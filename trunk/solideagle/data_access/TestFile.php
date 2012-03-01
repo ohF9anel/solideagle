@@ -1,9 +1,14 @@
 <?php
 
-require_once("Process.php");
+namespace DataAccess
+{
 
-$test = new Process();
+    require_once("Process.php");
 
-$test->testAddTasks();
+    $test = new Process();
+
+    $test->testAddTasks();
+    
+}
 
 ?>

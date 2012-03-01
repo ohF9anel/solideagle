@@ -1,51 +1,54 @@
 <?php
 
-class Course
+namespace DataAccess
 {
     
-    // variables
-    private $id;
-    private $name;
-    
-    // getters & setters
-    
-    public function getId()
+    class Course
     {
-        return $this->id;
-    }
 
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
+        // variables
+        private $id;
+        private $name;
 
-    public function getName()
-    {
-        return $this->name;
-    }
+        // getters & setters
 
-    public function setName($name)
-    {
-        $this->name = $name;
+        public function getId()
+        {
+            return $this->id;
+        }
+
+        public function setId($id)
+        {
+            $this->id = $id;
+        }
+
+        public function getName()
+        {
+            return $this->name;
+        }
+
+        public function setName($name)
+        {
+            $this->name = $name;
+        }
+
+        // manage courses
+
+        public static function addCourse($course)
+        {
+
+        }
+
+        public static function updateCourse($course)
+        {
+
+        }
+
+        public static function delCourseById($courseId)
+        {
+
+        }
     }
-    
-    // manage courses
-    
-    public static function addCourse($course)
-    {
-        
-    }
-    
-    public static function updateCourse($course)
-    {
-        
-    }
-    
-    public static function delCourseById($courseId)
-    {
-        
-    }
-    
 }
 
 ?>

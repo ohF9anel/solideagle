@@ -1,55 +1,60 @@
 <?php
 
-class PersonTask
+namespace DataAccess
 {
-    
-    // variables
-    private $personId;
-    private $taskId;
-    private $configuration;
-    
-    // getters & setters
-    
-    public function getPersonId()
-    {
-        return $this->personId;
-    }
 
-    public function setPersonId($personId)
+    class PersonTask
     {
-        $this->personId = $personId;
-    }
 
-    public function getTaskId()
-    {
-        return $this->taskId;
-    }
+        // variables
+        private $personId;
+        private $taskId;
+        private $configuration;
 
-    public function setTaskId($taskId)
-    {
-        $this->taskId = $taskId;
-    }
+        // getters & setters
 
-    public function getConfiguration()
-    {
-        return $this->configuration;
-    }
+        public function getPersonId()
+        {
+            return $this->personId;
+        }
 
-    public function setConfiguration($configuration)
-    {
-        $this->configuration = $configuration;
-    }
-    
-    // manage person tasks
-    
-    public static function addPersonTask($personTask)
-    {
-        
-    }
-    
-    public static function removePersonTaskById($personTaskId)
-    {
-        
+        public function setPersonId($personId)
+        {
+            $this->personId = $personId;
+        }
+
+        public function getTaskId()
+        {
+            return $this->taskId;
+        }
+
+        public function setTaskId($taskId)
+        {
+            $this->taskId = $taskId;
+        }
+
+        public function getConfiguration()
+        {
+            return $this->configuration;
+        }
+
+        public function setConfiguration($configuration)
+        {
+            $this->configuration = $configuration;
+        }
+
+        // manage person tasks
+
+        public static function addPersonTask($personTask)
+        {
+
+        }
+
+        public static function removePersonTaskById($personTaskId)
+        {
+
+        }
+
     }
     
 }
