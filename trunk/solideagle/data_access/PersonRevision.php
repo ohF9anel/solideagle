@@ -1,41 +1,41 @@
 <?php
 
-class PersonRevision
+class Person
 {
 
     // variables
     private $id;
-    private $version_id;
+    private $versionId;
     private $type;
-    private $account_username;
-    private $account_password;
-    private $account_active;
-    private $account_active_untill;
-    private $account_active_from;
-    private $start_date;
-    private $first_name;
+    private $accountUsername;
+    private $accountPassword;
+    private $accountActive;
+    private $accountActiveUntill;
+    private $accountActiveFrom;
+    private $startDate;
+    private $firstName;
     private $name;
     private $gender;
-    private $birth_date;
-    private $birth_place;
+    private $birthDate;
+    private $birthPlace;
     private $nationality;
     private $street;
-    private $house_number;
-    private $post_code;
+    private $houseNumber;
+    private $postCode;
     private $city;
     private $country;
     private $email;
     private $phone;
     private $phone2;
     private $mobile;
-    private $made_on;
+    private $madeOn;
     private $group_id;
     private $information;
     private $deleted;
-    private $teacher_course_id;
-    private $student_previous_school;
-    private $student_stamnr;
-    private $parent_occupation;
+    private $teacherCourseId;
+    private $studentPreviousSchool;
+    private $studentStamnr;
+    private $parentOccupation;
 
     // getters & setters
 
@@ -48,15 +48,15 @@ class PersonRevision
     {
         $this->id = $id;
     }
-
-    public function getVersion_id()
+    
+    public function getVersionId()
     {
-        return $this->version_id;
+        return $this->versionId;
     }
 
-    public function setVersion_id($version_id)
+    public function setVersionId($versionId)
     {
-        $this->version_id = $version_id;
+        $this->versionId = $versionId;
     }
 
     public function getType()
@@ -69,74 +69,74 @@ class PersonRevision
         $this->type = $type;
     }
 
-    public function getAccount_username()
+    public function getAccountUsername()
     {
-        return $this->account_username;
+        return $this->accountUsername;
     }
 
-    public function setAccount_username($account_username)
+    public function setAccountUsername($accountUsername)
     {
-        $this->account_username = $account_username;
+        $this->accountUsername = $accountUsername;
     }
 
-    public function getAccount_password()
+    public function getAccountPassword()
     {
-        return $this->account_password;
+        return $this->accountPassword;
     }
 
-    public function setAccount_password($account_password)
+    public function setAccountPassword($accountPassword)
     {
-        $this->account_password = $account_password;
+        $this->accountPassword = $accountPassword;
     }
 
-    public function getAccount_active()
+    public function getAccountActive()
     {
-        return $this->account_active;
+        return $this->accountActive;
     }
 
-    public function setAccount_active($account_active)
+    public function setAccountActive($accountActive)
     {
-        $this->account_active = $account_active;
+        $this->accountActive = $accountActive;
     }
 
-    public function getAccount_active_untill()
+    public function getAccountActiveUntill()
     {
-        return $this->account_active_untill;
+        return $this->accountActiveUntill;
     }
 
-    public function setAccount_active_untill($account_active_untill)
+    public function setAccountActiveUntill($accountActiveUntill)
     {
-        $this->account_active_untill = $account_active_untill;
+        $this->accountActiveUntill = $accountActiveUntill;
     }
 
-    public function getAccount_active_from()
+    public function getAccountActiveFrom()
     {
-        return $this->account_active_from;
+        return $this->accountActiveFrom;
     }
 
-    public function setAccount_active_from($account_active_from)
+    public function setAccountActiveFrom($accountActiveFrom)
     {
-        $this->account_active_from = $account_active_from;
+        $this->accountActiveFrom = $accountActiveFrom;
     }
 
-    public function getStart_date()
+    public function getStartDate()
     {
-        return $this->start_date;
+        return $this->startDate;
     }
 
-    public function setStart_date($start_date)
+    public function setStartDate($startDate)
     {
-        $this->start_date = $start_date;
+        $this->startDate = $startDate;
     }
 
-    public function getFirst_name()
+    public function getFirstName()
     {
-        return $this->first_name;
+        return $this->firstName;
     }
 
-    public function setFirst_name($first_name)
+    public function setFirstName($firstName)
     {
-        $this->first_name = $first_name;
+        $this->firstName = $firstName;
     }
 
     public function getName()
@@ -159,24 +159,24 @@ class PersonRevision
         $this->gender = $gender;
     }
 
-    public function getBirth_date()
+    public function getBirthDate()
     {
-        return $this->birth_date;
+        return $this->birthDate;
     }
 
-    public function setBirth_date($birth_date)
+    public function setBirthDate($birthDate)
     {
-        $this->birth_date = $birth_date;
+        $this->birthDate = $birthDate;
     }
 
-    public function getBirth_place()
+    public function getBirthPlace()
     {
-        return $this->birth_place;
+        return $this->birthPlace;
     }
 
-    public function setBirth_place($birth_place)
+    public function setBirthPlace($birthPlace)
     {
-        $this->birth_place = $birth_place;
+        $this->birthPlace = $birthPlace;
     }
 
     public function getNationality()
@@ -199,24 +199,24 @@ class PersonRevision
         $this->street = $street;
     }
 
-    public function getHouse_number()
+    public function getHouseNumber()
     {
-        return $this->house_number;
+        return $this->houseNumber;
     }
 
-    public function setHouse_number($house_number)
+    public function setHouseNumber($houseNumber)
     {
-        $this->house_number = $house_number;
+        $this->houseNumber = $houseNumber;
     }
 
-    public function getPost_code()
+    public function getPostCode()
     {
-        return $this->post_code;
+        return $this->postCode;
     }
 
-    public function setPost_code($post_code)
+    public function setPostCode($postCode)
     {
-        $this->post_code = $post_code;
+        $this->postCode = $postCode;
     }
 
     public function getCity()
@@ -279,14 +279,14 @@ class PersonRevision
         $this->mobile = $mobile;
     }
 
-    public function getMade_on()
+    public function getMadeOn()
     {
-        return $this->made_on;
+        return $this->madeOn;
     }
 
-    public function setMade_on($made_on)
+    public function setMadeOn($madeOn)
     {
-        $this->made_on = $made_on;
+        $this->madeOn = $madeOn;
     }
 
     public function getGroup_id()
@@ -319,44 +319,44 @@ class PersonRevision
         $this->deleted = $deleted;
     }
 
-    public function getTeacher_course_id()
+    public function getTeacherCourseId()
     {
-        return $this->teacher_course_id;
+        return $this->teacherCourseId;
     }
 
-    public function setTeacher_course_id($teacher_course_id)
+    public function setTeacherCourseId($teacherCourseId)
     {
-        $this->teacher_course_id = $teacher_course_id;
+        $this->teacherCourseId = $teacherCourseId;
     }
 
-    public function getStudent_previous_school()
+    public function getStudentPreviousSchool()
     {
-        return $this->student_previous_school;
+        return $this->studentPreviousSchool;
     }
 
-    public function setStudent_previous_school($student_previous_school)
+    public function setStudentPreviousSchool($studentPreviousSchool)
     {
-        $this->student_previous_school = $student_previous_school;
+        $this->studentPreviousSchool = $studentPreviousSchool;
     }
 
-    public function getStudent_stamnr()
+    public function getStudentStamnr()
     {
-        return $this->student_stamnr;
+        return $this->studentStamnr;
     }
 
-    public function setStudent_stamnr($student_stamnr)
+    public function setStudentStamnr($studentStamnr)
     {
-        $this->student_stamnr = $student_stamnr;
+        $this->studentStamnr = $studentStamnr;
     }
 
-    public function getParent_occupation()
+    public function getParentOccupation()
     {
-        return $this->parent_occupation;
+        return $this->parentOccupation;
     }
 
-    public function setParent_occupation($parent_occupation)
+    public function setParentOccupation($parentOccupation)
     {
-        $this->parent_occupation = $parent_occupation;
+        $this->parentOccupation = $parentOccupation;
     }
 
 }

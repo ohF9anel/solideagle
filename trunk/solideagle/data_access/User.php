@@ -9,19 +9,19 @@ class User
 	private $password;
 	private $groups = array();
 	
-	public function __construct($id) {
-		$this->id = $id;
+	public function __construct($id)
+        {
+            $this->id = $id;
 	}
-	
 	
 	public function addToGroup($group)
 	{
-		$this->groups[] = $group;
+            $this->groups[] = $group;
 	}
 	
 	public function getGroups()
 	{
-		return $this->groups;
+            return $this->groups;
 	}
 	
 	public function getId()
@@ -68,9 +68,10 @@ class User
 	{
 	    $this->password = $password;
 	}
-	
-	
+        
 
+        
+        
 }
 
 ?>
