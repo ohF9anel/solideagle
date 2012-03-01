@@ -29,6 +29,23 @@ class Course
         $this->name = $name;
     }
     
+    // manage courses
+    
+    public static function addCourse($course)
+    {
+        
+    }
+    
+    public static function updateCourse($course)
+    {
+        
+    }
+    
+    public static function delCourseById($courseId)
+    {
+        
+    }
+    
 }
 
 ?>
