@@ -1,32 +1,37 @@
 <?php
 
-class RelationType
+namespace DataAccess
 {
-    
-    // variables
-    private $id;
-    private $description;
-    
-    // getters & setters
-    
-    public function getId()
-    {
-        return $this->id;
-    }
 
-    public function setId($id)
+    class RelationType
     {
-        $this->id = $id;
-    }
 
-    public function getDescription()
-    {
-        return $this->description;
-    }
+        // variables
+        private $id;
+        private $description;
 
-    public function setDescription($description)
-    {
-        $this->description = $description;
+        // getters & setters
+
+        public function getId()
+        {
+            return $this->id;
+        }
+
+        public function setId($id)
+        {
+            $this->id = $id;
+        }
+
+        public function getDescription()
+        {
+            return $this->description;
+        }
+
+        public function setDescription($description)
+        {
+            $this->description = $description;
+        }
+
     }
     
 }

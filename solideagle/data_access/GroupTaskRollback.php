@@ -1,77 +1,82 @@
 <?php
 
-class GroupTaskRollback
+namespace DataAccess
 {
 
-    // variables
-    private $id;
-    private $groupId;
-    private $taskId;
-    private $configuration;
-    private $taskExecutedOn;
-    
-    // getters & setters
-    
-    public function getId()
+    class GroupTaskRollback
     {
-        return $this->id;
-    }
 
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
+        // variables
+        private $id;
+        private $groupId;
+        private $taskId;
+        private $configuration;
+        private $taskExecutedOn;
 
-    public function getGroupId()
-    {
-        return $this->groupId;
-    }
+        // getters & setters
 
-    public function setGroupId($groupId)
-    {
-        $this->groupId = $groupId;
-    }
+        public function getId()
+        {
+            return $this->id;
+        }
 
-    public function getTaskId()
-    {
-        return $this->taskId;
-    }
+        public function setId($id)
+        {
+            $this->id = $id;
+        }
 
-    public function setTaskId($taskId)
-    {
-        $this->taskId = $taskId;
-    }
+        public function getGroupId()
+        {
+            return $this->groupId;
+        }
 
-    public function getConfiguration()
-    {
-        return $this->configuration;
-    }
+        public function setGroupId($groupId)
+        {
+            $this->groupId = $groupId;
+        }
 
-    public function setConfiguration($configuration)
-    {
-        $this->configuration = $configuration;
-    }
+        public function getTaskId()
+        {
+            return $this->taskId;
+        }
 
-    public function getTaskExecutedOn()
-    {
-        return $this->taskExecutedOn;
-    }
+        public function setTaskId($taskId)
+        {
+            $this->taskId = $taskId;
+        }
 
-    public function setTaskExecutedOn($taskExecutedOn)
-    {
-        $this->taskExecutedOn = $taskExecutedOn;
-    }
-    
-    public static function addGroupTaskRollback($groupTaskRollback)
-    {
-        
-    }
-    
-    public static function removeGroupTaskRollbacksStartingFromId($groupTaskRollbackStartId)
-    {
-        
+        public function getConfiguration()
+        {
+            return $this->configuration;
+        }
+
+        public function setConfiguration($configuration)
+        {
+            $this->configuration = $configuration;
+        }
+
+        public function getTaskExecutedOn()
+        {
+            return $this->taskExecutedOn;
+        }
+
+        public function setTaskExecutedOn($taskExecutedOn)
+        {
+            $this->taskExecutedOn = $taskExecutedOn;
+        }
+
+        public static function addGroupTaskRollback($groupTaskRollback)
+        {
+
+        }
+
+        public static function removeGroupTaskRollbacksStartingFromId($groupTaskRollbackStartId)
+        {
+
+        }
+
     }
     
 }
-
+    
 ?>
