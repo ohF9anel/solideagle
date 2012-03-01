@@ -1,8 +1,8 @@
 <?php
 
-class GroupType
+class Platform
 {
-
+    
     // variables
     private $id;
     private $name;
@@ -27,6 +27,23 @@ class GroupType
     public function setName($name)
     {
         $this->name = $name;
+    }
+    
+    // manage platforms
+    
+    public static function addPlatform($platform)
+    {
+        
+    }
+    
+    public static function updatePlatform($platform)
+    {
+        
+    }
+    
+    public static function removePlatformById($platformId)
+    {
+        
     }
     
 }
