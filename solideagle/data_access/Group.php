@@ -1,38 +1,51 @@
 <?php
 	
-class Group{
-	private $id;
-	private $name;
-	private $subGroups = array();
-	
-	public function __construct($id,$name) {
-		$this->id = $id;
-		$this->name = $name;
-	}
-	
-	public function addSubGroup($group)
-	{
-		$this->subGroups[] = $group;
-	}
-	
-	public function getSubGroups()
-	{
-		return $this->subGroups;
-	}	
+class Group
+{
+    
+    // variables
+    private $id;
+    private $name;
+    private $descriptionRights;
+    private $childGroups = array();
+    
+    // getters, setters & functions
+    
+    public function addChildGroup($childGroup)
+    {
+            $this->children[] = $childGroup;
+    }
 
-	public function getId()
-	{
-	    return $this->id;
-	}
+    public function getChildGroups()
+    {
+            return $this->childGroups;
+    }	
 
-	public function getName()
-	{
-	    return $this->name;
-	}
+    public function getId()
+    {
+        return $this->id;
+    }
 
-	public function setName($name)
-	{
-	    $this->name = $name;
-	}
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+    
+    public function getDescriptionRights()
+    {
+        return $this->descriptionRights;
+    }
+
+    public function setDescriptionRights($descriptionRights)
+    {
+        $this->descriptionRights = $descriptionRights;
+    }
+
 }
+
 ?>
