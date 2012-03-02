@@ -114,7 +114,7 @@ namespace DataAccess
 			
 			
 			$sql = "SELECT
-					`course`.`id`,
+					`course`.`idd`,
 					`course`.`name`
 					FROM `CentralAccountDB`.`course`;";
 			
