@@ -69,7 +69,7 @@ namespace DataAccess
 
         }
 
-        public static function removePersonTaskRollbacksStartingFromId($personTaskRollbackStartingId)
+        public static function delPersonTaskRollbacksStartingFromId($personTaskRollbackStartingId)
         {
 
         }

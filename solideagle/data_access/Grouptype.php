@@ -44,7 +44,7 @@ class GroupType
 
 	}
 
-	public static function removeGroupTypeById($groupTypeId)
+	public static function delGroupTypeById($groupTypeId)
 	{
 
 	}

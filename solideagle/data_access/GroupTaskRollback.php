@@ -70,7 +70,7 @@ namespace DataAccess
 
         }
 
-        public static function removeGroupTaskRollbacksStartingFromId($groupTaskRollbackStartId)
+        public static function delGroupTaskRollbacksStartingFromId($groupTaskRollbackStartId)
         {
 
         }
