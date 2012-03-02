@@ -65,6 +65,8 @@ class Database
 
 		$conn = new PDO($connectionParams[0],$connectionParams[1],$connectionParams[2]);
 
+		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		
 		Database::$_connections[$connstring] = new DBconnection($conn);
 
 		Return Database::$_connections[$connstring];
