@@ -111,7 +111,7 @@ namespace DataAccess
 		{
 			$retArr = array();
 			
-			
+			$blaat = 1;
 			
 			$sql = "SELECT
 					`course`.`id`,
