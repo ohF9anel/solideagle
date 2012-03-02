@@ -1,6 +1,8 @@
 <?php
 namespace Database;
 
+use PDO;
+
 class CustomDataReader
 {
 	
@@ -8,7 +10,7 @@ class CustomDataReader
 	
 	public function __construct($stmt)
 	{
-		$this->_stmt;
+		$this->_stmt = $stmt;
 	}
 	
 	public function read() //false on failure
