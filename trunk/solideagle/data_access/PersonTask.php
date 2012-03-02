@@ -50,7 +50,7 @@ namespace DataAccess
 
         }
 
-        public static function removePersonTaskById($personTaskId)
+        public static function delPersonTaskById($personTaskId)
         {
 
         }

@@ -50,7 +50,7 @@ namespace DataAccess
 
         }
 
-        public static function removeGroupTaskById($groupTaskId)
+        public static function delGroupTaskById($groupTaskId)
         {
 
         }

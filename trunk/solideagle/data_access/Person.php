@@ -3,6 +3,9 @@
 namespace DataAccess
 {
 
+    require_once '../data_access/database/databasecommand.php';
+    use Database\DatabaseCommand;
+    
     class Person
     {
 
@@ -31,8 +34,8 @@ namespace DataAccess
         private $phone2;
         private $mobile;
         private $madeOn;
-        private $group_id;
-        private $information;
+        private $groupId;
+        private $otherInformation;
         private $deleted;
         private $teacherCourseId;
         private $studentPreviousSchool;
@@ -281,24 +284,24 @@ namespace DataAccess
             $this->madeOn = $madeOn;
         }
 
-        public function getGroup_id()
+        public function getGroupId()
         {
-            return $this->group_id;
+            return $this->groupId;
         }
 
-        public function setGroup_id($group_id)
+        public function setGroupId($groupId)
         {
-            $this->group_id = $group_id;
+            $this->groupId = $groupId;
         }
 
-        public function getInformation()
+        public function getOtherInformation()
         {
-            return $this->information;
+            return $this->otherInformation;
         }
 
-        public function setInformation($information)
+        public function setOtherInformation($otherInformation)
         {
-            $this->information = $information;
+            $this->otherInformation = $otherInformation;
         }
 
         public function getDeleted()
@@ -351,24 +354,203 @@ namespace DataAccess
             $this->parentOccupation = $parentOccupation;
         }
 
-        public function addPerson($this)
+        /**
+         *
+         * @param Person $this
+         * @return int id
+         */
+        public static function addPerson($person)
         {
+                $sql = "INSERT INTO `CentralAccountDB`.`person`
+                        (`id`,
+                        `account_username`,
+                        `account_password`,
+                        `account_active`,
+                        `account_active_untill`,
+                        `account_active_from`,
+                        `first_name`,
+                        `name`,
+                        `gender`,
+                        `birth_date`,
+                        `birth_place`,
+                        `nationality`,
+                        `street`,
+                        `house_number`,
+                        `post_code`,
+                        `city`,
+                        `country`,
+                        `email`,
+                        `phone`,
+                        `phone2`,
+                        `mobile`,
+                        `made_on`,
+                        `group_id`,
+                        `other_information`,
+                        `deleted`,
+                        `student_previous_school`,
+                        `student_stamnr`,
+                        `parent_occupation`)
+                        VALUES
+                        (
+                        :id,
+                        :account_username,
+                        :account_password,
+                        :account_active,
+                        :account_active_untill,
+                        :account_active_from,
+                        :first_name,
+                        :name,
+                        :gender,
+                        :birth_date,
+                        :birth_place,
+                        :nationality,
+                        :street,
+                        :house_number,
+                        :post_code,
+                        :city,
+                        :country,
+                        :email,
+                        :phone,
+                        :phone2,
+                        :mobile,
+                        :made_on,
+                        :group_id,
+                        :other_information,
+                        :deleted,
+                        :student_previous_school,
+                        :student_stamnr,
+                        :parent_occupation
+                        );
+                        ";
 
+                $cmd = new DatabaseCommand($sql);
+                $cmd->addParam(":id", $person->getId());
+                $cmd->addParam(":account_username", $person->getAccountUsername());
+                $cmd->addParam(":account_password", $person->getAccountPassword());
+                $cmd->addParam(":account_active", $person->getAccountActive());
+                $cmd->addParam(":account_active_untill", $person->getAccountActiveUntill());
+                $cmd->addParam(":account_active_from", $person->getAccountActiveFrom());
+                $cmd->addParam(":first_name", $person->getFirstName());
+                $cmd->addParam(":name", $person->getName());
+                $cmd->addParam(":gender", $person->getGender());
+                $cmd->addParam(":birth_date", $person->getBirthDate());
+                $cmd->addParam(":birth_place", $person->getBirthPlace());
+                $cmd->addParam(":nationality", $person->getNationality());
+                $cmd->addParam(":street", $person->getStreet());
+                $cmd->addParam(":house_number", $person->getHouseNumber());
+                $cmd->addParam(":post_code", $person->getPostCode());
+                $cmd->addParam(":city", $person->getCity());
+                $cmd->addParam(":country", $person->getCountry());
+                $cmd->addParam(":email", $person->getEmail());
+                $cmd->addParam(":phone", $person->getPhone());
+                $cmd->addParam(":phone2", $person->getPhone2());
+                $cmd->addParam(":mobile", $person->getMobile());
+                $cmd->addParam(":made_on", $person->getMadeOn());
+                $cmd->addParam(":group_id", $person->getGroupId());
+                $cmd->addParam(":other_information", $person->getOtherInformation());
+                $cmd->addParam(":deleted", $person->getDeleted());
+                $cmd->addParam(":student_previous_school", $person->getStudentPreviousSchool());
+                $cmd->addParam(":student_stamnr", $person->getStudentStamNr());
+                $cmd->addParam(":parent_occupation", $person->getParentOccupation());
+
+                $cmd->BeginTransaction();
+
+                $cmd->execute();
+
+                $cmd->newQuery("SELECT LAST_INSERT_ID();");
+
+                $retval =  $cmd->executeScalar();
+
+                $cmd->CommitTransaction();
+
+                return $retval;
         }
-
-        public function updatePerson($this)
+        
+        /**
+         *
+         * @param Person $person 
+         */
+        public static function updatePerson($person)
         {
+                $sql = "UPDATE `CentralAccountDB`.`person` SET
+                        `id` = :id,
+                        `account_username` = :account_username,
+                        `account_password` = :account_password,
+                        `account_active` = :account_active,
+                        `account_active_untill` = :account_active_untill,
+                        `account_active_from` = :account_active_from,
+                        `first_name` = :first_name,
+                        `name` = :name,
+                        `gender` = :gender,
+                        `birth_date` = :birth_date,
+                        `birth_place` = :birth_place,
+                        `nationality` = :nationality,
+                        `street` = :street,
+                        `house_number` = :house_number,
+                        `post_code` = :post_code,
+                        `city` = :city,
+                        `country` = :country,
+                        `email` = :email,
+                        `phone` = :phone,
+                        `phone2` = :phone2,
+                        `mobile` = :mobile,
+                        `made_on` = :made_on,
+                        `group_id` = :group_id,
+                        `other_information` = :other_information,
+                        `deleted` = :deleted,
+                        `student_previous_school` = :student_previous_school,
+                        `student_stamnr` = :student_stamnr,
+                        `parent_occupation` = :parent_occupation
+                        WHERE id = :id;
+                        ";
 
+                $cmd = new DatabaseCommand($sql);
+                $cmd->addParam(":id", $person->getId());
+                $cmd->addParam(":account_username", $person->getAccountUsername());
+                $cmd->addParam(":account_password", $person->getAccountPassword());
+                $cmd->addParam(":account_active", $person->getAccountActive());
+                $cmd->addParam(":account_active_untill", $person->getAccountActiveUntill());
+                $cmd->addParam(":account_active_from", $person->getAccountActiveFrom());
+                $cmd->addParam(":first_name", $person->getFirstName());
+                $cmd->addParam(":name", $person->getName());
+                $cmd->addParam(":gender", $person->getGender());
+                $cmd->addParam(":birth_date", $person->getBirthDate());
+                $cmd->addParam(":birth_place", $person->getBirthPlace());
+                $cmd->addParam(":nationality", $person->getNationality());
+                $cmd->addParam(":street", $person->getStreet());
+                $cmd->addParam(":house_number", $person->getHouseNumber());
+                $cmd->addParam(":post_code", $person->getPostCode());
+                $cmd->addParam(":city", $person->getCity());
+                $cmd->addParam(":country", $person->getCountry());
+                $cmd->addParam(":email", $person->getEmail());
+                $cmd->addParam(":phone", $person->getPhone());
+                $cmd->addParam(":phone2", $person->getPhone2());
+                $cmd->addParam(":mobile", $person->getMobile());
+                $cmd->addParam(":made_on", $person->getMadeOn());
+                $cmd->addParam(":group_id", $person->getGroupId());
+                $cmd->addParam(":other_information", $person->getOtherInformation());
+                $cmd->addParam(":deleted", $person->getDeleted());
+                $cmd->addParam(":student_previous_school", $person->getStudentPreviousSchool());
+                $cmd->addParam(":student_stamnr", $person->getStudentStamNr());
+                $cmd->addParam(":parent_occupation", $person->getParentOccupation());
+
+                $cmd->execute();
         }
 
         public static function removePersonById($personId)
         {
+                $sql = "DELETE FROM `CentralAccountDB`.`person`
+					WHERE `id` = :id;";
 
+                $cmd = new DatabaseCommand($sql);
+                $cmd->addParam(":id", $personId);
+
+                $cmd->execute();
         }
 
         public static function getPersonById($id)
         {
-
+                
         }
 
     }

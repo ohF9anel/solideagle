@@ -44,7 +44,7 @@ namespace DataAccess
 
         }
 
-        public static function removePlatformById($platformId)
+        public static function delPlatformById($platformId)
         {
 
         }

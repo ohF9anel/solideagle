@@ -43,7 +43,7 @@ namespace DataAccess
             $this->tasks[] = $taskId;
         }
 
-        public function removeTasks($arrTaskIds)
+        public function delTasks($arrTaskIds)
         {
             $this->tasks = array_diff($this->tasks, $arrTaskIds);
         }
