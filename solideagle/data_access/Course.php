@@ -106,6 +106,35 @@ namespace DataAccess
 			$cmd->execute();
 
 		}
+		
+		public static function getAllCourses()
+		{
+			$retArr = array();
+			
+			
+			
+			$sql = "SELECT
+					`course`.`id`,
+					`course`.`name`
+					FROM `CentralAccountDB`.`course`;";
+			
+			$cmd = new DatabaseCommand($sql);
+			
+			$reader = $cmd->executeReader();
+			
+			$reader->readAll(function($courseRow) use (&$retArr) {
+				
+				$tempCourse = new Course();
+				$tempCourse->setId($courseRow->id);
+				$tempCourse->setName($courseRow->name);
+				
+				$retArr[] = $tempCourse;
+				
+			});
+			
+			return $retArr;
+		}
+		
 	}
 }
 
