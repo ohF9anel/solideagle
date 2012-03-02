@@ -85,11 +85,17 @@ class Database
 
 	Public static Function executeReader($databaseCmd)
 	{
-		$stmt = Database::getStatement($databaseCmd);
-		$stmt->execute($databaseCmd->getParams());
 
-		return new CustomDataReader($stmt);
-
+		try{
+			$stmt = Database::getStatement($databaseCmd);
+			$stmt->execute($databaseCmd->getParams());
+				
+			return new CustomDataReader($stmt);
+				
+		}catch (PDOException $err) {
+				
+			var_dump($err);
+		}
 	}
 
 
@@ -101,19 +107,33 @@ class Database
 	 */
 	Public static Function executeScalar($databaseCmd)
 	{
-		$stmt = Database::getStatement($databaseCmd);
-		$stmt->execute($databaseCmd->getParams());
 
-		$arr = ($stmt->fetch(PDO::FETCH_NUM));
+		try{
+			$stmt = Database::getStatement($databaseCmd);
+			$stmt->execute($databaseCmd->getParams());
 
-		return $arr[0];
+			$arr = ($stmt->fetch(PDO::FETCH_NUM));
+
+			return $arr[0];
+
+		}catch (PDOException $err) {
+
+			var_dump($err);
+		}
 
 	}
 
 	Public static Function execute($databaseCmd)
 	{
-		$stmt = Database::getStatement($databaseCmd);
-		return $stmt->execute($databaseCmd->getParams());
+
+		try{
+			$stmt = Database::getStatement($databaseCmd);
+			return $stmt->execute($databaseCmd->getParams());
+
+		}catch (PDOException $err) {
+
+			var_dump($err);
+		}
 	}
 
 	public static function BeginTransaction($connParams)

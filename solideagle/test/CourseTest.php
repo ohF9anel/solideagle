@@ -19,8 +19,10 @@ require_once '../data_access/Course.php';
 
 use DataAccess\Course;
 
-$course = new Course();
+//$course = new Course();
 
+
+var_dump(Course::getAllCourses());
 
 // $course->setName("TestCourseTrans");
 
@@ -35,6 +37,6 @@ $course = new Course();
 // Course::updateCourse($course);
 
 
-Course::delCourseById(1);
+//Course::delCourseById(1);
 
 ?>
