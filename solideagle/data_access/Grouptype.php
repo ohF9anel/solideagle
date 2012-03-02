@@ -1,6 +1,10 @@
 <?php
 
+
+
 namespace DataAccess;
+
+
 
 class GroupType
 {
