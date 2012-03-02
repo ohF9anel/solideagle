@@ -110,9 +110,7 @@ namespace DataAccess
 		public static function getAllCourses()
 		{
 			$retArr = array();
-			
-			$blaat = 1;
-			
+
 			$sql = "SELECT
 					`course`.`id`,
 					`course`.`name`

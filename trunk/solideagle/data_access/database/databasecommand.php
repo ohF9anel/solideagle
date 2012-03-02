@@ -14,7 +14,7 @@ class DatabaseCommand
 	private $_params = array(); //array
 	private $_connectionParams; //array
 
-	public function __construct($sql,$connectionParams = NULL)
+	public function __construct($sql = NULL,$connectionParams = NULL)
 	{
 		if($connectionParams === NULL)
 		{
@@ -36,7 +36,7 @@ class DatabaseCommand
 	public function newQuery($sql)
 	{
 		$this->_sql = $sql;
-		$_params = array();
+		$this->_params = array();
 	}
 
 	public function hasParams()
