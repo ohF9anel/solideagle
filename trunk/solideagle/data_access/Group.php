@@ -92,8 +92,20 @@ namespace DataAccess;
 			$cmd->execute();
 			
 			$cmd->newQuery("SELECT LAST_INSERT_ID();");
+				
+			$thisGroupId =  $cmd->executeScalar();
 			
-			$retval =  $cmd->executeScalar();
+			$sql = "INSERT INTO group_closure (parent_id, child_id, length)
+						SELECT t.parent_id, :groupid, t.length+1
+						FROM group_closure AS t
+						WHERE t.child_id = :parentid
+						UNION ALL
+						SELECT :groupid, :groupid, 0;";
+			
+			$cmd->newQuery($sql);
+						
+			$cmd->addParam(":groupid", $thisGroupId);
+			$cmd->addParam(":parentid", $group->getParentId());
 			
 			$cmd->CommitTransaction();
 			return $retval;
