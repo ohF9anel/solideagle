@@ -35,7 +35,7 @@ namespace DataAccess
 			$this->name = $name;
 		}
 
-		 
+			
 
 		/**
 		 * My function description.
@@ -47,38 +47,63 @@ namespace DataAccess
 		public static function addCourse($course)
 		{
 			$sql = "INSERT INTO `CentralAccountDB`.`course`
-			(`name`)
+			(
+				`name`
+			)
 			VALUES
-			(:name);";
-				
-				
+			(
+				:name
+			);";
+
+
 			$cmd = new DatabaseCommand($sql);
 			$cmd->addParam(":name", $course->getName());
-				
-			$cmd->BeginTransaction();
-				
-			$cmd->execute();
-				
-			$cmd->newQuery("SELECT LAST_INSERT_ID();");
-				
-			$retval =  $cmd->executeScalar();
-				
-			$cmd->CommitTransaction();
-				
-			return $retval;
 
-				
+
+			$cmd->BeginTransaction();
+
+			$cmd->execute();
+
+			$cmd->newQuery("SELECT LAST_INSERT_ID();");
+
+			$retval =  $cmd->executeScalar();
+
+			$cmd->CommitTransaction();
+			return $retval;
 		}
 
+		/**
+		 * 
+		 *
+		 * @param Course $course
+		 */
 		public static function updateCourse($course)
 		{
+			$sql = "UPDATE `CentralAccountDB`.`course`
+				SET
+				`name` = :name
+				WHERE 
+				`id` = :id;";
 
+			$cmd = new DatabaseCommand($sql);
+			$cmd->addParam(":id", $course->getId());
+			$cmd->addParam(":name", $course->getName());
+
+			$cmd->execute();
 		}
 
 
 
 		public static function delCourseById($courseId)
 		{
+				
+			$sql = "DELETE FROM `CentralAccountDB`.`course`
+					WHERE `id` = :id;";
+
+			$cmd = new DatabaseCommand($sql);
+			$cmd->addParam(":id", $courseId);
+
+			$cmd->execute();
 
 		}
 	}

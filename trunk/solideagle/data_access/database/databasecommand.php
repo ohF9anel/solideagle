@@ -69,6 +69,12 @@ class DatabaseCommand
 		return Database::executeScalar($this);
 	}
 
+	/**
+	 * 
+	 * Executes SQL, returns true on success
+	 * 
+	 * @return bool
+	 */
 	public function execute()
 	{
 		return Database::execute($this);
