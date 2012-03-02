@@ -113,8 +113,7 @@ class Database
 	Public static Function execute($databaseCmd)
 	{
 		$stmt = Database::getStatement($databaseCmd);
-		$stmt->execute($databaseCmd->getParams());
-		$stmt->closeCursor();
+		return $stmt->execute($databaseCmd->getParams());
 	}
 
 	public static function BeginTransaction($connParams)

@@ -15,17 +15,26 @@
 
 // });
 
-require_once 'data_access/Course.php';
+require_once '../data_access/Course.php';
 
 use DataAccess\Course;
 
 $course = new Course();
 
 
-$course->setName("TestCourseTrans");
+// $course->setName("TestCourseTrans");
 
-$id = Course::addCourse($course);
-echo $id;
-echo "finish";
+// $id = Course::addCourse($course);
+// echo $id;
+// echo "finish";
+
+
+// $course->setId("3");
+// $course->setName("UpdateTest");
+
+// Course::updateCourse($course);
+
+
+Course::delCourseById(1);
 
 ?>
