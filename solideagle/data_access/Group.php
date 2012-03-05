@@ -169,11 +169,13 @@ class Group
 	 */
 	public static function validateGroup($group)
 	{
-		$validationErrors() = array();
+		$validationErrors = array();
+		
 		if(empty($group->getName()))
 		{
 			$validationErrors[] = "Groep moet een naam hebben."; 
 		}
+		
 		if(strlen($group->getName()) > 45)
 		{
 			$validationErrors[] = "De naam van de groep mag niet langer zijn dan 45 karakters.";
