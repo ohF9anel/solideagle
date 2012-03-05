@@ -169,26 +169,19 @@ class Group
 	 */
 	public static function validateGroup($group)
 	{
-
+            
 		$valErrors  = Validator::validateString($group->getName(),1,45,false);
 
 		foreach ($valErrors as $valError)
 		{
 			if($valError == ValidationError::STRING_TOO_LONG)
-			{
-				$validationErrors[] = "De naam van de groep mag niet langer zijn dan 45 karakters.";
-			}
+                                $validationErrors[] = "De naam van de groep mag niet langer zijn dan 45 karakters.";
 				
 			if($valError == ValidationError::STRING_TOO_SHORT)
-			{
 				$validationErrors[] = "Groep moet een naam hebben.";
-			}
-				
-				
+	
 			if($valError == ValidationError::STRING_HAS_SPECIAL_CHARS)
-			{
-				$validationErrors[] = "Groep naam mag geen speciale tekens bevatten";
-			}
+				$validationErrors[] = "Groep naam mag geen speciale tekens bevatten.";
 		}
 
 

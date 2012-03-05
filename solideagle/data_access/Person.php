@@ -4,7 +4,9 @@ namespace DataAccess
 {
 
     require_once '../data_access/database/databasecommand.php';
+    require_once '../data_access/validation/Validator.php';
     use Database\DatabaseCommand;
+    use Validation\Validator;
     
     class Person
     {
@@ -41,6 +43,8 @@ namespace DataAccess
         private $studentPreviousSchool;
         private $studentStamnr;
         private $parentOccupation;
+        
+        private $valErrors = array();
 
         // getters & setters
 
@@ -361,6 +365,9 @@ namespace DataAccess
          */
         public static function addPerson($person)
         {
+                if (!isValidPerson)
+                    return false;
+            
                 $sql = "INSERT INTO `CentralAccountDB`.`person`
                         (`id`,
                         `account_username`,
@@ -472,6 +479,9 @@ namespace DataAccess
          */
         public static function updatePerson($person)
         {
+                if (!isValidPerson)
+                    return false;
+                
                 $sql = "UPDATE `CentralAccountDB`.`person` SET
                         `id` = :id,
                         `account_username` = :account_username,
@@ -551,6 +561,49 @@ namespace DataAccess
         public static function getPersonById($id)
         {
                 
+        }
+        
+        public static function validatePerson($person)
+        {
+            $validationErrors = array();
+            
+            $valErrors = Validator::validateString($person->getAccountUsername, 1, 45);
+            
+            foreach ($valErrors as $valError)
+            {
+                switch($valError) {
+                    case ValidationError::STRING_TOO_LONG:
+                        $validationErrors[] = "De gebruikersnaam mag niet langer zijn dan 45 karakters.";
+                    case ValidationError::STRING_TOO_SHORT:
+                        $validationErrors[] = "Voer een gebruikersnaam in.";
+                    case ValidationError::STRING_HAS_SPECIAL_CHARS:
+                        $validationErrors[] = "De gebruikers mag geen speciale tekens bevatten.";
+                }
+            }
+            
+            $valErrors = Validator::validateString($person->getPassword, 1, 45);
+            
+            foreach ($valErrors as $valError)
+            {
+                switch($valError) {
+                    case ValidationError::STRING_TOO_LONG:
+                        $validationErrors[] = "De gebruikersnaam mag niet langer zijn dan 45 karakters.";
+                    case ValidationError::STRING_TOO_SHORT:
+                        $validationErrors[] = "Voer een gebruikersnaam in.";
+                    case ValidationError::STRING_HAS_SPECIAL_CHARS:
+                        $validationErrors[] = "De gebruikers mag geen speciale tekens bevatten.";
+                }
+            }
+        }
+        
+        public static function isValidPerson($person)
+        {
+            if (validatePerson($person))
+            {
+                
+            }
+            
+            return true;
         }
 
     }
