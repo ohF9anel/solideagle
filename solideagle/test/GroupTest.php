@@ -1,8 +1,7 @@
 <?php
 
+require_once 'Log.php';
 require_once 'data_access/Group.php';
-
-
 
 $conf = array('mode' => 0600, 'timeFormat' => '%X %x');
 $logger = Log::singleton('file', 'out.log', 'ident', $conf);
@@ -10,7 +9,7 @@ for ($i = 0; $i < 10; $i++) {
 	$logger->log("Log entry $i");
 }
 
-die();
+
 
 use DataAccess\Group;
 
@@ -19,6 +18,26 @@ $group = new Group();
 $group->setName("TheBigRoot");
 $group->setDescription("Just testing");
 
+var_dump( Group::isValidGroup($group));
+
+//var_dump(Group::validateGroup($group));
+
+$group->setName("");
+$group->setDescription("Just testing");
+
+var_dump( Group::isValidGroup($group));
+
+//var_dump(Group::validateGroup($group));
+
+$group->setName("sqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsd");
+$group->setDescription("Just testing");
+
+var_dump( Group::isValidGroup($group));
+
+//var_dump(Group::validateGroup($group));
+
+
+die();
 
 $childGroup = new Group();
 

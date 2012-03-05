@@ -3,8 +3,11 @@
 namespace DataAccess;
 
 require_once '../data_access/database/databasecommand.php';
+require_once 'validation/Validator.php';
 
 use Database\DatabaseCommand;
+use validation\Validator;
+use validation\ValidationError;
 
 class Group
 {
@@ -169,20 +172,27 @@ class Group
 	 */
 	public static function validateGroup($group)
 	{
-            
-		$valErrors  = Validator::validateString($group->getName(),1,45,false);
 
-		foreach ($valErrors as $valError)
+		$validationErrors = array();
+		
+
+		foreach (Validator::validateString($group->getName(),1,45,false) as $valError)
 		{
-			if($valError == ValidationError::STRING_TOO_LONG)
-                                $validationErrors[] = "De naam van de groep mag niet langer zijn dan 45 karakters.";
-				
-			if($valError == ValidationError::STRING_TOO_SHORT)
+			if($valError == ValidationError::STRING_TOO_LONG )
+			{
+				$validationErrors[] = "De naam van de groep mag niet langer zijn dan 45 karakters.";
+			}
+			elseif($valError == ValidationError::STRING_TOO_SHORT || $valError == ValidationError::IS_NULL)
+			{
 				$validationErrors[] = "Groep moet een naam hebben.";
-	
-			if($valError == ValidationError::STRING_HAS_SPECIAL_CHARS)
-				$validationErrors[] = "Groep naam mag geen speciale tekens bevatten.";
+			}
+			elseif($valError == ValidationError::STRING_HAS_SPECIAL_CHARS)
+			{
+				$validationErrors[] = "Groep naam mag geen speciale tekens bevatten";
+			}
 		}
+		
+		return $validationErrors;
 
 
 	}
@@ -194,7 +204,8 @@ class Group
 	 */
 	public static function isValidGroup($group)
 	{
-		return true;
+		$valErr = Group::validateGroup($group);
+		return empty($valErr)?true:false;
 	}
 
 
