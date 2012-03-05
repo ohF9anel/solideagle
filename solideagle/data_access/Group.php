@@ -72,7 +72,7 @@ class Group
 	 *
 	 * Adds a new group under its parent (set by parentid) or as root if parentid is not set.
 	 * Will also save the childgroups
-	 * 
+	 *
 	 *
 	 * @param Group $group
 	 * @return int
@@ -83,24 +83,24 @@ class Group
 		$cmd = new DatabaseCommand();
 
 		$cmd->BeginTransaction();
-		
+
 		Group::addGroupRecursive($group,$cmd);
-		
-		$cmd->CommitTransaction();	
+
+		$cmd->CommitTransaction();
 	}
-	
+
 	/**
 	 * gets called by addGroup();
-	 * 
+	 *
 	 * @param Group $group
 	 * @param DatabaseCommand $cmd
 	 */
 	private static function addGroupRecursive($group,$cmd)
 	{
-		
+
 		if(!isValidGroup($group))
-			return false;
-		
+		return false;
+
 		$sql = "INSERT INTO `CentralAccountDB`.`group`
         						(
         						`name`,
@@ -110,16 +110,16 @@ class Group
         						:name,
         						:desc
         						);";
-		 
+			
 		$cmd->newQuery($sql);
-		
+
 		$cmd->addParam(":name", $group->getName());
 		$cmd->addParam(":desc", $group->getDescription());
-		 
+			
 		$cmd->execute();
 
 		$cmd->newQuery("SELECT LAST_INSERT_ID();");
-		 
+			
 		$group->id =  $cmd->executeScalar();
 
 		$sql = "INSERT INTO group_closure (parent_id, child_id, length)
@@ -130,23 +130,23 @@ class Group
         							SELECT :groupid, :groupid, 0;";
 
 		$cmd->newQuery($sql);
-		 
+			
 		$cmd->addParam(":groupid", $group->getId());
 		$cmd->addParam(":parentid", $group->getParentId());
-		
+
 		$cmd->execute();
-		
+
 
 		foreach ($group->getChildGroups() as $childgrp)
 		{
 			$childgrp->setParentId($group->getId());
-			
+				
 			if(!isValidGroup($childgrp))
 			{
 				$cmd->RollbackTransaction();
-				return false;			
+				return false;
 			}
-			
+				
 			Group::addGroupRecursive($childgrp,$cmd);
 		}
 	}
@@ -169,27 +169,39 @@ class Group
 	 */
 	public static function validateGroup($group)
 	{
-		$validationErrors = array();
-		
-		if(empty($group->getName()))
+
+		$valErrors  = Validator::validateString($group->getName(),1,45,false);
+
+		foreach ($valErrors as $valError)
 		{
-			$validationErrors[] = "Groep moet een naam hebben."; 
+			if($valError == ValidationError::STRING_TOO_LONG)
+			{
+				$validationErrors[] = "De naam van de groep mag niet langer zijn dan 45 karakters.";
+			}
+				
+			if($valError == ValidationError::STRING_TOO_SHORT)
+			{
+				$validationErrors[] = "Groep moet een naam hebben.";
+			}
+				
+				
+			if($valError == ValidationError::STRING_HAS_SPECIAL_CHARS)
+			{
+				$validationErrors[] = "Groep naam mag geen speciale tekens bevatten";
+			}
 		}
-		
-		if(strlen($group->getName()) > 45)
-		{
-			$validationErrors[] = "De naam van de groep mag niet langer zijn dan 45 karakters.";
-		}
+
+
 	}
-	
+
 	/**
-	* Validates a Group object, returns true when valid
-	*
-	* @param Group $group
-	*/
+	 * Validates a Group object, returns true when valid
+	 *
+	 * @param Group $group
+	 */
 	public static function isValidGroup($group)
 	{
-		return(empty(validateGroup($group)));
+		return true;
 	}
 
 
