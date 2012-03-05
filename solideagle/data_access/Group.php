@@ -102,12 +102,12 @@ class Group
 	 */
 	private static function addGroupRecursive($group,$cmd)
 	{
-
-		if(!Group::isValidGroup($group))
+		$err = Group::validateGroup($group);
+		if(!empty($err))
 		{
-			assert("false /* group not validated before saving! */");
+			assert("false /* Group not validated before saving! See log for details*/");
 			
-			Logger::getLogger()->log("Group not validated before saving!",PEAR_LOG_ERR);
+			Logger::getLogger()->log("Group not validated before saving! Validation errors:\n" . var_export($err,true) . "\nObject dump:\n" . var_export($group,true) . "\n",PEAR_LOG_ERR);
 			
 			return false;
 		}
@@ -201,21 +201,13 @@ class Group
 			}
 		}
 		
+		
 		return $validationErrors;
 
 
 	}
 
-	/**
-	 * Validates a Group object, returns true when valid
-	 *
-	 * @param Group $group
-	 */
-	public static function isValidGroup($group)
-	{
-		$valErr = Group::validateGroup($group);
-		return empty($valErr)?true:false;
-	}
+
 
 
 }
