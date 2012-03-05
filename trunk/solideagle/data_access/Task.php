@@ -13,7 +13,7 @@ namespace DataAccess
         private $id;
         private $name;
         private $pathScript;
-        private $taskTypeId;
+        private $taskType;
         private $configuration;
 
         // getters & setters
@@ -48,14 +48,14 @@ namespace DataAccess
             $this->pathScript = $pathScript;
         }
 
-        public function getTaskTypeId()
+        public function getTaskType()
         {
-            return $this->taskTypeId;
+            return $this->taskType;
         }
 
-        public function setTaskTypeId($taskTypeId)
+        public function setTaskType($taskType)
         {
-            $this->taskTypeId = $taskTypeId;
+            $this->taskType = $taskType;
         }
 
         public function getConfiguration()
@@ -77,21 +77,21 @@ namespace DataAccess
                                 `id`,
                                 `name`,
                                 `path_script`,
-                                `tasktype_id`
+                                `task_type`
                         )
                         VALUES
                         (
                                 :id,
                                 :name,
                                 :path_script,
-                                :tasktype_id 
+                                :task_type
                         );";
 
                 $cmd = new DatabaseCommand($sql);
                 $cmd->addParam(":id", $task->getId());
                 $cmd->addParam(":name", $task->getName());
                 $cmd->addParam(":path_script", $task->getPathScript());
-                $cmd->addParam(":tasktype_id", $task->getTaskTypeId());
+                $cmd->addParam(":task_type", $task->getTaskType());
 
                 $cmd->BeginTransaction();
 

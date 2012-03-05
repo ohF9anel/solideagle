@@ -8,30 +8,19 @@ namespace DataAccess
 
         // variables
 
-        private $taskId;
-        private $processId;
+        private $task;
         private $standardConfiguration;
 
         // getters & setters
 
-        public function getTaskId()
+        public function getTask()
         {
-            return $this->taskId;
+            return $this->task;
         }
 
-        public function setTaskId($taskId)
+        public function setTask($task)
         {
-            $this->taskId = $taskId;
-        }
-
-        public function getProcessId()
-        {
-            return $this->processId;
-        }
-
-        public function setProcessId($processId)
-        {
-            $this->processId = $processId;
+            $this->task = $task;
         }
 
         public function getStandardConfiguration()
@@ -43,8 +32,14 @@ namespace DataAccess
         {
             $this->standardConfiguration = $standardConfiguration;
         }
+        
+        function __construct($task, $standardConfiguration)
+        {
+            $this->task = $task;
+            $this->standardConfiguration = $standardConfiguration;
+        }
 
-    }
+        }
     
 }
 
