@@ -10,20 +10,9 @@ namespace DataAccess
     {
         
         // variables
-        private $id;
         private $name;
 
         // getters & setters
-
-        public function getId()
-        {
-            return $this->id;
-        }
-
-        public function setId($id)
-        {
-            $this->id = $id;
-        }
 
         public function getName()
         {
@@ -46,38 +35,31 @@ namespace DataAccess
         {
                 $sql = "INSERT INTO `CentralAccountDB`.`tasktype`
                         (
-                        `id`,
                         `name`
                         )
                         VALUES
                         (
-                        :id,
                         :name
                         );
                         ";
 
                 $cmd = new DatabaseCommand($sql);
-                $cmd->addParam(":id", $taskType->getId());
                 $cmd->addParam(":name", $taskType->getName());
                 $cmd->BeginTransaction();
 
                 $cmd->execute();
 
-                $cmd->newQuery("SELECT LAST_INSERT_ID();");
-
-                $retval = $cmd->executeScalar();
-
                 $cmd->CommitTransaction();
                 return $retval;
         }
         
-        public static function delTaskTypeById($taskTypeId)
+        public static function delTaskTypeByName($taskTypeName)
         {
             $sql = "DELETE FROM `CentralAccountDB`.`tasktype`
-                    WHERE `id` = :id;";
+                    WHERE `name` = :name;";
 
             $cmd = new DatabaseCommand($sql);
-            $cmd->addParam(":id", $taskTypeId);
+            $cmd->addParam(":name", $taskTypeName);
 
             $cmd->execute();
         }
