@@ -1,6 +1,6 @@
 <?php
 
-namespace validation;
+namespace Validation;
 
 class ValidationError {
     
@@ -30,9 +30,9 @@ class Validator
                 {
                     $valErrors[] = ValidationError::STRING_TOO_LONG;
                 }
-                if (!allowSpecialsChars)
+                if (!$allowSpecialsChars)
                 {
-                    if(!ctype_alnum($string))
+                    if(preg_match("a-zA-Z0-9_-\.", $string))
                     {
                         $valErrors[] = ValidationError::STRING_HAS_SPECIAL_CHARS;
                     }
