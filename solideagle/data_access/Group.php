@@ -70,6 +70,9 @@ class Group
 
 	/**
 	 *
+	 * Adds a new group under its parent (set by parentid) or as root if parentid is not set.
+	 * Will also save the childgroups
+	 * 
 	 *
 	 * @param Group $group
 	 * @return int
@@ -87,13 +90,17 @@ class Group
 	}
 	
 	/**
+	 * gets called by addGroup();
 	 * 
-	 * Enter description here ...
 	 * @param Group $group
 	 * @param DatabaseCommand $cmd
 	 */
 	private static function addGroupRecursive($group,$cmd)
 	{
+		
+		if(!isValidGroup($group))
+			return false;
+		
 		$sql = "INSERT INTO `CentralAccountDB`.`group`
         						(
         						`name`,
@@ -130,11 +137,15 @@ class Group
 		$cmd->execute();
 		
 
-	echo $group->id;
-		
 		foreach ($group->getChildGroups() as $childgrp)
 		{
 			$childgrp->setParentId($group->getId());
+			
+			if(!isValidGroup($childgrp))
+			{
+				$cmd->RollbackTransaction();
+				return false;			
+			}
 			
 			Group::addGroupRecursive($childgrp,$cmd);
 		}
@@ -151,6 +162,33 @@ class Group
 
 	}
 
+	/**
+	 * Validates a Group object, returns array with validation errors
+	 *
+	 * @param Group $group
+	 */
+	public static function validateGroup($group)
+	{
+		$validationErrors() = array();
+		if(empty($group->getName()))
+		{
+			$validationErrors[] = "Groep moet een naam hebben."; 
+		}
+		if(strlen($group->getName()) > 45)
+		{
+			$validationErrors[] = "De naam van de groep mag niet langer zijn dan 45 karakters.";
+		}
+	}
+	
+	/**
+	* Validates a Group object, returns true when valid
+	*
+	* @param Group $group
+	*/
+	public static function isValidGroup($group)
+	{
+		return(empty(validateGroup($group)));
+	}
 
 
 }
