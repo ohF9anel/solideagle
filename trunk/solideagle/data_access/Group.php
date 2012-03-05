@@ -2,12 +2,14 @@
 
 namespace DataAccess;
 
-require_once '../data_access/database/databasecommand.php';
+require_once 'database/databasecommand.php';
 require_once 'validation/Validator.php';
+require_once 'logging/Logger.php';
 
 use Database\DatabaseCommand;
 use validation\Validator;
 use validation\ValidationError;
+use Logging\Logger;
 
 class Group
 {
@@ -101,8 +103,15 @@ class Group
 	private static function addGroupRecursive($group,$cmd)
 	{
 
-		if(!isValidGroup($group))
-		return false;
+		if(!Group::isValidGroup($group))
+		{
+			assert("false /* group not validated before saving! */");
+			
+			Logger::getLogger()->log("Group not validated before saving!",PEAR_LOG_ERR);
+			
+			return false;
+		}
+		
 
 		$sql = "INSERT INTO `CentralAccountDB`.`group`
         						(
