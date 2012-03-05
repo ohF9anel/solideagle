@@ -15,7 +15,7 @@ $group = new Group();
 $group->setName("TheBigRoot");
 $group->setDescription("Just testing");
 
-var_dump( Group::isValidGroup($group));
+//var_dump( Group::isValidGroup($group));
 
 //var_dump(Group::validateGroup($group));
 
@@ -24,14 +24,14 @@ $group->setDescription("Just testing");
 
 Group::addGroup($group);
 
-var_dump( Group::isValidGroup($group));
+//var_dump( Group::isValidGroup($group));
 
 //var_dump(Group::validateGroup($group));
 
 $group->setName("sqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsd");
 $group->setDescription("Just testing");
 
-var_dump( Group::isValidGroup($group));
+//var_dump( Group::isValidGroup($group));
 
 //var_dump(Group::validateGroup($group));
 

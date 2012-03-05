@@ -30,8 +30,7 @@ class Validator
 		$valErrors = array();
 		if(empty($string) && $minlength > 0){
 			$valErrors[] = ValidationError::IS_NULL;
-		}
-		if(strlen($string) < $minlength)
+		}elseif(strlen($string) < $minlength)
 		{
 			$valErrors[] = ValidationError::STRING_TOO_SHORT;
 		}
