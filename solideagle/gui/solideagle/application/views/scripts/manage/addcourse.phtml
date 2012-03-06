@@ -1,7 +1,7 @@
 <title>Solid Eagle</title>
 
-<link rel="stylesheet" type="text/css" media="screen" href="css/reset.css" />
-<link rel="stylesheet" type="text/css" media="screen" href="css/screen.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="../css/reset.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="../css/screen.css" />
 <div id="wrapper">
 
     <div id="header">
@@ -34,6 +34,17 @@
     
     <div id="content">
         
+        <h2>Nieuw vak toevoegen</h2>
+        <?php echo $this->course; ?>
+        <form action="#" method="post" id="formAddCourse">
+            <dl>
+                <dt><label for="txtNameCourse">Naam vak:</label></dt>
+                <dd><input type="text" id="txtNameCourse" name="txtNameCourse" /></dd>
+                
+                <dd><input type="submit" id="addCourseBtn" name="addCourseBtn" value="Voeg toe" /></dd>
+            </dl>
+        </form>
+
     </div>
     
     <div id="footer">

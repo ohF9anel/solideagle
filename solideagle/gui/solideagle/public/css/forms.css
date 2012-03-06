@@ -1,0 +1,64 @@
+﻿/* form */
+
+form fieldset
+{
+	border: 0;
+}
+form label input
+{
+	margin-right: 5px;
+}
+form input, dl.form textarea, dl.form select {
+    webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px;
+    border: 2px solid #030;
+    padding: 4px 7px;
+}
+
+form input:hover, dl.form textarea:hover, dl.form select:hover {
+    background-color: #F0F0FF;
+}
+
+form
+{
+	margin: 0 auto;
+}
+form dt
+{
+	float: left;
+	width: 100px;
+	padding: 0 0 5px 10px;
+	height: 24px;
+	line-height: 24px;
+}
+form dd
+{
+	padding-bottom: 5px;
+	min-height: 24px;
+	_height: 24px; /* fake min-height in IE6 */
+	line-height: 24px;
+}
+form label
+{
+	display: block;
+	line-height: 24px;
+}
+form dd.buttons
+{
+	padding-top: 5px;
+	padding-left: 160px;
+	width: 440px;
+}
+form span.error
+{
+	color:  #060 !important;
+	font-style: italic;
+	font-size: smaller;
+}
+
+.inpshort {
+	width: 50px;
+}
+
+.inplong {
+	width: 250px;
+}
