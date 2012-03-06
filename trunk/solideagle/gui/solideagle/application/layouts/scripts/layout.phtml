@@ -7,9 +7,9 @@ echo $this->doctype(); ?>
 <head>
 <?php echo $this->headMeta(); ?>
 <?php echo $this->headTitle(); ?>
-<link rel="stylesheet" type="text/css" media="screen" href="../css/reset.css" />
-<link rel="stylesheet" type="text/css" media="screen" href="../css/forms.css" />
-<link rel="stylesheet" type="text/css" media="screen" href="../css/screen.css" />
+<?php echo $this->headLink()->appendStylesheet($this->baseUrl().'/css/reset.css') ?>
+<?php echo $this->headLink()->appendStylesheet($this->baseUrl().'/css/forms.css') ?>
+<?php echo $this->headLink()->appendStylesheet($this->baseUrl().'/css/screen.css') ?>
 </head>
 <body>
     

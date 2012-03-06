@@ -19,10 +19,11 @@ class CourseController extends Zend_Controller_Action
 
             // Create and configure courseName element:
             $courseName = $form->createElement('text', 'courseName', array('label' => 'Naam vak:'));
-            $courseName->addValidator('alnum')
-                    ->addValidator('regex', false, array('/^[a-z]+/'))
-                    ->addValidator('stringLength', false, array(1, 46))
-                    ->setRequired(true);
+//            $courseName->addValidator('alnum')
+//                    ->addValidator('regex', false, array('/^[a-z]+/'))
+//                    ->addValidator('stringLength', false, array(1, 46))
+//                    ->addErrorMessage("vul de naam van het vak in")
+//                    ->setRequired(true);
 
             // Add elements to form:
             $form->addElement($courseName)
@@ -55,9 +56,20 @@ class CourseController extends Zend_Controller_Action
         // add course
         $course = new Course();
         $course->setName($values['courseName']);
-        Course::addCourse($course);
+        $validationErrors = Course::validateCourse($course);
+        if (sizeof($validationErrors) == 0)
+        {
+            Course::addCourse($course);
+            echo "Vak toegevoegd.";
+        }
+        else {
+            $this->view->validationErrors = $validationErrors[0];
+            $this->view->form = $form;
+            return $this->render('add');
+            
+        }
         
-        echo "Vak toegevoegd.";
+        
     }
 
 
