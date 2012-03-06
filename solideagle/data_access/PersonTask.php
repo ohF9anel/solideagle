@@ -47,12 +47,48 @@ namespace DataAccess
 
         public static function addPersonTask($personTask)
         {
+                $sql = "INSERT INTO `CentralAccountDB`.`person_task_queue`
+                        (
+                                `id`,
+                                `person_id`,
+                                `task_id`,
+                                `configuration`
+                        )
+                        VALUES
+                        (
+                                :id,
+                                :person_id,
+                                :task_id,
+                                :configuration
+                        );";
 
+                $cmd = new DatabaseCommand($sql);
+                $cmd->addParam(":id", $personTask->getId());
+                $cmd->addParam(":person_id", $personTask->getPersonId());
+                $cmd->addParam(":task_id", $personTask->getTaskId());
+                $cmd->addParam(":configuration", $personTask->getConfiguration());
+
+                $cmd->BeginTransaction();
+
+                $cmd->execute();
+
+                $cmd->newQuery("SELECT LAST_INSERT_ID();");
+
+                $retval = $cmd->executeScalar();
+
+                $cmd->CommitTransaction();
+                return $retval;
         }
 
         public static function delPersonTaskById($personTaskId)
         {
+                $sql = "DELETE FROM `CentralAccountDB`.`person_task_queue`
+					WHERE `id` = :id;";
 
+                $cmd = new DatabaseCommand($sql);
+                $cmd->addParam(":id", $personTaskId);
+
+                $cmd->execute();
         }
 
     }

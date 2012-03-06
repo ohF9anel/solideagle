@@ -40,7 +40,8 @@ class Validator
 		}
  		if (!$allowSpecialChars)
  		{
- 			if(!preg_match('/^[A-Za-z0-9_-]*$/', $string)) 
+                        // allow a-z A-Z 0-9 '.' '-' '_' ' '
+ 			if(!preg_match('/^[A-Za-z0-9_-\s\.]*$/', $string)) 
  			{
  				$valErrors[] = ValidationError::STRING_HAS_SPECIAL_CHARS;
  			}
@@ -48,7 +49,7 @@ class Validator
 		return $valErrors;
 	}
         
-        public static function validatePassword($psw, $minLength, $maxLength, $oneLowerCaseRequired, $oneUpperCaseRequired, $numberRequired)
+        public static function validatePassword($psw, $minLength, $maxLength)
         {
                 $valErrors = Validator::validateString($psw, $minLength, $maxLength, true);
 

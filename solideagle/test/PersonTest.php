@@ -1,18 +1,25 @@
 <?php
 
 require_once '../data_access/Person.php';
+require_once '../data_access/Type.php';
+require_once '../data_access/utils/UsernameGenerator.php';
 
 use DataAccess\Person;
+use DataAccess\Type;
+use Utils\UsernameGenerator;
 
 $person = new Person();
 
-$person->setAccountUsername("dds-_456Asdff");
-$person->setAccountPassword("pasdfdsdfsdfsf0AdsfqdsddfsdfqfssF");
+$person->addType(new Type(1, null));
+$person->addType(new Type(2, null));
+
+$person->setAccountUsername(UsernameGenerator::CreateUniqueUsername("Marie Michele", "De la Creme"));
+$person->setAccountPassword("Azerty123");
 $person->setAccountActive(true);
 $person->setAccountActiveUntill("20120305151546");
 $person->setAccountActiveFrom("20120304111111");
-$person->setFirstName("Bruno");
-$person->setName("Bodson");
+$person->setFirstName("Marie Michele");
+$person->setName("De la Creme");
 $person->setGender("M");
 $person->setBirthDate("19890102");
 $person->setBirthPlace("Gent");
@@ -38,6 +45,7 @@ $errors = Person::validatePerson($person);
 
 var_dump($errors);
 $id = Person::addPerson($person);
+
 
 echo $id;
 echo "finish";

@@ -14,7 +14,7 @@ namespace DataAccess
 
         // variables
         private $id;
-        private $type;
+        private $type = array();
         private $accountUsername;
         private $accountPassword;
         private $accountActive;
@@ -59,14 +59,14 @@ namespace DataAccess
             $this->id = $id;
         }
 
-        public function getType()
+        public function getTypes()
         {
             return $this->type;
         }
 
-        public function setType($type)
+        public function addType($type)
         {
-            $this->type = $type;
+            $this->type[] = $type;
         }
 
         public function getAccountUsername()
@@ -368,7 +368,7 @@ namespace DataAccess
         {
                 if (!Person::isValidPerson($person))
                     return false;
-            
+                
                 $sql = "INSERT INTO `CentralAccountDB`.`person`
                         (`id`,
                         `account_username`,
@@ -467,11 +467,30 @@ namespace DataAccess
 
                 $cmd->newQuery("SELECT LAST_INSERT_ID();");
 
-                $retval =  $cmd->executeScalar();
+                $personId =  $cmd->executeScalar();
+                
+                $sql = "INSERT INTO `CentralAccountDB`.`type_person`
+                        (
+                        `type_id`,
+                        `person_id`
+                        )
+                        VALUES
+                        (
+                        :type_id,
+                        :person_id
+                        );";
+                
+                 foreach($person->getTypes() as $type) {
+                        $cmd = new DatabaseCommand($sql);
+                        $cmd->addParam(":type_id", $type->getId());
+                        $cmd->addParam(":person_id", $personId);
+
+                        $cmd->execute();
+                }
 
                 $cmd->CommitTransaction();
 
-                return $retval;
+                return $personId;
         }
         
         /**
@@ -548,8 +567,11 @@ namespace DataAccess
                 $cmd->execute();
         }
 
-        public static function removePersonById($personId)
+        public static function delPersonById($personId)
         {
+                //$sql = "DELETE FROM `CentralAccountDB`.`type_person`
+            // remove links tussentabel type!!
+            
                 $sql = "DELETE FROM `CentralAccountDB`.`person`
 					WHERE `id` = :id;";
 

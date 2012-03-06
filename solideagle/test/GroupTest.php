@@ -1,9 +1,8 @@
 <?php
 
-require_once 'config.php';
+require_once '../config.php';
 
-require_once 'data_access/Group.php';
-
+require_once '../data_access/Group.php';
 
 
 
