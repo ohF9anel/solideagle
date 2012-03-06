@@ -4,7 +4,7 @@ namespace DataAccess;
 
 require_once 'database/databasecommand.php';
 require_once 'validation/Validator.php';
-require_once 'logging/Logger.php';
+require_once '../logging/Logger.php';
 
 use Database\DatabaseCommand;
 use validation\Validator;

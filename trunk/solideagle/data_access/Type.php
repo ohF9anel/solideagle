@@ -7,7 +7,7 @@ namespace DataAccess
     {
         // variables
         private $id;
-        private $name;
+        private $typeName;
 
         // getters & setters
 
@@ -21,14 +21,62 @@ namespace DataAccess
             $this->id = $id;
         }
 
-        public function getName()
+        public function getTypeName()
         {
-            return $this->name;
+            return $this->typeName;
         }
 
-        public function setName($name)
+        public function setTypeName($typeName)
         {
-            $this->name = $name;
+            $this->typeName = $typeName;
+        }
+        
+        public function __construct($id, $typeName)
+        {
+            $this->id = $id;
+            $this->typeName = $typeName;
+        }
+        
+        // manage types
+        
+        public static function addType($type)
+        {
+                $sql = "INSERT INTO `CentralAccountDB`.`type`
+                        (
+                                `id`,
+                                `type_name`,
+                        )
+                        VALUES
+                        (
+                                :id,
+                                :type_name,
+                        );";
+
+                $cmd = new DatabaseCommand($sql);
+                $cmd->addParam(":id", $type->getId());
+                $cmd->addParam(":type_name", $type->getTypeName());
+
+                $cmd->BeginTransaction();
+
+                $cmd->execute();
+
+                $cmd->newQuery("SELECT LAST_INSERT_ID();");
+
+                $retval = $cmd->executeScalar();
+
+                $cmd->CommitTransaction();
+                return $retval;
+        }
+        
+        public static function delTypeById($typeId)
+        {
+            $sql = "DELETE FROM `CentralAccountDB`.`type`
+					WHERE `id` = :id;";
+
+            $cmd = new DatabaseCommand($sql);
+            $cmd->addParam(":id", $typeId);
+
+            $cmd->execute();
         }
 
     }

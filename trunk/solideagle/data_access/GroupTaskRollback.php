@@ -67,7 +67,7 @@ namespace DataAccess
 
         public static function addGroupTaskRollback($groupTaskRollback)
         {
-
+                
         }
 
         public static function delGroupTaskRollbacksStartingFromId($groupTaskRollbackStartId)
