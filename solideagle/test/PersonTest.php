@@ -10,10 +10,11 @@ use Utils\UsernameGenerator;
 
 $person = new Person();
 
-$person->addType(new Type(1, null));
-$person->addType(new Type(2, null));
+//$person->addType(new Type(1, null));
+//$person->addType(new Type(2, null));
 
-$person->setAccountUsername(UsernameGenerator::CreateUniqueUsername("Marie Michele", "De la Creme"));
+$person->setId(1);
+$person->setAccountUsername("bodsonb");
 $person->setAccountPassword("Azerty123");
 $person->setAccountActive(true);
 $person->setAccountActiveUntill("20120305151546");
@@ -44,7 +45,7 @@ $person->setParentOccupation("Stripper");
 $errors = Person::validatePerson($person);
 
 var_dump($errors);
-$id = Person::addPerson($person);
+$id = Person::updatePerson($person);
 
 
 echo $id;
