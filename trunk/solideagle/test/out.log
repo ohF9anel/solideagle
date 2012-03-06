@@ -1,0 +1,18 @@
+14:47:25 03/05/12 ident [error] Group not validated before saving! Validation errors:
+array (
+  0 => 'Groep moet een naam hebben.',
+)
+Object dump:
+DataAccess\Group::__set_state(array(
+   'id' => NULL,
+   'name' => '',
+   'description' => 'Just testing',
+   'childGroups' => 
+  array (
+  ),
+   'groupTypes' => 
+  array (
+  ),
+   'parentId' => NULL,
+))
+
