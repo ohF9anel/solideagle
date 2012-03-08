@@ -10,17 +10,16 @@ use Utils\UsernameGenerator;
 
 $person = new Person();
 
-//$person->addType(new Type(1, null));
-//$person->addType(new Type(2, null));
+$person->addType(new Type(1, null));
 
-$person->setId(1);
+$person->setId(44);
 $person->setAccountUsername("bodsonb");
 $person->setAccountPassword("Azerty123");
 $person->setAccountActive(true);
 $person->setAccountActiveUntill("20120305151546");
 $person->setAccountActiveFrom("20120304111111");
-$person->setFirstName("Marie Michele");
-$person->setName("De la Creme");
+$person->setFirstName("Bruno");
+$person->setName("Bodson");
 $person->setGender("M");
 $person->setBirthDate("19890102");
 $person->setBirthPlace("Gent");

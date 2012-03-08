@@ -5,9 +5,11 @@ namespace DataAccess
 
     require_once '../data_access/database/databasecommand.php';
     require_once '../data_access/validation/Validator.php';
+    require_once 'logging/Logger.php';
     use Database\DatabaseCommand;
     use Validation\Validator;
     use Validation\ValidationError;
+    use Logging\Logger;
     
     class Person
     {
@@ -366,8 +368,18 @@ namespace DataAccess
          */
         public static function addPerson($person)
         {
-                if (!Person::isValidPerson($person))
+                $err = Person::validatePerson($person);
+                if (!empty($err))
+                {
+                    Logger::getLogger()->log("Person not validated before saving! Validation errors:\n" . var_export($err,true) . "\nPerson object dump:\n" . var_export($person,true) . "\n",PEAR_LOG_ERR);
                     return false;
+                }
+                
+                if (sizeof($person->getTypes()) < 1)
+                {
+                    Logger::getLogger()->log("Person does not have any type(s)! \nPerson object dump:\n" . var_export($person,true) . "\n",PEAR_LOG_ERR);
+                    return false;
+                }
                 
                 $sql = "INSERT INTO `CentralAccountDB`.`person`
                         (`id`,
@@ -499,8 +511,18 @@ namespace DataAccess
          */
         public static function updatePerson($person)
         {
-                if (!Person::isValidPerson($person))
+                $err = Person::validatePerson($person);
+                if (!empty($err))
+                {
+                    Logger::getLogger()->log("Person not validated before saving! Validation errors:\n" . var_export($err,true) . "\nPerson object dump:\n" . var_export($person,true) . "\n",PEAR_LOG_ERR);
                     return false;
+                }
+                
+                if (sizeof($person->getTypes()) < 1)
+                {
+                    Logger::getLogger()->log("Person does not have any type(s)! \nPerson object dump:\n" . var_export($person,true) . "\n",PEAR_LOG_ERR);
+                    return false;
+                }
                 
                 // save old data to person_revision
                 
@@ -712,6 +734,33 @@ namespace DataAccess
 
                 $cmd->execute();
                 
+                $sql = "DELETE FROM `CentralAccountDB`.`type_person`
+					WHERE `person_id` = :personId;";
+
+                $cmd = new DatabaseCommand($sql);
+                $cmd->addParam(":personId", $person->getId());
+
+                $cmd->execute();
+                
+                $sql = "INSERT INTO `CentralAccountDB`.`type_person`
+                        (
+                        `type_id`,
+                        `person_id`
+                        )
+                        VALUES
+                        (
+                        :type_id,
+                        :person_id
+                        );";
+                
+                 foreach($person->getTypes() as $type) {
+                        $cmd = new DatabaseCommand($sql);
+                        $cmd->addParam(":type_id", $type->getId());
+                        $cmd->addParam(":person_id", $person->getId());
+
+                        $cmd->execute();
+                }
+                
                 $cmd->CommitTransaction();
         }
 
@@ -732,6 +781,39 @@ namespace DataAccess
         public static function getPersonById($id)
         {
                 
+        }
+        
+        /**
+         * Returns user id and username if valid user
+         * @param string $username
+         * @param string $password
+         * @param string $typeName
+         * @return var $personIdName    id and username 
+         */
+        public static function checkValidPersonByCredentials($username, $password, $typeName)
+        {
+                $sql = "SELECT
+                        `person`.`id`, `person`.`account_username`
+                        FROM `CentralAccountDB`.`person`,
+                        `CentralAccountDB`.`type_person`,
+                        `CentralAccountDB`.`type`
+                        WHERE `person`.`account_username` = :accountUsername
+                        AND `person`.`account_password` = :accountPassword
+                        AND `person`.`id` = `type_person`.`person_id`
+                        AND `type`.`id` = `type_person`.`type_id`
+                        AND `type`.`type_name` = :typeName
+                        ;";
+
+                $cmd = new DatabaseCommand($sql);
+		$cmd->addParam(":accountUsername", $username);
+                $cmd->addParam(":accountPassword", $password);
+                $cmd->addParam(":typeName", $typeName);
+                
+                $reader = $cmd->executeReader();
+                
+                $personIdName = $reader->read();
+                
+                return $personIdName;
         }
         
         public static function validatePerson($person)
