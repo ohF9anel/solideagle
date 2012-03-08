@@ -58,11 +58,11 @@ body
 	
 }
 
-#tabs ul
+#tabs>ul
 {
 	background-color: #666;
 	margin:0;
-		padding:5px;
+		padding:5px;()
 	
 
 }
@@ -73,17 +73,27 @@ body
 	color:#FFF;
 }
 
-#tabs ul:AFTER
+#tabs>ul:AFTER
 {
 	display: table;
 	content: "";
 	clear:both;
 }
 
-#tabs li
+#tabs>ul>li
 {
 	display: block;
 	float:left;
 	margin:0 0 0 15px;
 	padding:0;
+}
+
+#courseform
+{
+	float:left;
+}
+
+#courselist
+{
+	float:left;
 }
