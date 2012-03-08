@@ -1,6 +1,6 @@
 <?php
 
-require_once '/data_access/Course.php';
+require_once 'data_access/Course.php';
 use DataAccess\Course;
 
 class CourseController extends Zend_Controller_Action

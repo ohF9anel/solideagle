@@ -5,14 +5,41 @@ require_once '../config.php';
 require_once '../data_access/Group.php';
 
 
-
-
 use DataAccess\Group;
 
-$group = new Group();
 
-$group->setName("TheBigRoot");
-$group->setDescription("Just testing");
+
+/*
+
+select * from group_closure as c, `group` as g 
+where c.parent_id in (SELECT
+c.parent_id				FROM group_closure AS c 
+                LEFT OUTER JOIN group_closure AS anc
+				ON anc.child_id = c.child_id AND anc.parent_id <> c.parent_id
+                
+				WHERE anc.parent_id IS NULL 
+)  and c.child_id = g.id order by c.`parent_id`, c.`length`*/
+
+render_tree(Group::getTree());
+
+function render_tree($roots)
+{
+	foreach($roots as $group)
+	{
+		echo "<ul>\n<li>";
+		echo $group->getName() . "(" . $group->getId() . ")\n";
+		render_tree($group->getChildGroups());
+		echo "</li></ul>\n";
+	}
+}
+
+
+
+
+
+
+die();
+
 
 //var_dump( Group::isValidGroup($group));
 
@@ -35,7 +62,7 @@ $group->setDescription("Just testing");
 //var_dump(Group::validateGroup($group));
 
 
-die();
+
 
 $childGroup = new Group();
 
