@@ -39,7 +39,6 @@ namespace DataAccess
         private $phone2;
         private $mobile;
         private $madeOn;
-        private $groupId;
         private $otherInformation;
         private $deleted;
         private $teacherCourseId;
@@ -291,16 +290,6 @@ namespace DataAccess
             $this->madeOn = $madeOn;
         }
 
-        public function getGroupId()
-        {
-            return $this->groupId;
-        }
-
-        public function setGroupId($groupId)
-        {
-            $this->groupId = $groupId;
-        }
-
         public function getOtherInformation()
         {
             return $this->otherInformation;
@@ -404,7 +393,6 @@ namespace DataAccess
                         `phone2`,
                         `mobile`,
                         `made_on`,
-                        `group_id`,
                         `other_information`,
                         `deleted`,
                         `student_previous_school`,
@@ -434,7 +422,6 @@ namespace DataAccess
                         :phone2,
                         :mobile,
                         :made_on,
-                        :group_id,
                         :other_information,
                         :deleted,
                         :student_previous_school,
@@ -466,7 +453,6 @@ namespace DataAccess
                 $cmd->addParam(":phone2", $person->getPhone2());
                 $cmd->addParam(":mobile", $person->getMobile());
                 $cmd->addParam(":made_on", $person->getMadeOn());
-                $cmd->addParam(":group_id", $person->getGroupId());
                 $cmd->addParam(":other_information", $person->getOtherInformation());
                 $cmd->addParam(":deleted", $person->getDeleted());
                 $cmd->addParam(":student_previous_school", $person->getStudentPreviousSchool());
@@ -560,7 +546,6 @@ namespace DataAccess
                 $oldPerson->setPhone2($retObj->phone2);
                 $oldPerson->setMobile($retObj->mobile);
                 $oldPerson->setMadeOn($retObj->made_on);
-                $oldPerson->setGroupId($retObj->group_id);
                 $oldPerson->setOtherInformation($retObj->other_information);
                 $oldPerson->setDeleted($retObj->deleted);
                 $oldPerson->setStudentPreviousSchool($retObj->student_previous_school);
@@ -595,7 +580,6 @@ namespace DataAccess
                         `phone2`,
                         `mobile`,
                         `made_on`,
-                        `group_id`,
                         `other_information`,
                         `deleted`,
                         `student_previous_school`,
@@ -625,7 +609,6 @@ namespace DataAccess
                         :phone2,
                         :mobile,
                         :made_on,
-                        :group_id,
                         :other_information,
                         :deleted,
                         :student_previous_school,
@@ -657,7 +640,6 @@ namespace DataAccess
                 $cmd->addParam(":phone2", $oldPerson->getPhone2());
                 $cmd->addParam(":mobile", $oldPerson->getMobile());
                 $cmd->addParam(":made_on", $oldPerson->getMadeOn());
-                $cmd->addParam(":group_id", $oldPerson->getGroupId());
                 $cmd->addParam(":other_information", $oldPerson->getOtherInformation());
                 $cmd->addParam(":deleted", $oldPerson->getDeleted());
                 $cmd->addParam(":student_previous_school", $oldPerson->getStudentPreviousSchool());
@@ -693,7 +675,6 @@ namespace DataAccess
                         `phone2` = :phone2,
                         `mobile` = :mobile,
                         `made_on` = :made_on,
-                        `group_id` = :group_id,
                         `other_information` = :other_information,
                         `deleted` = :deleted,
                         `student_previous_school` = :student_previous_school,
@@ -725,7 +706,6 @@ namespace DataAccess
                 $cmd->addParam(":phone2", $person->getPhone2());
                 $cmd->addParam(":mobile", $person->getMobile());
                 $cmd->addParam(":made_on", $person->getMadeOn());
-                $cmd->addParam(":group_id", $person->getGroupId());
                 $cmd->addParam(":other_information", $person->getOtherInformation());
                 $cmd->addParam(":deleted", $person->getDeleted());
                 $cmd->addParam(":student_previous_school", $person->getStudentPreviousSchool());

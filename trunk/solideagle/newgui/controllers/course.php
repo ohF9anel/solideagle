@@ -7,7 +7,7 @@ switch ($_GET["q"])
 	
 	$(function() {
 			updateUniform();
-		
+
 	 });
 	
 	

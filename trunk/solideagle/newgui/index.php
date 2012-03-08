@@ -5,6 +5,8 @@
 	<title>Gebruikersbeheer</title>
 	<link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.8.18.custom.css">
 	<link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/style2.css">
+        <link rel="stylesheet" href="css/forms.css">
 	<link rel="stylesheet" href="css/uniform.default.css">
 	<script src="js/jquery-1.7.1.min.js"></script>
 	<script src="js/jquery-ui-1.8.18.custom.min.js"></script>
@@ -18,14 +20,22 @@
 		$("#tabs").bind('easytabs:ajax:complete', function(e, clicked, panel, response, status, xhr) {
 	     	$(panel).trigger('easytabs:ajax:complete', response);
 	    });
+            
+            $( "#btnUser" ).button({
+                icons: {
+                    primary: "ui-icon-locked"
+                },
+                text: false
+            });
+                
+            $("#tabs2").easytabs({uiTabs: true});
 
-        $("#tabs2").easytabs({uiTabs: true});
 
+            $("#testtab").bind('easytabs:ajax:complete',function(content){
 
-        $("#testtab").bind('easytabs:ajax:complete',function(content){
+                            $.getScript("controllers/course.php?q=js");
+            });
 
-			$.getScript("controllers/course.php?q=js");
-        });
  
         updateUniform();
         
@@ -44,8 +54,8 @@
 
 
 <div id="userbar">
-	<span id="username">Gebruikersnaam placeholder</span>
-	
+    <a href="#" id="lnkUsername">gebruikersnaam</a>	
+    <button id="btnUser">user button</button>
 </div>
 
 <div id="header">
@@ -61,7 +71,7 @@
 		<li><a href="#dashboard">Dashboard</a></li>
 		<li><a href="#groepengebruikers">Groepen en gebruikers</a></li>
 		<li><a href="#configuratie">Configuratie</a></li>
-		<li><a href="controllers/course.php?q=content #test"  data-target="#testtab">Test</a></li>
+		<li><a href="controllers/person.php?q=content #addPerson"  data-target="#testtab">Test</a></li>
 	</ul>
 	<div id="dashboard">
 		<p>Proin elit arcu, rutrum commodo, vehicula tempus, commodo a, risus. Curabitur nec arcu. Donec sollicitudin mi sit amet mauris. Nam elementum quam ullamcorper ante. Etiam aliquet massa et lorem. Mauris dapibus lacus auctor risus. Aenean tempor ullamcorper leo. Vivamus sed magna quis ligula eleifend adipiscing. Duis orci. Aliquam sodales tortor vitae ipsum. Aliquam nulla. Duis aliquam molestie erat. Ut et mauris vel pede varius sollicitudin. Sed ut dolor nec orci tincidunt interdum. Phasellus ipsum. Nunc tristique tempus lectus.</p>

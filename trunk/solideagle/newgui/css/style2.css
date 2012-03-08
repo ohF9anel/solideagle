@@ -1,0 +1,19 @@
+#addPerson #basicInfo { 
+    float: left;
+    width: 30%;
+}
+
+#addPerson #contactInfo {
+    float: left;
+    width: 30%;
+}
+
+#addPerson #accountInfo {
+    float: left;
+    width: 30%;
+}
+
+#userbar {
+    
+}
+

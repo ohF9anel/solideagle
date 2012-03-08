@@ -32,7 +32,6 @@ namespace DataAccess
         private $phone2;
         private $mobile;
         private $madeOn;
-        private $group_id;
         private $information;
         private $deleted;
         private $teacherCourseId;
@@ -290,16 +289,6 @@ namespace DataAccess
         public function setMadeOn($madeOn)
         {
             $this->madeOn = $madeOn;
-        }
-
-        public function getGroup_id()
-        {
-            return $this->group_id;
-        }
-
-        public function setGroup_id($group_id)
-        {
-            $this->group_id = $group_id;
         }
 
         public function getInformation()
