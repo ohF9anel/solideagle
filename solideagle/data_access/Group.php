@@ -4,7 +4,7 @@ namespace DataAccess;
 
 require_once 'database/databasecommand.php';
 require_once 'validation/Validator.php';
-require_once '../logging/Logger.php';
+require_once 'logging/Logger.php';
 
 use Database\DatabaseCommand;
 use validation\Validator;
@@ -30,6 +30,11 @@ class Group
 		$this->childGroups[] = $childGroup;
 	}
 
+	public function addChildGroups($arrChildGroup)
+	{
+		$this->childGroups = array_merge($this->childGroups,$arrChildGroup);
+	}
+
 	public function getChildGroups()
 	{
 		return $this->childGroups;
@@ -38,6 +43,11 @@ class Group
 	public function getId()
 	{
 		return $this->id;
+	}
+
+	public function setId($id)
+	{
+		$this->id = $id;
 	}
 
 	public function getName()
@@ -75,9 +85,8 @@ class Group
 
 	/**
 	 *
-	 * Adds a new group under its parent (set by parentid) or as root if parentid is not set.
+	 * Adds a new group under its parent,set by parentid, or as root if parentid is not set.
 	 * Will also save the childgroups
-	 *
 	 *
 	 * @param Group $group
 	 * @return int
@@ -106,12 +115,15 @@ class Group
 		if(!empty($err))
 		{
 			assert("false /* Group not validated before saving! See log for details*/");
-			
+
 			Logger::getLogger()->log("Group not validated before saving! Validation errors:\n" . var_export($err,true) . "\nObject dump:\n" . var_export($group,true) . "\n",PEAR_LOG_ERR);
-			
+
+
+			$cmd->RollbackTransaction();
+
 			return false;
 		}
-		
+
 
 		$sql = "INSERT INTO `CentralAccountDB`.`group`
         						(
@@ -152,25 +164,168 @@ class Group
 		foreach ($group->getChildGroups() as $childgrp)
 		{
 			$childgrp->setParentId($group->getId());
-				
-			if(!isValidGroup($childgrp))
-			{
-				$cmd->RollbackTransaction();
-				return false;
-			}
-				
+
+
 			Group::addGroupRecursive($childgrp,$cmd);
 		}
 	}
 
 
-	public static function updateGroup($group, $parentId)
+	/**
+	 *
+	 * Only updates group name and group description
+	 * @param Group $group
+	 */
+	public static function updateGroup($group)
 	{
+		$err = Group::validateGroup($group);
+		if(!empty($err))
+		{
+			assert("false /* Group not validated before updating! See log for details*/");
+
+			Logger::getLogger()->log("Group not validated before updating! Validation errors:\n" . var_export($err,true) . "\nObject dump:\n" . var_export($group,true) . "\n",PEAR_LOG_ERR);
+				
+			return false;
+		}
+
+		$sql = "UPDATE `CentralAccountDB`.`group`
+				SET
+				`name` = :name,
+				`description` = :description
+				WHERE `id` = :id;";
+
+		$cmd = new DatabaseCommand();
+		$cmd->newQuery($sql);
+			
+		$cmd->addParam(":name", $group->getName());
+		$cmd->addParam(":description", $group->getName());
+		$cmd->addParam(":id", $group->getId());
+			
+		$cmd->execute();
+
 
 	}
 
+	/**
+	 *
+	 * moves a group to his parentid
+	 * @param Group $group
+	 */
+	public static function moveGroup($group)
+	{
+		$sql = "DELETE a FROM group_closure AS a
+				JOIN group_closure AS d ON a.child_id = d.child_id
+				LEFT JOIN group_closure AS x
+				ON x.parent_id = d.parent_id AND x.child_id = a.parent_id
+				WHERE d.parent_id = :id AND x.parent_id IS NULL;";
+
+		$cmd = new DatabaseCommand($sql);
+		$cmd->BeginTransaction();
+		$cmd->addParam(":id", $group->getId());
+		$cmd->execute();
+
+
+		$sql = "INSERT INTO group_closure (parent_id, child_id, length)
+				(SELECT supertree.parent_id, subtree.child_id,
+				supertree.length+subtree.length+1
+				FROM group_closure AS supertree JOIN group_closure AS subtree
+				WHERE subtree.parent_id = :id 
+				AND supertree.child_id = :newparentid);";
+
+		$cmd->newQuery($sql);
+		$cmd->addParam(":id", $group->getId());
+		$cmd->addParam(":newparentid", $group->getParentId());
+		$cmd->execute();
+
+		$cmd->CommitTransaction();
+	}
+
+	public static function getRoots()
+	{
+		$sql = "SELECT
+				`group`.`id`,
+				`group`.`name`,
+				`group`.`description`
+				FROM `CentralAccountDB`.`group`, group_closure AS c 
+                LEFT OUTER JOIN group_closure AS anc
+				ON anc.child_id = c.child_id AND anc.parent_id <> c.parent_id
+				WHERE anc.parent_id IS NULL and  `group`.`id` = c.parent_id";
+
+		$retArr = array();
+
+		$cmd = new DatabaseCommand($sql);
+		$cmd->executeReader()->readAll(function($row) use (&$retArr) {
+
+			$tempGroup = new Group();
+			$tempGroup->setId($row->id);
+			$tempGroup->setName($row->name);
+			$tempGroup->setDescription($row->description);
+
+			$retArr[] = $tempGroup;
+
+		});
+			
+		return $retArr;
+	}
+
+	/**
+	 * 
+	 * Enter description here ...
+	 * @param Group $group
+	 * @return multitype:\DataAccess\Group
+	 */
+	public static function getChilderen($group)
+	{
+		$sql = "select
+		    g.id, g.name, g.description
+		from
+		    `group` as g,
+		    group_closure as c
+		where
+		    c.child_id = g.id and c.parent_id = :parentid and length = 1";
+
+		$retArr = array();
+
+		$cmd = new DatabaseCommand($sql);
+		$cmd->addParam(":parentid", $group->getId());
+		$cmd->executeReader()->readAll(function($row) use (&$retArr,$group) {
+
+			$tempGroup = new Group();
+			$tempGroup->setParentId($group->getParentId());
+			$tempGroup->setId($row->id);
+			$tempGroup->setName($row->name);
+			$tempGroup->setDescription($row->description);
+
+			$retArr[] = $tempGroup;
+
+		});
+			
+		return $retArr;
+	}
+
+	public static function getTree()
+	{
+		return Group::getTreeRecursive(Group::getRoots());
+	}
+
+	private static function getTreeRecursive($groups)
+	{
+		foreach($groups as &$root)
+		{
+			$childeren = Group::getChilderen($root);
+			$root->addChildGroups($childeren);
+			Group::getTreeRecursive($childeren);
+		}
+		
+		return $groups;
+	}
+
+
+
 	public static function delGroupById($groupId)
 	{
+		//do not delete if group has members
+
 
 	}
 
@@ -183,7 +338,7 @@ class Group
 	{
 
 		$validationErrors = array();
-		
+
 
 		foreach (Validator::validateString($group->getName(),1,45,false) as $valError)
 		{
@@ -200,8 +355,8 @@ class Group
 				$validationErrors[] = "Groep naam mag geen speciale tekens bevatten";
 			}
 		}
-		
-		
+
+
 		return $validationErrors;
 
 
@@ -212,5 +367,16 @@ class Group
 
 }
 
+
+/*select group_concat(n.name order by a.length desc separator ' -> ') as path
+ from group_closure d
+join group_closure a on (a.child_id = d.child_id)
+join `group` n on (n.id = a.parent_id)
+where d.parent_id in
+(select parent_id  from group_closure tc  where
+not exists (
+select null    from group_closure tci    where tc.child_id = tci.child_id      and tci.length <> 0  ))
+and d.child_id != d.parent_id
+group by d.child_id */
 
 ?>

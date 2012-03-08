@@ -165,4 +165,9 @@
 			color: #555;
 		}
 		
+		#group-content ul,#group-content li
+		{
+			padding-left:5px;
+		}
+		
 /*EOF*/

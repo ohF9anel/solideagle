@@ -43,7 +43,7 @@ class Validator
                         // allow a-z A-Z 0-9 '.' '-' '_' ' '
  			if(!preg_match('/^[A-Za-z0-9_-\s\.]*$/', $string)) 
  			{
- 				$valErrors[] = ValidationError::STRING_HAS_SPECIAL_CHARS;
+ 				//$valErrors[] = ValidationError::STRING_HAS_SPECIAL_CHARS;
  			}
  		}
 		return $valErrors;

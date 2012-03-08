@@ -130,6 +130,7 @@ namespace DataAccess
 				$tempCourse = new Course();
 				$tempCourse->setId($courseRow->id);
 				$tempCourse->setName($courseRow->name);
+			
 				
 				$retArr[] = $tempCourse;
 				
