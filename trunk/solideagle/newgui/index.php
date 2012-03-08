@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>Gebruikersbeheer</title>
-	<link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.8.18.custom.css">
+	<link rel="stylesheet" href="css/ui-custom/jquery-ui-1.8.18.custom.css">
 	<link rel="stylesheet" href="css/style.css">
         <link rel="stylesheet" href="css/style2.css">
         <link rel="stylesheet" href="css/forms.css">
