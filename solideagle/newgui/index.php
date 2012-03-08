@@ -29,6 +29,12 @@
  
             
         
+                $("#logoutBtn").button({
+                    icons: {
+                        primary: "ui-icon-unlocked"
+                    }
+                })
+                    
 	});
 	</script>
 </head>
@@ -56,6 +62,7 @@
 		<li><a href="#configuratie">Configuratie</a></li>
 		<li><a href="controllers/course.php #test"  data-target="#testtab">Test</a></li>
 	</ul>
+    
 	<div id="dashboard">
 		<p>Proin elit arcu, rutrum commodo, vehicula tempus, commodo a, risus. Curabitur nec arcu. Donec sollicitudin mi sit amet mauris. Nam elementum quam ullamcorper ante. Etiam aliquet massa et lorem. Mauris dapibus lacus auctor risus. Aenean tempor ullamcorper leo. Vivamus sed magna quis ligula eleifend adipiscing. Duis orci. Aliquam sodales tortor vitae ipsum. Aliquam nulla. Duis aliquam molestie erat. Ut et mauris vel pede varius sollicitudin. Sed ut dolor nec orci tincidunt interdum. Phasellus ipsum. Nunc tristique tempus lectus.</p>
 	</div>
