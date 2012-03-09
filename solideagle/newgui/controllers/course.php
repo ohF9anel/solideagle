@@ -13,24 +13,47 @@ class CourseController
 {
 	public function getCourseList()
 	{
-		echo "<ul>";
+		
+		$out;
+		
 		foreach(Course::getAllCourses() as $course)
 		{
-				
-			echo "<li>" . $course->getName() . "</li>";
+			$out[] = array("id" => $course->getId(),"name" => $course->getName());
+			
 		}
-		echo "</ul>";
+		
+		echo json_encode($out);
+
 	}
 	
-	public function test()
+	public function addNew($params)
 	{
-		echo "hello";
+		
+		
+		
+			$course = new Course();
+			$course->setName($params["coursename"]);
+			
+			$errors = Course::validateCourse($course);
+			
+			if(!empty($errors))
+			{
+				echo "Fout bij opslaan:\n";
+				foreach ($errors as $error)
+				{
+					echo $error . "\n";
+				}
+			}else{
+				
+				Course::addCourse($course);
+	
+			}
+			
+			
+		
 	}
 }
 
 
 
 ?>
-
-
-
