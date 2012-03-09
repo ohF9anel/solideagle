@@ -29,13 +29,12 @@ form dt
 	width: 150px;
 	padding: 0 0 5px 10px;
 	height: 24px;
-        line-height: 26px;
+       
 }
 form dd
 {
-	padding-bottom: 5px;
-	min-height: 24px;
-	_height: 24px; /* fake min-height in IE6 */
+ 	padding-bottom: 12px;
+height: 30px;
 
 }
 form label

@@ -23,8 +23,13 @@ body
 	padding: 0 25px;
 }
 
+#userbar > button
+{
+	font-size: 10px;
+}
 
-#username
+
+#userbar > span
 {
 	color: #ddd;
 }
