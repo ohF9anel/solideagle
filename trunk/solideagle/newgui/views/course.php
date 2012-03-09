@@ -18,17 +18,27 @@ class course
 		 $.getJSON('controllers/course.getCourseList', function(data) {
 		 
   			$.each(data, function() {
-				    	lielem = $("<li>");
+				    	lielem = $("<li/>");
 				    	lielem.html(this.name);
+				    	lielem.attr("courseid",this.id);
+				    
+				    	  $('<a/>', {html: " | delete",href: "javascript:void(0);" })
+				    	  .click(function(){
 				    	
-				        list.append(lielem);
-				  
+				    		alert($(this).parent().attr("courseid"));
+				    		
+				    		$.post("controllers/course.delete", { id: $(this).parent().attr("courseid") }, function(data)
+				    		{
+				    			updateCourses();
+				    		});
+
+				    	
+				    	})
+
+				    	  .appendTo(lielem);
+				    	list.append(lielem);
 				    });
 
-
-
-			
-			
 			});
 		 
 
