@@ -1,64 +1,31 @@
 <?php
 
+
+
 require_once 'data_access/Course.php';
+require_once 'basecontroller.php';
 use DataAccess\Course;
 
-switch ($_GET["q"])
+basecontroller::load(new CourseController());
+
+
+class CourseController
 {
-	case "js":?>
-	
-	$(function() {
-			updateUniform();
-			
-			$("#courselist").load("controllers/course.php?q=courselist");
-			
-	 });
-	
-	
-	<?php 
-	break;
-	case "content":?>
-
-		<div id="test">
-			<div id="courseform">
-				<form action="#" method="post" id="formAddCourse">
-					
-							<label for="txtNameCourse">Naam vak:</label>
-						
-							<input type="text" id="txtNameCourse" name="txtNameCourse" />
-							<br />
-							
-							
-							
-						
-							<input type="submit" id="addCourseBtn" name="addCourseBtn"
-								value="Voeg toe" />
-						
-				</form>
-			</div>
-			<div id="courselist">
-
-			</div>
-			
-		
-			
-		</div>
-
-
-		<?php 
-	break;
-	case "courselist":
-	
+	public function getCourseList()
+	{
 		echo "<ul>";
 		foreach(Course::getAllCourses() as $course)
 		{
-			
+				
 			echo "<li>" . $course->getName() . "</li>";
 		}
 		echo "</ul>";
-		
-		break;
-
+	}
+	
+	public function test()
+	{
+		echo "hello";
+	}
 }
 
 
