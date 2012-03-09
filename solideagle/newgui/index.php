@@ -29,7 +29,7 @@
                 text: false
             });
                 
-            $("#tabs2").easytabs({uiTabs: true});
+            $("#tabs2").easytabs({cache: false});
 
 
             $("#testtab").bind('easytabs:ajax:complete',function(content){
