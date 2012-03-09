@@ -1,7 +1,5 @@
 <?php
 
-
-
 require_once 'data_access/Course.php';
 require_once 'basecontroller.php';
 use DataAccess\Course;
