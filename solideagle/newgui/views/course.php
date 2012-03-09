@@ -13,9 +13,13 @@ class course
 		 function updateCourses()
 		 {
 		 
+		 	$("#courselistholder").html("<p>Loading....</p>");
+		 
 		 list = $("<ul>");
 		 
 		 $.getJSON('controllers/course.getCourseList', function(data) {
+		 
+		  	$("#courselistholder").html("");
 		 
   			$.each(data, function() {
 				    	lielem = $("<li/>");
@@ -25,24 +29,25 @@ class course
 				    	  $('<a/>', {html: " | delete",href: "javascript:void(0);" })
 				    	  .click(function(){
 				    	
-				    		alert($(this).parent().attr("courseid"));
-				    		
 				    		$.post("controllers/course.delete", { id: $(this).parent().attr("courseid") }, function(data)
 				    		{
 				    			updateCourses();
 				    		});
 
-				    	
 				    	})
 
 				    	  .appendTo(lielem);
-				    	list.append(lielem);
+				    	list.append(lielem).appendTo($("#courselistholder"));
+				    	
+				    		
+				    	
 				    });
 
 			});
 		 
+		
 
-		 	$("#courselistholder").append(list);
+		 
 		 }
 		
 		$(function() {

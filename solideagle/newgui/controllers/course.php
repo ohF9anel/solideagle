@@ -54,6 +54,8 @@ class CourseController
 	public function delete($params)
 	{
 		Course::delCourseById($params["id"]);
+		
+	
 	}
 }
 
