@@ -112,7 +112,7 @@ form  p > label
 	line-height:26px;
 }
 
-form > p > input
+form   p > input
 {
 	float:right;
 	margin-bottom: 10px;
