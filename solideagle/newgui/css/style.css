@@ -106,7 +106,7 @@ body
 	float:left;
 }
 
-form > p > label
+form  p > label
 {
 	float:left;
 	line-height:26px;
