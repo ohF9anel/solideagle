@@ -10,12 +10,51 @@ class course
 	public function js()
 	{
 		?>
-		$(function() {
-			updateUniform();
+		 function updateCourses()
+		 {
+		 
+		 list = $("<ul>");
+		 
+		 $.getJSON('controllers/course.getCourseList', function(data) {
+		 
+  			$.each(data, function() {
+				    	lielem = $("<li>");
+				    	lielem.html(this.name);
+				    	
+				        list.append(lielem);
+				  
+				    });
+
+
+
 			
-			$("#courselist").load("controllers/course.php?q=courselist");
+			
+			});
+		 
+
+		 	$("#courselistholder").append(list);
+		 }
+		
+		$(function() {
+			
+			
+		
+			
+			updateCourses();
+			
+			$("#formAddCourse").ajaxForm(function(responseText, statusText, xhr, $form){
+			
+			
+				if(responseText.length > 3)
+					alert(responseText);
+			
+				updateCourses();
+			});
 			
 		 });
+		 
+
+		 
 		<?php
 	}
 	
@@ -26,17 +65,14 @@ class course
 		
 		<div id="test">
 			<div id="courseform">
-				<form action="#" method="post" id="formAddCourse">
+				<form action="controllers/course.addNew" method="post" id="formAddCourse">
 					
 					<p>
 							<label for="txtNameCourse">Naam vak:</label>
 						
-							<input type="text" id="txtNameCourse" name="txtNameCourse" />
+							<input type="text" id="txtNameCourse" name="coursename" />
 							<br />
 							
-							
-							
-						
 							<input type="submit" id="addCourseBtn" name="addCourseBtn"
 								value="Voeg toe" />
 					</p>
@@ -45,7 +81,8 @@ class course
 				</form>
 			</div>
 			<div id="courselist">
-
+				<h3>Vakken</h3>
+				<div id="courselistholder" ></div>
 			</div>
 			
 		

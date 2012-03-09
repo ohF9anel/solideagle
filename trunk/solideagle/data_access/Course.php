@@ -49,7 +49,7 @@ namespace DataAccess
 		 */
 		public static function addCourse($course)
 		{
-			if(!Course::validateCourse($course))
+			if(!Course::isValidCourse($course))
 			return false;
 
 			$sql = "INSERT INTO `CentralAccountDB`.`course`
@@ -112,7 +112,7 @@ namespace DataAccess
 
 		}
 
-	
+
 		public static function getAllCourses()
 		{
 			$retArr = array();
@@ -121,11 +121,11 @@ namespace DataAccess
 					`course`.`id`,
 					`course`.`name`
 					FROM `CentralAccountDB`.`course`;";
-				
+
 			$cmd = new DatabaseCommand($sql);
-				
+
 			$reader = $cmd->executeReader();
-				
+
 			$reader->readAll(function($courseRow) use (&$retArr) {
 
 				$tempCourse = new Course();
@@ -136,7 +136,7 @@ namespace DataAccess
 				$retArr[] = $tempCourse;
 
 			});
-				
+
 			return $retArr;
 		}
 
@@ -163,7 +163,7 @@ namespace DataAccess
 
 		public static function isValidCourse($course)
 		{
-			$errors = Person::validateCourse($course);
+			$errors = Course::validateCourse($course);
 
 			if (sizeof($errors) > 0)
 			{

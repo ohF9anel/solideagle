@@ -100,6 +100,9 @@ body
 
 #courselist
 {
+	border-left: 1px dashed #555;
+	margin-left:20px;
+	padding-left:10px;
 	float:left;
 }
 
