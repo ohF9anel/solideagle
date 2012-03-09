@@ -19,7 +19,7 @@ class course
 		<?php
 	}
 	
-	public function addForm()
+	public function getcontent()
 	{
 		
 		?>
@@ -28,6 +28,7 @@ class course
 			<div id="courseform">
 				<form action="#" method="post" id="formAddCourse">
 					
+					<p>
 							<label for="txtNameCourse">Naam vak:</label>
 						
 							<input type="text" id="txtNameCourse" name="txtNameCourse" />
@@ -38,7 +39,9 @@ class course
 						
 							<input type="submit" id="addCourseBtn" name="addCourseBtn"
 								value="Voeg toe" />
-						
+					</p>
+					
+					
 				</form>
 			</div>
 			<div id="courselist">

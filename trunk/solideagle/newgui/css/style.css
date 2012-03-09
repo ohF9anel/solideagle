@@ -84,7 +84,7 @@ body
 	content: "";
 	clear:both;
 }
-
+	
 #tabs>ul>li
 {
 	display: block;
@@ -101,4 +101,18 @@ body
 #courselist
 {
 	float:left;
+}
+
+form > p > label
+{
+	float:left;
+	line-height:26px;
+}
+
+form > p > input
+{
+	float:right;
+	margin-bottom: 10px;
+	margin-left:10px;
+
 }
