@@ -77,7 +77,7 @@
 	<div id="groepengebruikers">
 		<div id="tabs2">
 				<ul>
-					<li><a href="#zoeken">Zoeken</a></li>
+					<li><a href="views/person.getcontent #addPerson" data-target="#zoeken">Zoeken</a></li>
 					<li><a href="#partymode">Partymode!</a></li>
 				</ul>
 				<div id="zoeken">
