@@ -112,6 +112,12 @@ form  p > label
 	line-height:26px;
 }
 
+form   p 
+{
+	
+	clear:both;
+}
+
 form   p > input
 {
 	float:right;

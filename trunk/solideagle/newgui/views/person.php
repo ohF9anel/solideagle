@@ -28,10 +28,10 @@ class person
                         </p>
                         <p>
                             <label for="radioGender">Geslacht:</label>
-                            <input type="radio" id="radioGenderMale" name="radioGender" value="M" />
-                            <label for="radioGenderMale">Man</label>
-                            <input type="radio" id="radioGenderFemale" name="radioGender" value="V" />
-                            <label for="radioGenderFemale">Vrouw</label>
+                          <input type="radio" id="radioGenderMale" name="radioGender" value="M" style="margin:7px 0 0 5px"/>
+                            <label for="radioGenderMale" style="float:right">Man</label>
+                          <p>    <input type="radio" id="radioGenderFemale" name="radioGender" value="V" style="margin:7px 0 0 5px"/>
+                            <label for="radioGenderFemale" style="float:right">Vrouw</label></p>
                         </p>
                         <p>
                             <label for="txtBirthDate">Geboortedatum:</label>
