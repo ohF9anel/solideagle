@@ -139,6 +139,10 @@ class person
                             <label for="txtFtpUrl">FTP-map:</label>
                             <input type="text" id="txtFtpUrl" name="txtFtpUrl" />
                         </p>
+                        
+                        <p>
+                            <input type="submit" id="addPersonBtn" name="addPersonBtn" value="Voeg toe" />
+                        </p>
                     </div>
                     
                 </form>
