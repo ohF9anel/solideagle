@@ -6,10 +6,25 @@
 <title>Zend Framework Quickstart Application</title>
 
 
+<?php 
+
+
+$this->headScript()->appendFile($this->SE_path . "/js/jquery.form.js");
+$this->headScript()->appendFile($this->SE_path . "/js/jquery.easytabs.min.js");
+
+
+echo $this->jQuery(); 
+
+echo $this->headScript(); 
+
+echo "\n";
 
 
 
-<?php echo $this->headLink()->appendStylesheet($this->serverUrl().$this->baseUrl().'/css/style.css') ?>
+echo $this->headLink()->appendStylesheet($this->SE_path.'/css/style.css') 
+
+?>
+
 </head>
 <body>
 
@@ -29,7 +44,10 @@
 
 			<ul>
 				<li><a href="#dashboard">Dashboard</a></li>
-				<li><a href="#groepengebruikers">Groepen en gebruikers</a></li>
+				<li><a href="<?php echo $this->url(
+            array('controller'=>'users'),
+            'default',
+            true) ?>">Groepen en gebruikers</a></li>
 				<li><a href="#configuratie">Configuratie</a></li>
 				<li><a href="<?php echo $this->url(
             array('controller'=>'course'),

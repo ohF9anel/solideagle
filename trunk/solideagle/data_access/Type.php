@@ -1,9 +1,12 @@
 <?php
 
+
 namespace DataAccess
 {
+	require_once 'data_access/database/databasecommand.php';
+    use Database\DatabaseCommand;
 
-    class Type
+				class Type
     {
         // variables
         private $id;
@@ -77,6 +80,30 @@ namespace DataAccess
             $cmd->addParam(":id", $typeId);
 
             $cmd->execute();
+        }
+        
+        public static function getAll()
+        {
+        	$sql = "SELECT
+			`type`.`id`,
+			`type`.`type_name`
+			FROM `CentralAccountDB`.`type`;";
+        	
+        	$cmd = new DatabaseCommand($sql);
+        	
+        	$retarr = array();
+        	
+        	$cmd ->executeReader()->readAll(function($rowdata) use (&$retarr){
+        		
+        		$retarr[] = new Type($rowdata->id, $rowdata->type_name);
+  
+        		
+        	});
+        	
+        	
+        	
+        	
+        	return $retarr;
         }
 
     }
