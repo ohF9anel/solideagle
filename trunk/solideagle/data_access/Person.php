@@ -3,8 +3,8 @@
 namespace DataAccess
 {
 
-    require_once '../data_access/database/databasecommand.php';
-    require_once '../data_access/validation/Validator.php';
+    require_once 'data_access/database/databasecommand.php';
+    require_once 'data_access/validation/Validator.php';
     require_once 'logging/Logger.php';
     use Database\DatabaseCommand;
     use Validation\Validator;
@@ -786,7 +786,17 @@ namespace DataAccess
 
         public static function getPersonById($id)
         {
+                $sql = "SELECT * FROM `CentralAccountDB`.`person`
+                        WHERE `id` = :id;";
                 
+                $cmd = new DatabaseCommand($sql);
+                $cmd->addParam(":id", $id);
+
+                $reader = $cmd->executeReader();
+                
+                $retObj = $reader->read();
+                
+                return $retObj;
         }
         
         /**
