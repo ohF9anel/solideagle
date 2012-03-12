@@ -1,0 +1,54 @@
+<?php echo $this->doctype() ?>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Zend Framework Quickstart Application</title>
+
+
+
+
+
+<?php echo $this->headLink()->appendStylesheet($this->serverUrl().$this->baseUrl().'/css/style.css') ?>
+</head>
+<body>
+
+	<div id="userbar">
+		<span>gebruikersnaam</span>
+	</div>
+
+	<div id="header">
+		<span>Gebruikersbeheer</span> <img
+			src="<?php echo $this->serverUrl().$this->baseUrl(); ?>/images/logo.png" height="90px" />
+	</div>
+
+
+	<div id="content">
+
+		<div id="tabs">
+
+			<ul>
+				<li><a href="#dashboard">Dashboard</a></li>
+				<li><a href="#groepengebruikers">Groepen en gebruikers</a></li>
+				<li><a href="#configuratie">Configuratie</a></li>
+				<li><a href="<?php echo $this->url(
+            array('controller'=>'course'),
+            'default',
+            true) ?>">Test</a>
+				</li>
+
+			</ul>
+		</div>
+		
+	
+		
+		
+	
+
+
+	<?php echo $this->layout()->content ?>
+
+	</div>
+
+</body>
+</html>
