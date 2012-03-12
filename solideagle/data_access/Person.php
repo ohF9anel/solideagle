@@ -41,7 +41,6 @@ namespace DataAccess
         private $madeOn;
         private $otherInformation;
         private $deleted;
-        private $teacherCourseId;
         private $studentPreviousSchool;
         private $studentStamnr;
         private $parentOccupation;
@@ -310,16 +309,6 @@ namespace DataAccess
             $this->deleted = $deleted;
         }
 
-        public function getTeacherCourseId()
-        {
-            return $this->teacherCourseId;
-        }
-
-        public function setTeacherCourseId($teacherCourseId)
-        {
-            $this->teacherCourseId = $teacherCourseId;
-        }
-
         public function getStudentPreviousSchool()
         {
             return $this->studentPreviousSchool;
@@ -348,6 +337,43 @@ namespace DataAccess
         public function setParentOccupation($parentOccupation)
         {
             $this->parentOccupation = $parentOccupation;
+        }
+        
+        /**
+         * 
+         * 
+         *
+         * @param Person $person
+         */
+        
+        public static function tryCreateUsername($person)
+        {
+        	
+        	$counter = "";
+        	
+        	$username = $person->getName() . substr($person->getFirstName(),0,1) . date("y");
+        	
+        	$username = strtolower($username);
+        	
+        	$sql = "select account_username from person where account_username = :accusername";
+        	
+        	for(;;)
+        	{
+        		echo "trying: " . $username . $counter . "\n";
+        		
+        		$cmd = new DatabaseCommand($sql);
+        		 
+        		$cmd->addParam(":accusername", $username . $counter);
+        		 
+        		if($cmd->executeReader()->read())
+        		{
+        			$counter += 1;
+        		}else{
+        			break;
+        		}
+        	}
+        	
+        	return $username . $counter;
         }
 
         /**

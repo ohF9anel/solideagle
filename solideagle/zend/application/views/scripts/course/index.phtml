@@ -1,16 +1,27 @@
 
+<?php $this->headScript()->captureStart() ?>
+var courseDataUrl = '<?php echo $this->SE_path . "/course/getall" ?>';
+<?php $this->headScript()->captureEnd() ?>
+
+
+<?php
+
+$this->headScript()->appendFile($this->SE_path . "/js/views/course.js");
+
+?>
+
+
+
+
 <div id="test">
 	<div id="courseform">
 		<form action="controllers/course.addNew" method="post"
 			id="formAddCourse">
-
 			<p>
 				<label for="txtNameCourse">Naam vak:</label> <input type="text"
 					id="txtNameCourse" name="coursename" /> <br /> <input type="submit"
 					id="addCourseBtn" name="addCourseBtn" value="Voeg toe" />
 			</p>
-
-
 		</form>
 	</div>
 	<div id="courselist">
