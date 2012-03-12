@@ -63,7 +63,9 @@ class Database
 			return Database::$_connections[$connstring];
 		}
 
-		$conn = new PDO($connectionParams[0],$connectionParams[1],$connectionParams[2],array(PDO::ATTR_PERSISTENT => true));
+		
+		
+		$conn = new PDO($connectionParams[0],$connectionParams[1],$connectionParams[2]);//,array(PDO::ATTR_PERSISTENT => true));
 
 		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		
