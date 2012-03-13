@@ -9,7 +9,7 @@ class User
     private $cn;
     private $uid;
     private $sAMAccountName;
-    //private $unicodePwd;
+    private $unicodePwd;
     private $sn;
     private $givenname;
     private $displayName;
@@ -51,7 +51,13 @@ class User
 
     public function setUnicodePwd($unicodePwd)
     {
-        $this->unicodePwd = $unicodePwd;
+        $newPassword = "\"" . $unicodePwd . "\"";
+        $len = strlen($newPassword);
+        $newPassw = "";
+        for($i=0;$i<$len;$i++)
+        $newPassw .= "{$newPassword{$i}}\000";
+        
+        $this->unicodePwd = $newPassw;
     }
 
     public function setSn($sn)
