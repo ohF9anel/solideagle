@@ -130,6 +130,11 @@ class User
         $this->info = $info;
     }
     
+    public function getCn()
+    {
+        return $this->cn;
+    }
+
 }
 
 ?>

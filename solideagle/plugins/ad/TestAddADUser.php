@@ -32,6 +32,8 @@ $user->setInfo($person->other_information);
 
 $conn = new ConnectionLDAP();
 
-$conn->updateUser($user->getUserInfo(), '', true);
+$dn = 'CN=' . $user->getCn() . ',OU=gebruikers,DC=solideagle,DC=lok';
+
+$conn->addUser($user->getUserInfo(), $dn, true);
 
 ?>
