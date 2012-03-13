@@ -9,7 +9,7 @@ class User
     private $cn;
     private $uid;
     private $sAMAccountName;
-    private $unicodepwd;
+    //private $unicodePwd;
     private $sn;
     private $givenname;
     private $displayName;
@@ -49,9 +49,9 @@ class User
         $this->sAMAccountName = $sAMAccountName;
     }
 
-    public function setUnicodepwd($unicodepwd)
+    public function setUnicodePwd($unicodePwd)
     {
-        $this->unicodepwd = $unicodepwd;
+        $this->unicodePwd = $unicodePwd;
     }
 
     public function setSn($sn)
