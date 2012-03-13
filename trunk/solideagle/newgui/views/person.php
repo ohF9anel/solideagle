@@ -16,10 +16,6 @@ class person
                     <div id="basicInfo">
                         <h3>Basisinformatie</h3>
                         <p>
-                            <label for="txtNameCourse">Naam vak:</label>
-                            <input type="text" id="txtNameCourse" name="coursename" />			
-                        </p>
-                        <p>
                             <label for="txtFirstName">Voornaam:</label>
                             <input type="text" id="txtFirstName" name="txtFirstName" />
                         <p>

@@ -14,7 +14,6 @@ class ConnectionLDAP
     
     public function __construct()
     {
-        //ldap_start_tls();
         $this->conn = ldap_connect('ldaps://S1.solideagle.lok') or die("Could not connect to server");  
         // bind to the LDAP server specified above 
         $r = ldap_bind($this->conn, AD_USERNAME, AD_PASSWORD) or die("Could not bind to server");     
@@ -35,12 +34,26 @@ class ConnectionLDAP
             return false;
 
         $userInfo["objectclass"] = "user";
+        
+        // attribute "memberOfGroups" not permitted in userInfo
+        $memberOfGroups = $userInfo['memberOfGroups'];
+        unset($userInfo['memberOfGroups']);
 
         $userInfo["useraccountcontrol"] = $enabled? "66048" : "66050";
 
         if (ldap_add($this->conn, $dn, $userInfo))
         {
             echo "Successfully added: " . $userInfo["cn"];
+            
+            // add user to correct group
+            foreach($memberOfGroups as $memberOfGroup)
+            {
+                $group_name = "CN=" . $memberOfGroup->getName() . ",OU=groepen,DC=solideagle,DC=lok";
+                
+                $group_info['member'] = $dn; // User's DN is added to group's 'member' array
+                ldap_mod_add($this->conn, $group_name, $group_info);
+                echo "Added to group: " . $group_name;
+            }
         }
     }
     
@@ -61,6 +74,9 @@ class ConnectionLDAP
         $enable = ($ac & ~2); // set all bits minus bit 1 (=dec2)
  
         $userInfo["useraccountcontrol"] = $enabled? $enable : $disable;
+        
+        $userInfo["homeDirectory"] = "\\\S1\shares\home\bodsonb";
+        $userInfo["homeDrive"] = "T:";
         
         if (ldap_modify($this->conn, $dn, $userInfo))
         {

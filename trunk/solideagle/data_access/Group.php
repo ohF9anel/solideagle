@@ -22,7 +22,6 @@ class Group
 	private $groupTypes = array();
 	private $parentId = NULL;
 
-
 	// getters, setters & functions
 
 	public function addChildGroup($childGroup)
@@ -79,7 +78,12 @@ class Group
 	{
 		$this->parentId = $parentId;
 	}
-
+        
+        public function __construct($id, $name)
+        {
+                $this->id = $id;
+                $this->name = $name;
+        }
 
 	// manage groups
 

@@ -25,6 +25,8 @@ class User
     private $mail;
     private $info;
     
+    private $memberOfGroups = array();
+    
     /**
      * returns all properties of an AD user
      * @return array User  
@@ -33,6 +35,7 @@ class User
     {
         return get_object_vars($this);
     }
+    
 
     public function setCn($cn)
     {
@@ -130,10 +133,24 @@ class User
         $this->info = $info;
     }
     
+    public function addMembersOfGroup($memberOfGroups)
+    {
+        $this->memberOfGroups = $memberOfGroups;
+    }
+    
+    public function getMembersOfGroups()
+    {
+        return $this->memberOfGroups;
+    }
+    
     public function getCn()
     {
         return $this->cn;
     }
+    
+    
+    
+    
 
 }
 
