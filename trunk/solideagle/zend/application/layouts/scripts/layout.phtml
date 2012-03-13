@@ -1,6 +1,6 @@
-<?php echo $this->doctype() ?>
-
-<html xmlns="http://www.w3.org/1999/xhtml">
+<?php //echo $this->doctype() ?>
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Zend Framework Quickstart Application</title>
@@ -12,6 +12,7 @@
 $this->headScript()->appendFile($this->SE_path . "/js/jquery.form.js");
 $this->headScript()->appendFile($this->SE_path . "/js/jquery.easytabs.min.js");
 
+$this->headScript()->appendFile($this->SE_path . "/bootstrap/js/bootstrap.min.js");
 
 echo $this->jQuery(); 
 
@@ -19,9 +20,14 @@ echo $this->headScript();
 
 echo "\n";
 
+$this->headLink()->appendStylesheet($this->SE_path.'/css/style.css') ;
 
 
-echo $this->headLink()->appendStylesheet($this->SE_path.'/css/style.css') 
+$this->headLink()->appendStylesheet($this->SE_path.'/bootstrap/css/bootstrap.css');
+$this->headLink()->appendStylesheet($this->SE_path.'/bootstrap/css/bootstrap-responsive.css');
+
+
+echo $this->headLink();
 
 ?>
 

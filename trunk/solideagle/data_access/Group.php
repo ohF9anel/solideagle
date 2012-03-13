@@ -332,6 +332,41 @@ class Group
 
 
 	}
+	
+	/**
+	 * returns parents in array with (depth,group) ordered by depth
+	 * 
+	 * @param Group $group
+	 */
+	public static function getParents($group)
+	{
+		$sql = "SELECT p.`id`,
+				p.`name`,
+				p.`description`, t.length FROM `group` p 
+				JOIN group_closure t ON p.id=t.parent_id 
+				WHERE t.child_id =  :groupid 
+				AND t.child_id <> t.parent_id
+				ORDER BY t.length;";
+		
+		$cmd = new DatabaseCommand($sql);
+		
+		$cmd->addParam(":groupid", $group->getId());
+		
+		$retArr = array();
+		
+		$cmd->executeReader()->readAll(function($row) use (&$retArr){
+				
+			$tmpgroup = new Group();
+			$tmpgroup->setId($row->id);
+			$tmpgroup->setName($row->name);
+			$tmpgroup->setDescription($row->description);
+				
+			$retArr[] = array($row->length,$tmpgroup);
+				
+		});
+		
+		return $retArr;
+	}
 
 	/**
 	 * Validates a Group object, returns array with validation errors

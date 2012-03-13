@@ -17,7 +17,7 @@ $this->headScript()->appendFile($this->SE_path . "/js/views/users.js");
 
 	<h1>Gebruiker toevoegen</h1>
 
-	<form  action="<?php echo $this->SE_path . "/users/adduserpost" ?>" method="post" id="formAddUser">
+	<form class="well" action="<?php echo $this->SE_path . "/users/adduserpost" ?>" method="post" id="formAddUser">
 		<div id="tab-container" class="tab-container">
 			<ul class='etabs'>
 				<li class='tab'><a href="#type">Kies type</a></li>
@@ -34,9 +34,9 @@ $this->headScript()->appendFile($this->SE_path . "/js/views/users.js");
 				{
 					?>
 					<p class="ui-helper-clearfix">
+					<label class="checkbox"	for="<?php echo $type->getId() ?>"><?php echo $type->getTypeName() ?>
 						<input type="checkbox" name="type[]" value="<?php echo $type->getId() ?>"
-							id="<?php echo $type->getId() ?>" /> <label
-							for="<?php echo $type->getId() ?>"><?php echo $type->getTypeName() ?>
+							id="<?php echo $type->getId() ?>" /> 
 						</label>
 					</p>
 					
@@ -69,9 +69,9 @@ $this->headScript()->appendFile($this->SE_path . "/js/views/users.js");
 				{
 					?>
 					<p class="ui-helper-clearfix">
+					<label class="checkbox"	for="<?php echo $task->getId() ?>"><?php echo $task->getName() ?>
 						<input type="checkbox" name="task[]" checked="checked" value="<?php echo $task->getId() ?>"
-							id="<?php echo $task->getId() ?>" /> <label
-							for="<?php echo $task->getId() ?>"><?php echo $task->getName() ?>
+							id="<?php echo $task->getId() ?>" /> 
 						</label>
 					</p>
 					
@@ -79,7 +79,7 @@ $this->headScript()->appendFile($this->SE_path . "/js/views/users.js");
 				}		
 				?>
 					
-					<button>Toevoegen</button>
+					<button type="submit" class="btn">Toevoegen</button>
 					
 				</div>
 			</div>
