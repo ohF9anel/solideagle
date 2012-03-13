@@ -15,14 +15,14 @@ class ConnectionLDAP
     public function __construct()
     {
         //ldap_start_tls();
-        $this->conn = ldap_connect('ldaps://S1') or die("Could not connect to server");  
+        $this->conn = ldap_connect('ldaps://S1.solideagle.lok') or die("Could not connect to server");  
         // bind to the LDAP server specified above 
-        ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7);
-        ldap_set_option($this->conn, LDAP_OPT_PROTOCOL_VERSION, 3);
+//        ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7);
+//        ldap_set_option($this->conn, LDAP_OPT_PROTOCOL_VERSION, 3);
         $r = ldap_bind($this->conn, AD_USERNAME, AD_PASSWORD) or die("Could not bind to server");     
 
-//        ldap_set_option($this->conn, LDAP_OPT_PROTOCOL_VERSION, 3);
-//        ldap_set_option($this->conn, LDAP_OPT_REFERRALS, 0);
+        ldap_set_option($this->conn, LDAP_OPT_PROTOCOL_VERSION, 3);
+     //   ldap_set_option($this->conn, LDAP_OPT_REFERRALS, 0);
     }
     
     public function __destruct()
