@@ -33,7 +33,11 @@ function render_tree($roots)
 	}
 }
 
+$childGroup = new Group();
+$childGroup->setId(44);
 
+
+var_dump(Group::getParents($childGroup));
 
 
 

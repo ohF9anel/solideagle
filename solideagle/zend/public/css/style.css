@@ -37,6 +37,7 @@ body
 #header > img
 {
 	float: right;
+	height: 90px;
 }
 
 #header
@@ -105,7 +106,7 @@ body
 	padding-left:10px;
 	float:left;
 }
-
+/*
 form  p > label
 {
 	float:left;
@@ -126,7 +127,7 @@ form   p > input
 
 }
 
-
+*/
 
 .etabs { margin: 0; padding: 0; }
 .tab { display: inline-block; zoom:1; *display:inline; background: #eee; border: solid 1px #999; border-bottom: none; -moz-border-radius: 4px 4px 0 0; -webkit-border-radius: 4px 4px 0 0; }

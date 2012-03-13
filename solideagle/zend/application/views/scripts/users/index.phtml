@@ -1,2 +1,41 @@
 
+    <div class="well">
+  
+    </div>
+
+
+
 <h1>Gebruikers:</h1>
+
+<table class="table">
+<thead>
+	<tr>
+	<td>ID</td>
+	<td>Voornaam</td>
+	<td>Achternaam</td>
+	<td>Gebruikersnaam</td>
+	<td>Actief</td>
+	<td>Gemaakt op</td>
+	</tr>
+</thead>
+<tbody>
+
+<?php
+	foreach ($this->users as $user)
+	{
+		?>
+
+		<tr>
+		<td><?php echo $user->getId(); ?></td>
+		<td><?php echo $user->getFirstName(); ?></td>
+		<td><?php echo $user->getName(); ?></td>
+		<td><?php echo $user->getAccountUserName(); ?></td>
+		<td><?php echo $user->getAccountActive(); ?></td>
+		<td><?php echo $user->getMadeOn(); ?></td>
+		</tr>
+
+		<?php
+	}
+?>
+</tbody>
+</table>

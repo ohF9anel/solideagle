@@ -1336,6 +1336,53 @@ namespace DataAccess
             
             return true;
         }
+        
+        /**
+         * 
+         * Pass -1 to get all users
+         * Will only partially fill the user object!
+         * @param int $groupid
+         */
+        public static function getUsersForDisplayByGroup($groupid = -1)
+        {
+        	$sql = "SELECT DISTINCT
+					`person`.`id`,
+					`person`.`account_username`,
+					`person`.`account_active`,
+					`person`.`first_name`,
+					`person`.`name`,
+					`person`.`made_on`
+					FROM `CentralAccountDB`.`person`, `CentralAccountDB`.`group_person`
+					WHERE
+					((:groupid = -1) OR (`person`.`id` = `group_person`.`person_id` ))
+					AND
+					`person`.`deleted` = 0
+					AND
+					((:groupid = -1) OR (`group_person`.`group_id` =  :groupid))";
+        	
+        	$cmd = new DatabaseCommand($sql);
+        	
+        	$cmd->addParam(":groupid", $groupid);
+        	
+        	$retarr = array();
+        	
+        	$cmd->executeReader()->readAll(function($row) use (&$retarr){
+        		
+        		$tempperson = new Person();
+        		$tempperson->setId($row->id);
+        		$tempperson->setName($row->name);
+        		$tempperson->setFirstName($row->first_name);
+        		$tempperson->setAccountUsername($row->account_username);
+        		$tempperson->setAccountActive($row->account_active);
+        		$tempperson->setMadeOn($row->made_on);
+        		
+        		$retarr[] = $tempperson;
+        	
+        	});
+        	
+        	
+        	return $retarr;
+        }
 
     }
     

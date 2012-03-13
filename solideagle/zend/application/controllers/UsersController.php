@@ -3,9 +3,11 @@
 require_once 'data_access/Type.php';
 require_once 'data_access/Person.php';
 require_once 'data_access/Task.php';
+require_once 'data_access/PersonTaskQueue.php';
 use DataAccess\Person;
 use DataAccess\Type;
 use DataAccess\Task;
+use DataAccess\PersonTaskQueue;
 
 class UsersController extends Zend_Controller_Action
 {
@@ -17,7 +19,7 @@ class UsersController extends Zend_Controller_Action
 
     public function indexAction()
     {
-    	//$this->view->users = Person::getAll();
+    	$this->view->users = Person::getUsersForDisplayByGroup();
     }
     
     public function adduserAction()
@@ -46,16 +48,23 @@ class UsersController extends Zend_Controller_Action
  		
  		$person->setFirstName($data["txtFirstName"]);
  		$person->setName($data["txtName"]);
+ 		
+ 		$personid = Person::addPerson($person);
+ 		
  		if(isset($data["task"]))
  		{
  			foreach($data["task"] as $task)
  			{
- 				
+ 				$tq = new PersonTaskQueue();
+ 				$tq->setPerson_id($personid);
+ 				$tq->setTask_id($task);
+ 				$tq->setConfiguration("No conf");
+ 				PersonTaskQueue::addTaskToQueue($tq);
  			}
  		}
- 		var_dump($person);
  		
- 	//	Person::addPerson($person);
+ 		
+ 	
  		
  		
     }
