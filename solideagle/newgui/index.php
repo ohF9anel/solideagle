@@ -76,14 +76,14 @@
 	</div>
 	<div id="groepengebruikers">
 		<div id="tabs2">
-				<ul>
-					<li><a href="views/person.getcontent #addPerson" data-target="#zoeken">Zoeken</a></li>
-					<li><a href="#partymode">Partymode!</a></li>
-				</ul>
-				<div id="zoeken">
-				<p> 4044444444444</p>
-				</div>
-				<div id="partymode"><p> EYO EYO EYO</p></div>
+                        <ul>
+                                <li><a href="views/person.getcontent #addPerson" data-target="#zoeken">Zoeken</a></li>
+                                <li><a href="#partymode">Partymode!</a></li>
+                        </ul>
+                        <div id="zoeken">
+                        <p> 4044444444444</p>
+                        </div>
+                        <div id="partymode"><p> EYO EYO EYO</p></div>
 		</div>
 	</div>
 	<div id="configuratie">

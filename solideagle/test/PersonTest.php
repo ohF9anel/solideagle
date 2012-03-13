@@ -3,16 +3,20 @@
 require_once '../data_access/Person.php';
 require_once '../data_access/Type.php';
 require_once '../data_access/utils/UsernameGenerator.php';
+require_once '../data_access/Group.php';
 
 use DataAccess\Person;
+use DataAccess\Group;
 use DataAccess\Type;
 use Utils\UsernameGenerator;
 
 $person = new Person();
 
 $person->addType(new Type(1, null));
+$person->addGroup(new Group(45, "leerkrachten")); // ou groep leerkrachten
+$person->addGroup(new Group(46, "admins"));       // ou groep admins
 
-$person->setId(44);
+//$person->setId(58);
 $person->setAccountUsername("bodsonb");
 $person->setAccountPassword("Azerty123");
 $person->setAccountActive(true);
@@ -34,7 +38,6 @@ $person->setPhone("+3292222222");
 $person->setPhone2("+3292333333");
 $person->setMobile("+32473365305");
 $person->setMadeOn("20120301144511");
-$person->setGroupId("1");
 $person->setOtherInformation("andere info \n dfsjkdsj");
 $person->setDeleted(false);
 $person->setStudentPreviousSchool("Voskenslaan");
@@ -44,7 +47,7 @@ $person->setParentOccupation("Stripper");
 $errors = Person::validatePerson($person);
 
 var_dump($errors);
-$id = Person::updatePerson($person);
+$id = Person::addPerson($person);
 
 
 echo $id;

@@ -11,6 +11,8 @@ namespace DataAccess
 
     require_once 'data_access/database/databasecommand.php';
     require_once 'data_access/validation/Validator.php';
+    require_once 'data_access/Type.php';
+    require_once 'data_access/Group.php';
     require_once 'logging/Logger.php';
     use Database\DatabaseCommand;
     use Validation\Validator;
@@ -22,6 +24,7 @@ namespace DataAccess
 
         // variables
         private $id;
+        private $groups = array();
         private $accountUsername;
         private $accountPassword;
         private $accountActive = 1;
@@ -79,6 +82,16 @@ namespace DataAccess
         public function addType($type)
         {
             $this->type[] = $type;
+        }
+        
+        public function getGroups()
+        {
+            return $this->groups;
+        }
+
+        public function addGroup($group)
+        {
+            $this->groups[] = $group;
         }
 
         public function getAccountUsername()
@@ -510,6 +523,8 @@ namespace DataAccess
 
                 $personId =  $cmd->executeScalar();
                 
+                // add person to correct type(s)
+                
                 $sql = "INSERT INTO `CentralAccountDB`.`type_person`
                         (
                         `type_id`,
@@ -524,6 +539,28 @@ namespace DataAccess
                  foreach($person->getTypes() as $type) {
                         $cmd = new DatabaseCommand($sql);
                         $cmd->addParam(":type_id", $type->getId());
+                        $cmd->addParam(":person_id", $personId);
+
+                        $cmd->execute();
+                }
+                
+                // add person to correct group(s)
+                                
+                $sql = "INSERT INTO `CentralAccountDB`.`group_person`
+                                (
+                                `group_id`,
+                                `person_id`
+                                )
+                                VALUES
+                                (
+                                :group_id,
+                                :person_id
+                                );";
+                
+                foreach($person->getGroups() as $group)
+                {
+                        $cmd = new DatabaseCommand($sql);
+                        $cmd->addParam(":group_id", $group->getId());
                         $cmd->addParam(":person_id", $personId);
 
                         $cmd->execute();
@@ -757,6 +794,8 @@ namespace DataAccess
 
                 $cmd->execute();
                 
+                // updates person's type(s)
+                
                 $sql = "DELETE FROM `CentralAccountDB`.`type_person`
 					WHERE `person_id` = :personId;";
 
@@ -779,6 +818,36 @@ namespace DataAccess
                  foreach($person->getTypes() as $type) {
                         $cmd = new DatabaseCommand($sql);
                         $cmd->addParam(":type_id", $type->getId());
+                        $cmd->addParam(":person_id", $person->getId());
+
+                        $cmd->execute();
+                }
+                
+                // update person's group(s)
+                
+                $sql = "DELETE FROM `CentralAccountDB`.`group_person`
+					WHERE `person_id` = :personId;";
+
+                $cmd = new DatabaseCommand($sql);
+                $cmd->addParam(":personId", $person->getId());
+
+                $cmd->execute();
+                
+                $sql = "INSERT INTO `CentralAccountDB`.`group_person`
+                                (
+                                `group_id`,
+                                `person_id`
+                                )
+                                VALUES
+                                (
+                                :group_id,
+                                :person_id
+                                );";
+                
+                foreach($person->getGroups() as $group)
+                {
+                        $cmd = new DatabaseCommand($sql);
+                        $cmd->addParam(":group_id", $group->getId());
                         $cmd->addParam(":person_id", $person->getId());
 
                         $cmd->execute();
@@ -812,8 +881,66 @@ namespace DataAccess
                 $reader = $cmd->executeReader();
                 
                 $retObj = $reader->read();
+
+                $person = new Person();
                 
-                return $retObj;
+                $person->setId($retObj->id);
+                $person->setAccountUsername($retObj->account_username);
+                $person->setAccountPassword($retObj->account_password);
+                $person->setAccountActive($retObj->account_active);
+                $person->setAccountActiveUntill($retObj->account_active_untill);
+                $person->setAccountActiveFrom($retObj->account_active_from);
+                $person->setFirstName($retObj->first_name);
+                $person->setName($retObj->name);
+                $person->setGender($retObj->gender);
+                $person->setBirthDate($retObj->birth_date);
+                $person->setBirthPlace($retObj->birth_place);
+                $person->setNationality($retObj->nationality);
+                $person->setStreet($retObj->street);
+                $person->setHouseNumber($retObj->house_number);
+                $person->setPostCode($retObj->post_code);
+                $person->setCity($retObj->city);
+                $person->setCountry($retObj->country);
+                $person->setEmail($retObj->email);
+                $person->setPhone($retObj->phone);
+                $person->setPhone2($retObj->phone2);
+                $person->setMobile($retObj->mobile);
+                $person->setMadeOn($retObj->made_on);
+                $person->setOtherInformation($retObj->other_information);
+                $person->setDeleted($retObj->deleted);
+                $person->setStudentPreviousSchool($retObj->student_previous_school);
+                $person->setStudentStamnr($retObj->student_stamnr);
+                $person->setParentOccupation($retObj->parent_occupation);
+                
+                $sql = "SELECT `type`.`id`, `type`.`type_name` FROM `CentralAccountDB`.`type_person`,
+                       `CentralAccountDB`.`type`
+                        WHERE `person_id` = :person_id
+                        AND `type`.`id` = `type_person`.`type_id`
+                        ";
+                
+                $cmd = new DatabaseCommand($sql);
+                $cmd->addParam(":person_id", $person->getId());
+  
+                $cmd->executeReader()->readAll(function($row) use (&$person) {
+			$type = new Type($row->id, $row->type_name);
+			$person->addType($type);
+		});
+                
+                $sql = "SELECT `group`.`id`, `group`.`name` FROM `CentralAccountDB`.`group`,
+                       `CentralAccountDB`.`group_person`
+                        WHERE `person_id` = :person_id
+                        AND `group`.`id` = `group_person`.`group_id`
+                        ";
+                
+                $cmd = new DatabaseCommand($sql);
+                $cmd->addParam(":person_id", $person->getId());
+
+                $cmd->executeReader()->readAll(function($row) use (&$person) {
+			$group = new Group($row->id, $row->name);
+			$person->addGroup($group);
+		});
+               
+                return $person;
         }
         
         /**
