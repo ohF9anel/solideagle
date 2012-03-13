@@ -1,0 +1,90 @@
+
+<?php $this->headScript()->captureStart() ?>
+var blaat = '<?php echo $this->SE_path . "/var/dev" ?>';
+<?php $this->headScript()->captureEnd() ?>
+
+
+<?php
+
+$this->headScript()->appendFile($this->SE_path . "/js/views/users.js");
+
+?>
+
+
+
+
+<div id="adduser">
+
+	<h1>Gebruiker toevoegen</h1>
+
+	<form  action="<?php echo $this->SE_path . "/users/adduserpost" ?>" method="post" id="formAddUser">
+		<div id="tab-container" class="tab-container">
+			<ul class='etabs'>
+				<li class='tab'><a href="#type">Kies type</a></li>
+				<li class='tab'><a href="#gegevens">Gegevens invullen</a></li>
+				<li class='tab'><a href="#taken">Taken</a></li>
+			</ul>
+			<div class="panel-container">
+				<div id="type">
+					
+					
+
+				<?php
+				foreach ($this->types as $type)
+				{
+					?>
+					<p class="ui-helper-clearfix">
+						<input type="checkbox" name="type[]" value="<?php echo $type->getId() ?>"
+							id="<?php echo $type->getId() ?>" /> <label
+							for="<?php echo $type->getId() ?>"><?php echo $type->getTypeName() ?>
+						</label>
+					</p>
+					
+					<?php
+				}		
+				?>
+
+
+			</div>
+				<div id="gegevens">
+
+					<p class="ui-helper-clearfix">
+						<label for="txtFirstName">Voornaam:</label> <input type="text"
+							id="txtFirstName" name="txtFirstName" />
+					
+					</p>
+					
+					<p class="ui-helper-clearfix">
+						<label for="txtName">Naam:</label> <input type="text" id="txtName"
+							name="txtName" />
+					</p>
+
+					
+
+				</div>
+				<div id="taken">
+					
+					<?php
+				foreach ($this->tasks as $task)
+				{
+					?>
+					<p class="ui-helper-clearfix">
+						<input type="checkbox" name="task[]" checked="checked" value="<?php echo $task->getId() ?>"
+							id="<?php echo $task->getId() ?>" /> <label
+							for="<?php echo $task->getId() ?>"><?php echo $task->getName() ?>
+						</label>
+					</p>
+					
+					<?php
+				}		
+				?>
+					
+					<button>Toevoegen</button>
+					
+				</div>
+			</div>
+		</div>
+	</form>
+
+
+</div>

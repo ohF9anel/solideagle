@@ -34,7 +34,7 @@ namespace DataAccess
             $this->typeName = $typeName;
         }
         
-        public function __construct($id, $typeName)
+        public function __construct($id, $typeName = "")
         {
             $this->id = $id;
             $this->typeName = $typeName;

@@ -1,7 +1,13 @@
 <?php
 
+
+
+
 namespace DataAccess
 {
+	function IsNullOrEmptyString($question){
+		return (!isset($question) || trim($question)==='');
+	}
 
     require_once 'data_access/database/databasecommand.php';
     require_once 'data_access/validation/Validator.php';
@@ -16,12 +22,11 @@ namespace DataAccess
 
         // variables
         private $id;
-        private $type = array();
         private $accountUsername;
         private $accountPassword;
-        private $accountActive;
-        private $accountActiveUntill;
-        private $accountActiveFrom;
+        private $accountActive = 1;
+        private $accountActiveUntill  = "";
+        private $accountActiveFrom  = "";
         private $startDate;
         private $firstName;
         private $name;
@@ -38,15 +43,22 @@ namespace DataAccess
         private $phone;
         private $phone2;
         private $mobile;
-        private $madeOn;
+        private $madeOn = "";
         private $otherInformation;
-        private $deleted;
+        private $deleted = 0;
         private $studentPreviousSchool;
         private $studentStamnr;
         private $parentOccupation;
         
         private $valErrors = array();
 
+        public function __construct()
+        {
+        	
+        	//$this->
+        	
+        }
+        
         // getters & setters
 
         public function getId()
@@ -346,7 +358,7 @@ namespace DataAccess
          * @param Person $person
          */
         
-        public static function tryCreateUsername($person)
+        private static function tryCreateUsername($person)
         {
         	
         	$counter = "";
@@ -383,6 +395,11 @@ namespace DataAccess
          */
         public static function addPerson($person)
         {
+        	
+        		$person->setAccountUsername(Person::tryCreateUsername($person));
+        		
+        		$person->setAccountPassword("P@ssw0rd");
+        	
                 $err = Person::validatePerson($person);
                 if (!empty($err))
                 {
@@ -837,7 +854,7 @@ namespace DataAccess
             $validationErrors = array();
            
             // account username
-            $valErrors = Validator::validateString($person->getAccountUsername(), 1, 45, false);
+            $valErrors = Validator::validateString($person->getAccountUsername(), 0, 45, false);
             foreach ($valErrors as $valError)
             {
                 switch($valError) {
@@ -853,7 +870,7 @@ namespace DataAccess
             }
             
             // account password
-            $valErrors = Validator::validatePassword($person->getAccountPassword(), 8, 64, true, true, true);
+            $valErrors = Validator::validatePassword($person->getAccountPassword(), 0, 64, true, true, true);
             foreach ($valErrors as $valError)
             {
                 switch($valError) {
@@ -876,7 +893,8 @@ namespace DataAccess
                         $validationErrors[] = "Wachtwoord: fout."; break;
                 }
             }
-            
+            if(!IsNullOrEmptyString($person->getAccountActiveUntill()))
+            {
             // account active untill
             $valErrors = Validator::validateDateTime($person->getAccountActiveUntill(), true);
             foreach ($valErrors as $valError)
@@ -895,7 +913,10 @@ namespace DataAccess
                         $validationErrors[] = "Account actief tot: fout."; break;
                 }
             }
-            
+        }
+        
+            if(!IsNullOrEmptyString($person->getAccountActiveFrom()))
+            {
             // account active from
             $valErrors = Validator::validateDateTime($person->getAccountActiveFrom(), true);
             foreach ($valErrors as $valError)
@@ -913,7 +934,7 @@ namespace DataAccess
                     default:
                         $validationErrors[] = "Account actief vanaf: fout."; break;
                 }
-            }
+            }}
             
             // first name
             $valErrors = Validator::validateString($person->getFirstName(), 1, 45);
@@ -947,6 +968,9 @@ namespace DataAccess
                 }
             }
             
+            if(!IsNullOrEmptyString($person->getBirthDate()))
+            {
+            
             // birth date
             $valErrors = Validator::validateDateOccurrence($person->getBirthDate(), true);
             foreach ($valErrors as $valError)
@@ -961,7 +985,7 @@ namespace DataAccess
                     default:
                         $validationErrors[] = "Geboortedatum: fout."; break;
                 }
-            }
+            }}
             
             // birth place
             $valErrors = Validator::validateString($person->getBirthPlace(), 0, 45);
@@ -1025,17 +1049,14 @@ namespace DataAccess
             }
             
             // post code
-            $valErrors = Validator::validateInt($person->getPostCode(), 0, 10000);
+            $valErrors = Validator::validateString($person->getPostCode(), 0, 4);
             foreach ($valErrors as $valError)
             {
                 switch($valError)
                 {
-                    case ValidationError::NO_NUMBER:
-                        $validationErrors[] = "Postcode: moet een nummer zijn van 4 cijfers."; break;
-                    case ValidationError::INT_TOO_SMALL:
-                        $validationErrors[] = "Postcode: mag niet negatief zijn."; break;
-                    case ValidationError::INT_TOO_LARGE:
-                        $validationErrors[] = "Postcode: mag niet groter zijn dan 9999."; break;
+                    case ValidationError::STRING_TOO_LONG:
+                        $validationErrors[] = "Postcode: moet een nummer zijn van 4 cijfers."; 
+                    break;
                     default:
                         $validationErrors[] = "Postcode: fout."; break;
                 }
@@ -1124,23 +1145,25 @@ namespace DataAccess
             }
             
             // made on
-            $valErrors = Validator::validateDateTimeOccurrence($person->getMadeOn(), true);
-            foreach ($valErrors as $valError)
+            if(!IsNullOrEmptyString($person->getMadeOn()))
             {
-                switch($valError) {
-                    case ValidationError::DATE_BAD_SYNTAX:
-                        $validationErrors[] = "Gemaakt op: datum moet ingegeven worden als YYYYMMDD."; break;
-                    case ValidationError::DATE_DOES_NOT_EXIST:
-                        $validationErrors[] = "Gemaakt op: deze datum bestaat niet."; break;
-                    case ValidationError::TIME_DOES_NOT_EXIST:
-                        $validationErrors[] = "Gemaakt op: dit tijdstip bestaat niet."; break;
-                    case ValidationError::DATE_IS_FUTURE:
-                        $validationErrors[] = "Gemaakt op: moet in het verleden zijn."; break;
-                    default:
-                        $validationErrors[] = "Gemaakt op: fout."; break;
-                }
+	            $valErrors = Validator::validateDateTimeOccurrence($person->getMadeOn(), true);
+	            foreach ($valErrors as $valError)
+	            {
+	                switch($valError) {
+	                    case ValidationError::DATE_BAD_SYNTAX:
+	                        $validationErrors[] = "Gemaakt op: datum moet ingegeven worden als YYYYMMDD."; break;
+	                    case ValidationError::DATE_DOES_NOT_EXIST:
+	                        $validationErrors[] = "Gemaakt op: deze datum bestaat niet."; break;
+	                    case ValidationError::TIME_DOES_NOT_EXIST:
+	                        $validationErrors[] = "Gemaakt op: dit tijdstip bestaat niet."; break;
+	                    case ValidationError::DATE_IS_FUTURE:
+	                        $validationErrors[] = "Gemaakt op: moet in het verleden zijn."; break;
+	                    default:
+	                        $validationErrors[] = "Gemaakt op: fout."; break;
+	                }
+	            }
             }
-            
             // previous school
             $valErrors = Validator::validateString($person->getStudentPreviousSchool(), 0, 50);
             foreach ($valErrors as $valError)

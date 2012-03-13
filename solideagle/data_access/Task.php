@@ -3,7 +3,7 @@
 namespace DataAccess
 {
 
-    require_once '../data_access/database/databasecommand.php';
+    require_once 'data_access/database/databasecommand.php';
     use Database\DatabaseCommand;
 
     class Task
@@ -115,6 +115,33 @@ namespace DataAccess
 
             $cmd->execute();
         }
+        
+        
+        public static function getAllByType($typename)
+        {
+        	$sql = "SELECT
+				`task`.`id`,
+				`task`.`name`
+				FROM `CentralAccountDB`.`task` WHERE `task`.`task_type` = :tasktype";
+        	
+        	$cmd = new DatabaseCommand($sql);
+        	$cmd->addParam(":tasktype", $typename);
+        	
+        	$retarr = array();
+        	
+        	$cmd->executeReader()->readAll(function($row) use (&$retarr){
+        		
+        		$temptask = new Task();
+        		$temptask->setId($row->id);
+        		$temptask->setName($row->name);
+        		$retarr[] = $temptask;
+        		
+        	});
+        	
+        	return $retarr;
+        }
+        
+        
     }
     
 }
