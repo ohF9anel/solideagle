@@ -19,6 +19,8 @@
         </controllerFile>
         <controllerFile controllerName="Users">
           <actionMethod actionName="index"/>
+          <actionMethod actionName="adduser"/>
+          <actionMethod actionName="adduserpost"/>
         </controllerFile>
       </controllersDirectory>
       <formsDirectory enabled="false"/>
@@ -48,6 +50,9 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Users">
             <viewScriptFile forActionName="index"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Users">
+            <viewScriptFile forActionName="adduser"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>

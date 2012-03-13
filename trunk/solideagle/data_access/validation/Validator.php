@@ -53,6 +53,9 @@ class Validator
         {
                 $valErrors = Validator::validateString($psw, $minLength, $maxLength, true);
 
+                //TODO tempfix
+                return $valErrors;
+                
                 if( !preg_match("#[0-9]+#", $psw) )
                         $valErrors[] = ValidationError::PSW_NO_NUMBER;
                 
