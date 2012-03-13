@@ -15,7 +15,7 @@ $person = Person::getPersonById(44);
 $user->setCn($person->first_name . ' ' . $person->name . ' (' . $person->account_username . ')');
 $user->setUid($person->account_username);
 $user->setSAMAccountName($person->account_username);
-$user->setUnicodepwd('Azerty123');
+//$user->setUnicodePwd('Azerty123');
 $user->setSn($person->name);
 $user->setGivenname($person->first_name);
 $user->setUserprincipalname($person->account_username);
