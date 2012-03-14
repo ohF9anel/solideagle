@@ -6,6 +6,10 @@
 <title>Zend Framework Quickstart Application</title>
 
 
+
+
+
+
 <?php 
 
 
@@ -17,6 +21,18 @@ $this->headScript()->appendFile($this->SE_path . "/bootstrap/js/bootstrap.min.js
 echo $this->jQuery(); 
 
 echo $this->headScript(); 
+
+?>
+<!--  <script>
+$(function()
+{
+	$('#nav-container ul').attr("class","nav");
+
+});
+
+</script>-->
+
+<?php
 
 echo "\n";
 
@@ -39,37 +55,36 @@ echo $this->headLink();
 	</div>
 
 	<div id="header">
-		<span>Gebruikersbeheer</span> <img
-			src="<?php echo $this->serverUrl().$this->baseUrl(); ?>/images/logo.png" height="90px" />
+		<span><a href="<?php echo $this->url(array('controller'=>'index','action'=>'index')) ?>">Gebruikersbeheer</a></span> <img
+			src="<?php echo $this->serverUrl().$this->baseUrl(); ?>/images/logo.png"
+			height="90px" />
 	</div>
 
-
 	<div id="content">
+		<div id="nav-container">
+			<div class="navbar">
+				<div class="navbar-inner">
+					<div class="container">
+					<?php echo $this->navigation()->menu()->setOnlyActiveBranch(true)->setUlClass("nav")->setRenderParents(true)->setMinDepth(1)->setMaxDepth(1); ?>
+					</div>
+				</div>
+			</div>
 
-		<div id="tabs">
-
-			<ul>
-				<li><a href="#dashboard">Dashboard</a></li>
-				<li><a href="<?php echo $this->url(
-            array('controller'=>'users'),
-            'default',
-            true) ?>">Groepen en gebruikers</a></li>
-				<li><a href="#configuratie">Configuratie</a></li>
-				<li><a href="<?php echo $this->url(
-            array('controller'=>'course'),
-            'default',
-            true) ?>">Test</a>
-				</li>
-
-			</ul>
+			<div class="navbar">
+				<div class="navbar-inner">
+					<div class="container">
+					<?php echo $this->navigation()->menu()->setOnlyActiveBranch(true)->setUlClass("nav")->setRenderParents(false)->setMinDepth(2)->setMaxDepth(2); ?>
+					</div>
+				</div>
+			</div>
 		</div>
-		
-	
-		
-		
-	
+
+		<div id="breadcrumbs"></div>
 
 
+		
+		
+		
 	<?php echo $this->layout()->content ?>
 
 	</div>

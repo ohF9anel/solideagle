@@ -2,23 +2,19 @@
 
 require_once '../config.php';
 
-require_once '../data_access/Group.php';
+require_once 'data_access/Group.php';
 
 
 use DataAccess\Group;
 
 
 
-/*
 
-select * from group_closure as c, `group` as g 
-where c.parent_id in (SELECT
-c.parent_id				FROM group_closure AS c 
-                LEFT OUTER JOIN group_closure AS anc
-				ON anc.child_id = c.child_id AND anc.parent_id <> c.parent_id
-                
-				WHERE anc.parent_id IS NULL 
-)  and c.child_id = g.id order by c.`parent_id`, c.`length`*/
+
+
+
+$time_start = microtime(true);
+
 
 render_tree(Group::getTree());
 
@@ -33,6 +29,14 @@ function render_tree($roots)
 	}
 }
 
+$time_end = microtime(true);
+$time = $time_end - $time_start;
+
+echo "Script ran in $time seconds\n";
+
+
+die();
+
 $childGroup = new Group();
 $childGroup->setId(44);
 
@@ -42,7 +46,6 @@ var_dump(Group::getParents($childGroup));
 
 
 
-die();
 
 
 //var_dump( Group::isValidGroup($group));

@@ -49,6 +49,12 @@ class UsersController extends Zend_Controller_Action
  		$person->setFirstName($data["txtFirstName"]);
  		$person->setName($data["txtName"]);
  		
+ 		if(count($errors = Person::validatePerson($person)) > 0)
+ 		{
+ 			echo json_encode($errors);
+ 			return;
+ 		}
+ 		
  		$personid = Person::addPerson($person);
  		
  		if(isset($data["task"]))

@@ -2,6 +2,8 @@
 
 namespace DataAccess;
 
+
+
 require_once 'database/databasecommand.php';
 require_once 'validation/Validator.php';
 require_once 'logging/Logger.php';
@@ -79,7 +81,7 @@ class Group
 		$this->parentId = $parentId;
 	}
         
-        public function __construct($id, $name)
+        public function __construct($id="", $name="")
         {
                 $this->id = $id;
                 $this->name = $name;
@@ -307,9 +309,48 @@ class Group
 		return $retArr;
 	}
 
-	public static function getTree()
+	public static function getTreeSLOW()
 	{
 		return Group::getTreeRecursive(Group::getRoots());
+	}
+	
+	public static function getTree()
+	{
+		$sql = "SELECT p.id,p.name,p.description,t.length, 
+		(SELECT t1.parent_id FROM group_closure t1 WHERE t1.length=1 AND t1.child_id=t.child_id) AS parent
+		FROM `group` p JOIN group_closure t ON p.id=t.child_id  order by t.length,parent";
+		
+		$rootArr = array();
+		$completeArr = array();
+		
+		$cmd = new DatabaseCommand($sql);
+		$cmd->executeReader()->readAll(function($row) use (&$rootArr,&$completeArr) {
+			
+			$childGroup = new Group();
+			$childGroup->setId($row->id);
+			$childGroup->setName($row->name);
+			$childGroup->setDescription($row->description);
+			$childGroup->setParentId($row->parent);
+			
+			$completeArr[$row->id] = $childGroup;
+	
+			if($row->parent == NULL)
+			{
+				$rootArr[] = $childGroup;	
+			}
+				
+		});
+		
+		//order groups
+		foreach($completeArr as $tempgroup)
+		{
+			if(($parentId = $tempgroup->getParentId()) != NULL)
+			{
+				$completeArr[$parentId]->addChildGroup($tempgroup);
+			}
+		}
+		
+		return $rootArr;
 	}
 
 	private static function getTreeRecursive($groups)
@@ -328,8 +369,21 @@ class Group
 
 	public static function delGroupById($groupId)
 	{
-		//do not delete if group has members
+		//do not delete if group has members or subgroups!!!??!
+		
+		$sql = "DELETE FROM group_closure"
 
+		/*
+		 * SET SQL_SAFE_UPDATES=0;
+		 * 
+			DELETE gc FROM `CentralAccountDB`.`group_closure` as gc
+			WHERE (gc.parent_id = 70 OR gc.child_id = 70);
+			
+			DELETE g FROM  `CentralAccountDB`.`group` as g
+			WHERE g.id = 82;
+		 * 
+		 * 
+		 */
 
 	}
 	
