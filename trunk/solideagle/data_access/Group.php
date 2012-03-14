@@ -371,19 +371,27 @@ class Group
 	{
 		//do not delete if group has members or subgroups!!!??!
 		
-		$sql = "DELETE FROM group_closure"
+		$sql = "SET SQL_SAFE_UPDATES=0;";
+		
+		$cmd = new DatabaseCommand($sql);
+		$cmd->BeginTransaction();
+		$cmd->execute();
 
-		/*
-		 * SET SQL_SAFE_UPDATES=0;
-		 * 
-			DELETE gc FROM `CentralAccountDB`.`group_closure` as gc
-			WHERE (gc.parent_id = 70 OR gc.child_id = 70);
-			
-			DELETE g FROM  `CentralAccountDB`.`group` as g
-			WHERE g.id = 82;
-		 * 
-		 * 
-		 */
+		$sql = "DELETE gc FROM `CentralAccountDB`.`group_closure` as gc
+			WHERE (gc.parent_id = :groupid OR gc.child_id = :groupid);";
+		
+		$cmd->newQuery($sql);
+		$cmd->addParam(":groupid", $groupId);
+		$cmd->execute();
+		
+		$sql = "DELETE g FROM  `CentralAccountDB`.`group` as g
+			WHERE g.id = :groupid;";
+		
+		$cmd->newQuery($sql);
+		$cmd->addParam(":groupid", $groupId);
+		$cmd->execute();
+
+		$cmd->CommitTransaction();
 
 	}
 	

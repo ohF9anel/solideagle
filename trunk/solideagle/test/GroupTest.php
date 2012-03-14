@@ -11,6 +11,12 @@ use DataAccess\Group;
 
 
 
+Group::delGroupById(38);
+
+
+
+
+
 
 
 $time_start = microtime(true);
