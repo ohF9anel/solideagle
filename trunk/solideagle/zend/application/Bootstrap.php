@@ -35,15 +35,22 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		
 		
 		$view = $this->getResource('view');
-		$view->jQuery()->addStylesheet($path.'/css/ui-custom/jquery-ui-1.8.18.custom.css')
+		$view->jQuery()->addStylesheet($path.'/css/ui-custom/jquery-ui-1.8.18.custom.csss')
 		->setLocalPath($path.'/js/jquery-1.7.1.min.js')
-		->setUiLocalPath($path.'/js/jquery-ui-1.8.18.custom.min.js');
+		->setUiLocalPath($path.'/js/jquery-ui-1.8.18.custom.min.jss');
 		$view->jQuery()->enable();
 		$view->jQuery()->uiEnable();
 	
 	}
 	
-
+	protected function _initNavigation()
+	{
+		$view = $this->getResource('view');
+		$config = new Zend_Config_Xml(APPLICATION_PATH . '/configs/navigation.xml','nav');
+		
+		$nav = new Zend_Navigation($config);
+		$view->navigation($nav);
+	}
 	
 	
 

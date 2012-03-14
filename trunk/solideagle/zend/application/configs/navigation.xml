@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configdata>
+	<nav>
+		<home>
+			<label>Gebruikersbeheer</label>
+			<controller>index</controller>
+			<action>index</action>
+			<pages>
+			
+				<dashboard>
+					<label>Dashboard</label>
+					<controller>index</controller>
+					<action>index</action>
+				</dashboard>
+			
+				<groupsandusers>
+					<label>Groepen en gebruikers</label>
+					<controller>users</controller>
+					<action>index</action>
+					
+					<pages>
+						<adduser>
+							<label>Gebruiker toevoegen</label>
+							<controller>users</controller>
+							<action>adduser</action>
+						
+						</adduser>
+					</pages>
+				</groupsandusers>	
+				
+				
+				
+			</pages>
+		</home>
+	
+	</nav>
+
+</configdata>

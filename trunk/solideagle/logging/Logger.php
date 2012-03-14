@@ -23,7 +23,15 @@ class Logger
 	static function getLogger()
 	{
 		if(Logger::$logger == NULL)
-		Logger::$logger  = Log::singleton('file', 'out.log', 'ident', Logger::$conf);
+		{
+			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+			  	Logger::$logger  = Log::singleton('file', 'c:\out.log', 'ident', Logger::$conf);
+			} else {
+			   	Logger::$logger  = Log::singleton('file', '/tmp/out.log', 'ident', Logger::$conf);
+			}
+
+		}
+	
 
 		return Logger::$logger;
 	}
