@@ -15,6 +15,7 @@ class GroupTaskQueue
 	private $path_script;
 	private $taskname;
 	private $errorcount;
+	private $errormessages;
 	
 	public function getId()
 	{
@@ -57,6 +58,7 @@ class GroupTaskQueue
 				`group_task_queue`.`group_id`,
 				`group_task_queue`.`configuration`,
 				`group_task_queue`.`errorcount`,
+				`group_task_queue`.`errormessages`,
 				`task`.`path_script`,
 				`task`.`name`
 				FROM `CentralAccountDB`.`group_task_queue`, `CentralAccountDB`.`task` WHERE `group_task_queue`.`task_id` =  `task`.`id`;";
@@ -73,6 +75,7 @@ class GroupTaskQueue
 				$gtq->setGroup_id($row->group_id);
 				$gtq->setErrorcount($row->errorcount);
 				$gtq->setConfigurationFromDb($row->configuration);
+				$gtq->setErrormessages($row->errormessages);
 				$gtq->setTask_id($row->task_id);
 				$gtq->setPath_script($row->path_script);
 				$gtq->setTaskname($row->name);
@@ -105,6 +108,26 @@ class GroupTaskQueue
 		$cmd->addParam(":configuration", $groupTaskQueue->getConfigurationForDb());
 		
 		$cmd->execute();
+	}
+	
+	/**
+	 *
+	 * @param GroupTaskQueue $groupTaskQueue
+	 */
+	public static function increaseErrorCount($groupTaskQueue)
+	{
+		$sql = "UPDATE `CentralAccountDB`.`group_task_queue`
+				SET
+				`errorcount` = `errorcount` + 1,
+				`errormessages` = :errormessages
+				WHERE  id = :gtqId;";
+		
+		$cmd = new DatabaseCommand($sql);
+		$cmd->BeginTransaction();
+		$cmd->addParam(":gtqId", $groupTaskQueue->getId());
+		$cmd->addParam(":errormessages", $groupTaskQueue->getErrormessages());
+		$cmd->execute();
+		$cmd->CommitTransaction();
 	}
 	
 	/**
@@ -233,5 +256,20 @@ class GroupTaskQueue
 	public function setErrorcount($errorcount)
 	{
 	    $this->errorcount = $errorcount;
+	}
+
+	public function getErrormessages()
+	{
+	    return $this->errormessages;
+	}
+	
+	public function setErrorMessages($errormessages)
+	{
+		$this->errormessages = $errormessages;
+	}
+
+	public function addErrormessage($errormessages)
+	{
+	    $this->errormessages .= $errormessages . "\n";
 	}
 }

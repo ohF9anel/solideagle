@@ -6,7 +6,7 @@
 
 
 <div class="row">
-	<div class="span4">
+	<div class="span6">
 		<h2>Group task queue</h2>
 
 
@@ -16,6 +16,8 @@
 					<td>Task Naam</td>
 					<td>Configuratie</td>
 					<td>Group id</td>
+					<td>Error count</td>
+					<td>Error messages</td>
 				</tr>
 			</thead>
 			<tbody>
@@ -24,12 +26,16 @@
 				{
 					?>
 
-				<tr>
+				<tr <?php if($gtq->getErrorCount()>0){echo 'class="alert alert-error"';} ?>>
 					<td><?php echo $gtq->getTaskname() ?>
 					</td>
-					<td><?php var_dump( $gtq->getConfiguration()) ?>
+					<td><pre><?php var_dump( $gtq->getConfiguration()) ?></pre>
 					</td>
 					<td><?php echo $gtq->getGroup_Id() ?>
+					</td>
+					<td><?php echo $gtq->getErrorCount() ?>
+					</td>
+					<td><pre><?php echo $gtq->getErrorMessages() ?></pre>
 					</td>
 				</tr>
 

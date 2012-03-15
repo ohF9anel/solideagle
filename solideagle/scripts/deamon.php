@@ -29,6 +29,8 @@ class deamon
 			if($script->runScript($grouptask))
 			{
 				GroupTaskQueue::addToRollback($grouptask);	
+			}else{
+				GroupTaskQueue::increaseErrorCount($grouptask);
 			}
 		}
 	}
