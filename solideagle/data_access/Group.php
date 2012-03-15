@@ -423,7 +423,7 @@ class Group
 			$tmpgroup->setName($row->name);
 			$tmpgroup->setDescription($row->description);
 				
-			$retArr[] = array($tmpgroup);
+			$retArr[] = $tmpgroup;
 				
 		});
 		
