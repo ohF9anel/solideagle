@@ -110,6 +110,55 @@ class GroupTaskQueue
 		$cmd->execute();
 	}
 	
+	/**
+	 * 
+	 * @param GroupTaskQueue $groupTaskQueue
+	 */
+	public static function addToRollback($groupTaskQueue)
+	{
+		$sql = "DELETE FROM  `CentralAccountDB`.`group_task_queue` WHERE `group_task_queue`.`id` = :gtqid";
+		
+		$cmd = new DatabaseCommand($sql);
+		
+		$cmd->BeginTransaction();
+		
+		
+		$cmd->addParam(":gtqid", $groupTaskQueue->getId());
+		$cmd->execute();
+		
+		$sql = "INSERT INTO `CentralAccountDB`.`group_task_rollback`
+				(
+				`task_id`,
+				`group_id`,
+				`original_configuration`,
+				`rollback_configuration`,
+				`task_executed_on`,
+				`task_executed_by`)
+				VALUES
+				(
+				:task_id,
+				:group_id,
+				:original_configuration,
+				:rollback_configuration,
+				:task_executed_on,
+				:task_executed_by 
+				);";
+		
+		$cmd->newQuery($sql);
+		
+		$cmd->addParam(":task_id", $groupTaskQueue->getTask_id());
+		$cmd->addParam(":group_id", $groupTaskQueue->getGroup_id());
+		$cmd->addParam(":original_configuration", $groupTaskQueue->getConfiguration());
+		$cmd->addParam(":rollback_configuration", NULL);
+		$cmd->addParam(":task_executed_on", NULL);
+		$cmd->addParam(":task_executed_by", NULL);
+		
+		$cmd->execute();
+		
+		$cmd->CommitTransaction();
+		
+	}
+	
 
 	public function getPath_script()
 	{
