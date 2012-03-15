@@ -3,15 +3,15 @@
 namespace AD;
 
 require_once('User.php');
-require_once('Group.php');
 require_once('data_access/Person.php');
 require_once('ConnectionLdap.php');
+require_once('ManageUser.php');
 
 use DataAccess\Person;
 
 $user = new User();
 
-$person = Person::getPersonById(58);
+$person = Person::getPersonById(70);
 
 $user->setCn($person->getFirstName() . ' ' . $person->getName() . ' (' . $person->getAccountUserName() . ')');
 $user->setUid($person->getAccountUserName());
@@ -31,12 +31,9 @@ $user->setMobile($person->getMobile());
 $user->setMail($person->getEmail());
 $user->setInfo($person->getOtherInformation());
 
+$user->setEnabled($person->getAccountActive());
 $user->addMemberOfGroups($person->getGroups());
 
-$conn = new ConnectionLDAP();
-
-$dn = 'CN=' . $user->getCn() . ',OU=gebruikers,DC=solideagle,DC=lok';
-
-$conn->updateUser($user->getUserInfo(), $dn, true);
+ManageUser::updateUser($user->getUserInfo());
 
 ?>
