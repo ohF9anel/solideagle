@@ -1,8 +1,9 @@
 <?php
+namespace ad;
 
-require_once 'scriptInterface.php';
+require_once 'scripts/scriptInterface.php';
 
-class createou implements scriptInterface
+class createou implements \scriptInterface
 {
 	public function getParams()
 	{
@@ -23,12 +24,8 @@ class createou implements scriptInterface
 			
 			
 			
-			//create on SS
-			
-			
-			
-			//create on Google
-				
+		
+			return true;
 	}
 	
 	

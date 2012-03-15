@@ -9,6 +9,8 @@ interface scriptInterface
 	/**
 	 * 
 	 * @param GroupTaskQueue $grouptaskqueue
+	 * 
+	 * return true when succes, false when fail
 	 */
 	public function runScript($grouptaskqueue);
 	
