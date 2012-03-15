@@ -1345,7 +1345,10 @@ namespace DataAccess
          */
         public static function getUsersForDisplayByGroup($groupid = -1)
         {
-        	$sql = "SELECT DISTINCT
+        	
+        	if($groupid !== -1)
+        	{
+        	$sql = "SELECT
 					`person`.`id`,
 					`person`.`account_username`,
 					`person`.`account_active`,
@@ -1354,11 +1357,21 @@ namespace DataAccess
 					`person`.`made_on`
 					FROM `CentralAccountDB`.`person`, `CentralAccountDB`.`group_person`
 					WHERE
-					((:groupid = -1) OR (`person`.`id` = `group_person`.`person_id` ))
+					(`person`.`id` = `group_person`.`person_id` ))
 					AND
 					`person`.`deleted` = 0
 					AND
-					((:groupid = -1) OR (`group_person`.`group_id` =  :groupid))";
+					(`group_person`.`group_id` =  :groupid))";
+        	}else{
+	        		$sql = "SELECT
+	        		`person`.`id`,
+	        		`person`.`account_username`,
+	        		`person`.`account_active`,
+	        		`person`.`first_name`,
+	        		`person`.`name`,
+	        		`person`.`made_on`
+	        		FROM `CentralAccountDB`.`person`;";
+        	}
         	
         	$cmd = new DatabaseCommand($sql);
         	
