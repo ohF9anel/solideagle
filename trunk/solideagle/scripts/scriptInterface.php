@@ -1,11 +1,16 @@
 <?php
-namespace scripts;
+
 
 interface scriptInterface
 {
 	
 	public function getParams();
-	public function runScript($config);
+	
+	/**
+	 * 
+	 * @param GroupTaskQueue $grouptaskqueue
+	 */
+	public function runScript($grouptaskqueue);
 	
 	
 }

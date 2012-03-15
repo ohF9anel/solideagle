@@ -1,5 +1,5 @@
 <?php
-namespace scripts;
+
 
 require_once '../scriptInterface.php';
 

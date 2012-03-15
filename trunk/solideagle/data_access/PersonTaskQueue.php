@@ -1,6 +1,5 @@
 <?php
 
-
 namespace DataAccess;
 
 use Database\DatabaseCommand;

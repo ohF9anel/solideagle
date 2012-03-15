@@ -104,9 +104,11 @@ class Group
 
 		$cmd->BeginTransaction();
 
-		Group::addGroupRecursive($group,$cmd);
+		$id = Group::addGroupRecursive($group,$cmd);
 
 		$cmd->CommitTransaction();
+		
+		return $id;
 	}
 
 	/**
@@ -166,6 +168,7 @@ class Group
 
 		$cmd->execute();
 
+	
 
 		foreach ($group->getChildGroups() as $childgrp)
 		{
@@ -174,6 +177,8 @@ class Group
 
 			Group::addGroupRecursive($childgrp,$cmd);
 		}
+		
+		return $group->id;
 	}
 
 
