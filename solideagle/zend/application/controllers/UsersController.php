@@ -5,11 +5,13 @@ require_once 'data_access/Person.php';
 require_once 'data_access/Task.php';
 require_once 'data_access/PersonTaskQueue.php';
 require_once 'data_access/Group.php';
+require_once 'data_access/GroupTaskQueue.php';
 use DataAccess\Person;
 use DataAccess\Type;
 use DataAccess\Task;
 use DataAccess\PersonTaskQueue;
 use DataAccess\Group;
+use DataAcces\GroupTaskQueue;
 
 
 class UsersController extends Zend_Controller_Action
@@ -111,8 +113,15 @@ class UsersController extends Zend_Controller_Action
     		return;
     	}
     	
-    	Group::addGroup($group);
+    	$groupid = Group::addGroup($group);
     	
+    	$gtaskq = new GroupTaskQueue();
+    	
+    	$gtaskq->setGroup_id($groupid);
+    	$gtaskq->setTask_id("27");
+    	$gtaskq->setConfiguration("");
+    	
+    	GroupTaskQueue::addTaskToQueue($gtaskq);
     	
     	
     }
