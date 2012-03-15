@@ -44,41 +44,6 @@ class ConnectionLDAP
     {
         return $this->conn;
     }
-
-    public function setConn($conn)
-    {
-        $this->conn = $conn;
-    }
-    
-    
-    /**
-     * Adds an OU to AD in the right place according to the parents
-     * @param Group[] $arrParentsGroups     all the group parents of the child
-     * @param Group $childGroup             the child group object (new OU to add)
-     * @return boolean                      
-     */
-    public function addOU($arrParentsGroups, $childGroup)
-    {
-        if ($childGroup == null)
-            return false;
-        
-        $info['objectClass'] = "organizationalUnit";
-        $info["ou"] = $childGroup->getName();
-        if ($arrParentsGroups == null)
-        {
-            $r = ldap_add($this->conn, "OU=" . $childGroup->getName() . ", " . AD_DC, $info);
-        }
-        else
-        {
-            $ouString = "";
-            for($i = 0; $i < sizeof($arrParentsGroups); $i++)
-            {
-                $ouString .= "OU=" . $arrParentsGroups[$i]->getName() . ", ";
-            }
-            $r = ldap_add($this->conn, "OU=" . $childGroup->getName() . ", " . $ouString . AD_DC, $info);
-        }
-    }
-    
 }
 
 ?>
