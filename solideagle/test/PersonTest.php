@@ -16,7 +16,7 @@ $person->addType(new Type(1, null));
 $person->addGroup(new Group(45, "leerkrachten")); // ou groep leerkrachten
 $person->addGroup(new Group(46, "admins"));       // ou groep admins
 
-//$person->setId(58);
+$person->setId(58);
 $person->setAccountUsername("bodsonb");
 $person->setAccountPassword("Azerty123");
 $person->setAccountActive(true);
@@ -47,7 +47,7 @@ $person->setParentOccupation("Stripper");
 $errors = Person::validatePerson($person);
 
 var_dump($errors);
-$id = Person::addPerson($person);
+$id = Person::updatePerson($person);
 
 
 echo $id;

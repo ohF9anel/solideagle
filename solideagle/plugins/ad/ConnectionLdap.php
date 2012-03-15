@@ -3,7 +3,8 @@
 namespace AD;
 
 require_once 'data_access/Person.php';
-require_once 'test/config.php';
+require_once 'data_access/Group.php';
+require_once 'config.php';
 use DataAccess\Person;
 
 
@@ -36,8 +37,8 @@ class ConnectionLDAP
         $userInfo["objectclass"] = "user";
         
         // attribute "memberOfGroups" not permitted in userInfo
-        $memberOfGroups = $userInfo['memberOfGroups'];
-        unset($userInfo['memberOfGroups']);
+        $groups = $userInfo['groups'];
+        unset($userInfo['groups']);
 
         $userInfo["useraccountcontrol"] = $enabled? "66048" : "66050";
 
@@ -45,15 +46,20 @@ class ConnectionLDAP
         {
             echo "Successfully added: " . $userInfo["cn"];
             
-            // add user to correct group
-            foreach($memberOfGroups as $memberOfGroup)
-            {
-                $group_name = "CN=" . $memberOfGroup->getName() . ",OU=groepen,DC=solideagle,DC=lok";
-                
-                $group_info['member'] = $dn; // User's DN is added to group's 'member' array
-                ldap_mod_add($this->conn, $group_name, $group_info);
-                echo "Added to group: " . $group_name;
-            }
+            $this->addUserToGroups($groups, $dn);
+        }
+    }
+    
+    public function addUserToGroups($groups, $dn)
+    {
+        // add user to correct group
+        foreach($groups as $group)
+        {
+            $group_name = "CN=" . $group->getName() . ",OU=groepen,DC=solideagle,DC=lok";
+
+            $group_info['member'] = $dn;
+            ldap_mod_add($this->conn, $group_name, $group_info);
+            echo "Added to group: " . $group_name;
         }
     }
     
@@ -63,7 +69,13 @@ class ConnectionLDAP
             return false;
         
         $userInfo['objectclass'] = "user";
+        
+        // cn not permitted to update
         unset($userInfo["cn"]);
+        
+        // attribute "memberOfGroups" not permitted in userInfo
+        $groups = $userInfo['groups'];
+        unset($userInfo['groups']);
         
         $sr = ldap_search($this->conn, $dn, "(uid=" . $userInfo['uid'] . ")");
         $ent = ldap_get_entries($this->conn, $sr);
@@ -75,18 +87,55 @@ class ConnectionLDAP
  
         $userInfo["useraccountcontrol"] = $enabled? $enable : $disable;
         
-        $userInfo["homeDirectory"] = "\\\S1\shares\home\bodsonb";
-        $userInfo["homeDrive"] = "T:";
+        // remove previous group memberships
+        if(isset($ent[0]["memberof"]))
+        {
+            for($i = 0; $i < sizeof($ent[0]["memberof"]) - 1; $i++)
+            {
+                $group = $ent[0]["memberof"][$i];
+                $group_info['member'] = array();
+                ldap_mod_del($this->conn, $group, $group_info);
+            }
+        }
         
         if (ldap_modify($this->conn, $dn, $userInfo))
         {
             echo "Successfully updated";
+            
+            $this->addUserToGroups($groups, $dn);
         }
     }
     
     public static function delUserByUsername($userName)
     {
         
+    }
+    
+    public function addOU($arrParentsGroups, $childGroup)
+    {
+        if ($childGroup == null)
+            return false;
+        
+        $info['objectClass'] = "organizationalUnit";
+        $info["ou"] = $childGroup->getName();
+        if ($arrParentsGroups == null)
+        {
+            $r = ldap_add($this->conn, "OU=" . $childGroup->getName() . ", " . AD_DC, $info);
+        }
+        else
+        {
+            $ouString = "";
+            for($i = 0; $i < sizeof($arrParentsGroups); $i++)
+            {
+                $ouString .= "OU=" . $arrParentsGroups[$i]->getName() . ", ";
+            }
+            $r = ldap_add($this->conn, "OU=" . $childGroup->getName() . ", " . $ouString . AD_DC, $info);
+        }
+        
+        
+
+        // add data to directory
+        //$r = ldap_add($this->conn, "OU=geb,OU=gebruikers," . AD_DC, $info);
     }
     
 }

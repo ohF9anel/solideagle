@@ -11,9 +11,7 @@ use DataAccess\Person;
 
 $user = new User();
 
-$person = Person::getPersonById(59);
-
-var_dump($person);
+$person = Person::getPersonById(58);
 
 $user->setCn($person->getFirstName() . ' ' . $person->getName() . ' (' . $person->getAccountUserName() . ')');
 $user->setUid($person->getAccountUserName());
@@ -33,15 +31,12 @@ $user->setMobile($person->getMobile());
 $user->setMail($person->getEmail());
 $user->setInfo($person->getOtherInformation());
 
-$user->addMembersOfGroup($person->getGroups());
-
-//$userGroups->addMember(new Group())
-
+$user->addMemberOfGroups($person->getGroups());
 
 $conn = new ConnectionLDAP();
 
 $dn = 'CN=' . $user->getCn() . ',OU=gebruikers,DC=solideagle,DC=lok';
 
-$conn->addUser($user->getUserInfo(), $dn, true);
+$conn->updateUser($user->getUserInfo(), $dn, true);
 
 ?>
