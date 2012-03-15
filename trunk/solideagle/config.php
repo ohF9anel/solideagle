@@ -1,5 +1,12 @@
 <?php
 
+/* ----------GLOBAL CONFIG VARS---------- */
+
+define('AD_DC', 'DC=solideagle,DC=lok');
+define('AD_USERNAME', 'Administrator@solideagle.lok');
+define('AD_PASSWORD', 'ChaCha69');
+define('AD_IP_ADDRESS', 'S1');
+
 /*TODO: Disable asserts here when deploying */
 
 // Active assert and make it quiet

@@ -365,8 +365,6 @@ class Group
 		return $groups;
 	}
 
-
-
 	public static function delGroupById($groupId)
 	{
 		//do not delete if group has members or subgroups!!!??!
@@ -464,7 +462,7 @@ class Group
 	}
 
 	
-	public static function getGroupById($groupid)
+	public static function getGroupById($groupId)
 	{
 		$sql = "SELECT p.`id`,
 		p.`name`,
@@ -472,12 +470,10 @@ class Group
 		
 		$cmd = new DatabaseCommand($sql);
 		
-		$cmd->addParam(":groupid", $group->getId());
-		
+		$cmd->addParam(":groupid", $groupId);
 		
 		if($row = $cmd->executeReader()->read())
 		{
-			
 			$tmpgroup = new Group();
 			$tmpgroup->setId($row->id);
 			$tmpgroup->setName($row->name);

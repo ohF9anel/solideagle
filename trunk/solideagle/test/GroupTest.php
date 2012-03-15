@@ -44,7 +44,7 @@ echo "Script ran in $time seconds\n";
 die();
 
 $childGroup = new Group();
-$childGroup->setId(44);
+$childGroup->setId(84);
 
 
 var_dump(Group::getParents($childGroup));
@@ -57,42 +57,47 @@ var_dump(Group::getParents($childGroup));
 //var_dump( Group::isValidGroup($group));
 
 //var_dump(Group::validateGroup($group));
-
-$group->setName("");
-$group->setDescription("Just testing");
-
-Group::addGroup($group);
-
-//var_dump( Group::isValidGroup($group));
-
-//var_dump(Group::validateGroup($group));
-
-$group->setName("sqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsd");
-$group->setDescription("Just testing");
+//$pgroup = new Group('', 'eerstes');
+//$pgroup->setParentId(83);
+////$pgroup->setName("gebruikers");
+////$pgroup->setDescription("Just testing");
+////
+////$pgroup->addChildGroup(new Group('', 'leerkrachten'));
+////$pgroup->addChildGroup(new Group('', 'admins'));
+////$pgroup->addChildGroup(new Group('', 'staff'));
+////
+//Group::addGroup($pgroup);
 
 //var_dump( Group::isValidGroup($group));
 
 //var_dump(Group::validateGroup($group));
 
+//$group->setName("sqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsdsqdfqsd");
+//$group->setDescription("Just testing");
+
+//var_dump( Group::isValidGroup($group));
+
+//var_dump(Group::validateGroup($group));
 
 
 
-$childGroup = new Group();
 
-$childGroup->setName("TheBigLeaf");
-$childGroup->setDescription("Just testing leafs");
+//$childGroup = new Group();
+//
+//$childGroup->setName("TheBigLeaf");
+//$childGroup->setDescription("Just testing leafs");
+//
+//$childGroupGroup = new Group();
+//
+//$childGroupGroup->setName("TheBigLeafLeaf");
+//$childGroupGroup->setDescription("Just testing leaf leafs");
+//
+//
+//$childGroup->addChildGroup($childGroupGroup);
+//
+//$group->addChildGroup($childGroup);
 
-$childGroupGroup = new Group();
-
-$childGroupGroup->setName("TheBigLeafLeaf");
-$childGroupGroup->setDescription("Just testing leaf leafs");
-
-
-$childGroup->addChildGroup($childGroupGroup);
-
-$group->addChildGroup($childGroup);
-
-Group::addGroup($group);
+//Group::addGroup($group);
 
 
 

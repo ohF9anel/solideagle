@@ -25,7 +25,7 @@ class User
     private $mail;
     private $info;
     
-    private $memberOfGroups = array();
+    private $groups = array();
     
     /**
      * returns all properties of an AD user
@@ -133,14 +133,14 @@ class User
         $this->info = $info;
     }
     
-    public function addMembersOfGroup($memberOfGroups)
+    public function addMemberOfGroups($groups)
     {
-        $this->memberOfGroups = $memberOfGroups;
+        $this->groups = $groups;
     }
     
-    public function getMembersOfGroups()
+    public function getMemberOfGroups()
     {
-        return $this->memberOfGroups;
+        return $this->groups;
     }
     
     public function getCn()
