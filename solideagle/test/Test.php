@@ -1,10 +1,14 @@
 <?php
 
-include_once 'data_access/Person.php';
-use DataAccess\Person;
+include('Net/SSH2.php');
 
+$ssh = new Net_SSH2('10.3.7.111');
+if (!$ssh->login('Administrator@solideagle.lok', 'ChaCha69')) {
+	exit('Login Failed');
+}
 
-var_dump(Person::getUsersForDisplayByGroup())
+echo $ssh->exec('ls');
+
 
 
 ?>

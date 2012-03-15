@@ -2,16 +2,26 @@
 
 function render_tree($roots)
 {
+	if(count($roots) === 0)
+		return;
+	
+	echo "<ul class='hi'>\n";
 	foreach($roots as $group)
 	{
-		echo "<ul>\n<li><a href='#'>";
-		echo $group->getName() . "(" . $group->getId() . ")\n";
+		echo "<li>\n<a href='#sqdf'>";
+		echo $group->getName() . "(" . $group->getId() . ")" . "</a>\n";
+		
+		
 		render_tree($group->getChildGroups());
-		echo "</a></li></ul>\n";
+		echo "</li>\n";
 	}
+	echo "</ul>\n";
 }
 
 ?>
+
+
+</div>
 
 
 <script>
