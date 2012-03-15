@@ -22,10 +22,12 @@ class createou implements \scriptInterface
 			
 			//create on AD
 			
+			$grouptaskqueue->setRollback_Configuration("Rollbackconf");
 			
 			
+			return false; //it failed for some reason
 		
-			return true;
+			return true; //succes
 	}
 	
 	

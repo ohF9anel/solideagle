@@ -1,6 +1,7 @@
 <?php
 namespace DataAcces;
 require_once 'database/databasecommand.php';
+require_once 'helpers/dateconverter.php';
 
 use Database\DatabaseCommand;
 
@@ -10,6 +11,7 @@ class GroupTaskQueue
 	private $task_id;
 	private $group_id;
 	private $configuration;
+	private $rollback_configuration;
 	private $path_script;
 	private $taskname;
 	
@@ -43,15 +45,7 @@ class GroupTaskQueue
 	    $this->group_id = $group_id;
 	}
 
-	public function getConfiguration()
-	{
-	    return $this->configuration;
-	}
 
-	public function setConfiguration($configuration)
-	{
-	    $this->configuration = $configuration;
-	}
 	
 	
 	public static function getTasksToRun()
@@ -75,7 +69,7 @@ class GroupTaskQueue
 				
 				$gtq->setId($row->id);
 				$gtq->setGroup_id($row->group_id);
-				$gtq->setConfiguration($row->configuration);
+				$gtq->setConfigurationFromDb($row->configuration);
 				$gtq->setTask_id($row->task_id);
 				$gtq->setPath_script($row->path_script);
 				$gtq->setTaskname($row->name);
@@ -105,7 +99,7 @@ class GroupTaskQueue
 		$cmd = new DatabaseCommand($sql);
 		$cmd->addParam(":group_id", $groupTaskQueue->getGroup_id());
 		$cmd->addParam(":task_id", $groupTaskQueue->getTask_id());
-		$cmd->addParam(":configuration", $groupTaskQueue->getConfiguration());
+		$cmd->addParam(":configuration", $groupTaskQueue->getConfigurationForDb());
 		
 		$cmd->execute();
 	}
@@ -148,9 +142,9 @@ class GroupTaskQueue
 		
 		$cmd->addParam(":task_id", $groupTaskQueue->getTask_id());
 		$cmd->addParam(":group_id", $groupTaskQueue->getGroup_id());
-		$cmd->addParam(":original_configuration", $groupTaskQueue->getConfiguration());
-		$cmd->addParam(":rollback_configuration", NULL);
-		$cmd->addParam(":task_executed_on", NULL);
+		$cmd->addParam(":original_configuration", $groupTaskQueue->getConfigurationForDb());
+		$cmd->addParam(":rollback_configuration", $groupTaskQueue->getRollback_ConfigurationForDb());
+		$cmd->addParam(":task_executed_on", DateConverter::timestampDateToDb(time()));
 		$cmd->addParam(":task_executed_by", NULL);
 		
 		$cmd->execute();
@@ -178,5 +172,53 @@ class GroupTaskQueue
 	public function setTaskname($taskname)
 	{
 	    $this->taskname = $taskname;
+	}
+	
+	/********************/
+	
+	//PHP 5.3 does not support $this or ::self in closures
+	//not so pretty workaround
+	
+	public function setConfigurationFromDb($config)
+	{
+		$this->configuration = $config;
+	}
+	
+	public function getConfigurationForDb()
+	{
+		return $this->configuration;
+	}
+	
+	public function setRollback_ConfigurationFromDb($config)
+	{
+		$this->rollback_configuration = $config;
+	}
+	
+	public function getRollback_ConfigurationForDb()
+	{
+		return $this->rollback_configuration;
+	}
+	
+	/****************/
+	
+	public function getConfiguration()
+	{
+		return base64_decode(unserialize($this->configuration));
+	}
+	
+	public function setConfiguration($configuration)
+	{
+		$this->configuration =  base64_encode(serialize($configuration));
+	}
+
+	public function getRollback_configuration()
+	{
+		return base64_decode(unserialize($this->rollback_configuration));
+	  
+	}
+
+	public function setRollback_configuration($rollback_configuration)
+	{
+		$this->rollback_configuration =  base64_encode(serialize($rollback_configuration));
 	}
 }
