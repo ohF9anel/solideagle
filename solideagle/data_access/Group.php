@@ -463,6 +463,30 @@ class Group
 
 	}
 
+	
+	public static function getGroupById($groupid)
+	{
+		$sql = "SELECT p.`id`,
+		p.`name`,
+		p.`description`FROM `group` p WHERE  p.`id` = :groupid";
+		
+		$cmd = new DatabaseCommand($sql);
+		
+		$cmd->addParam(":groupid", $group->getId());
+		
+		
+		if($row = $cmd->executeReader()->read())
+		{
+			
+			$tmpgroup = new Group();
+			$tmpgroup->setId($row->id);
+			$tmpgroup->setName($row->name);
+			$tmpgroup->setDescription($row->description);
+		}
+
+		return $tmpgroup;
+	
+	}
 
 
 
