@@ -3,9 +3,11 @@
 /* ----------GLOBAL CONFIG VARS---------- */
 
 define('AD_DC', 'DC=solideagle,DC=lok');
+define('AD_GROUPS_OU', 'groepen');
+define('AD_USERS_OU', 'gebruikers');
+define('AD_LDAPS_URL', 'ldaps://S1.solideagle.lok');
 define('AD_USERNAME', 'Administrator@solideagle.lok');
 define('AD_PASSWORD', 'ChaCha69');
-define('AD_IP_ADDRESS', 'S1');
 
 /*TODO: Disable asserts here when deploying */
 

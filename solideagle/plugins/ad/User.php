@@ -25,7 +25,9 @@ class User
     private $mail;
     private $info;
     
+    // to be unset before adding
     private $groups = array();
+    private $enabled = true;
     
     /**
      * returns all properties of an AD user
@@ -141,6 +143,16 @@ class User
     public function getMemberOfGroups()
     {
         return $this->groups;
+    }
+    
+    public function getEnabled()
+    {
+        return $this->enabled;
+    }
+
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
     }
     
     public function getCn()

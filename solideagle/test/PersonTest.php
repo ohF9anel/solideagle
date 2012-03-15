@@ -13,17 +13,17 @@ use Utils\UsernameGenerator;
 $person = new Person();
 
 $person->addType(new Type(1, null));
-$person->addGroup(new Group(45, "leerkrachten")); // ou groep leerkrachten
-$person->addGroup(new Group(46, "admins"));       // ou groep admins
+$person->addGroup(new Group(84, "eerstes")); // ou groep leerkrachten
+//$person->addGroup(new Group(46, "admins"));       // ou groep admins
 
-$person->setId(58);
-$person->setAccountUsername("bodsonb");
+//$person->setId(58);
+$person->setAccountUsername("bruno");
 $person->setAccountPassword("Azerty123");
 $person->setAccountActive(true);
 $person->setAccountActiveUntill("20120305151546");
 $person->setAccountActiveFrom("20120304111111");
-$person->setFirstName("Bruno");
-$person->setName("Bodson");
+$person->setFirstName("verbier");
+$person->setName("kelly");
 $person->setGender("M");
 $person->setBirthDate("19890102");
 $person->setBirthPlace("Gent");
@@ -47,7 +47,7 @@ $person->setParentOccupation("Stripper");
 $errors = Person::validatePerson($person);
 
 var_dump($errors);
-$id = Person::updatePerson($person);
+$id = Person::addPerson($person);
 
 
 echo $id;
