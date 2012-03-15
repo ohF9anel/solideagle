@@ -4,25 +4,33 @@ function render_tree($roots)
 {
 	foreach($roots as $group)
 	{
-		echo "<ul>\n<li>";
+		echo "<ul>\n<li><a href='#'>";
 		echo $group->getName() . "(" . $group->getId() . ")\n";
 		render_tree($group->getChildGroups());
-		echo "</li></ul>\n";
+		echo "</a></li></ul>\n";
 	}
 }
 
 ?>
+
+
+<script>
+
+	$(function(){
+		$("#grouptree").jstree();
+	});
+</script>
 
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span2">
 			<h1>Groepen</h1>
 
-			<?php 
-			
+			<div id="grouptree">
+			<?php 		
 				render_tree($this->groups);
 			?>
-
+			</div>
 		</div>
 		<div class="span10">
 			<h1>Gebruikers</h1>
