@@ -119,7 +119,7 @@ class UsersController extends Zend_Controller_Action
     	
     	$gtaskq->setGroup_id($groupid);
     	$gtaskq->setTask_id("27");
-    	$gtaskq->setConfiguration("");
+    	$gtaskq->setConfiguration(array("param1" => "mijn eerste parameter","param2" => "i wanna go surfing", "belangerijk" => "haha toch niet"));
     	
     	GroupTaskQueue::addTaskToQueue($gtaskq);
     	

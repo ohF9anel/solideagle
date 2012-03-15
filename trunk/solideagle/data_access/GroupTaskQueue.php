@@ -14,6 +14,7 @@ class GroupTaskQueue
 	private $rollback_configuration;
 	private $path_script;
 	private $taskname;
+	private $errorcount;
 	
 	public function getId()
 	{
@@ -55,6 +56,7 @@ class GroupTaskQueue
 				`group_task_queue`.`task_id`,
 				`group_task_queue`.`group_id`,
 				`group_task_queue`.`configuration`,
+				`group_task_queue`.`errorcount`,
 				`task`.`path_script`,
 				`task`.`name`
 				FROM `CentralAccountDB`.`group_task_queue`, `CentralAccountDB`.`task` WHERE `group_task_queue`.`task_id` =  `task`.`id`;";
@@ -69,6 +71,7 @@ class GroupTaskQueue
 				
 				$gtq->setId($row->id);
 				$gtq->setGroup_id($row->group_id);
+				$gtq->setErrorcount($row->errorcount);
 				$gtq->setConfigurationFromDb($row->configuration);
 				$gtq->setTask_id($row->task_id);
 				$gtq->setPath_script($row->path_script);
@@ -203,7 +206,7 @@ class GroupTaskQueue
 	
 	public function getConfiguration()
 	{
-		return base64_decode(unserialize($this->configuration));
+		return unserialize(base64_decode($this->configuration));
 	}
 	
 	public function setConfiguration($configuration)
@@ -213,12 +216,22 @@ class GroupTaskQueue
 
 	public function getRollback_configuration()
 	{
-		return base64_decode(unserialize($this->rollback_configuration));
+		return unserialize(base64_decode($this->rollback_configuration));
 	  
 	}
 
 	public function setRollback_configuration($rollback_configuration)
 	{
 		$this->rollback_configuration =  base64_encode(serialize($rollback_configuration));
+	}
+
+	public function getErrorcount()
+	{
+	    return $this->errorcount;
+	}
+
+	public function setErrorcount($errorcount)
+	{
+	    $this->errorcount = $errorcount;
 	}
 }

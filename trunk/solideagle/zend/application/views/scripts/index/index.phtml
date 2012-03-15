@@ -1,3 +1,49 @@
 
 
-<h1>Startpagina</h1>
+<div class="page-header">
+<h1>Dashboard</h1>
+</div>
+
+
+<div class="row">
+	<div class="span4">
+		<h2>Group task queue</h2>
+
+
+		<table class="table">
+			<thead>
+				<tr>
+					<td>Task Naam</td>
+					<td>Configuratie</td>
+					<td>Group id</td>
+				</tr>
+			</thead>
+			<tbody>
+
+				<?php foreach ($this->groupTaskQueue as $gtq)
+				{
+					?>
+
+				<tr>
+					<td><?php echo $gtq->getTaskname() ?>
+					</td>
+					<td><?php var_dump( $gtq->getConfiguration()) ?>
+					</td>
+					<td><?php echo $gtq->getGroup_Id() ?>
+					</td>
+				</tr>
+
+				<?php
+	} ?>
+			</tbody>
+		</table>
+	</div>
+
+	<div class="span4">
+	<h2>Group task rollback</h2>
+	
+	
+	
+	</div>
+</div>
+

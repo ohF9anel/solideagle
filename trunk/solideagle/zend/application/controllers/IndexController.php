@@ -1,5 +1,9 @@
 <?php
 
+require_once 'data_access/GroupTaskQueue.php';
+
+use DataAcces\GroupTaskQueue;
+
 class IndexController extends Zend_Controller_Action
 {
 
@@ -10,7 +14,7 @@ class IndexController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        // action body
+       $this->view->groupTaskQueue = GroupTaskQueue::getTasksToRun();
     }
 
 

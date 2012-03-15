@@ -13,13 +13,15 @@
 <?php 
 
 
+
+$this->headScript()->appendFile($this->SE_path . "/js/jquery-1.7.1.min.js");
 $this->headScript()->appendFile($this->SE_path . "/js/jquery.form.js");
 $this->headScript()->appendFile($this->SE_path . "/js/jquery.easytabs.min.js");
 $this->headScript()->appendFile($this->SE_path . "/js/jstree/jquery.jstree.js");
 
 $this->headScript()->appendFile($this->SE_path . "/bootstrap/js/bootstrap.min.js");
 
-echo $this->jQuery(); 
+//echo $this->jQuery(); 
 
 echo $this->headScript(); 
 
