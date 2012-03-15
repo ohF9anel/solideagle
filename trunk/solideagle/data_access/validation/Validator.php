@@ -84,9 +84,9 @@ class Validator
                     {
                             $valErrors[] = ValidationError::INT_TOO_SMALL;
                     }
-                    else if($val > $maxval)
+                    else if($maxval !== NULL && $val > $maxval)
                     {
-                            $valErrors[] = ValidationError::INT_TOO_BIG;
+                            $valErrors[] = ValidationError::INT_TOO_LARGE;
                     }
                 }
 
