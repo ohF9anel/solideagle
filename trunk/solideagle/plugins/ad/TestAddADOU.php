@@ -2,16 +2,22 @@
 
 namespace AD;
 
-require_once('ConnectionLdap.php');
+require_once('ManageOU.php');
 require_once('data_access/Group.php');
 
 use DataAccess\Group;
 
-$cgroup = Group::getGroupById(84);
-$pgroup = Group::getParents($cgroup);
+//$cgroup = Group::getGroupById(84);
+//$pgroup = Group::getParents($cgroup);
+//
+//$conn = new ConnectionLDAP();
+//
+//$conn->addOU($pgroup, $cgroup);
 
-$conn = new ConnectionLDAP();
+$group = Group::getGroupById(76);
 
-$conn->addOU($pgroup, $cgroup);
+ManageOU::updateOU($group);
+
+
 
 ?>
