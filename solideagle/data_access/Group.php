@@ -365,6 +365,8 @@ class Group
 		return $groups;
 	}
 
+
+
 	public static function delGroupById($groupId)
 	{
 		//do not delete if group has members or subgroups!!!??!
@@ -454,6 +456,14 @@ class Group
 				$validationErrors[] = "Groep naam mag geen speciale tekens bevatten";
 			}
 		}
+		
+		foreach(Validator::validateInt($group->getParentId()) as $valError)
+		{
+			if($valError == \Validation\ValidationError::NO_NUMBER)
+			{
+				$validationErrors[] = "Parentid moet een nummer zijn!";
+			}
+		}
 
 
 		return $validationErrors;
@@ -462,7 +472,7 @@ class Group
 	}
 
 	
-	public static function getGroupById($groupId)
+	public static function getGroupById($groupid)
 	{
 		$sql = "SELECT p.`id`,
 		p.`name`,
@@ -470,10 +480,13 @@ class Group
 		
 		$cmd = new DatabaseCommand($sql);
 		
-		$cmd->addParam(":groupid", $groupId);
+		$cmd->addParam(":groupid", $groupid);
+		
+		$tmpgroup = NULL;
 		
 		if($row = $cmd->executeReader()->read())
 		{
+			
 			$tmpgroup = new Group();
 			$tmpgroup->setId($row->id);
 			$tmpgroup->setName($row->name);

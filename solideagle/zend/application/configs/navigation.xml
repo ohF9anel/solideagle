@@ -25,6 +25,11 @@
 							<action>adduser</action>
 						
 						</adduser>
+						<addgroup>
+							<label>Groep toevoegen</label>
+								<controller>users</controller>
+								<action>addgroup</action>					
+						</addgroup>
 					</pages>
 				</groupsandusers>	
 				

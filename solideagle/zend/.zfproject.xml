@@ -21,6 +21,8 @@
           <actionMethod actionName="index"/>
           <actionMethod actionName="adduser"/>
           <actionMethod actionName="adduserpost"/>
+          <actionMethod actionName="addgrouppost"/>
+          <actionMethod actionName="addgroup"/>
         </controllerFile>
       </controllersDirectory>
       <formsDirectory enabled="false"/>
@@ -53,6 +55,9 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Users">
             <viewScriptFile forActionName="adduser"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Users">
+            <viewScriptFile forActionName="addgroup"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>

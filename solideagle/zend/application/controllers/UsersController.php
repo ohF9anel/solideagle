@@ -11,6 +11,7 @@ use DataAccess\Task;
 use DataAccess\PersonTaskQueue;
 use DataAccess\Group;
 
+
 class UsersController extends Zend_Controller_Action
 {
 
@@ -24,7 +25,7 @@ class UsersController extends Zend_Controller_Action
     	$this->view->users = Person::getUsersForDisplayByGroup();
     	$this->view->groups = Group::getTree();
     }
-    
+
     public function adduserAction()
     {
     	
@@ -78,8 +79,47 @@ class UsersController extends Zend_Controller_Action
  		
     }
 
+    public function addgroupAction()
+    {
+        $this->view->groups = Group::getTree();
+    }
 
+
+    public function addgrouppostAction()
+    {
+    	$this->_helper->layout()->disableLayout();
+    	$this->_helper->viewRenderer->setNoRender(true);
+   
+    	$data = $this->_request->getParams();
+    	$group = new Group();
+    	$group->setParentId($data["parentId"]);
+    	$group->setName($data["txtName"]);
+    	
+    	
+    	
+    	if(count($errors = Group::validateGroup($group)) > 0)
+    	{
+    		echo "<pre>";
+    		var_dump($errors);
+    		echo "</pre>";
+    		return;
+    	}
+    	
+    	if(Group::getGroupById($group->getParentId()) === NULL)
+    	{
+    		echo "Parent bestaat niet!";
+    		return;
+    	}
+    	
+    	Group::addGroup($group);
+    	
+    	
+    	
+    }
+    
 }
+
+
 
 
 
