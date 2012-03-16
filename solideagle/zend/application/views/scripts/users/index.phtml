@@ -8,7 +8,7 @@ function render_tree($roots)
 	echo "<ul class='hi'>\n";
 	foreach($roots as $group)
 	{
-		echo "<li groupid=" .  $group->getId() . ">\n<a href='#'>";
+		echo "<li id='tree".  $group->getId() .  "' groupid=" .  $group->getId() . ">\n<a href='#'>";
 		echo $group->getName() . "(" . $group->getId() . ")" . "</a>\n";
 		
 		
@@ -18,6 +18,7 @@ function render_tree($roots)
 	echo "</ul>\n";
 }
 
+
 ?>
 
 
@@ -26,6 +27,18 @@ function render_tree($roots)
 
 	$(function(){
 
+
+		var roots = [];
+
+		
+		<?php foreach($this->groups as $root)
+			//open roots
+		 {
+		 ?>
+		 roots.push(<?php echo "\"tree" . $root->getId() . "\"" ?>);
+		<?php
+		 }?>
+		
 
 		$.fn.dataTableExt.oStdClasses.sFilter = "span6";
 		$.fn.dataTableExt.oStdClasses.sLength  = "span6";
@@ -63,7 +76,8 @@ function render_tree($roots)
 	        "sAjaxSource": 'users/getusers'
 	    } );
 		
-		$("#grouptree").jstree()
+		$("#grouptree").jstree({"core" : { "initially_open" : [ "tree75" ]}})
+        
 		
 		.bind("select_node.jstree", function (event, data) { 
 			groupid = data.rslt.obj.attr("groupid");
@@ -126,6 +140,7 @@ function render_tree($roots)
 
 			<div id="grouptree">
 			<?php 		
+				
 				render_tree($this->groups);
 			?>
 			</div>
