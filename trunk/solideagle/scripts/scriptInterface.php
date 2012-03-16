@@ -8,11 +8,11 @@ interface scriptInterface
 	
 	/**
 	 * 
-	 * @param GroupTaskQueue $grouptaskqueue
+	 * @param BaseTaskQueue $taskqueue
 	 * 
 	 * return true when succes, false when fail
 	 */
-	public function runScript($grouptaskqueue);
+	public function runScript($taskqueue);
 	
 	
 }
