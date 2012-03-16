@@ -10,6 +10,8 @@ $ssh = new Net_SSH2('10.3.7.111');
 if (!$ssh->login('Administrator', 'ChaCha69')) {
 	exit('Login Failed');
 }
+var_dump($ssh->exec('cmd /Cdir'));
+//echo $ssh->exec('ls');
 
 $ssh->timeout = 10;
 
