@@ -1,9 +1,9 @@
 <?php
-namespace ad;
+
 
 require_once 'scripts/scriptInterface.php';
 
-class oumanager implements \scriptInterface
+class oumanager implements scriptInterface
 {
 	public function getParams()
 	{
@@ -28,7 +28,7 @@ class oumanager implements \scriptInterface
 		
 			if(!isset($params["action"]))
 			{
-				$grouptaskqueue->addErrorMessage("Probleem met configuratie");
+				$grouptaskqueue->setErrorMessages("Probleem met configuratie");
 				return false;
 			}
 				
@@ -36,8 +36,10 @@ class oumanager implements \scriptInterface
 			
 			if($params["action"] == "Add")
 			{
+				$grouptaskqueue->setErrorMessages("Not yet implemented");
 				return false; //it failed for some reason
 			}else{
+				$grouptaskqueue->setErrorMessages("Probleem met configuratie");
 				return false; //it failed for some reason
 			}
 			
