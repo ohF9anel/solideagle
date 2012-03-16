@@ -16,21 +16,25 @@ class ManageOU
      * @param Group $childGroup             the child group object (new OU to add)
      * @return boolean                      
      */
-    public static function addOU($childGroup)
+    public static function addOU($arrParentsGroups, $childGroup)
     {
         $connLdap = ConnectionLdap::singleton();
                 
-        if ($childGroup == null || $connLdap->getConn() == null)
+        if ($connLdap->getConn() == null)
              return array(false, "group or connection null");
+        
+        if ($childGroup == null)
+        {
+            Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nChild group cannot be null.", PEAR_LOG_ERR);
+            return false;
+        }
         
         $info['objectClass'] = "organizationalUnit";
         $info["ou"] = $childGroup->getName();
-        
-        $arrParentsGroups = Group::getParents($childGroup);
-        
+
         if ($arrParentsGroups == null)
         {
-            $r = ldap_add($connLdap->getConn(), "OU=" . $childGroup->getName() . ", " . AD_DC, $info);
+            ldap_add($connLdap->getConn(), "OU=" . $childGroup->getName() . ", " . AD_DC, $info);
         }
         else
         {
@@ -47,19 +51,79 @@ class ManageOU
         
     }
     
-    public static function updateOU($childGroup)
+    public static function updateOU($arrNewParentsGroups, $arrOldParentsGroups, $newChildGroup, $oldChildGroup)
     {
         $connLdap = ConnectionLdap::singleton();
                 
-        if ($childGroup == null || $connLdap->getConn() == null)
+        if ($connLdap->getConn() == null)
             return false;
         
+        if ($newChildGroup == null)
+        {
+            Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nChild group cannot be null.", PEAR_LOG_ERR);
+            return false;
+        }
+        
         $info['objectClass'] = "organizationalUnit";
-        $info["ou"] = $childGroup->getName();
+        $info["ou"] = $newChildGroup->getName();
         
-        $arrParentsGroups = Group::getParents($childGroup);
+        // every group should have a parent, because root is gebruikers
+        if ($arrNewParentsGroups == null)
+        {
+            Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \n\"" . $newChildGroup->getName() . "\" group has no parents, every group should be child of root!", PEAR_LOG_ERR);
+            return false;
+        }
         
-        var_dump($arrParentsGroups);
+        $oldDn = "";
+        for($i = 0; $i < sizeof($arrOldParentsGroups); $i++)
+        {
+            $oldDn .= "OU=" . $arrOldParentsGroups[$i]->getName() . ",";
+        }
+        $oldDn .= AD_DC;
+
+        $sr = ldap_search($connLdap->getConn(), $oldDn, "(OU=" . $oldChildGroup->getName() . ")");
+        $oldOuInfo = ldap_get_entries($connLdap->getConn(), $sr);
+        
+        if (!isset($oldOuInfo[0]))
+        {
+            Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nOU \"" . $oldChildGroup->getName() . "\" trying to update in AD not found in: \"" . $oldDn . "\".",PEAR_LOG_ERR);
+            return false;
+        }
+        
+        $newParentDn = "";
+        for($i = 0; $i < sizeof($arrNewParentsGroups); $i++)
+        {
+            $newParentDn .= "OU=" . $arrNewParentsGroups[$i]->getName() . ",";
+        }
+        $newParentDn .= AD_DC;
+        $newDn = "OU=" . $newChildGroup->getName() . "," . $newParentDn;
+        
+        var_dump($oldOuInfo[0]['distinguishedname'][0]);
+        var_dump($newChildGroup->getName());
+        var_dump($newDn);
+        var_dump($newParentDn);
+        if ($oldOuInfo[0]['distinguishedname'][0] != $newDn)
+        {
+            $r = ldap_rename($connLdap->getConn(), $oldOuInfo[0]['distinguishedname'][0], "OU=" . $newChildGroup->getName(), $newParentDn, true);
+            if ($r != 1)
+            {
+                Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nDN \"" . $oldOuInfo[0]['distinguishedname'][0] . "\" can't be removed or renamed to DN \"OU=" . $newChildGroup->getName() . "," . $newParentDn . "\".",PEAR_LOG_ERR);
+            }
+        }
+    }
+    
+    public static function removeOU($arrParentsGroups, $childGroup)
+    {
+        $connLdap = ConnectionLdap::singleton();
+                
+        if ($connLdap->getConn() == null)
+            return false;
+        
+        if ($childGroup == null)
+        {
+            Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nChild group cannot be null.", PEAR_LOG_ERR);
+            return false;
+        }
         
         // every group should have a parent, because root is gebruikers
         if ($arrParentsGroups == null)
@@ -67,6 +131,9 @@ class ManageOU
             Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \n\"" . $childGroup->getName() . "\" group has no parents, every group should be child of root!", PEAR_LOG_ERR);
             return false;
         }
+        
+        $info['objectClass'] = "organizationalUnit";
+        $info["ou"] = $childGroup->getName();
         
         $sr = ldap_search($connLdap->getConn(), "OU=" . AD_USERS_OU . ", " . AD_DC, "(OU=" . $childGroup->getName() . ")");
         $oldOuInfo = ldap_get_entries($connLdap->getConn(), $sr);
@@ -90,17 +157,8 @@ class ManageOU
         {
             ldap_rename($connLdap->getConn(), $oldOuInfo[0]['distinguishedname'][0], $childGroup->getName(), $parentDn, true);
         }
-
-//        else
-//        {
-//            $ouString = "";
-//            for($i = 0; $i < sizeof($arrParentsGroups); $i++)
-//            {
-//                $ouString .= "OU=" . $arrParentsGroups[$i]->getName() . ", ";
-//            }
-//            $r = ldap_add($connLdap->getConn(), "OU=" . $childGroup->getName() . ", " . $ouString . AD_DC, $info);
-//        }
-    
+        
+        
     }
 }
 

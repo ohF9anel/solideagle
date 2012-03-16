@@ -4,16 +4,25 @@ namespace AD;
 
 require_once 'ConnectionLdap.php';
 require_once 'data_access/Group.php';
+require_once 'logging/Logger.php';
 use DataAccess\Group;
+use Logging\Logger;
 
 class ManageUser
 {
-    public static function addUser($userInfo)
+    public static function addUser($userInfo, $arrParentsGroups)
     {
         $connLdap = ConnectionLDAP::singleton();
         
         if ($connLdap->getConn() == null)
             return false;
+        
+        // every group should have a parent, because root is gebruikers
+        if ($arrParentsGroups == null)
+        {
+            Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \n" . var_dump($arrParentsGroups) . "\nuser has no parent groups, every user should be at least child of root!", PEAR_LOG_ERR);
+            return false;
+        }
 
         $userInfo["objectclass"] = "user";
         $userInfo["useraccountcontrol"] = $userInfo['enabled'] ? "66048" : "66050";
@@ -24,42 +33,48 @@ class ManageUser
         $groups = $userInfo['groups'];
         unset($userInfo['groups']);
         unset($userInfo['enabled']);
-
-        $parents = Group::getParents($group);
         
         $dn = "CN=" . $userInfo['cn'] . ", OU=" . $group->getName() . ", ";
-        for($i = 0; $i < sizeof($parents); $i++)
+        for($i = 0; $i < sizeof($arrParentsGroups); $i++)
         {
-            $dn .= "OU=" . $parents[$i]->getName() . ", ";
+            $dn .= "OU=" . $arrParentsGroups[$i]->getName() . ", ";
         }
         
         $dn .= AD_DC;
         var_dump($dn);
         if (ldap_add($connLdap->getConn(), $dn, $userInfo))
         {
-            echo "Successfully added: " . $userInfo["cn"];
-            
             $this->addUserToGroups($groups, $dn);
+        }
+        else 
+        {
+            Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \n" . var_dump($userInfo) . "\nUser cannot be added to AD.", PEAR_LOG_ERR);
         }
     }
     
     public static function addUserToGroups($groups, $dn)
     {
         $connLdap = ConnectionLdap::singleton();
+        
+        if ($connLdap->getConn() == null)
+            return false;
+        
         // add user to correct group
         foreach($groups as $group)
         {
             $group_name = "CN=" . $group->getName() . ", OU=" . AD_GROUPS_OU . ", " . AD_DC;
-            var_dump($group_name);
             $group_info['member'] = $dn;
-            ldap_mod_add($connLdap->getConn(), $group_name, $group_info);
-            echo "Added to group: " . $group_name;
+            if (!ldap_mod_add($connLdap->getConn(), $group_name, $group_info))
+            {
+                Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nUser cannot be added to group \"" . $group_name . "\"", PEAR_LOG_ERR);
+            }
         }
     }
     
-    public static function updateUser($userInfo)
+    public static function updateUser($userInfo, $arrParentsGroups)
     {
         $connLdap = ConnectionLDAP::singleton();
+        
         if ($connLdap->getConn() == null)
             return false;
         
@@ -68,13 +83,11 @@ class ManageUser
         
         $group = $userInfo['groups'][0];
         $groups = $userInfo['groups'];
-
-        $parents = Group::getParents($group);
         
         $parentDn = "OU=" . $group->getName() . ", ";
-        for($i = 0; $i < sizeof($parents); $i++)
+        for($i = 0; $i < sizeof($arrParentsGroups); $i++)
         {
-            $parentDn .= "OU=" . $parents[$i]->getName() . ", ";
+            $parentDn .= "OU=" . $arrParentsGroups[$i]->getName() . ", ";
         }
         
         $parentDn .= AD_DC;
@@ -119,13 +132,16 @@ class ManageUser
         
         if (ldap_modify($connLdap->getConn(), $dn, $userInfo))
         {
-            echo "Successfully updated";
-            
             ManageUser::addUserToGroups($groups, $dn);
+        }
+        else
+        {
+            Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \n
+                " . var_dump($userInfo) . "\n: user cannot be modified", PEAR_LOG_ERR);
         }
     }
     
-    public static function delUserByUsername($userName)
+    public static function delUser($userName, $arrParentsGroups)
     {
         
     }

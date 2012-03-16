@@ -4,9 +4,11 @@ namespace AD;
 
 require_once 'data_access/Person.php';
 require_once 'data_access/Group.php';
+require_once 'logging/Logger.php';
 require_once 'config.php';
 use DataAccess\Person;
 use DataAccess\Group;
+use Logging\Logger;
 
 
 class ConnectionLDAP
@@ -17,9 +19,13 @@ class ConnectionLDAP
 
     public function __construct()
     {
-        $this->conn = ldap_connect(AD_LDAPS_URL) or die("Could not connect to server");  
+        $this->conn = ldap_connect(AD_LDAPS_URL);
+        if ($this->conn == null)
+             Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nConnection to AD cannot be made.", PEAR_LOG_ERR);
+        
         // bind to the LDAP server specified above 
-        $r = ldap_bind($this->conn, AD_USERNAME, AD_PASSWORD) or die("Could not bind to server");     
+        if (!ldap_bind($this->conn, AD_USERNAME, AD_PASSWORD))
+            Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nCould not bind to AD server with given credentials.", PEAR_LOG_ERR);  
 
         ldap_set_option($this->conn, LDAP_OPT_PROTOCOL_VERSION, 3);
         ldap_set_option($this->conn, LDAP_OPT_REFERRALS, 0);
