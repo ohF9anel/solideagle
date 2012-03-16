@@ -3,53 +3,29 @@
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Zend Framework Quickstart Application</title>
-
-
-
-
-
-
+<title>Gebruikersbeheer</title>
 <?php 
 
 
-
-$this->headScript()->appendFile($this->SE_path . "/js/jquery-1.7.1.min.js");
-$this->headScript()->appendFile($this->SE_path . "/js/jquery.form.js");
-$this->headScript()->appendFile($this->SE_path . "/js/jquery.easytabs.min.js");
-$this->headScript()->appendFile($this->SE_path . "/js/jstree/jquery.jstree.js");
-
-$this->headScript()->appendFile($this->SE_path . "/bootstrap/js/bootstrap.min.js");
-
-//echo $this->jQuery(); 
+$this->headScript()->prependFile($this->SE_path . "/datatables/js/jquery.dataTables.min.js");
+$this->headScript()->prependFile($this->SE_path . "/js/jquery.easytabs.min.js");
+$this->headScript()->prependFile($this->SE_path . "/js/jstree/jquery.jstree.js");
+$this->headScript()->prependFile($this->SE_path . "/bootstrap/js/bootstrap.min.js");
+$this->headScript()->prependFile($this->SE_path . "/js/jquery.form.js");
+$this->headScript()->prependFile($this->SE_path . "/js/jquery-1.7.1.min.js");
 
 echo $this->headScript(); 
-
-?>
-<!--  <script>
-$(function()
-{
-	$('#nav-container ul').attr("class","nav");
-
-});
-
-</script>-->
-
-<?php
 
 echo "\n";
 
 $this->headLink()->appendStylesheet($this->SE_path.'/css/style.css') ;
-
-
 $this->headLink()->appendStylesheet($this->SE_path.'/bootstrap/css/bootstrap.css');
-$this->headLink()->appendStylesheet($this->SE_path.'/bootstrap/css/bootstrap-responsive.css');
+//$this->headLink()->appendStylesheet($this->SE_path.'/bootstrap/css/bootstrap-responsive.css');
 
 
 echo $this->headLink();
 
 ?>
-
 </head>
 <body>
 
@@ -83,10 +59,6 @@ echo $this->headLink();
 		</div>
 
 		<div id="breadcrumbs"></div>
-
-
-		
-		
 		
 	<?php echo $this->layout()->content ?>
 

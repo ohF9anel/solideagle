@@ -80,10 +80,48 @@ class UsersController extends Zend_Controller_Action
  		
  		
     }
+    
+    
+    public function getusersAction()
+    {
+    	$this->_helper->layout()->disableLayout();
+    	$this->_helper->viewRenderer->setNoRender(true);
+    	
+    	$persons = array();
+    	
+    	$data = $this->_request->getParams();
+    	
+    	
+    	$gid = -1;
+    	
+    	if(isset($data["gid"]))
+    	{
+    		$gid = $data["gid"];
+    	}
+    	
+    	foreach(Person::getUsersForDisplayByGroup($gid) as $gp)
+    	{
+    		$person[0] = $gp->getId();
+    		$person[1] = $gp->getFirstName();
+    		$person[2] = $gp->getName();
+    		$person[3] = $gp->getAccountUserName();
+    		$person[4] = $gp->getAccountActive();
+    		$person[5] = $gp->getMadeOn();				
+    		
+    		$persons[] = $person;
+    	}
+    	
+    	echo json_encode(array("aaData" => $persons));
+    }
 
     public function addgroupAction()
     {
         $this->view->groups = Group::getTree();
+     //   $this->view->tasks = 
+       
+        
+     
+        
     }
 
 
@@ -115,11 +153,13 @@ class UsersController extends Zend_Controller_Action
     	
     	$groupid = Group::addGroup($group);
     	
+    	$group->setId($groupid);
+    	
     	$gtaskq = new GroupTaskQueue();
     	
     	$gtaskq->setGroup_id($groupid);
     	$gtaskq->setTask_id("27");
-    	$gtaskq->setConfiguration(array("action" => "Add", "groupid" => $groupid,"groupname" => $group->getName()));
+    	$gtaskq->setConfiguration(array("action" => "Add", "groupobj" => $group));
     	
     	GroupTaskQueue::addTaskToQueue($gtaskq);
     	

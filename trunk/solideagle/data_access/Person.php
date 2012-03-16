@@ -1357,11 +1357,11 @@ namespace DataAccess
 					`person`.`made_on`
 					FROM `CentralAccountDB`.`person`, `CentralAccountDB`.`group_person`
 					WHERE
-					(`person`.`id` = `group_person`.`person_id` ))
+					(`person`.`id` = `group_person`.`person_id` )
 					AND
 					`person`.`deleted` = 0
 					AND
-					(`group_person`.`group_id` =  :groupid))";
+					(`group_person`.`group_id` =  :groupid)";
         	}else{
 	        		$sql = "SELECT
 	        		`person`.`id`,

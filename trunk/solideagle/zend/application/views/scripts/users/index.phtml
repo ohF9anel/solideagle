@@ -8,7 +8,7 @@ function render_tree($roots)
 	echo "<ul class='hi'>\n";
 	foreach($roots as $group)
 	{
-		echo "<li>\n<a href='#sqdf'>";
+		echo "<li groupid=" .  $group->getId() . ">\n<a href='#'>";
 		echo $group->getName() . "(" . $group->getId() . ")" . "</a>\n";
 		
 		
@@ -21,13 +21,82 @@ function render_tree($roots)
 ?>
 
 
-</div>
-
 
 <script>
 
 	$(function(){
-		$("#grouptree").jstree();
+
+
+		$.fn.dataTableExt.oStdClasses.sFilter = "span6";
+		$.fn.dataTableExt.oStdClasses.sLength  = "span6";
+		$.fn.dataTableExt.oStdClasses.sWrapper = "row-fluid well";
+
+		$.fn.dataTableExt.oStdClasses.sPagePrevEnabled  ="btn btn-success span1";
+		$.fn.dataTableExt.oStdClasses.sPagePrevDisabled   ="btn btn-danger span1";
+		$.fn.dataTableExt.oStdClasses.sPageNextEnabled   ="btn btn-success ";
+		$.fn.dataTableExt.oStdClasses.sPageNextDisabled   ="btn btn-danger ";
+
+		$("#userstable").dataTable({
+			"bSort":true,
+			"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+			  "sDom": 'fl<"btn-group span6"p>irt',//'<"row-fluid well"fl><"row-fluid well btn-group"<"span6"p><"span6"i>>rt',
+	        "bProcessing": true,
+	        "sAjaxSource": 'users/getusers'
+	    } );
+		
+		$("#grouptree").jstree()
+		
+		.bind("select_node.jstree", function (event, data) { 
+			groupid = data.rslt.obj.attr("groupid");
+
+			$("#userstable").dataTable().fnReloadAjax('users/getusers?gid='+groupid);
+		});
+
+		$.fn.dataTableExt.oApi.fnReloadAjax = function ( oSettings, sNewSource, fnCallback, bStandingRedraw )
+		{
+		    if ( typeof sNewSource != 'undefined' && sNewSource != null )
+		    {
+		        oSettings.sAjaxSource = sNewSource;
+		    }
+		    this.oApi._fnProcessingDisplay( oSettings, true );
+		    var that = this;
+		    var iStart = oSettings._iDisplayStart;
+		    var aData = [];
+		 
+		    this.oApi._fnServerParams( oSettings, aData );
+		     
+		    oSettings.fnServerData( oSettings.sAjaxSource, aData, function(json) {
+		        /* Clear the old information from the table */
+		        that.oApi._fnClearTable( oSettings );
+		         
+		        /* Got the data - add it to the table */
+		        var aData =  (oSettings.sAjaxDataProp !== "") ?
+		            that.oApi._fnGetObjectDataFn( oSettings.sAjaxDataProp )( json ) : json;
+		         
+		        for ( var i=0 ; i<aData.length ; i++ )
+		        {
+		            that.oApi._fnAddData( oSettings, aData[i] );
+		        }
+		         
+		        oSettings.aiDisplay = oSettings.aiDisplayMaster.slice();
+		        that.fnDraw();
+		         
+		        if ( typeof bStandingRedraw != 'undefined' && bStandingRedraw === true )
+		        {
+		            oSettings._iDisplayStart = iStart;
+		            that.fnDraw( false );
+		        }
+		         
+		        that.oApi._fnProcessingDisplay( oSettings, false );
+		         
+		        /* Callback user function - for event handlers etc */
+		        if ( typeof fnCallback == 'function' && fnCallback != null )
+		        {
+		            fnCallback( oSettings );
+		        }
+		    }, oSettings );
+		}
+		
 	});
 </script>
 
@@ -45,7 +114,7 @@ function render_tree($roots)
 		<div class="span10">
 			<h1>Gebruikers</h1>
 
-			<table class="table">
+			<table id="userstable" class="table">
 				<thead>
 					<tr>
 						<td>ID</td>
@@ -63,7 +132,7 @@ function render_tree($roots)
 					
 
 				<?php
-				foreach ($this->users as $user)
+				/*foreach ($this->users as $user)
 				{
 					?>
 					<tr>
@@ -75,7 +144,7 @@ function render_tree($roots)
 						<td><?php echo $user->getMadeOn(); ?></td>
 					</tr>
 				<?php
-	}
+	}*/
 ?>
 </tbody>
 			</table>

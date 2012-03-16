@@ -23,6 +23,7 @@
           <actionMethod actionName="adduserpost"/>
           <actionMethod actionName="addgrouppost"/>
           <actionMethod actionName="addgroup"/>
+          <actionMethod actionName="getusers"/>
         </controllerFile>
       </controllersDirectory>
       <formsDirectory enabled="false"/>
