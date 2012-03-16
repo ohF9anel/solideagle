@@ -29,7 +29,7 @@ function render_tree($roots)
 
 		$.fn.dataTableExt.oStdClasses.sFilter = "span6";
 		$.fn.dataTableExt.oStdClasses.sLength  = "span6";
-		$.fn.dataTableExt.oStdClasses.sWrapper = "row-fluid well";
+		$.fn.dataTableExt.oStdClasses.sWrapper = "well";
 
 		$.fn.dataTableExt.oStdClasses.sPagePrevEnabled  ="btn btn-success span1";
 		$.fn.dataTableExt.oStdClasses.sPagePrevDisabled   ="btn btn-danger span1";
@@ -39,8 +39,27 @@ function render_tree($roots)
 		$("#userstable").dataTable({
 			"bSort":true,
 			"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-			  "sDom": 'fl<"btn-group span6"p>irt',//'<"row-fluid well"fl><"row-fluid well btn-group"<"span6"p><"span6"i>>rt',
+			  "sDom": '<"row-fluid"fl><"row-fluid"<"btn-group span6"p><"span6"i>>rt',//'<"row-fluid well"fl><"row-fluid well btn-group"<"span6"p><"span6"i>>rt',
 	        "bProcessing": true,
+	        "oLanguage": {
+	            "sProcessing": "Data ophalen...",
+	            "sLengthMenu": "Aantal resultaten per pagina: _MENU_ ",
+	            "sZeroRecords": "Geen resultaten gevonden",
+	            "sInfo": "_START_ tot _END_ van _TOTAL_ resultaten",
+	            "sInfoEmpty": "Geen resultaten om weer te geven",
+	            "sInfoFiltered": " (gefilterd uit _MAX_ resultaten)",
+	            "sInfoPostFix": "",
+	            "sSearch": "Zoeken:",
+	            "sEmptyTable": "Geen resultaten aanwezig in de tabel",
+	            "sInfoThousands": ".",
+	            "sLoadingRecords": "Een moment geduld aub - bezig met laden...",
+	            "oPaginate": {
+	                "sFirst": "Eerste",
+	                "sLast": "Laatste",
+	                "sNext": "Volgende",
+	                "sPrevious": "Vorige"
+	            }
+	        },
 	        "sAjaxSource": 'users/getusers'
 	    } );
 		
