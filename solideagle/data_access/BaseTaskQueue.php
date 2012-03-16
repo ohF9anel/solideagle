@@ -76,7 +76,7 @@ class BaseTaskQueue
 
 	public function addErrormessage($errormessages)
 	{
-	    $this->errormessages .= $errormessages . "\n";
+	    $this->errormessages .=   "\n" . $errormessages;
 	}
 	
 	

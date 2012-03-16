@@ -8,7 +8,7 @@
 			<pages>
 			
 				<dashboard>
-					<label>Dashboard</label>
+					<label>Dashboard</label>Gebruiker
 					<controller>index</controller>
 					<action>index</action>
 				</dashboard>
@@ -33,7 +33,11 @@
 					</pages>
 				</groupsandusers>	
 				
+				<deamon>
+				<label>Run deamon</label>
+				<uri>/SolidEagle/scripts/deamon</uri>
 				
+				</deamon>
 				
 			</pages>
 		</home>

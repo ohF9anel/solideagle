@@ -21,7 +21,7 @@ class ManageOU
         $connLdap = ConnectionLdap::singleton();
                 
         if ($childGroup == null || $connLdap->getConn() == null)
-            return false;
+             return array(false, "group or connection null");
         
         $info['objectClass'] = "organizationalUnit";
         $info["ou"] = $childGroup->getName();
@@ -39,8 +39,12 @@ class ManageOU
             {
                 $ouString .= "OU=" . $arrParentsGroups[$i]->getName() . ", ";
             }
+          
             $r = ldap_add($connLdap->getConn(), "OU=" . $childGroup->getName() . ", " . $ouString . AD_DC, $info);
         }
+        
+        return array($r,ldap_error($connLdap->getConn()));
+        
     }
     
     public static function updateOU($childGroup)

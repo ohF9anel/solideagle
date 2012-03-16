@@ -42,6 +42,7 @@ class ConnectionLDAP
     
     public function getConn()
     {
+    
         return $this->conn;
     }
 }
