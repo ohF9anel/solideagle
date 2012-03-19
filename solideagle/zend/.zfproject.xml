@@ -28,7 +28,9 @@
         </controllerFile>
         <controllerFile controllerName="Groups">
           <actionMethod actionName="index"/>
-          <actionMethod actionName="getgroup"/>
+          <actionMethod actionName="editgroup"/>
+          <actionMethod actionName="updategrouppost"/>
+          <actionMethod actionName="addsubgroup"/>
         </controllerFile>
       </controllersDirectory>
       <formsDirectory enabled="false"/>
@@ -69,7 +71,10 @@
             <viewScriptFile forActionName="index"/>
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Groups">
-            <viewScriptFile forActionName="getgroup"/>
+            <viewScriptFile forActionName="editgroup"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Groups">
+            <viewScriptFile forActionName="addsubgroup"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>

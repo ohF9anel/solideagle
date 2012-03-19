@@ -1,9 +1,9 @@
 <script>
 	$(function(){
 
-	
+		
 
-		$("#formAddUser").ajaxForm({
+		$("#formAddGroup").ajaxForm({
 			success: function() { 
 				showUsers();
 				updateTree();
@@ -15,19 +15,11 @@
 
 
 <form class="form-horizontal"
-	action="<?php echo $this->SE_path . "/users/adduserpost" ?>"
-	method="post" id="formAddUser">
+	action="<?php echo $this->SE_path . "/groups/updategrouppost" ?>"
+	method="post" id="formAddGroup">
 	<fieldset>
-		<legend>Gebruiker maken</legend>
+		<legend>Subgroep maken</legend>
 
-		<div class="control-group">
-			<label class="control-label" for="txtFirstName">Voornaam</label>
-			<div class="controls">
-				<input id="txtFirstName" class="input-xlarge" type="text"
-					value="">
-			</div>
-		</div>
-		
 		<div class="control-group">
 			<label class="control-label" for="txtName">Naam</label>
 			<div class="controls">
@@ -36,6 +28,12 @@
 			</div>
 		</div>
 
+		<div class="control-group">
+			<label class="control-label" for="txtDescription">Omschrijving</label>
+			<div class="controls">
+				<textarea id="txtDescription" class="input-xlarge" rows="3"></textarea>
+			</div>
+		</div>
 		
 
 

@@ -1,5 +1,11 @@
 <?php
 
+require_once 'data_access/Group.php';
+require_once 'data_access/GroupTaskQueue.php';
+
+use DataAccess\Group;
+use DataAcces\GroupTaskQueue;
+
 class GroupsController extends Zend_Controller_Action
 {
 
@@ -13,9 +19,45 @@ class GroupsController extends Zend_Controller_Action
         // action body
     }
 
-    public function getgroupAction()
+    public function editgroupAction()
     {
-        // action body
+        $this->_helper->layout()->disableLayout();
+        
+        $data = $this->_request->getParams();
+        
+        if(isset($data["gid"]))
+        {
+        	$groupid = $data["gid"];
+        	$this->view->group = Group::getGroupById($groupid);
+        }else{
+        	exit();
+        }
+        
+      
+    }
+    
+    public function updategrouppostAction()
+    {
+    	$this->_helper->layout()->disableLayout();
+    	$this->_helper->viewRenderer->setNoRender(true);
+    }
+    
+    public function addsubgroupAction()
+    {
+    	$this->_helper->layout()->disableLayout();
+    	
+    	$data = $this->_request->getParams();
+    	
+    	if(isset($data["gid"]))
+    	{
+    		$groupid = $data["gid"];
+    		if(Group::getGroupById($groupid) != NULL)
+    		{
+    			$this->view->groupid = $groupid;
+    		}
+    		
+    	}
+    	
     }
 
 

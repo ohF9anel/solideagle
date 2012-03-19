@@ -1,0 +1,64 @@
+<script>
+	$(function(){
+
+		$("#lbldeletesure").hide();
+
+		$("#blnDelete").click(function(){
+			$("#lbldeletesure").toggle();
+			$("#blnDeleteSure").removeAttr("checked");
+		});
+		
+		$("#formAddSubGroup").ajaxForm({
+			success: function() { 
+				showUsers();
+				updateTree();
+	    } });
+		
+	});
+
+</script>
+
+
+<form class="form-horizontal"
+	action="<?php echo $this->SE_path . "/groups/addsubgrouppost" ?>"
+	method="post" id="formAddSubGroup">
+	<fieldset>
+		<legend>Groep bewerken</legend>
+
+		<div class="control-group">
+			<label class="control-label" for="txtName">Naam</label>
+			<div class="controls">
+				<input id="txtName" class="input-xlarge" type="text"
+					value="<?php echo $this->group->getName() ?>">
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="txtDescription">Omschrijving</label>
+			<div class="controls">
+				<textarea id="txtDescription" class="input-xlarge" rows="3"><?php echo $this->group->getDescription() ?></textarea>
+			</div>
+		</div>
+		
+				<div class="control-group error">
+			<label class="control-label" for="blnDelete">Groep verwijderen</label>
+			<div class="controls">
+				<label class="checkbox">
+				<input id="blnDelete" type="checkbox" value="delete">
+				Ja, ik wil deze groep verwijderen
+				</label>
+				<label id="lbldeletesure" class="checkbox">
+				<input id="blnDeleteSure" type="checkbox" value="delete">
+				Ja, ik ben zeker
+				</label>
+			</div>
+		</div>
+
+		<div class="form-actions">
+		<button class="btn btn-primary" type="submit">Opslaan</button>
+		
+		</div>
+		
+		<input type="hidden" id="groupid" value="<?php echo $this->group->getId() ?>">
+	</fieldset>
+</form>
