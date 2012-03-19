@@ -76,8 +76,8 @@ class UsersController extends Zend_Controller_Action
 
     public function adduserAction()
     {
-    	
-    	$this->view->types = Type::getAll();
+    	$this->_helper->layout()->disableLayout();
+    	//$this->view->types = Type::getAll();
     	$this->view->tasks = Task::getAllByType("user");
     }
 
