@@ -158,7 +158,6 @@ class ManageOU
             ldap_rename($connLdap->getConn(), $oldOuInfo[0]['distinguishedname'][0], $childGroup->getName(), $parentDn, true);
         }
         
-        
     }
 }
 
