@@ -4,6 +4,8 @@
 
 <script>
 
+	var selectedGroupId = -1;
+
 	$(function(){
 		updateTree();
 
@@ -11,8 +13,16 @@
 		$("#ShowUsersLink").click(function(){
 			showUsers();
 		});
+
+		$("#EditGroupLink").click(function(){
+
+			
+			
+			alert(selectedGroupId);
+		});
 		
-		//showUsers();
+		
+		showUsers();
 	});
 
 	function updateTree()
@@ -33,7 +43,7 @@
 			},
 			"plugins" : [ "themes", "json_data","ui" ]
 		}).bind("select_node.jstree", function (event, data) { 
-			groupid = data.rslt.obj.attr("groupid");
+			selectedGroupId = data.rslt.obj.attr("groupid");
 
 			groupname =  data.rslt.obj.attr("groupname");
 
@@ -41,7 +51,7 @@
 
 			if($("#userstable").length)
 			{
-				$("#userstable").dataTable().fnReloadAjax('users/getusers?gid='+groupid);
+				$("#userstable").dataTable().fnReloadAjax('users/getusers?gid='+selectedGroupId);
 			}
 			
 		});
@@ -88,7 +98,7 @@
 	                "sPrevious": "Vorige"
 	            }
 	        },
-	        "sAjaxSource": 'users/getusers'
+	       // "sAjaxSource": 'users/getusers'
 	    } );
 		
 	}
