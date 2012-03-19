@@ -14,6 +14,35 @@ use DataAccess\Group;
 use DataAcces\GroupTaskQueue;
 
 
+function groupsToJson($roots,$isfirst = true)
+{
+	if(count($roots) === 0)
+		return false;
+	 
+	$thisrootarr = array();
+	 
+	foreach($roots as $group)
+	{
+		$arr = array("data" => array("title" => $group->getName(), "attr" => array("href" => "javascript:void(0)")), "attr" => array("id" => "tree" . $group->getId(),"groupid" => $group->getId(),"groupname" => $group->getName()));
+		
+		if($isfirst)
+		{
+			$arr["state"] = "open";
+			$isfirst = false;
+		}
+		
+		if(($children = groupsToJson($group->getChildGroups(),$isfirst)) != false)
+		{
+			$arr["children"] = $children;
+		}
+		
+		$thisrootarr[] = $arr;
+	}
+
+	return $thisrootarr;
+	 
+}
+
 class UsersController extends Zend_Controller_Action
 {
 
@@ -27,6 +56,23 @@ class UsersController extends Zend_Controller_Action
     	$this->view->users = Person::getUsersForDisplayByGroup();
     	$this->view->groups = Group::getTree();
     }
+    
+    public function getgroupAction()
+    {
+    	$this->_helper->layout()->disableLayout();
+    	$this->_helper->viewRenderer->setNoRender(true);
+    	
+    	
+    	$arr = groupsToJson(Group::getTree());
+    	
+    	
+    	
+    	echo json_encode($arr);
+    	
+    
+    }
+    
+    
 
     public function adduserAction()
     {
