@@ -137,6 +137,15 @@ form   p > input
 
 .tab-container .panel-container { background: #fff; border: solid #666 1px; padding: 10px; -moz-border-radius: 0 4px 4px 4px; -webkit-border-radius: 0 4px 4px 4px; }
 
+#nav-container > .navbar
+{
+	margin-bottom: 5px;
+}
+
+#nav-container
+{
+	margin-bottom: 13px;
+}
 
 
 

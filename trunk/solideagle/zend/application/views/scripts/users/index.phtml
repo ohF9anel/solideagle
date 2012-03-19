@@ -1,53 +1,68 @@
-<?php
 
-function render_tree($roots)
-{
-	if(count($roots) === 0)
-		return;
-	
-	echo "<ul class='hi'>\n";
-	foreach($roots as $group)
-	{
-		echo "<li id='tree".  $group->getId() .  "' groupid=" .  $group->getId() . ">\n<a href='#'>";
-		echo $group->getName() . "(" . $group->getId() . ")" . "</a>\n";
-		
-		
-		render_tree($group->getChildGroups());
-		echo "</li>\n";
-	}
-	echo "</ul>\n";
-}
-
-
-?>
 
 
 
 <script>
 
 	$(function(){
+		updateTree();
 
 
-		var roots = [];
-
+		$("#ShowUsersLink").click(function(){
+			showUsers();
+		});
 		
-		<?php foreach($this->groups as $root)
-			//open roots
-		 {
-		 ?>
-		 roots.push(<?php echo "\"tree" . $root->getId() . "\"" ?>);
-		<?php
-		 }?>
-		
+		//showUsers();
+	});
 
-		$.fn.dataTableExt.oStdClasses.sFilter = "span6";
-		$.fn.dataTableExt.oStdClasses.sLength  = "span6";
-		$.fn.dataTableExt.oStdClasses.sWrapper = "well";
+	function updateTree()
+	{
+		$("#grouptree").jstree({ 
+			"ui" : {	
+				"initially_select" : [ "tree75" ]
+			},
+			"json_data" : {
+				"ajax" : {
+					"url" : "users/getgroup",
+					"data" : function (n) { 
+						return { id : n.attr ? n.attr("id") : 0 }; 
+					},
+					"progressive_render" : true,
+					"progressive_unload" : true
+				}
+			},
+			"plugins" : [ "themes", "json_data","ui" ]
+		}).bind("select_node.jstree", function (event, data) { 
+			groupid = data.rslt.obj.attr("groupid");
 
-		$.fn.dataTableExt.oStdClasses.sPagePrevEnabled  ="btn btn-success span1";
-		$.fn.dataTableExt.oStdClasses.sPagePrevDisabled   ="btn btn-danger span1";
-		$.fn.dataTableExt.oStdClasses.sPageNextEnabled   ="btn btn-success ";
-		$.fn.dataTableExt.oStdClasses.sPageNextDisabled   ="btn btn-danger ";
+			groupname =  data.rslt.obj.attr("groupname");
+
+			$("#groupname").html(groupname);
+
+			if($("#userstable").length)
+			{
+				$("#userstable").dataTable().fnReloadAjax('users/getusers?gid='+groupid);
+			}
+			
+		});
+	}
+
+
+	function showUsers()
+	{
+		$("#groepcontent").html("<h2>Gebruikers</h2>");
+
+		$("<table id='userstable' class='table'>").append("<thead>\
+				<tr>\
+				<td>ID</td>\
+				<td>Voornaam</td>\
+				<td>Achternaam</td>\
+				<td>Gebruikersnaam</td>\
+				<td>Actief</td>\
+				<td>Gemaakt op</td>\
+			</tr>\
+		</thead>").appendTo($("#groepcontent"));
+
 
 		$("#userstable").dataTable({
 			"bSort":true,
@@ -76,61 +91,8 @@ function render_tree($roots)
 	        "sAjaxSource": 'users/getusers'
 	    } );
 		
-		$("#grouptree").jstree({"core" : { "initially_open" : [ "tree75" ]}})
-        
-		
-		.bind("select_node.jstree", function (event, data) { 
-			groupid = data.rslt.obj.attr("groupid");
-
-			$("#userstable").dataTable().fnReloadAjax('users/getusers?gid='+groupid);
-		});
-
-		$.fn.dataTableExt.oApi.fnReloadAjax = function ( oSettings, sNewSource, fnCallback, bStandingRedraw )
-		{
-		    if ( typeof sNewSource != 'undefined' && sNewSource != null )
-		    {
-		        oSettings.sAjaxSource = sNewSource;
-		    }
-		    this.oApi._fnProcessingDisplay( oSettings, true );
-		    var that = this;
-		    var iStart = oSettings._iDisplayStart;
-		    var aData = [];
-		 
-		    this.oApi._fnServerParams( oSettings, aData );
-		     
-		    oSettings.fnServerData( oSettings.sAjaxSource, aData, function(json) {
-		        /* Clear the old information from the table */
-		        that.oApi._fnClearTable( oSettings );
-		         
-		        /* Got the data - add it to the table */
-		        var aData =  (oSettings.sAjaxDataProp !== "") ?
-		            that.oApi._fnGetObjectDataFn( oSettings.sAjaxDataProp )( json ) : json;
-		         
-		        for ( var i=0 ; i<aData.length ; i++ )
-		        {
-		            that.oApi._fnAddData( oSettings, aData[i] );
-		        }
-		         
-		        oSettings.aiDisplay = oSettings.aiDisplayMaster.slice();
-		        that.fnDraw();
-		         
-		        if ( typeof bStandingRedraw != 'undefined' && bStandingRedraw === true )
-		        {
-		            oSettings._iDisplayStart = iStart;
-		            that.fnDraw( false );
-		        }
-		         
-		        that.oApi._fnProcessingDisplay( oSettings, false );
-		         
-		        /* Callback user function - for event handlers etc */
-		        if ( typeof fnCallback == 'function' && fnCallback != null )
-		        {
-		            fnCallback( oSettings );
-		        }
-		    }, oSettings );
-		}
-		
-	});
+	}
+	
 </script>
 
 <div class="container-fluid">
@@ -139,49 +101,29 @@ function render_tree($roots)
 			<h1>Groepen</h1>
 
 			<div id="grouptree">
-			<?php 		
-				
-				render_tree($this->groups);
-			?>
+				<!-- tree will be rendered here -->
 			</div>
 		</div>
 		<div class="span10">
-			<h1>Gebruikers</h1>
 
-			<table id="userstable" class="table">
-				<thead>
-					<tr>
-						<td>ID</td>
-						<td>Voornaam</td>
-						<td>Achternaam</td>
-						<td>Gebruikersnaam</td>
-						<td>Actief</td>
-						<td>Gemaakt op</td>
-					</tr>
-				</thead>
-				<tbody>
-					
-					
-					
-					
+			<ul class="nav nav-pills ">
+				<li><h2  style="line-height: 30px"><span id="groupname"></span> <small>Groep opties</small></h2></li>
+				<li><a id="ShowUsersLink" href="#"><i class="icon-th-list"></i>Gebruikers
+						tonen</a></li>
+				<li><a id="EditGroupLink" href="#"><i class="icon-pencil"></i>Groep
+						bewerken</a></li>
+				<li><a id="CreateSubGroupLink" href="#"><i class="icon-plus"></i>Subgroep
+						maken</a></li>
+				<li><a id="CreateUserLink" href="#"><i class="icon-user"></i>Gebruiker
+						maken</a></li>
+			</ul>
 
-				<?php
-				/*foreach ($this->users as $user)
-				{
-					?>
-					<tr>
-						<td><?php echo $user->getId(); ?></td>
-						<td><?php echo $user->getFirstName(); ?></td>
-						<td><?php echo $user->getName(); ?></td>
-						<td><?php echo $user->getAccountUserName(); ?></td>
-						<td><?php echo $user->getAccountActive(); ?></td>
-						<td><?php echo $user->getMadeOn(); ?></td>
-					</tr>
-				<?php
-	}*/
-?>
-</tbody>
-			</table>
+			<div id="groepcontent">
+				
+
+				
+			</div>
+
 		</div>
 	</div>
 </div>

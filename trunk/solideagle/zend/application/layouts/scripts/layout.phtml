@@ -6,7 +6,7 @@
 <title>Gebruikersbeheer</title>
 <?php 
 
-
+$this->headScript()->prependFile($this->SE_path . "/datatables/js/datatable.custom.solideagle.js");
 $this->headScript()->prependFile($this->SE_path . "/datatables/js/jquery.dataTables.min.js");
 $this->headScript()->prependFile($this->SE_path . "/js/jquery.easytabs.min.js");
 $this->headScript()->prependFile($this->SE_path . "/js/jstree/jquery.jstree.js");
@@ -14,7 +14,7 @@ $this->headScript()->prependFile($this->SE_path . "/bootstrap/js/bootstrap.min.j
 $this->headScript()->prependFile($this->SE_path . "/js/jquery.form.js");
 $this->headScript()->prependFile($this->SE_path . "/js/jquery-1.7.1.min.js");
 
-echo $this->headScript(); 
+echo $this->headScript();
 
 echo "\n";
 
@@ -34,7 +34,9 @@ echo $this->headLink();
 	</div>
 
 	<div id="header">
-		<span><a href="<?php echo $this->url(array('controller'=>'index','action'=>'index')) ?>">Gebruikersbeheer</a></span> <img
+		<span><a
+			href="<?php echo $this->url(array('controller'=>'index','action'=>'index')) ?>">Gebruikersbeheer</a>
+		</span> <img
 			src="<?php echo $this->serverUrl().$this->baseUrl(); ?>/images/logo.png"
 			height="90px" />
 	</div>
@@ -44,23 +46,23 @@ echo $this->headLink();
 			<div class="navbar">
 				<div class="navbar-inner">
 					<div class="container">
-					<?php echo $this->navigation()->menu()->setOnlyActiveBranch(true)->setUlClass("nav")->setRenderParents(true)->setMinDepth(1)->setMaxDepth(1); ?>
+						<?php echo $this->navigation()->menu()->setOnlyActiveBranch(true)->setUlClass("nav")->setRenderParents(true)->setMinDepth(1)->setMaxDepth(1); ?>
 					</div>
 				</div>
 			</div>
 
 			<div class="navbar">
-				<div class="navbar-inner">
+				<div class="navbar-inner subnav">
 					<div class="container">
-					<?php echo $this->navigation()->menu()->setOnlyActiveBranch(true)->setUlClass("nav")->setRenderParents(false)->setMinDepth(2)->setMaxDepth(2); ?>
+						<?php echo $this->navigation()->menu()->setOnlyActiveBranch(true)->setUlClass("nav")->setRenderParents(false)->setMinDepth(2)->setMaxDepth(2); ?>
 					</div>
 				</div>
 			</div>
 		</div>
 
 		<div id="breadcrumbs"></div>
-		
-	<?php echo $this->layout()->content ?>
+
+		<?php echo $this->layout()->content ?>
 
 	</div>
 
