@@ -24,7 +24,6 @@ namespace DataAccess
 
         // variables
         private $id;
-        private $groups = array();
         private $accountUsername;
         private $accountPassword;
         private $accountActive = 1;
@@ -52,6 +51,7 @@ namespace DataAccess
         private $studentPreviousSchool;
         private $studentStamnr;
         private $parentOccupation;
+        private $groupId;
         
         private $valErrors = array();
 
@@ -82,16 +82,6 @@ namespace DataAccess
         public function addType($type)
         {
             $this->type[] = $type;
-        }
-        
-        public function getGroups()
-        {
-            return $this->groups;
-        }
-
-        public function addGroup($group)
-        {
-            $this->groups[] = $group;
         }
 
         public function getAccountUsername()
@@ -364,13 +354,16 @@ namespace DataAccess
             $this->parentOccupation = $parentOccupation;
         }
         
-        /**
-         * 
-         * 
-         *
-         * @param Person $person
-         */
-        
+        public function getGroupId()
+        {
+            return $this->groupId;
+        }
+
+        public function setGroupId($groupId)
+        {
+            $this->groupId = $groupId;
+        }
+    
         private static function tryCreateUsername($person)
         {
         	
@@ -408,10 +401,8 @@ namespace DataAccess
          */
         public static function addPerson($person)
         {
-        	
-        		$person->setAccountUsername(Person::tryCreateUsername($person));
-        		
-        		$person->setAccountPassword("P@ssw0rd");
+                $person->setAccountUsername(Person::tryCreateUsername($person));
+                $person->setAccountPassword("P@ssw0rd");
         	
                 $err = Person::validatePerson($person);
                 if (!empty($err))
@@ -453,7 +444,8 @@ namespace DataAccess
                         `deleted`,
                         `student_previous_school`,
                         `student_stamnr`,
-                        `parent_occupation`)
+                        `parent_occupation`,
+                        `group_id`)
                         VALUES
                         (
                         :id,
@@ -482,7 +474,8 @@ namespace DataAccess
                         :deleted,
                         :student_previous_school,
                         :student_stamnr,
-                        :parent_occupation
+                        :parent_occupation,
+                        :group_id
                         );
                         ";
 
@@ -514,6 +507,7 @@ namespace DataAccess
                 $cmd->addParam(":student_previous_school", $person->getStudentPreviousSchool());
                 $cmd->addParam(":student_stamnr", $person->getStudentStamNr());
                 $cmd->addParam(":parent_occupation", $person->getParentOccupation());
+                $cmd->addParam(":group_id", $person->getGroupId());
 
                 $cmd->BeginTransaction();
 
@@ -544,28 +538,6 @@ namespace DataAccess
                         $cmd->execute();
                 }
                 
-                // add person to correct group(s)
-                                
-                $sql = "INSERT INTO `CentralAccountDB`.`group_person`
-                                (
-                                `group_id`,
-                                `person_id`
-                                )
-                                VALUES
-                                (
-                                :group_id,
-                                :person_id
-                                );";
-                
-                foreach($person->getGroups() as $group)
-                {
-                        $cmd = new DatabaseCommand($sql);
-                        $cmd->addParam(":group_id", $group->getId());
-                        $cmd->addParam(":person_id", $personId);
-
-                        $cmd->execute();
-                }
-
                 $cmd->CommitTransaction();
 
                 return $personId;
@@ -631,6 +603,7 @@ namespace DataAccess
                 $oldPerson->setStudentPreviousSchool($retObj->student_previous_school);
                 $oldPerson->setStudentStamnr($retObj->student_stamnr);
                 $oldPerson->setParentOccupation($retObj->parent_occupation);
+                $oldPerson->setGroupId($retObj->group_id);
                 
                 // no difference, no update!
                 if($oldPerson == $person)
@@ -664,7 +637,9 @@ namespace DataAccess
                         `deleted`,
                         `student_previous_school`,
                         `student_stamnr`,
-                        `parent_occupation`)
+                        `parent_occupation`,
+                        `group_id`
+                        )
                         VALUES
                         (
                         :id,
@@ -693,7 +668,8 @@ namespace DataAccess
                         :deleted,
                         :student_previous_school,
                         :student_stamnr,
-                        :parent_occupation
+                        :parent_occupation,
+                        :group_id
                         );
                         ";
 
@@ -725,6 +701,7 @@ namespace DataAccess
                 $cmd->addParam(":student_previous_school", $oldPerson->getStudentPreviousSchool());
                 $cmd->addParam(":student_stamnr", $oldPerson->getStudentStamNr());
                 $cmd->addParam(":parent_occupation", $oldPerson->getParentOccupation());
+                $cmd->addParam(":group_id", $oldPerson->getGroupId());
                 
                 $cmd->BeginTransaction();
 
@@ -759,7 +736,8 @@ namespace DataAccess
                         `deleted` = :deleted,
                         `student_previous_school` = :student_previous_school,
                         `student_stamnr` = :student_stamnr,
-                        `parent_occupation` = :parent_occupation
+                        `parent_occupation` = :parent_occupation,
+                        `group_id` = :group_id
                         WHERE id = :id;
                         ";
 
@@ -791,6 +769,7 @@ namespace DataAccess
                 $cmd->addParam(":student_previous_school", $person->getStudentPreviousSchool());
                 $cmd->addParam(":student_stamnr", $person->getStudentStamNr());
                 $cmd->addParam(":parent_occupation", $person->getParentOccupation());
+                $cmd->addParam(":group_id", $person->getGroupId());
 
                 $cmd->execute();
                 
@@ -911,6 +890,7 @@ namespace DataAccess
                 $person->setStudentPreviousSchool($retObj->student_previous_school);
                 $person->setStudentStamnr($retObj->student_stamnr);
                 $person->setParentOccupation($retObj->parent_occupation);
+                $person->setGroupId($retObj->group_id);
                 
                 $sql = "SELECT `type`.`id`, `type`.`type_name` FROM `CentralAccountDB`.`type_person`,
                        `CentralAccountDB`.`type`
@@ -924,20 +904,6 @@ namespace DataAccess
                 $cmd->executeReader()->readAll(function($row) use (&$person) {
 			$type = new Type($row->id, $row->type_name);
 			$person->addType($type);
-		});
-                
-                $sql = "SELECT `group`.`id`, `group`.`name` FROM `CentralAccountDB`.`group`,
-                       `CentralAccountDB`.`group_person`
-                        WHERE `person_id` = :person_id
-                        AND `group`.`id` = `group_person`.`group_id`
-                        ";
-                
-                $cmd = new DatabaseCommand($sql);
-                $cmd->addParam(":person_id", $person->getId());
-
-                $cmd->executeReader()->readAll(function($row) use (&$person) {
-			$group = new Group($row->id, $row->name);
-			$person->addGroup($group);
 		});
                
                 return $person;
