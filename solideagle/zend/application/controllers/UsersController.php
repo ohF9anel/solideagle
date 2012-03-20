@@ -23,7 +23,7 @@ function groupsToJson($roots,$isfirst = true)
 	 
 	foreach($roots as $group)
 	{
-		$arr = array("data" => array("title" => $group->getName(), "attr" => array("href" => "javascript:void(0)")), "attr" => array("id" => "tree" . $group->getId(),"groupid" => $group->getId(),"groupname" => $group->getName()));
+		$arr = array("data" => array("title" =>  htmlentities($group->getName()), "attr" => array("href" => "javascript:void(0)")), "attr" => array("id" => "tree" . $group->getId(),"groupid" => $group->getId(),"groupname" =>  htmlentities($group->getName())));
 		
 		if($isfirst)
 		{

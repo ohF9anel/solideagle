@@ -1,7 +1,3 @@
-
-
-
-
 <script>
 
 	var selectedGroupId = -1;
@@ -17,16 +13,19 @@
 		$("#EditGroupLink").click(function(){
 			
 			$("#groepcontent").load("<?php echo $this->SE_path . '/groups/editgroup?gid=' ?>" + selectedGroupId);
+			
 		});
 
 		$("#CreateSubGroupLink").click(function(){
 
 			$("#groepcontent").load("<?php echo $this->SE_path . '/groups/addsubgroup?gid=' ?>" + selectedGroupId);
+			
 		});
 
 		$("#CreateUserLink").click(function(){
 
 			$("#groepcontent").load("<?php echo $this->SE_path . '/users/adduser?gid=' ?>" + selectedGroupId);
+			
 		});
 		
 		
@@ -110,6 +109,9 @@
 	    } );
 		
 	}
+
+	
+	
 	
 </script>
 
