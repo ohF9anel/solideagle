@@ -24,6 +24,7 @@ class User
     private $mobile;
     private $mail;
     private $info;
+    private $homedirectory;
     
     // to be unset before adding
     private $groups = array();
@@ -135,6 +136,16 @@ class User
         $this->info = $info;
     }
     
+    public function getHomedirectory()
+    {
+        return $this->homedirectory;
+    }
+
+    public function setHomedirectory($homedirectory)
+    {
+        $this->homedirectory = $homedirectory;
+    }
+
     public function addMemberOfGroups($groups)
     {
         $this->groups = $groups;

@@ -44,11 +44,11 @@ class ManageUser
         var_dump($dn);
         if (ldap_add($connLdap->getConn(), $dn, $userInfo))
         {
-            $this->addUserToGroups($groups, $dn);
+            ManageUser::addUserToGroups($groups, $dn);
         }
         else 
         {
-            Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \n" . var_dump($userInfo) . "\nUser cannot be added to AD.", PEAR_LOG_ERR);
+            Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \n" . var_export($userInfo, true) . "\nUser cannot be added to AD. Does the OU exist?", PEAR_LOG_ERR);
         }
     }
     
