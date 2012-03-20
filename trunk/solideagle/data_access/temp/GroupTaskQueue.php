@@ -59,23 +59,26 @@ class GroupTaskQueue extends BaseTaskQueue
 	
 	public static function addTaskToQueue($groupTaskQueue)
 	{
-		$sql = "INSERT INTO `CentralAccountDB`.`group_task_queue`
-		(
-		`group_id`,
-		`task_id`,
-		`configuration`)
-		VALUES
-		(
-		
-		:group_id ,
-		:task_id ,
-		:configuration
-		);";
+		$sql = "INSERT INTO `CentralAccountDB`.`task_queue`
+				(
+				`person_id`,
+				`group_id`,
+				`task_id`,
+				`configuration`,
+				)
+				VALUES
+				(
+					:personid,
+					:groupid,
+					:task_id,
+					:config
+				);";
 		
 		$cmd = new DatabaseCommand($sql);
-		$cmd->addParam(":group_id", $groupTaskQueue->getGroup_id());
-		$cmd->addParam(":task_id", $groupTaskQueue->getTask_id());
-		$cmd->addParam(":configuration", $groupTaskQueue->getConfigurationForDb());
+		$cmd->addParam(":personid", $groupTaskQueue->getGroup_id());
+		$cmd->addParam(":groupid", $groupTaskQueue->getTask_id());
+		$cmd->addParam(":task_id", $groupTaskQueue->getConfigurationForDb());
+		$cmd->addParam(":config", $groupTaskQueue->getConfigurationForDb());
 		
 		$cmd->execute();
 	}

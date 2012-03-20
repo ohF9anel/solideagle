@@ -1,8 +1,5 @@
 <?php
 
-
-
-
 namespace DataAccess
 {
 	function IsNullOrEmptyString($question){
