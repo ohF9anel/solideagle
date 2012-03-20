@@ -18,19 +18,7 @@
 					<controller>users</controller>
 					<action>index</action>
 					
-					<pages>
-						<adduser>
-							<label>Gebruiker toevoegen</label>
-							<controller>users</controller>
-							<action>adduser</action>
-						
-						</adduser>
-						<addgroup>
-							<label>Groep toevoegen</label>
-								<controller>users</controller>
-								<action>addgroup</action>					
-						</addgroup>
-					</pages>
+					
 				</groupsandusers>	
 				
 				<deamon>

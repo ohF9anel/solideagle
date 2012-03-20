@@ -8,10 +8,17 @@
 			$("#blnDeleteSure").removeAttr("checked");
 		});
 		
-		$("#formAddSubGroup").ajaxForm({
-			success: function() { 
-				showUsers();
-				updateTree();
+		$("#formEditGroup").ajaxForm({
+			success: function(responseText, statusText, xhr, $form) { 
+
+				if(responseText.length > 0)
+				{
+					alert(responseText);
+				}else{
+					showUsers();
+					updateTree();
+				}
+				
 	    } });
 		
 	});
@@ -20,23 +27,23 @@
 
 
 <form class="form-horizontal"
-	action="<?php echo $this->SE_path . "/groups/addsubgrouppost" ?>"
-	method="post" id="formAddSubGroup">
+	action="<?php echo $this->SE_path . "/groups/updategrouppost" ?>"
+	method="post" id="formEditGroup">
 	<fieldset>
 		<legend>Groep bewerken</legend>
 
 		<div class="control-group">
 			<label class="control-label" for="txtName">Naam</label>
 			<div class="controls">
-				<input id="txtName" class="input-xlarge" type="text"
-					value="<?php echo $this->group->getName() ?>">
+				<input id="txtName" name="groupName" class="input-xlarge" type="text"
+					value="<?php echo htmlentities($this->group->getName()) ?>">
 			</div>
 		</div>
 
 		<div class="control-group">
 			<label class="control-label" for="txtDescription">Omschrijving</label>
 			<div class="controls">
-				<textarea id="txtDescription" class="input-xlarge" rows="3"><?php echo $this->group->getDescription() ?></textarea>
+				<textarea id="txtDescription" name="groupDescription" class="input-xlarge" rows="3"><?php echo htmlentities($this->group->getDescription()) ?></textarea>
 			</div>
 		</div>
 		
@@ -44,11 +51,11 @@
 			<label class="control-label" for="blnDelete">Groep verwijderen</label>
 			<div class="controls">
 				<label class="checkbox">
-				<input id="blnDelete" type="checkbox" value="delete">
+				<input id="blnDelete" name="delete"  type="checkbox" value="delete">
 				Ja, ik wil deze groep verwijderen
 				</label>
 				<label id="lbldeletesure" class="checkbox">
-				<input id="blnDeleteSure" type="checkbox" value="delete">
+				<input id="blnDeleteSure" name="deletesure" type="checkbox" value="delete">
 				Ja, ik ben zeker
 				</label>
 			</div>
@@ -59,6 +66,6 @@
 		
 		</div>
 		
-		<input type="hidden" id="groupid" value="<?php echo $this->group->getId() ?>">
+		<input type="hidden" name="groupid" value="<?php echo $this->group->getId() ?>">
 	</fieldset>
 </form>

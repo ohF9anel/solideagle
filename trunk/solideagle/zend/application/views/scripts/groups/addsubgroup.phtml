@@ -4,9 +4,16 @@
 		
 
 		$("#formAddGroup").ajaxForm({
-			success: function() { 
-				showUsers();
-				updateTree();
+			success: function(responseText, statusText, xhr, $form) { 
+
+				if(responseText.length > 0)
+				{
+					alert(responseText);
+				}else{
+					showUsers();
+					updateTree();
+				}
+				
 	    } });
 		
 	});
