@@ -23,15 +23,13 @@ $ssh->write("cmd\n");
 
 $ssh->write("set naam=blaat\n");
 
-
-
 $ssh->write("echo %naam%\n");
 
 
 
 $ssh->write("echo ENDOFSESSION\n");
 
-while($data = $ssh->_get_channel_packet(NET_SSH2_CHANNEL_SHELL))
+while($data = $conn->_get_channel_packet(NET_SSH2_CHANNEL_SHELL))
 {
 	echo $data;
 }
