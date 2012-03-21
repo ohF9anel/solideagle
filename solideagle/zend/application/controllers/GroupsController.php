@@ -1,10 +1,13 @@
 <?php
 
+
 require_once 'data_access/Group.php';
-require_once 'data_access/GroupTaskQueue.php';
+require_once 'scripts/ad/groupmanager.php';
 
 use DataAccess\Group;
 use DataAcces\GroupTaskQueue;
+use adplugin\groupmanager;
+
 
 class GroupsController extends Zend_Controller_Action
 {
@@ -70,6 +73,14 @@ class GroupsController extends Zend_Controller_Action
     	
     	
     		//TODO: ADD TO QUEUE
+    		
+    		
+    		$grp = Group::getGroupById($groupid);
+    		
+    		$gm = new groupmanager("27",$groupid);
+    		
+    		$gm->prepareDeleteGroup(Group::getParents($grp), $grp);
+    		
     		Group::delGroupById($groupid);
     	}
     	

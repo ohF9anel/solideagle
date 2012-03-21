@@ -293,7 +293,7 @@ class Group
 		    `group` as g,
 		    group_closure as c
 		where
-		    c.child_id = g.id and c.parent_id = :parentid and length = 1";
+		    c.child_id = g.id and g.deleted = 0 and c.parent_id = :parentid and length = 1";
 
 		$retArr = array();
 
@@ -323,7 +323,7 @@ class Group
 	{
 		$sql = "SELECT p.id,p.name,p.description,t.length, 
 		(SELECT t1.parent_id FROM group_closure t1 WHERE t1.length=1 AND t1.child_id=t.child_id) AS parent
-		FROM `group` p JOIN group_closure t ON p.id=t.child_id  order by t.length,parent";
+		FROM `group` p JOIN group_closure t ON p.id=t.child_id  WHERE p.deleted = 0  order by t.length,parent";
 		
 		$rootArr = array();
 		$completeArr = array();
@@ -370,9 +370,22 @@ class Group
 		return $groups;
 	}
 
-
-
 	public static function delGroupById($groupId)
+	{
+		$sql = "UPDATE `CentralAccountDB`.`group`
+				SET 
+				`deleted` = 1
+				WHERE `id` = :groupid;";
+		
+		$cmd = new DatabaseCommand($sql);
+		$cmd->addParam(":groupid", $groupId);
+		$cmd->BeginTransaction();
+		$cmd->execute();
+		$cmd->CommitTransaction();
+	}
+
+
+	public static function reallyDelGroupById($groupId)
 	{
 		//do not delete if group has members or subgroups!!!??!
 		

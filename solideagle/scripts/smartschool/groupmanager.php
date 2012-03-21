@@ -22,7 +22,8 @@ class groupmanager extends \DataAccess\BaseTask
 	
 	public function runTask($taskqueue)
 	{
-		
+		$taskqueue->setErrormessages("smartschool not implemented yet");
+		return false;
 	}
 	
 	public function createTaskFromParams($params)

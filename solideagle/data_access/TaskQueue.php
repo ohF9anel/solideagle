@@ -105,7 +105,19 @@ class TaskQueue
 	 */
 	public static function increaseErrorCount($taskQueue)
 	{
-		echo $taskQueue->getErrormessages();
+		
+	$sql = "UPDATE `CentralAccountDB`.`task_queue`
+				SET
+				`errorcount` = `errorcount` + 1,
+				`errormessages` = :errormessages
+				WHERE  id = :tqId;";
+		
+		$cmd = new DatabaseCommand($sql);
+		$cmd->BeginTransaction();
+		$cmd->addParam(":tqId", $taskQueue->getId());
+		$cmd->addParam(":errormessages", $taskQueue->getErrormessages());
+		$cmd->execute();
+		$cmd->CommitTransaction();
 	}
 
 	public function getGroupid()
