@@ -1,6 +1,6 @@
 <?php
 
-namespace DataAcces;
+
 
 class BaseTaskQueue
 {

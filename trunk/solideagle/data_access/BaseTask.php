@@ -8,26 +8,26 @@ use DataAccess\TaskQueue;
 
 abstract class BaseTask
 {
-	
 	/**
 	 *
 	 * @param TaskQueue $taskqueue
 	 */
-	public function runTask($taskqueue);
+	public abstract function runTask($taskqueue);
 	
-	public function getParams();
+	public abstract function getParams();
 	
+	public abstract function createTaskFromParams($params);
 	
 	//impl
-	
 	const TypeGroup = 0;
 	const TypePerson = 1;
 	
 	private $taskid;
+	//---only one of these can not be NULL
 	private $personid = NULL;
 	private $groupid = NULL;
 	
-	public function __construct($taskid,$personOrGroupId,$type)
+	protected function __construct($taskid,$personOrGroupId,$type)
 	{
 		$this->taskid = $taskid;
 		if($type == BaseTask::TypeGroup)
@@ -43,11 +43,10 @@ abstract class BaseTask
 	{
 		$tq = new TaskQueue();
 		$tq->setTaskId($this->taskid);
-		$tq->setConfig($config);
+		$tq->setConfiguration($config);
 		$tq->setGroupid($this->groupid);
 		$tq->setPersonid($this->personid);	
 		TaskQueue::addToQueue($tq);
-		
 	}
 
 	public function getTaskid()

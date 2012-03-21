@@ -1,72 +1,59 @@
 <?php
-require_once 'data_access/GroupTaskQueue.php';
-require_once 'data_access/PersonTaskQueue.php';
+require_once 'data_access/TaskQueue.php';
 
-use DataAcces\GroupTaskQueue;
-use DataAcces\PersonTaskQueue;
-
-//spl_autoload_extensions(".php"); // comma-separated list
-//spl_autoload_register();
+use DataAccess\TaskQueue;
 
 
 class deamon
 {
 	public function __construct()
 	{
-		$this->runGroupTasks();
-		$this->runPersonTasks();
+		$this->runTasks();
+	
 	}
 
-	private function runGroupTasks()
+	private function runTasks()
 	{
-		foreach(GroupTaskQueue::getTasksToRun() as $grouptask)
+		foreach(TaskQueue::getTasksToRun() as $taskqueue)
 		{
-			$toRun =  "./" . $grouptask->getPath_script() . $grouptask->getTaskname() . ".php";
+			$class = $taskqueue->getTask()->getName();
+			
+			$toRun =  "./" . $taskqueue->getTask()->getPathScript() . $class . ".php";
 			
 			
 			if(file_exists($toRun))
 			{
 				require_once $toRun;
 			}else{
-				$grouptask->setErrorMessages("Task script: " .$toRun.  " does not exist!");
-				GroupTaskQueue::increaseErrorCount($grouptask);
+				$taskqueue->setErrorMessages("Task script: " .$toRun.  " does not exist!");
+				TaskQueue::increaseErrorCount($taskqueue);
 				continue;
 			}
 			
-			$class = $grouptask->getTaskname();
-				
+			$class = "\\" . str_replace("/", "", $taskqueue->getTask()->getPathScript()) . "plugin\\" . $taskqueue->getTask()->getName();
+
 			if(class_exists($class))
 			{
 				$script = new $class();
+			
 			}else{
-				$grouptask->setErrorMessages("Task class: " .$class.  " does not exist!");
-				PersonTaskQueue::increaseErrorCount($persontask);
+				$taskqueue->setErrorMessages("Task class: " .$class.  " does not exist!");
+				TaskQueue::increaseErrorCount($taskqueue);
 				continue;
 			}
 			
 			
-			$class = $grouptask->getTaskname();
-				
-			if(class_exists($class))
+			if(method_exists($script,"runTask"))
 			{
-				$script = new $class();
-			}else{
-				$grouptask->setErrorMessages("Task class: " .$class.  " does not exist!");
-				GroupTaskQueue::increaseErrorCount($grouptask);
-				continue;
-			}
-				
-			if(method_exists($script,"runScript"))
-			{
-				if($script->runScript($grouptask))
+				if($script->runTask($taskqueue))
 				{
-					GroupTaskQueue::addToRollback($grouptask);
+					TaskQueue::addToRollback($taskqueue);
 				}else{
-					GroupTaskQueue::increaseErrorCount($grouptask);
+					TaskQueue::increaseErrorCount($taskqueue);
 				}
 			}else{
-				$grouptask->setErrorMessages("Task method: runScript does not exist!");
-				GroupTaskQueue::increaseErrorCount($grouptask);
+				$taskqueue->setErrorMessages("Task method: runScript does not exist!");
+				TaskQueue::increaseErrorCount($taskqueue);
 				continue;
 			}
 			
@@ -74,57 +61,8 @@ class deamon
 		}
 	}
 	
-	private function runTask($task)
-	{
-		
-	}
 	
 	
-	private function runPersonTasks()
-	{
-		foreach(PersonTaskQueue::getTasksToRun() as $persontask)
-		{
-			$toRun =  $persontask->getPath_script() . $persontask->getTaskname() . ".php";
-			
-			if(file_exists($toRun))
-			{
-				require_once $toRun;
-			}else{
-				$persontask->setErrorMessages("Task script: " .$toRun.  " does not exist!");
-				PersonTaskQueue::increaseErrorCount($persontask);
-				continue;
-			}
-			
-			
-			$class = $persontask->getTaskname();
-			
-			if(class_exists($class))
-			{
-				$script = new $class();
-			}else{
-				$persontask->setErrorMessages("Task class: " .$class.  " does not exist!");
-				PersonTaskQueue::increaseErrorCount($persontask);
-				continue;
-			}
-			
-			if(method_exists($script,"runScript"))
-			{
-				if($script->runScript($persontask))
-				{
-					PersonTaskQueue::addToRollback($persontask);
-				}else{
-					PersonTaskQueue::increaseErrorCount($persontask);
-				}
-			}else{
-				$persontask->setErrorMessages("Task method: runScript does not exist!");
-				PersonTaskQueue::increaseErrorCount($persontask);
-				continue;
-			}
-				
-			
-			
-		}
-	}
 }
 
 new deamon();
