@@ -13,6 +13,8 @@ use Utils\UsernameGenerator;
 $person = new Person();
 
 $person->addType(new Type(1, null));
+$person->addGroup(new Group(84, "eerstes")); // ou groep leerkrachten
+//$person->addGroup(new Group(46, "admins"));       // ou groep admins
 
 //$person->setId(58);
 $person->setAccountUsername("bruno");
@@ -41,7 +43,6 @@ $person->setDeleted(false);
 $person->setStudentPreviousSchool("Voskenslaan");
 $person->setStudentStamNr("12345678");
 $person->setParentOccupation("Stripper");
-$person->setGroupId(83);
 //
 $errors = Person::validatePerson($person);
 

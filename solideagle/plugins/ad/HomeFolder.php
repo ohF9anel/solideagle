@@ -2,7 +2,7 @@
 
 namespace AD;
 
-require_once('Net/SSH2.php');
+include('ConnectionSsh.php');
 require_once 'logging/Logger.php';
 require_once 'config.php';
 use Logging\Logger;
@@ -33,25 +33,30 @@ class HomeFolder
         
         // make folder & subfolders
         $conn->write("mkdir " . $path . "\\" . $username . "\n");
-        if ($www) $conn->write("mkdir " . $path . "\\" . $username . "\\" . "_www\n");
-        $conn->write("mkdir " . $path . "\\" . $username . "\\" . "_scans\n");
+        $conn->write("mkdir " . $path . "\\" . $username . "\\" . "www\n");
+        $conn->write("mkdir " . $path . "\\" . $username . "\\" . "scans\n");
+        $conn->write("mkdir " . $path . "\\" . $username . "\\" . "Documents\n");
+        $conn->write("mkdir " . $path . "\\" . $username . "\\" . "Downloads\n");
+        $conn->write("mkdir " . $path . "\\" . $username . "\\" . "Pictures\n");
+        $conn->write("mkdir " . $path . "\\" . $username . "\\" . "Music\n");
+        $conn->write("mkdir " . $path . "\\" . $username . "\\" . "Movies\n");
         
         // set permissions to local folder
-        $conn->write("setacl -ot file -actn ace -ace \"n:" . AD_NETBIOS . "\\" . $username . ";s:n;m:grant;p:change;i:so,sc\" -on " . $path . "\\" . $username . "\n");
+        $conn->write("icacls " . $path . "\\" . $username . " /q /reset /t\n");
         $conn->write("takeown /F " . $path . "\\" . $username . " /A /R /D Y\n");
         $conn->write("takeown /F " . $path . "\\" . $username . "\\*.* /A /R /D Y\n");
         
         // add read groups
-//        $cmd = "icacls " . $path . "\\" . $username . " /q /grant *S-1-5-32-544:F *S-1-5-18:F " . AD_NETBIOS . "\\" . $username . ":M ";
-//        
-//        foreach($arrReadRightsGroups as $group)
-//        {
-//            $cmd .= AD_NETBIOS . "\\" . $group->getName() . ":R ";
-//        }
-//        
-//        $cmd .= "/inheritance:r /T /C\n";
+        $cmd = "icacls " . $path . "\\" . $username . " /q /grant *S-1-5-32-544:F *S-1-5-18:F " . AD_NETBIOS . "\\" . $username . ":M ";
         
-//        $conn->write($cmd);  
+        foreach($arrReadRightsGroups as $group)
+        {
+            $cmd .= AD_NETBIOS . "\\" . $group->getName() . ":R ";
+        }
+        
+        $cmd .= "/inheritance:r /T /C\n";
+        
+        $conn->write($cmd);  
 
         // share and set permissions
         $cmd = "net share " . $username . "$=" . $path . "\\" . $username . " /grant:" . AD_NETBIOS . "\\" . $username . ",change /grant:\"" . AD_NETBIOS . "\\Domain Admins\",read ";
@@ -59,7 +64,7 @@ class HomeFolder
         {
             $cmd .= "/grant:" . AD_NETBIOS . "\\" . $group->getName() . ",read ";
         }
-        $cmd .= "/cache:None /remark:\"SolidEagle: " . date("YmdHis") . "\"\n";
+        $cmd .= "/cache:None\n";
         
         $conn->write($cmd);  
         
