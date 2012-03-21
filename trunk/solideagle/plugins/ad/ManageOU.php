@@ -133,10 +133,14 @@ class ManageOU
         }
         
         $info['objectClass'] = "organizationalUnit";
-        $info["ou"] = $childGroup->getName();
+        $info["ou"] = ConnectionLDAP::escapeForLDAPSearch($childGroup->getName());
         
-        $sr = ldap_search($connLdap->getConn(), "OU=" . AD_USERS_OU . ", " . AD_DC, "(OU=" . $childGroup->getName() . ")");
+     
+        
+        $sr = ldap_search($connLdap->getConn(), "OU=" . AD_USERS_OU . ", " . AD_DC, "(OU=" .  $info["ou"] . ")");
         $oldOuInfo = ldap_get_entries($connLdap->getConn(), $sr);
+        
+       
 
         if (!isset($oldOuInfo[0]))
         {
@@ -144,19 +148,25 @@ class ManageOU
             return false;
         }
         
-        $parentDn = "OU=" . $childGroup->getName() . ", ";
+       $parentDn = "OU=" . $childGroup->getName() . ", ";
         for($i = 0; $i < sizeof($arrParentsGroups); $i++)
         {
             $parentDn .= "OU=" . $arrParentsGroups[$i]->getName() . ", ";
         }
         $parentDn .= AD_DC;
-        $dn = "OU=" . $childGroup->getName() . ", " . $parentDn;
+        
 
-        // move user to other ou?
-        if ($oldOuInfo[0]['distinguishedname'][0] != $dn)
-        {
-            ldap_rename($connLdap->getConn(), $oldOuInfo[0]['distinguishedname'][0], $childGroup->getName(), $parentDn, true);
-        }
+       // echo $parentDn;
+        
+        
+        
+        	$ret = ldap_delete($connLdap->getConn(), $parentDn);
+        
+        
+        
+        //echo ldap_error($connLdap->getConn());
+        
+        return $ret;
         
     }
 }

@@ -51,6 +51,14 @@ class ConnectionLDAP
     
         return $this->conn;
     }
+    
+    public static function escapeForLDAPSearch($stringtoescape)
+    {
+    	$stringtoescape = str_replace("*","\*",$stringtoescape);
+    	$stringtoescape = str_replace("(","\(",$stringtoescape);
+    	$stringtoescape = str_replace(")","\)",$stringtoescape);
+    	return $stringtoescape;
+    }
 }
 
 ?>

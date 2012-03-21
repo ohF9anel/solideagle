@@ -15,7 +15,7 @@
 		<table class="table">
 			<thead>
 				<tr>
-					<td>Task Naam</td>
+					<td>Task</td>
 					<td>Configuratie</td>
 					<td>Group id</td>
 					<td>Person id</td>
@@ -27,18 +27,11 @@
 
 			
 				<?php 
-			
-				
-				
-				
-				
 				foreach ($this->taskQueue as $tq)
-				{
-					
-					?>
+				{?>
 
 				<tr <?php if($tq->getErrorCount()>0){echo 'class="alert alert-error"';} ?>>
-					<td><?php echo $tq->getTask()->getName() ?>
+					<td><?php echo $tq->getTask()->getPathScript() . $tq->getTask()->getName() ?>
 					</td>
 					<td><pre><?php var_dump( $tq->getConfiguration()) ?></pre>
 					</td>
@@ -52,8 +45,7 @@
 					</td>
 				</tr>
 
-				<?php
-	} ?>
+				<?php } ?>
 			</tbody>
 		</table>
 	</div>

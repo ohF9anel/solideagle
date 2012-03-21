@@ -15,6 +15,7 @@ use DataAccess\TaskQueue;
 class groupmanager extends \DataAccess\BaseTask
 {
 	const ActionAdd = 0;
+	const ActionDelete = 1;
 	
 	
 	
@@ -49,20 +50,7 @@ class groupmanager extends \DataAccess\BaseTask
 				$taskqueue->setErrorMessages($ret[1]);
 				return false;
 			}
-			
-			/*$group = Group::getGroupById($grouptaskqueue->getGroup_Id());
-		
-			$stdobj = 
-		
-			if(!$stdobj[0])
-			{
-				$grouptaskqueue->setErrorMessages("OU toevoegen mislukt. Error: ");
-				$grouptaskqueue->addErrorMessage($stdobj[1]);
-				return false; //it failed for some reason
-			}*/
-			
-			
-		
+
 		}else if($config["action"] == "Move"){
 				
 			$taskqueue->setErrorMessages("Not Implemented Yet");
@@ -71,9 +59,14 @@ class groupmanager extends \DataAccess\BaseTask
 				
 			$taskqueue->setErrorMessages("Not Implemented Yet");
 			return false;
-		}else if($config["action"] == "Delete"){
-				
-			$taskqueue->setErrorMessages("Not Implemented Yet");
+		}else if($config["action"] == self::ActionDelete){
+
+			if(ManageOU::removeOU($config["parents"],$config["group"]))
+			{
+				return true;
+			}
+			
+			$taskqueue->setErrorMessages("Verwijderen mislukt");
 			return false;
 		}else{
 		
@@ -90,9 +83,18 @@ class groupmanager extends \DataAccess\BaseTask
 	
 	}
 	
-	public function prepareAddGroup($parentgroups,$newgroup)
+	public  function prepareAddGroup($parentgroups,$newgroup)
 	{
 		$config["action"] = self::ActionAdd;
+		$config["parents"] = $parentgroups;
+		$config["group"] = $newgroup;
+		
+		$this->addToQueue($config);
+	}
+	
+	public  function prepareDeleteGroup($parentgroups,$newgroup)
+	{
+		$config["action"] = self::ActionDelete;
 		$config["parents"] = $parentgroups;
 		$config["group"] = $newgroup;
 		
