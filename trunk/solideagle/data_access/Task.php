@@ -14,6 +14,11 @@ namespace DataAccess
 		private $name;
 		private $pathScript;
 		private $taskType;
+		
+		public function __construct($id = -1)
+		{
+			$this->id = $id;
+		}
 
 
 		// getters & setters
