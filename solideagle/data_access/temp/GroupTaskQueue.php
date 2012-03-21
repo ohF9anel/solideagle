@@ -1,5 +1,5 @@
 <?php
-namespace DataAcces;
+
 require_once 'database/databasecommand.php';
 require_once 'helpers/dateconverter.php';
 require_once 'BaseTaskQueue.php';

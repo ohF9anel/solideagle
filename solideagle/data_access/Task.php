@@ -138,7 +138,7 @@ namespace DataAccess
 			return $retarr;
 		}
 
-		public static function getTaskById()
+		public static function getTaskById($taskid)
 		{
 			$sql = "SELECT
 			`task`.`id`,
@@ -148,7 +148,7 @@ namespace DataAccess
 			FROM `CentralAccountDB`.`task` WHERE `task`.`id` = :taskid";
 
 			$cmd = new DatabaseCommand($sql);
-			$cmd->addParam(":taskid", $typename);
+			$cmd->addParam(":taskid", $taskid);
 
 
 

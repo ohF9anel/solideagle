@@ -17,7 +17,7 @@ class TaskQueue
 	private $configuration = array();
 	private $errorcount;
 	private $errormessages;
-	//---
+	//---only one of these can not be NULL
 	private $groupid = NULL;
 	private $personid = NULL;
 
@@ -43,7 +43,7 @@ class TaskQueue
 		);";
 
 		$cmd = new DatabaseCommand($sql);
-		$cmd->addParam(":personid", $taskQueue->getGroupid());
+		$cmd->addParam(":personid", $taskQueue->getPersonid());
 		$cmd->addParam(":groupid", $taskQueue->getGroupid());
 		$cmd->addParam(":task_id", $taskQueue->getTask()->getId());
 		$cmd->addParam(":config", $taskQueue->getConfigurationForDb());
@@ -53,7 +53,59 @@ class TaskQueue
 	
 	public static function getTasksToRun()
 	{
+		$sql = "SELECT
+			`task_queue`.`id`,
+			`task_queue`.`person_id`,
+			`task_queue`.`group_id`,
+			`task_queue`.`task_id`,
+			`task_queue`.`configuration`,
+			`task_queue`.`errorcount`,
+			`task_queue`.`errormessages`
+			FROM `CentralAccountDB`.`task_queue`;";
 		
+		$cmd = new DatabaseCommand($sql);
+		
+		$retarr = array();
+		
+		$cmd->executeReader()->readAll(function($row) use (&$retarr){
+			
+			$tq = new TaskQueue();
+			$tq->setId($row->id);
+			$tq->setPersonid($row->person_id);
+			$tq->setGroupid($row->group_id);
+			$tq->setTask(Task::getTaskById($row->task_id));
+			$tq->setConfigurationFromDb($row->configuration);
+			$tq->setErrorcount($row->errorcount);
+			$tq->setErrormessages($row->errormessages);
+			
+			$retarr[] = $tq;
+		});
+		
+		return $retarr;
+	}
+	
+	public static function addToRollback($taskQueue)
+	{
+		$sql = "DELETE FROM  `CentralAccountDB`.`task_queue` WHERE `task_queue`.`id` = :tqid";
+		
+		$cmd = new DatabaseCommand($sql);
+		
+		$cmd->BeginTransaction();
+		
+		
+		$cmd->addParam(":tqid", $taskQueue->getId());
+		$cmd->execute();
+		
+		$cmd->CommitTransaction();
+	}
+	
+	/**
+	 * 
+	 * @param TaskQueue $taskQueue
+	 */
+	public static function increaseErrorCount($taskQueue)
+	{
+		echo $taskQueue->getErrormessages();
 	}
 
 	public function getGroupid()
@@ -118,6 +170,10 @@ class TaskQueue
 		$this->task = new Task($id);
 	}
 	
+	/**
+	 * 
+	 * @return Task
+	 */
 	public function getTask()
 	{
 		return $this->task;

@@ -21,12 +21,12 @@ class ManageOU
         $connLdap = ConnectionLdap::singleton();
                 
         if ($connLdap->getConn() == null)
-             return array(false, "group or connection null");
+             return array(false, "LDAP Connectie mislukt");
         
         if ($childGroup == null)
         {
             Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nChild group cannot be null.", PEAR_LOG_ERR);
-            return false;
+            return array(false,"childgroup is null");
         }
         
         $info['objectClass'] = "organizationalUnit";
