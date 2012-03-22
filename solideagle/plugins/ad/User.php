@@ -2,6 +2,11 @@
 
 namespace AD;
 
+require_once '../data_access/Person.php';
+require_once('User.php');
+use DataAccess\Person;
+use DataAccess\Group;
+
 class User 
 {
     
@@ -137,7 +142,7 @@ class User
     
     public function addMemberOfGroups($groups)
     {
-        $this->groups = $groups;
+        $this->groups[] = $groups;
     }
     
     public function getMemberOfGroups()
@@ -158,6 +163,34 @@ class User
     public function getCn()
     {
         return $this->cn;
+    }
+    
+    public static function convertPersonToAdUser($person)
+    {
+        $user = new User();
+        
+        $user->setCn($person->getFirstName() . ' ' . $person->getName() . ' (' . $person->getAccountUserName() . ')');
+        $user->setUid($person->getAccountUserName());
+        $user->setSAMAccountName($person->getAccountUserName());
+        $user->setUnicodePwd($person->getAccountPassword());
+        $user->setSn($person->getName());
+        $user->setGivenname($person->getFirstName());
+        $user->setUserprincipalname($person->getAccountUserName());
+        $user->setDisplayName($person->getFirstName() . ' ' . $person->getName());
+        $user->setStreetaddress($person->getStreet());
+        $user->setPostofficebox($person->getHouseNumber());
+        $user->setPostalcode($person->getPostCode());
+        $user->setL($person->getCity());
+        $user->setCo($person->getCountry());
+        $user->setHomephone($person->getPhone());
+        $user->setMobile($person->getMobile());
+        $user->setMail($person->getEmail());
+        $user->setInfo($person->getOtherInformation());
+
+        $user->setEnabled($person->getAccountActive());
+        $user->addMemberOfGroups(Group::getGroupById($person->getGroupId()));
+        
+        return $user;
     }
     
     

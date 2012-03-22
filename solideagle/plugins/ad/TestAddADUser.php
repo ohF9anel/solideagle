@@ -4,14 +4,16 @@ namespace AD;
 
 require_once('User.php');
 require_once('data_access/Person.php');
+require_once('data_access/Group.php');
 require_once('ConnectionLdap.php');
 require_once('ManageUser.php');
 
 use DataAccess\Person;
+use DataAccess\Group;
 
 $user = new User();
 
-$person = Person::getPersonById(70);
+$person = Person::getPersonById(84);
 
 $user->setCn($person->getFirstName() . ' ' . $person->getName() . ' (' . $person->getAccountUserName() . ')');
 $user->setUid($person->getAccountUserName());
@@ -32,8 +34,10 @@ $user->setMail($person->getEmail());
 $user->setInfo($person->getOtherInformation());
 
 $user->setEnabled($person->getAccountActive());
-$user->addMemberOfGroups($person->getGroups());
+$user->addMemberOfGroups(Group::getGroupById($person->getGroupId()));
 
-ManageUser::updateUser($user->getUserInfo());
+$parents = Group::getParents(Group::getGroupById($person->getGroupId()));
+
+ManageUser::addUser($user->getUserInfo(), $parents);
 
 ?>

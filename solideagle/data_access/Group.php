@@ -504,7 +504,6 @@ class Group
 		
 		if($row = $cmd->executeReader()->read())
 		{
-			
 			$tmpgroup = new Group();
 			$tmpgroup->setId($row->id);
 			$tmpgroup->setName($row->name);

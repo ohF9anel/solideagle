@@ -9,18 +9,17 @@ class deamon
 	public function __construct()
 	{
 		$this->runTasks();
-	
 	}
 
 	private function runTasks()
 	{
+                var_dump("running tasks...");
+                var_dump(TaskQueue::getTasksToRun());
 		foreach(TaskQueue::getTasksToRun() as $taskqueue)
 		{
 			$class = $taskqueue->getTask()->getName();
 			
 			$toRun =  "./" . $taskqueue->getTask()->getPathScript() . $class . ".php";
-			
-			
 			if(file_exists($toRun))
 			{
 				require_once $toRun;
@@ -29,9 +28,9 @@ class deamon
 				TaskQueue::increaseErrorCount($taskqueue);
 				continue;
 			}
-			
-			$class = "\\" . str_replace("/", "", $taskqueue->getTask()->getPathScript()) . "plugin\\" . $taskqueue->getTask()->getName();
+			$class = "\\" . str_replace("/", "", $taskqueue->getTask()->getPathScript()) . "scripts\\" . $taskqueue->getTask()->getName();
 
+                        var_dump($class);
 			if(class_exists($class))
 			{
 				$script = new $class();
