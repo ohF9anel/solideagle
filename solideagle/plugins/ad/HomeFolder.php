@@ -2,7 +2,6 @@
 
 namespace AD;
 
-include('ConnectionSsh.php');
 require_once 'logging/Logger.php';
 require_once 'config.php';
 use Logging\Logger;

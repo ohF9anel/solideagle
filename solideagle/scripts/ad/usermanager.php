@@ -1,5 +1,5 @@
 <?php
-namespace adscripts;
+namespace adplugin;
 
 require_once 'data_access/BaseTask.php';
 require_once 'data_access/TaskQueue.php';
@@ -14,7 +14,8 @@ use DataAccess\TaskQueue;
 class usermanager extends \DataAccess\BaseTask
 {
 	const ActionAddUser = 0;
-        const ActionAddHomeFolder = 1;
+        const ActionUpdateUser = 1;
+        const ActionAddHomeFolder = 2;
         
         public function __construct($taskid = null, $personid = null)
 	{
@@ -31,7 +32,7 @@ class usermanager extends \DataAccess\BaseTask
 			return false;
 		}
 		
-		if($config["action"] == self::ActionAddUser)
+		if($config["action"] == self::ActionAddUser || $config["action"] == self::ActionUpdateUser)
 		{
                         if (!isset($config["userInfo"]) || !isset($config["arrParentsGroups"]))
                         {
@@ -39,7 +40,15 @@ class usermanager extends \DataAccess\BaseTask
                                 return false;
                         }
                         
-			$ret = ManageUser::addUser($config["userInfo"],$config["arrParentsGroups"]);
+                        if($config["action"] == self::ActionAddUser)
+                        {
+                            $ret = ManageUser::addUser($config["userInfo"],$config["arrParentsGroups"]);
+                        }
+                        else if ($config["action"] == self::ActionUpdateUser)
+                        {
+                            
+                            $ret = ManageUser::updateUser($config["userInfo"],$config["arrParentsGroups"]);
+                        }
 			
 			if($ret[0] === true)
 			{
@@ -78,6 +87,15 @@ class usermanager extends \DataAccess\BaseTask
 	public  function prepareAddUser($userInfo,$arrParentsGroups)
 	{
 		$config["action"] = self::ActionAddUser;
+                $config["userInfo"] = $userInfo;
+		$config["arrParentsGroups"] = $arrParentsGroups;
+		
+		$this->addToQueue($config);
+	}
+        
+        public  function prepareUpdateUser($userInfo,$arrParentsGroups)
+	{
+		$config["action"] = self::ActionUpdateUser;
                 $config["userInfo"] = $userInfo;
 		$config["arrParentsGroups"] = $arrParentsGroups;
 		

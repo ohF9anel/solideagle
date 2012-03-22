@@ -28,7 +28,7 @@ class deamon
 				TaskQueue::increaseErrorCount($taskqueue);
 				continue;
 			}
-			$class = "\\" . str_replace("/", "", $taskqueue->getTask()->getPathScript()) . "scripts\\" . $taskqueue->getTask()->getName();
+			$class = "\\" . str_replace("/", "", $taskqueue->getTask()->getPathScript()) . "plugin\\" . $taskqueue->getTask()->getName();
 
                         var_dump($class);
 			if(class_exists($class))

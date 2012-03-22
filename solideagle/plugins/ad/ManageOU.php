@@ -134,12 +134,8 @@ class ManageOU
         $info['objectClass'] = "organizationalUnit";
         $info["ou"] = ConnectionLDAP::escapeForLDAPSearch($childGroup->getName());
         
-     
-        
         $sr = ldap_search($connLdap->getConn(), "OU=" . AD_USERS_OU . ", " . AD_DC, "(OU=" .  $info["ou"] . ")");
         $oldOuInfo = ldap_get_entries($connLdap->getConn(), $sr);
-        
-       
 
         if (!isset($oldOuInfo[0]))
         {
@@ -154,17 +150,8 @@ class ManageOU
         }
         $parentDn .= AD_DC;
         
+        $ret = ldap_delete($connLdap->getConn(), $parentDn);
 
-       // echo $parentDn;
-        
-        
-        
-        	$ret = ldap_delete($connLdap->getConn(), $parentDn);
-        
-        
-        
-        //echo ldap_error($connLdap->getConn());
-        
         return $ret;
         
     }
