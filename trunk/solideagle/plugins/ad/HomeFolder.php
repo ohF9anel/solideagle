@@ -26,9 +26,9 @@ class HomeFolder
         if (!$conn->login(S1_ADMINISTRATOR, AD_PASSWORD))
         {
             return false;
-            Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nLogin to SSH failed on " . AD_DC_HOST . ".", PEAR_LOG_ERR);
+            Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nLogin to SSH failed on " . $server . ".", PEAR_LOG_ERR);
         }
-        
+
         $conn->write("cmd\n");
         
         // make folder & subfolders

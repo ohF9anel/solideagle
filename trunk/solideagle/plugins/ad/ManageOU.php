@@ -48,7 +48,6 @@ class ManageOU
         }
         
         return array($r,ldap_error($connLdap->getConn()));
-        
     }
     
     public static function updateOU($arrNewParentsGroups, $arrOldParentsGroups, $newChildGroup, $oldChildGroup)

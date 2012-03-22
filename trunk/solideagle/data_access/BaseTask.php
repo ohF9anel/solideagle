@@ -33,7 +33,7 @@ abstract class BaseTask
 		if($type == BaseTask::TypeGroup)
 		{
 			$this->groupid = $personOrGroupId;
-		}elseif ($type == BaseTask::TypeGroup)
+		}elseif ($type == BaseTask::TypePerson)
 		{
 			$this->personid = $personOrGroupId;
 		}

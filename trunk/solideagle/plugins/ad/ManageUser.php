@@ -42,14 +42,17 @@ class ManageUser
         
         $dn .= AD_DC;
         var_dump($dn);
-        if (ldap_add($connLdap->getConn(), $dn, $userInfo))
+        $ret = ldap_add($connLdap->getConn(), $dn, $userInfo);
+        if ($ret)
         {
-            $this->addUserToGroups($groups, $dn);
+            ManageUser::addUserToGroups($groups, $dn);
         }
         else 
         {
-            Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \n" . var_dump($userInfo) . "\nUser cannot be added to AD.", PEAR_LOG_ERR);
+            Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \n" . var_export($userInfo, true) . "\nReason: " . var_export(array($ret, ldap_error($connLdap->getConn())), true), PEAR_LOG_ERR);
         }
+
+        return array($ret, ldap_error($connLdap->getConn()));
     }
     
     public static function addUserToGroups($groups, $dn)
@@ -59,6 +62,8 @@ class ManageUser
         if ($connLdap->getConn() == null)
             return false;
         
+        $ret = true;
+        
         // add user to correct group
         foreach($groups as $group)
         {
@@ -67,8 +72,11 @@ class ManageUser
             if (!ldap_mod_add($connLdap->getConn(), $group_name, $group_info))
             {
                 Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nUser cannot be added to group \"" . $group_name . "\"", PEAR_LOG_ERR);
+                $ret = false;
             }
         }
+        
+        return $ret;
     }
     
     public static function updateUser($userInfo, $arrParentsGroups)

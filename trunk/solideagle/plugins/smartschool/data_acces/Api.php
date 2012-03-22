@@ -11,8 +11,8 @@ class Api
 
 	private function __construct()
 	{
-		$this->client = new SoapClient("http://dbz-tmp.smartschool.be/Webservices/V3?wsdl");
-		$this->apiKey = "Zs889p12va0S3a8K22hB352DZ350KoBo";
+		$this->client = new SoapClient(SS_WS_URL);
+		$this->apiKey = SS_WS_PSW;
 	}
 
 	public static function singleton()
