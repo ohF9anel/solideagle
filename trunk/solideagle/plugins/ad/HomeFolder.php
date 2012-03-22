@@ -20,7 +20,7 @@ class HomeFolder
      * @param group[] $arrReadRightsGroups 
      * @return boolean 
      */
-    public static function createHomeFolder($server, $path, $username, $arrReadRightsGroups)
+    public static function createHomeFolder($server, $path, $username, $arrReadRightsGroups = null)
     {
         $conn = new \Net_SSH2($server);
         if (!$conn->login(S1_ADMINISTRATOR, AD_PASSWORD))
@@ -33,13 +33,8 @@ class HomeFolder
         
         // make folder & subfolders
         $conn->write("mkdir " . $path . "\\" . $username . "\n");
-        $conn->write("mkdir " . $path . "\\" . $username . "\\" . "www\n");
-        $conn->write("mkdir " . $path . "\\" . $username . "\\" . "scans\n");
-        $conn->write("mkdir " . $path . "\\" . $username . "\\" . "Documents\n");
-        $conn->write("mkdir " . $path . "\\" . $username . "\\" . "Downloads\n");
-        $conn->write("mkdir " . $path . "\\" . $username . "\\" . "Pictures\n");
-        $conn->write("mkdir " . $path . "\\" . $username . "\\" . "Music\n");
-        $conn->write("mkdir " . $path . "\\" . $username . "\\" . "Movies\n");
+        //if ($www) $conn->write("mkdir " . $path . "\\" . $username . "\\" . "_www\n");
+        //$conn->write("mkdir " . $path . "\\" . $username . "\\" . "_scans\n");
         
         // set permissions to local folder
         $conn->write("icacls " . $path . "\\" . $username . " /q /reset /t\n");
@@ -49,9 +44,12 @@ class HomeFolder
         // add read groups
         $cmd = "icacls " . $path . "\\" . $username . " /q /grant *S-1-5-32-544:F *S-1-5-18:F " . AD_NETBIOS . "\\" . $username . ":M ";
         
-        foreach($arrReadRightsGroups as $group)
+        if ($arrReadRightsGroups != null)
         {
-            $cmd .= AD_NETBIOS . "\\" . $group->getName() . ":R ";
+            foreach($arrReadRightsGroups as $group)
+            {
+                $cmd .= AD_NETBIOS . "\\" . $group->getName() . ":R ";
+            }
         }
         
         $cmd .= "/inheritance:r /T /C\n";
@@ -59,16 +57,22 @@ class HomeFolder
         $conn->write($cmd);  
 
         // share and set permissions
-        $cmd = "net share " . $username . "$=" . $path . "\\" . $username . " /grant:" . AD_NETBIOS . "\\" . $username . ",change /grant:\"" . AD_NETBIOS . "\\Domain Admins\",read ";
-        foreach($arrReadRightsGroups as $group)
+        $cmd = "net share " . $username . "$=" . $path . "\\" . $username . " /grant:" . AD_NETBIOS . "\\" . $username . ",change /grant:\"" . AD_NETBIOS . "\\Domain Admins\",read";
+        if ($arrReadRightsGroups != null)
         {
-            $cmd .= "/grant:" . AD_NETBIOS . "\\" . $group->getName() . ",read ";
+            foreach($arrReadRightsGroups as $group)
+            {
+                $cmd .= "/grant:" . AD_NETBIOS . "\\" . $group->getName() . ",read ";
+            }
         }
         $cmd .= "/cache:None\n";
-        
         $conn->write($cmd);  
         
+//        while($data = $conn->_get_channel_packet(NET_SSH2_CHANNEL_SHELL)) echo $data;
+
         $conn->write("exit\nexit\n");
+        $conn->write("echo ENDOFCODE");
+        $conn->read('ENDOFCODE');
         $conn->_close_channel(NET_SSH2_CHANNEL_SHELL); 
         $conn->disconnect();
         
@@ -136,7 +140,8 @@ class HomeFolder
         $conn->write("rd /s /q " . $path . "\\" . $username . "\n");
       
         $conn->write("exit\nexit\n");
-        
+        $conn->write("echo ENDOFCODE");
+        $conn->read('ENDOFCODE');
         $conn->_close_channel(NET_SSH2_CHANNEL_SHELL); 
         $conn->disconnect();
         
