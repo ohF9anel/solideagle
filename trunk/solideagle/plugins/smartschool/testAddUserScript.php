@@ -1,21 +1,15 @@
 <?php
-require_once 'config.php';
-require_once 'Smartschool/User.php';
+//require_once 'config.php';
+require_once 'plugins/smartschool/data_access/SSUser.php';
 
+use Smartschool\SSUser;
+use DataAccess\Person;
+use Smartschool\Error;
 
-$user = new Smartschool\User();
+$user = new SSUser();
 
-$user->setInternnumber("smartschool_plugin3");
-$user->setUsername("smartschool_plugin_user3");
-$user->setPasswd1("12345");
-$user->setName("smartschool");
-$user->setSurname("pluginaanpassing");
-$user->setBasisrol("leerling");
-$user->setAccountStatus("actief");
-
-$user->addClass("groupsecret");
-$user->addClass("group2secret");
-
-echo Smartschool\Error::getErrorFromCode(Smartschool\User::saveUser($user));
+$user = SSUser::convertPersonToSsUser(Person::getPersonById(85));
+var_dump($user);
+echo Error::getErrorFromCode(SSUser::saveUser($user));
 
 ?>

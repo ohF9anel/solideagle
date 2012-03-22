@@ -16,8 +16,7 @@ class groupmanager extends \DataAccess\BaseTask
 {
 	const ActionAdd = 0;
 	const ActionDelete = 1;
-	
-	
+
 	
 	public function __construct($taskid = NULL,$groupid= NULL)
 	{

@@ -13,6 +13,13 @@ define('S1_ADMINISTRATOR', 'Administrator');
 define('AD_PASSWORD', 'Azerty1234');
 define('SSH_SERVER', 'S1.solideagle.lok');
 
+define('DIR_NAME_DOWNLOADS', '_downloads');
+define('DIR_NAME_UPLOADS', '_uploads');
+define('DIR_NAME_SCANS', '_scans');
+define('DIR_NAME_WWW', '_www');
+
+define('SS_WS_URL', 'http://dbz-tmp.smartschool.be/Webservices/V3?wsdl');
+define('SS_WS_PSW', 't2T79FbI2A5QHFNs');
 /*TODO: Disable asserts here when deploying */
 
 // Active assert and make it quiet

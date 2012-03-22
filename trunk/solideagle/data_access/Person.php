@@ -50,6 +50,8 @@ namespace DataAccess
         private $parentOccupation;
         private $groupId;
         
+        private $types = array();
+        
         private $valErrors = array();
 
         public function __construct()
@@ -69,16 +71,6 @@ namespace DataAccess
         public function setId($id)
         {
             $this->id = $id;
-        }
-
-        public function getTypes()
-        {
-            return $this->type;
-        }
-
-        public function addType($type)
-        {
-            $this->type[] = $type;
         }
 
         public function getAccountUsername()
@@ -360,8 +352,18 @@ namespace DataAccess
         {
             $this->groupId = $groupId;
         }
+        
+        public function addType($type)
+        {
+            $this->types[] = $type;
+        }
+        
+        public function getTypes()
+        {
+            return $this->types;
+        }
     
-        private static function tryCreateUsername($person)
+        public static function tryCreateUsername($person)
         {
         	
         	$counter = "";
@@ -794,36 +796,6 @@ namespace DataAccess
                  foreach($person->getTypes() as $type) {
                         $cmd = new DatabaseCommand($sql);
                         $cmd->addParam(":type_id", $type->getId());
-                        $cmd->addParam(":person_id", $person->getId());
-
-                        $cmd->execute();
-                }
-                
-                // update person's group(s)
-                
-                $sql = "DELETE FROM `CentralAccountDB`.`group_person`
-					WHERE `person_id` = :personId;";
-
-                $cmd = new DatabaseCommand($sql);
-                $cmd->addParam(":personId", $person->getId());
-
-                $cmd->execute();
-                
-                $sql = "INSERT INTO `CentralAccountDB`.`group_person`
-                                (
-                                `group_id`,
-                                `person_id`
-                                )
-                                VALUES
-                                (
-                                :group_id,
-                                :person_id
-                                );";
-                
-                foreach($person->getGroups() as $group)
-                {
-                        $cmd = new DatabaseCommand($sql);
-                        $cmd->addParam(":group_id", $group->getId());
                         $cmd->addParam(":person_id", $person->getId());
 
                         $cmd->execute();
@@ -1356,6 +1328,28 @@ namespace DataAccess
         	
         	
         	return $retarr;
+        }
+        
+        public static function getTypesByPersonId($personId)
+        {
+                $sql = "SELECT `type`.`type_name` FROM `CentralAccountDB`.`person`,
+                        `CentralAccountDB`.`type_person`,
+                        `CentralAccountDB`.type
+                        WHERE `person`.`id` = :id
+                        && `type_person`.`person_id` = `person`.`id`
+                        && `type_person`.`type_id` = `type`.`id`";
+                
+                $cmd = new DatabaseCommand($sql);
+                $cmd->addParam(":id", $personId);
+                
+                $retArr = array();
+                
+                $cmd->executeReader()->readAll(function($row) use (&$retArr)
+                {
+			$retArr[] = $row->type_name;
+                });
+			
+		return $retArr;
         }
 
     }
