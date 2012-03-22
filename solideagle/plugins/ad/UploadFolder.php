@@ -10,7 +10,7 @@ use Logging\Logger;
 class UploadFolder
 {
     
-    public static function createUploadFolder($server, $path, $username)
+    public static function setUploadFolder($server, $path, $shareUploadPath, $username, $enabled = true)
     {
         $conn = new \Net_SSH2($server);
         if (!$conn->login(S1_ADMINISTRATOR, AD_PASSWORD))
@@ -21,14 +21,26 @@ class UploadFolder
         
         $conn->write("cmd\n");
         
-        $conn->write("mkdir " . $path . "\\" . $username . "\n");
-        $conn->write("icacls " . $path . "\\" . $username . " /q /deny " . AD_NETBIOS . "\\" . $username . ":(WDAC,WO,S)\n");
-        $conn->write("icacls " . $path . "\\" . $username . " /q /grant " . AD_NETBIOS . "\\" . $username . ":M \n");
-        $conn->write("*S-1-5-32-544:F *S-1-5-18:F \n");
-        $conn->write("/inheritance:r /T /C \n");
-        $conn->write("icacls " . $path . "\\" . $username . " /q /grant *S-1-5-11:(CI)(R,WD,AD) \n");
+        if ($enabled)
+        {
+            $conn->write("mkdir " . $path . "\\" . $username . "\\" . DIR_NAME_UPLOADS . "\n");
+            $conn->write("icacls " . $path . "\\" . $username . "\\" . DIR_NAME_UPLOADS . " /q /deny " . AD_NETBIOS . "\\" . $username . ":(WDAC,WO,S)\n");
+            $conn->write("icacls " . $path . "\\" . $username . "\\" . DIR_NAME_UPLOADS . " /q /grant " . AD_NETBIOS . "\\" . $username . ":M \n");
+            $conn->write("*S-1-5-32-544:F *S-1-5-18:F \n");
+            $conn->write("/inheritance:r /T /C \n");
+            $conn->write("icacls " . $path . "\\" . $username . "\\" . DIR_NAME_UPLOADS . " /q /grant *S-1-5-11:(CI)(R,WD,AD) \n");
+
+            // make link
+            $conn->write("mklink /j " . $shareUploadPath . "\\" . $username . ' ' . $path . "\\" . $username . "\\" . DIR_NAME_UPLOADS . "\n");
+        }
+        else
+        {
+            $conn->write("rmdir " . $shareUploadPath . "\\" . $username . " /s /q\n");
+        }
         
         $conn->write("exit\nexit\n");
+        $conn->write("echo ENDOFCODE");
+        $conn->read('ENDOFCODE');
         $conn->_close_channel(NET_SSH2_CHANNEL_SHELL); 
         $conn->disconnect();
     }
