@@ -2,7 +2,7 @@
 
 namespace AD;
 
-require_once '../data_access/Person.php';
+require_once 'data_access/Person.php';
 require_once('User.php');
 use DataAccess\Person;
 use DataAccess\Group;

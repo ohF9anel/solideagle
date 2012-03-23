@@ -97,7 +97,7 @@ class ManageUser
         {
             $parentDn .= "OU=" . $arrParentsGroups[$i]->getName() . ", ";
         }
-        
+
         $parentDn .= AD_DC;
         $dn = "CN=" . $userInfo['cn'] . ", " . $parentDn;
         
@@ -138,7 +138,8 @@ class ManageUser
         unset($userInfo['enabled']);
         unset($userInfo['cn']);
         
-        if (ldap_modify($connLdap->getConn(), $dn, $userInfo))
+        $ret = ldap_modify($connLdap->getConn(), $dn, $userInfo);
+        if ($ret)
         {
             ManageUser::addUserToGroups($groups, $dn);
         }
@@ -147,6 +148,9 @@ class ManageUser
             Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \n
                 " . var_dump($userInfo) . "\n: user cannot be modified", PEAR_LOG_ERR);
         }
+        
+        return array($ret, ldap_error($connLdap->getConn()));
+        
     }
     
     public static function delUser($userName, $arrParentsGroups)
