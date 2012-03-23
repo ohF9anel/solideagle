@@ -7,7 +7,7 @@ require_once 'data_access/TaskQueue.php';
 use DataAccess\BaseTask;
 use DataAccess\TaskQueue;
 
-class groupmanager extends \DataAccess\BaseTask
+class groupmanager implements TaskInterface
 {
 	
 	public function __construct($taskid = NULL,$groupid= NULL)

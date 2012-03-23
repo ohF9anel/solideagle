@@ -31,6 +31,7 @@
           <actionMethod actionName="editgroup"/>
           <actionMethod actionName="updategrouppost"/>
           <actionMethod actionName="addsubgroup"/>
+          <actionMethod actionName="addsubgrouppost"/>
         </controllerFile>
       </controllersDirectory>
       <formsDirectory enabled="false"/>

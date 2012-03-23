@@ -1,17 +1,17 @@
 <?php
 namespace adplugin;
 
-require_once 'data_access/BaseTask.php';
-require_once 'data_access/TaskQueue.php';
+require_once 'data_access/TaskInserter.php';
+
 require_once 'plugins/ad/ManageUser.php';
 require_once 'plugins/ad/ManageHomeFolder.php';
 
 use AD\ManageUser;
 use AD\ManageHomeFolder;
-use DataAccess\BaseTask;
-use DataAccess\TaskQueue;
+use DataAccess\TaskInserter;
 
-class usermanager extends \DataAccess\BaseTask
+
+class usermanager implements \DataAccess\TaskInterface
 {
 	const ActionAddUser = 0;
         const ActionUpdateUser = 1;
