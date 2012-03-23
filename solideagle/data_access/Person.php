@@ -374,11 +374,16 @@ namespace DataAccess
         	
         	$sql = "select account_username from person where account_username = :accusername";
         	
+        	
+        	$cmd = new DatabaseCommand($sql);
+        	
+        	$cmd->BeginTransaction();
+        	
         	for(;;)
         	{
-        		echo "trying: " . $username . $counter . "\n";
+        		//echo "trying: " . $username . $counter . "\n";
         		
-        		$cmd = new DatabaseCommand($sql);
+        		$cmd->newQuery($sql);
         		 
         		$cmd->addParam(":accusername", $username . $counter);
         		 
@@ -390,7 +395,14 @@ namespace DataAccess
         		}
         	}
         	
+        	$cmd->CommitTransaction();
+        	
         	return $username . $counter;
+        }
+        
+        public static function generatePassword()
+        {
+        	return "P@ssw0rd"; //cool and 1337 password that is as good as any other password!
         }
 
         /**
@@ -401,7 +413,7 @@ namespace DataAccess
         public static function addPerson($person)
         {
                 $person->setAccountUsername(Person::tryCreateUsername($person));
-                $person->setAccountPassword("P@ssw0rd");
+                $person->setAccountPassword(Person::generatePassword());
         	
                 $err = Person::validatePerson($person);
                 if (!empty($err))
@@ -410,11 +422,12 @@ namespace DataAccess
                     return false;
                 }
                 
-                if (sizeof($person->getTypes()) < 1)
+               /* if (sizeof($person->getTypes()) < 1)
                 {
                     Logger::getLogger()->log("Person does not have any type(s)! \nPerson object dump:\n" . var_export($person,true) . "\n",PEAR_LOG_ERR);
                     return false;
                 }
+                */
                 
                 $sql = "INSERT INTO `CentralAccountDB`.`person`
                         (`id`,
