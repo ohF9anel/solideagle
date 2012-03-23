@@ -32,7 +32,11 @@ class GroupsController extends Zend_Controller_Action
 		}else{
 			exit();
 		}
+		
+		
+		$this->view->groups = Group::getAllGroups();
 
+	
 
 	}
 	
@@ -103,6 +107,26 @@ class GroupsController extends Zend_Controller_Action
 			//only should update when name changes
 			if($newGroup->getName() !== $oldgroup->getName())
 				OUManager::Modify(Group::getParents($newGroup),$oldgroup,$newGroup);
+			
+			if($data["selectGroup"] !== "ignore")
+			{
+				$newparentid = $data["selectGroup"];
+				$newGroup->setParentId($newparentid);
+				
+				if(!(count(Group::getChilderen($newGroup)) > 0))
+				{
+				
+					$oldparents = Group::getParents($newGroup);
+					
+					Group::moveGroup($newGroup);
+					
+					$newparents = Group::getParents($newGroup);
+					
+					OUManager::Move($oldparents,$newparents,$newGroup);
+				}else{
+					echo "Kan deze OU niet verplaatsen omdat hij subou's bevat";
+				}
+			}
 			
 			
 		}

@@ -35,7 +35,8 @@
 		<div class="control-group">
 			<label class="control-label" for="txtName">Naam</label>
 			<div class="controls">
-				<input id="txtName" name="groupName" class="input-xlarge" type="text"
+				<input id="txtName" name="groupName" class="input-xlarge"
+					type="text"
 					value="<?php echo htmlentities($this->group->getName()) ?>">
 			</div>
 		</div>
@@ -43,29 +44,48 @@
 		<div class="control-group">
 			<label class="control-label" for="txtDescription">Omschrijving</label>
 			<div class="controls">
-				<textarea id="txtDescription" name="groupDescription" class="input-xlarge" rows="3"><?php echo htmlentities($this->group->getDescription()) ?></textarea>
+				<textarea id="txtDescription" name="groupDescription"
+					class="input-xlarge" rows="3"><?php echo htmlentities($this->group->getDescription()) ?></textarea>
 			</div>
 		</div>
 		
-				<div class="control-group error">
+		
+		<div class="control-group">
+			<label class="control-label" for="txtDescription">Verplaatsen</label>
+			<div class="controls">
+				<select name="selectGroup">
+					<option value="ignore">Niet verplaatsen</option>
+					<?php foreach($this->groups as $group)
+					{
+					
+					?>
+					
+					<option value ="<?php echo $group->getId(); ?>"><?php echo $group->getName(); ?></option>
+						
+					<?php } ?>
+					
+				</select>
+			</div>
+		</div>
+
+		<div class="control-group error">
 			<label class="control-label" for="blnDelete">Groep verwijderen</label>
 			<div class="controls">
-				<label class="checkbox">
-				<input id="blnDelete" name="delete"  type="checkbox" value="delete">
-				Ja, ik wil deze groep verwijderen
-				</label>
-				<label id="lbldeletesure" class="checkbox">
-				<input id="blnDeleteSure" name="deletesure" type="checkbox" value="delete">
-				Ja, ik ben zeker
+				<label class="checkbox"> <input id="blnDelete" name="delete"
+					type="checkbox" value="delete"> Ja, ik wil deze groep verwijderen
+				</label> <label id="lbldeletesure" class="checkbox"> <input
+					id="blnDeleteSure" name="deletesure" type="checkbox" value="delete">
+					Ja, ik ben zeker
 				</label>
 			</div>
 		</div>
 
 		<div class="form-actions">
-		<button class="btn btn-primary" type="submit">Opslaan</button>
-		
+			<button class="btn btn-primary" type="submit">Opslaan</button>
+
 		</div>
-		
-		<input type="hidden" name="groupid" value="<?php echo $this->group->getId() ?>">
+
+		<input type="hidden" name="groupid"
+			value="<?php echo $this->group->getId() ?>">
 	</fieldset>
 </form>

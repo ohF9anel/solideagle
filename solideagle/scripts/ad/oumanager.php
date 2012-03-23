@@ -17,6 +17,7 @@ class oumanager implements \DataAccess\TaskInterface
 	const ActionAdd = 0;
 	const ActionDelete = 1;
 	const ActionModify = 2;
+	const ActionMove = 3;
 	
 	const myTaskId=27;
 
@@ -48,10 +49,9 @@ class oumanager implements \DataAccess\TaskInterface
 				return false;
 			}
 
-		}else if($config["action"] == "Move"){
+		}else if($config["action"] == self::ActionMove){
 				
-			$taskqueue->setErrorMessages("Not Implemented Yet");
-			return false;
+			return ManageOU::moveOU($config["newparents"], $config["oldparents"], $config["group"]);
 			
 		}else if($config["action"] ==  self::ActionModify){
 				
@@ -114,6 +114,18 @@ class oumanager implements \DataAccess\TaskInterface
 		$config["parents"] = $parentgroups;
 		
 		$taskInserter = new TaskInserter(self::myTaskId,$newgroup->getId(),TaskInserter::TypeGroup);
+		
+		$taskInserter->addToQueue($config);
+	}
+	
+	public function prepareMoveGroup($newparentsgroup,$oldparentsgroup,$group)
+	{
+		$config["action"] = self::ActionMove;
+		$config["newparents"] = $newparentsgroup;
+		$config["oldparents"] = $oldparentsgroup;
+		$config["group"] = $group;
+		
+		$taskInserter = new TaskInserter(self::myTaskId,$group->getId(),TaskInserter::TypeGroup);
 		
 		$taskInserter->addToQueue($config);
 	}

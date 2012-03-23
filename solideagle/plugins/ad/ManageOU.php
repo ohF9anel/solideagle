@@ -50,7 +50,7 @@ class ManageOU
         return array($r,ldap_error($connLdap->getConn()));
     }
     
-    public static function updateOU($arrNewParentsGroups, $arrOldParentsGroups, $newChildGroup, $oldChildGroup)
+    /*public static function updateOU($arrNewParentsGroups, $arrOldParentsGroups, $newChildGroup, $oldChildGroup)
     {
         $connLdap = ConnectionLdap::singleton();
                 
@@ -109,6 +109,37 @@ class ManageOU
                 Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nDN \"" . $oldOuInfo[0]['distinguishedname'][0] . "\" can't be removed or renamed to DN \"OU=" . $newChildGroup->getName() . "," . $newParentDn . "\".",PEAR_LOG_ERR);
             }
         }
+    }*/
+    
+    public static function moveOU($oldparents,$newparents,$group)
+    {
+    	$connLdap = ConnectionLdap::singleton();
+    	 
+    	 
+    	$oldDn = "";
+    	for($i = 0; $i < sizeof($oldparents); $i++)
+    	{
+    	$oldDn .= "OU=" . $oldparents[$i]->getName() . ",";
+    	}
+    	$oldDn .= AD_DC;
+    	
+    	$newParentDn = "";
+    	for($i = 0; $i < sizeof($newparents); $i++)
+    	{
+    	$newParentDn .= "OU=" . $newparents[$i]->getName() . ",";
+    	}
+    	$newParentDn .= AD_DC;
+    	 
+    	$sr = ldap_search($connLdap->getConn(), $oldDn, "(OU=" . $group->getName() . ")");
+    	$oldOuInfo = ldap_get_entries($connLdap->getConn(), $sr);
+    	
+    	
+    	 
+    	$r = ldap_rename($connLdap->getConn(), $oldOuInfo[0]['distinguishedname'][0], "OU=" . $group->getName(), $newParentDn, true);
+    	 
+    	echo ldap_error($connLdap->getConn());
+    	
+    	return $r;
     }
     
     public static function modifyOU($parents,$oldgroup,$newgroup)
