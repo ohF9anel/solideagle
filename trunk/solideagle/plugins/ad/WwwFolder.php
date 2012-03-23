@@ -10,7 +10,7 @@ use Logging\Logger;
 class WwwFolder
 {
     
-    public static function setWwwFolder($server, $path, $shareWwwPath, $username, $enabled = true)
+    public static function setWwwFolder($server, $path, $username, $enabled = true)
     {
         $conn = new \Net_SSH2($server);
         if (!$conn->login(S1_ADMINISTRATOR, AD_PASSWORD))
@@ -25,16 +25,18 @@ class WwwFolder
         {
             // make www folder in homedir
             $conn->write("mkdir " . $path . "\\" . $username . "\\" . DIR_NAME_WWW . "\n");
+            // give access to
+            $conn->write("setacl -ot file -actn ace -ace \"n:" . AD_NETBIOS . "\\" . $username . ";s:n;p:change;i:sc,so\" -on " . $path . "\\" . $username . "\\" . DIR_NAME_WWW. "\n");
             // protection folder
             $conn->write("setacl -ot file -actn ace -ace \"n:" . AD_NETBIOS . "\\" . $username . ";s:n;m:deny;p:delete;i:np\" -on " . $path . "\\" . $username . "\\" . DIR_NAME_WWW . "\n");
             // access webserver with user sysweb
             $conn->write("setacl -ot file -actn ace -ace \"n:" . AD_NETBIOS . "\\sysweb;s:n;m:grant;p:read;w:dacl\" -on " . $path . "\\" . $username . "\\" . DIR_NAME_WWW . "\n");
             // make link
-            $conn->write("mklink /j " . $shareWwwPath . "\\" . $username . ' ' . $path . "\\" . $username . "\\" . DIR_NAME_WWW . "\n");
+            $conn->write("mklink /j " . PATH_SHARE_WWW . "\\" . $username . ' ' . $path . "\\" . $username . "\\" . DIR_NAME_WWW . "\n");
         }
         else 
         {
-            $conn->write("rmdir " . $shareWwwPath . "\\" . $username . " /s /q\n");
+            $conn->write("rmdir " . PATH_SHARE_WWW . "\\" . $username . " /s /q\n");
         }
         
         //while($data = $conn->_get_channel_packet(NET_SSH2_CHANNEL_SHELL)) echo $data;

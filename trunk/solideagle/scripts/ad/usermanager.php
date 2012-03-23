@@ -89,6 +89,8 @@ class usermanager implements \DataAccess\TaskInterface
 		$config["action"] = self::ActionAddUser;
                 $config["userInfo"] = User::convertPersonToAdUser($person)->getUserInfo();
 		$config["arrParentsGroups"] = Group::getParents(Group::getGroupById($person->getGroupId()));
+                
+                var_dump($config["arrParentsGroups"]);
 		
                 $taskInserter = new TaskInserter(self::taskId, $person->getId(), TaskInserter::TypePerson);
 		$taskInserter->addToQueue($config);
