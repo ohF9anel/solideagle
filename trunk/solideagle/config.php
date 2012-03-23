@@ -2,7 +2,7 @@
 
 /* ----------GLOBAL CONFIG VARS---------- */
 
-define('AD_DC', 'DC=solideagle,DC=lok');
+define('AD_DC', 'DC=solideagle, DC=lok');
 define('AD_NETBIOS', 'SOLIDEAGLE');
 define('AD_DC_HOST', 'S1.solideagle.lok');
 define('AD_GROUPS_OU', 'groepen');

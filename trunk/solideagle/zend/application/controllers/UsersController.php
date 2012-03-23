@@ -6,12 +6,14 @@ require_once 'data_access/Task.php';
 
 require_once 'data_access/Group.php';
 
+require_once "scripts/Usermanager.php";
+
 use DataAccess\Person;
 use DataAccess\Type;
 
 use DataAccess\Group;
 
-
+use scripts\Usermanager;
 
 
 
@@ -85,18 +87,11 @@ class UsersController extends Zend_Controller_Action
  		
  		$personid = Person::addPerson($person);
  		
- 		if(isset($data["task"]))
- 		{
- 			foreach($data["task"] as $task)
- 			{
- 				
- 			}
- 		}
+ 		$person->setId($personid);
  		
- 		
+ 		Usermanager::Add($person);
  	
- 		
- 		
+
     }
     
     

@@ -29,6 +29,11 @@ class OUmanager {
 	{
 		\scripts\ad\oumanager::prepareDeleteGroup($parents, $groep);
 	}
+	
+	public static function Move($oldparents,$newparents,$group)
+	{
+		\scripts\ad\oumanager::prepareMoveGroup($oldparents,$newparents,$group);
+	}
 }
 
 
