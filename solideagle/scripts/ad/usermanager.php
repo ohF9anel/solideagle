@@ -1,14 +1,16 @@
 <?php
-namespace adplugin;
+namespace scripts\ad;
 
 require_once 'data_access/TaskInserter.php';
-
+require_once 'plugins/ad/User.php';
 require_once 'plugins/ad/ManageUser.php';
 require_once 'plugins/ad/ManageHomeFolder.php';
 
 use AD\ManageUser;
+use AD\User;
 use AD\ManageHomeFolder;
 use DataAccess\TaskInserter;
+use DataAccess\Group;
 
 
 class usermanager implements \DataAccess\TaskInterface
@@ -17,15 +19,12 @@ class usermanager implements \DataAccess\TaskInterface
         const ActionUpdateUser = 1;
         const ActionAddHomeFolder = 2;
         
-        public function __construct($taskid = null, $personid = null)
-	{
-		parent::__construct($taskid, $personid, parent::TypePerson);
-	}
+        const taskId = 29;
         
         public function runTask($taskqueue)
 	{
 		$config = $taskqueue->getConfiguration();
-		
+
 		if(!isset($config["action"]))
 		{
 			$taskqueue->setErrorMessages("Probleem met configuratie");
@@ -68,6 +67,7 @@ class usermanager implements \DataAccess\TaskInterface
                         }
                         $mhf = new ManageHomeFolder($config["server"], $config["username"], $config["homeFolderPath"], $config["scanSharePath"], $config["wwwSharePath"], $config["downloadSharePath"], $config["uploadSharePath"]);
                         $mhf->startHomeFolderManager();
+                        return true;
                 }
                 else
                 {
@@ -84,25 +84,27 @@ class usermanager implements \DataAccess\TaskInterface
 	
 	}
 	
-	public  function prepareAddUser($userInfo,$arrParentsGroups)
+	public static function prepareAddUser($person)
 	{
 		$config["action"] = self::ActionAddUser;
-                $config["userInfo"] = $userInfo;
-		$config["arrParentsGroups"] = $arrParentsGroups;
+                $config["userInfo"] = User::convertPersonToAdUser($person)->getUserInfo();
+		$config["arrParentsGroups"] = Group::getParents(Group::getGroupById($person->getGroupId()));
 		
-		$this->addToQueue($config);
+                $taskInserter = new TaskInserter(self::taskId, $person->getId(), TaskInserter::TypePerson);
+		$taskInserter->addToQueue($config);
 	}
         
-        public  function prepareUpdateUser($userInfo,$arrParentsGroups)
+        public static function prepareUpdateUser($person)
 	{
 		$config["action"] = self::ActionUpdateUser;
-                $config["userInfo"] = $userInfo;
-		$config["arrParentsGroups"] = $arrParentsGroups;
+                $config["userInfo"] = User::convertPersonToAdUser($person)->getUserInfo();
+		$config["arrParentsGroups"] = Group::getParents(Group::getGroupById($person->getGroupId()));
 		
-		$this->addToQueue($config);
+                $taskInserter = new TaskInserter(self::taskId, $person->getId(), TaskInserter::TypePerson);
+		$taskInserter->addToQueue($config);
 	}
         
-        public  function prepareAddHomeFolder($server, $username, $homeFolderPath, $scanSharePath, $wwwSharePath, $downloadSharePath, $uploadSharePath)
+        public static function prepareAddHomeFolder($personId, $server, $username, $homeFolderPath, $scanSharePath, $wwwSharePath, $downloadSharePath, $uploadSharePath)
 	{
 		$config["action"] = self::ActionAddHomeFolder;
                 $config["server"] = $server;
@@ -113,7 +115,8 @@ class usermanager implements \DataAccess\TaskInterface
                 $config["downloadSharePath"] = $downloadSharePath;
                 $config["uploadSharePath"] = $uploadSharePath;
 		
-		$this->addToQueue($config);
+		$taskInserter = new TaskInserter(self::taskId, $personId, TaskInserter::TypePerson);
+		$taskInserter->addToQueue($config);
 	}	
 	
 	public function getParams()
