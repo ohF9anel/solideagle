@@ -85,7 +85,7 @@ class GroupsController extends Zend_Controller_Action
 
 			$grp = Group::getGroupById($groupid);
 
-			OUManager::DeleteGroup(Group::getParents($grp), $grp);
+			OUManager::Delete(Group::getParents($grp), $grp);
 
 			Group::delGroupById($groupid);
 		}else{
@@ -102,7 +102,7 @@ class GroupsController extends Zend_Controller_Action
 			
 			//only should update when name changes
 			if($newGroup->getName() !== $oldgroup->getName())
-				OUManager::ModifyGroup(Group::getParents($newGroup),$oldgroup,$newGroup);
+				OUManager::Modify(Group::getParents($newGroup),$oldgroup,$newGroup);
 			
 			
 		}
@@ -154,7 +154,7 @@ class GroupsController extends Zend_Controller_Action
 			
 			
 			
-			OUmanager::AddGroup(Group::getParents($newSubGroup), $newSubGroup);
+			OUmanager::Add(Group::getParents($newSubGroup), $newSubGroup);
 			
 			
 

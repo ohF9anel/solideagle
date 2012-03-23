@@ -13,19 +13,19 @@ use DataAccess\Group;
 
 class OUmanager {
 	
-	public static function AddGroup($parents,$newgroup)
+	public static function Add($parents,$newgroup)
 	{
 		\scripts\ad\oumanager::prepareAddGroup($parents, $newgroup);
 		
 	}
 	
-	public static function ModifyGroup($parents,$oldgroup,$newgroup)
+	public static function Modify($parents,$oldgroup,$newgroup)
 	{
 		\scripts\ad\oumanager::prepareModifyGroup($parents,$oldgroup,$newgroup);
 		
 	}
 	
-	public static function DeleteGroup($parents,$groep)
+	public static function Delete($parents,$groep)
 	{
 		\scripts\ad\oumanager::prepareDeleteGroup($parents, $groep);
 	}
