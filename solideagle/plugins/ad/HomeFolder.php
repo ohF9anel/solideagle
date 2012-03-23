@@ -64,10 +64,10 @@ class HomeFolder
                 $cmd .= "/grant:" . AD_NETBIOS . "\\" . $group->getName() . ",read ";
             }
         }
-        $cmd .= "/cache:None\n";
+        $cmd .= " /cache:None\n";
         $conn->write($cmd);  
         
-//        while($data = $conn->_get_channel_packet(NET_SSH2_CHANNEL_SHELL)) echo $data;
+        //while($data = $conn->_get_channel_packet(NET_SSH2_CHANNEL_SHELL)) echo $data;
 
         $conn->write("exit\nexit\n");
         $conn->write("echo ENDOFCODE");

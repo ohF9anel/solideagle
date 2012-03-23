@@ -6,8 +6,8 @@ use DataAccess\Person;
 use DataAccess\Group;
 use scripts\ad\usermanager;
 
-$person = Person::getPersonById(85);
+$person = Person::getPersonById(91);
 
-usermanager::prepareUpdateUser($person);
+usermanager::prepareAddUser($person);
 
 ?>

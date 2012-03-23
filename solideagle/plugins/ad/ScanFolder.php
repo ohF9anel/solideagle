@@ -10,7 +10,7 @@ use Logging\Logger;
 class ScanFolder
 {
     
-    public static function setScanFolder($server, $path, $shareScanPath, $username, $enabled = true)
+    public static function setScanFolder($server, $path, $username, $enabled = true)
     {
         $conn = new \Net_SSH2($server);
         if (!$conn->login(S1_ADMINISTRATOR, AD_PASSWORD))
@@ -25,22 +25,24 @@ class ScanFolder
         {
             // make scan folder in homedir
             $conn->write("mkdir " . $path . "\\" . $username . "\\" . DIR_NAME_SCANS . "\n");
+            // give access to
+            $conn->write("setacl -ot file -actn ace -ace \"n:" . AD_NETBIOS . "\\" . $username . ";s:n;p:change;i:sc,so\" -on " . $path . "\\" . $username . "\\" . DIR_NAME_SCANS. "\n");
             // protection folder
             $conn->write("setacl -ot file -actn ace -ace \"n:" . AD_NETBIOS . "\\" . $username . ";s:n;m:deny;p:delete;i:np\" -on " . $path . "\\" . $username . "\\" . DIR_NAME_SCANS . "\n");
             // access sys scan user
-            $conn->write("setacl -ot file -actn ace -ace \"n:" . AD_NETBIOS . "\\sys_scan_user;s:n;m:grant;p:read;w:dacl\" -on " . $path . "\\" . $username . "\\" . DIR_NAME_SCANS . "\n");
+            $conn->write("setacl -ot file -actn ace -ace \"n:" . AD_NETBIOS . "\\sys_scan_user;s:n;m:grant;p:write;w:dacl\" -on " . $path . "\\" . $username . "\\" . DIR_NAME_SCANS . "\n");
             // make link
-            $conn->write("mklink /j " . $shareScanPath . "\\" . $username . ' ' . $path . "\\" . $username . "\\" . DIR_NAME_SCANS . "\n");
+            $conn->write("mklink /j " . PATH_SHARE_SCANS . "\\" . $username . ' ' . $path . "\\" . $username . "\\" . DIR_NAME_SCANS . "\n");
         }
         else 
         {
-            $conn->write("rmdir " . $shareScanPath . "\\" . $username . " /s /q\n");
+            $conn->write("rmdir " . PATH_SHARE_SCANS . "\\" . $username . " /s /q\n");
         }
-        
-        while($data = $conn->_get_channel_packet(NET_SSH2_CHANNEL_SHELL))
-{
-	echo $data;
-}
+//        
+//        while($data = $conn->_get_channel_packet(NET_SSH2_CHANNEL_SHELL))
+//{
+//	echo $data;
+//}
         
         $conn->write("exit\nexit\n");
         $conn->write("echo ENDOFCODE");
