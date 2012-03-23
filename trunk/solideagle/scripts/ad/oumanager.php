@@ -12,7 +12,7 @@ use DataAccess\TaskInserter;
 use DataAccess\TaskQueue;
 
 
-class groupmanager implements \DataAccess\TaskInterface
+class oumanager implements \DataAccess\TaskInterface
 {
 	const ActionAdd = 0;
 	const ActionDelete = 1;
