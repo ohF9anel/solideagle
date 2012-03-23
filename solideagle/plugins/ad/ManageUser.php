@@ -20,7 +20,7 @@ class ManageUser
         // every group should have a parent, because root is gebruikers
         if ($arrParentsGroups == null)
         {
-            Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \n" . var_dump($arrParentsGroups) . "\nuser has no parent groups, every user should be at least child of root!", PEAR_LOG_ERR);
+            Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \n" . var_export($arrParentsGroups, true) . "\nuser has no parent groups, every user should be at least child of root!", PEAR_LOG_ERR);
             return false;
         }
 
@@ -48,8 +48,6 @@ class ManageUser
         }
         
         $dn .= AD_DC;
-        var_dump($dn);
-        var_dump($userInfo);
         $ret = ldap_add($connLdap->getConn(), $dn, $userInfo);
         if ($ret)
         {
@@ -154,7 +152,7 @@ class ManageUser
         else
         {
             Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \n
-                " . var_dump($userInfo) . "\n: user cannot be modified", PEAR_LOG_ERR);
+                " . var_export($userInfo, true) . "\n: user cannot be modified", PEAR_LOG_ERR);
         }
         
         return array($ret, ldap_error($connLdap->getConn()));
