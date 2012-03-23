@@ -34,6 +34,13 @@ class ManageUser
         unset($userInfo['groups']);
         unset($userInfo['enabled']);
         
+        foreach($userInfo as $key => $attr)
+        {
+            if ($attr == '') {
+                unset($userInfo[$key]);
+            }
+        }
+        
         $dn = "CN=" . $userInfo['cn'] . ", OU=" . $group->getName() . ", ";
         for($i = 0; $i < sizeof($arrParentsGroups); $i++)
         {
@@ -42,6 +49,7 @@ class ManageUser
         
         $dn .= AD_DC;
         var_dump($dn);
+        var_dump($userInfo);
         $ret = ldap_add($connLdap->getConn(), $dn, $userInfo);
         if ($ret)
         {
