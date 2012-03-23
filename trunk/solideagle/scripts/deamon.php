@@ -29,7 +29,7 @@ class deamon
 			}else{
 				$taskqueue->setErrorMessages("Task script: " .$toRun.  " does not exist!");
 				TaskQueue::increaseErrorCount($taskqueue);
-				continue;
+				return;
 			}
 			$class = "\\" . str_replace("/", "", "scripts\\" . $taskqueue->getTask()->getPathScript()) . "\\" . $taskqueue->getTask()->getName();
 
@@ -41,7 +41,7 @@ class deamon
 			}else{
 				$taskqueue->setErrorMessages("Task class: " .$class.  " does not exist!");
 				TaskQueue::increaseErrorCount($taskqueue);
-				continue;
+				return;
 			}
 			
 			
@@ -51,14 +51,15 @@ class deamon
 				{
 					TaskQueue::addToRollback($taskqueue);
 				}else{
+					
 					TaskQueue::increaseErrorCount($taskqueue);
+					return;
 				}
 			}else{
 				$taskqueue->setErrorMessages("Task method: runScript does not exist!");
 				TaskQueue::increaseErrorCount($taskqueue);
-				continue;
+				return;
 			}
-			
 			
 		}
 	}
