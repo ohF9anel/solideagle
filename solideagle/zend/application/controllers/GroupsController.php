@@ -1,13 +1,10 @@
 <?php
 
-
 require_once 'data_access/Group.php';
-require_once 'scripts/ad/groupmanager.php';
+require_once 'scripts/OUmanager.php';
 
+use scripts\OUmanager;
 use DataAccess\Group;
-use DataAcces\GroupTaskQueue;
-
-
 
 class GroupsController extends Zend_Controller_Action
 {
@@ -37,6 +34,21 @@ class GroupsController extends Zend_Controller_Action
 		}
 
 
+	}
+	
+	public function getgroupAction()
+	{
+		$this->_helper->layout()->disableLayout();
+		$this->_helper->viewRenderer->setNoRender(true);
+		 
+		 
+		$arr = groupsToJson(Group::getTree());
+		 
+		 
+		 
+		echo json_encode($arr);
+		 
+	
 	}
 
 	public function updategrouppostAction()
@@ -73,7 +85,7 @@ class GroupsController extends Zend_Controller_Action
 
 			$grp = Group::getGroupById($groupid);
 
-			adplugin\groupmanager::prepareDeleteGroup(Group::getParents($grp), $grp);
+			OUManager::DeleteGroup(Group::getParents($grp), $grp);
 
 			Group::delGroupById($groupid);
 		}else{
@@ -90,7 +102,7 @@ class GroupsController extends Zend_Controller_Action
 			
 			//only should update when name changes
 			if($newGroup->getName() !== $oldgroup->getName())
-				adplugin\groupmanager::prepareModifyGroup(Group::getParents($newGroup),$oldgroup,$newGroup);
+				OUManager::ModifyGroup(Group::getParents($newGroup),$oldgroup,$newGroup);
 			
 			
 		}
@@ -142,7 +154,7 @@ class GroupsController extends Zend_Controller_Action
 			
 			
 			
-			adplugin\groupmanager::prepareAddGroup(Group::getParents($newSubGroup), $newSubGroup);
+			OUmanager::AddGroup(Group::getParents($newSubGroup), $newSubGroup);
 			
 			
 
@@ -157,4 +169,31 @@ class GroupsController extends Zend_Controller_Action
 }
 
 
+function groupsToJson($roots,$isfirst = true)
+{
+	if(count($roots) === 0)
+		return false;
 
+	$thisrootarr = array();
+
+	foreach($roots as $group)
+	{
+		$arr = array("data" => array("title" =>  ($group->getName()), "attr" => array("href" => "javascript:void(0)")), "attr" => array("id" => "tree" . $group->getId(),"groupid" => $group->getId(),"groupname" =>  htmlentities($group->getName())));
+
+		if($isfirst)
+		{
+			$arr["state"] = "open";
+			$isfirst = false;
+		}
+
+		if(($children = groupsToJson($group->getChildGroups(),$isfirst)) != false)
+		{
+			$arr["children"] = $children;
+		}
+
+		$thisrootarr[] = $arr;
+	}
+
+	return $thisrootarr;
+
+}
