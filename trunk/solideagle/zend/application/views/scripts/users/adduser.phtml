@@ -4,9 +4,15 @@
 	
 
 		$("#formAddUser").ajaxForm({
-			success: function() { 
-				showUsers();
-				updateTree();
+			success: function(responseText, statusText, xhr, $form) { 
+
+				if(responseText.length > 0)
+				{
+					alert(responseText);
+				}else{
+					showUsers();
+					updateTree();
+				}
 	    } });
 		
 	});
@@ -23,7 +29,7 @@
 		<div class="control-group">
 			<label class="control-label" for="txtFirstName">Voornaam</label>
 			<div class="controls">
-				<input id="txtFirstName" class="input-xlarge" type="text"
+				<input id="txtFirstName" name="txtFirstName" class="input-xlarge" type="text"
 					value="">
 			</div>
 		</div>
@@ -31,7 +37,7 @@
 		<div class="control-group">
 			<label class="control-label" for="txtName">Naam</label>
 			<div class="controls">
-				<input id="txtName" class="input-xlarge" type="text"
+				<input id="txtName" name="txtName" class="input-xlarge" type="text"
 					value="">
 			</div>
 		</div>
@@ -44,6 +50,6 @@
 		
 		</div>
 		
-		<input type="hidden" id="groupid" value="<?php echo $this->groupid ?>">
+		<input type="hidden" name="groupid" value="<?php echo $this->group->getId(); ?>">
 	</fieldset>
 </form>

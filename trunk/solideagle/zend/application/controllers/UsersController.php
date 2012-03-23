@@ -8,7 +8,6 @@ require_once 'data_access/Group.php';
 
 use DataAccess\Person;
 use DataAccess\Type;
-use DataAccess\Task;
 
 use DataAccess\Group;
 
@@ -37,8 +36,17 @@ class UsersController extends Zend_Controller_Action
     public function adduserAction()
     {
     	$this->_helper->layout()->disableLayout();
-    	//$this->view->types = Type::getAll();
-    	$this->view->tasks = Task::getAllByType("user");
+    	
+    	$data = $this->getRequest()->getParams();
+    
+   		 if(isset($data["gid"]))
+		{
+			$groupid = $data["gid"];
+			$this->view->group = Group::getGroupById($groupid);
+		}else{
+			exit();
+		}
+    	
     }
 
     public function adduserpostAction()
@@ -46,7 +54,7 @@ class UsersController extends Zend_Controller_Action
         $this->_helper->layout()->disableLayout();
  		$this->_helper->viewRenderer->setNoRender(true);
  		
- 		$data = $this->_request->getParams();
+ 		$data = $this->getRequest()->getParams();
  		
  		$person = new Person();
  		
@@ -58,8 +66,16 @@ class UsersController extends Zend_Controller_Action
 	 		}
  		}
  		
+ 		if(isset($data["txtFirstName"]) && isset($data["txtName"]) && isset($data["groupid"]))
+ 		{
+ 		
  		$person->setFirstName($data["txtFirstName"]);
  		$person->setName($data["txtName"]);
+ 		$person->setGroupId($data["groupid"]);
+ 		}else{
+ 			echo "Alle velden moetten ingevuld zijn";
+ 			return;
+ 		}
  		
  		if(count($errors = Person::validatePerson($person)) > 0)
  		{
@@ -73,11 +89,7 @@ class UsersController extends Zend_Controller_Action
  		{
  			foreach($data["task"] as $task)
  			{
- 				$tq = new PersonTaskQueue();
- 				$tq->setPerson_id($personid);
- 				$tq->setTask_id($task);
- 				$tq->setConfiguration("No conf");
- 				PersonTaskQueue::addTaskToQueue($tq);
+ 				
  			}
  		}
  		
