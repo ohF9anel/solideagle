@@ -1,27 +1,25 @@
 <?php
 namespace adplugin;
 
-require_once 'data_access/BaseTask.php';
+require_once 'data_access/TaskInserter.php';
 require_once 'data_access/TaskQueue.php';
 require_once 'plugins/ad/ManageOU.php';
 
 
 use AD\ManageOU;
 
-use DataAccess\BaseTask;
+use DataAccess\TaskInserter;
 use DataAccess\TaskQueue;
 
 
-class groupmanager extends \DataAccess\BaseTask
+class groupmanager implements \DataAccess\TaskInterface
 {
 	const ActionAdd = 0;
 	const ActionDelete = 1;
-
+	const ActionModify = 2;
 	
-	public function __construct($taskid = NULL,$groupid= NULL)
-	{
-		parent::__construct($taskid, $groupid, parent::TypeGroup);
-	}
+	const myTaskId=27;
+
 	
 
 	
@@ -54,10 +52,14 @@ class groupmanager extends \DataAccess\BaseTask
 				
 			$taskqueue->setErrorMessages("Not Implemented Yet");
 			return false;
-		}else if($config["action"] == "Modify"){
+			
+		}else if($config["action"] ==  self::ActionModify){
 				
-			$taskqueue->setErrorMessages("Not Implemented Yet");
-			return false;
+			$ret = ManageOU::modifyOU($config["parents"],$config["oldgroup"],$config["newgroup"]);
+			
+			return $ret;
+
+			
 		}else if($config["action"] == self::ActionDelete){
 
 			if(ManageOU::removeOU($config["parents"],$config["group"]))
@@ -82,22 +84,38 @@ class groupmanager extends \DataAccess\BaseTask
 	
 	}
 	
-	public  function prepareAddGroup($parentgroups,$newgroup)
+	public static function prepareAddGroup($parentgroups,$newgroup)
 	{
 		$config["action"] = self::ActionAdd;
 		$config["parents"] = $parentgroups;
 		$config["group"] = $newgroup;
 		
-		$this->addToQueue($config);
+		$taskInserter = new TaskInserter(self::myTaskId,$newgroup->getId(),TaskInserter::TypeGroup);
+		
+		$taskInserter->addToQueue($config);
 	}
 	
-	public  function prepareDeleteGroup($parentgroups,$newgroup)
+	public static function prepareDeleteGroup($parentgroups,$newgroup)
 	{
 		$config["action"] = self::ActionDelete;
 		$config["parents"] = $parentgroups;
 		$config["group"] = $newgroup;
 		
-		$this->addToQueue($config);
+		$taskInserter = new TaskInserter(self::myTaskId,$newgroup->getId(),TaskInserter::TypeGroup);
+		
+		$taskInserter->addToQueue($config);
+	}
+	
+	public static function prepareModifyGroup($parentgroups,$oldroup,$newgroup)
+	{
+		$config["action"] = self::ActionModify;
+		$config["oldgroup"] = $oldroup;
+		$config["newgroup"] = $newgroup;
+		$config["parents"] = $parentgroups;
+		
+		$taskInserter = new TaskInserter(self::myTaskId,$newgroup->getId(),TaskInserter::TypeGroup);
+		
+		$taskInserter->addToQueue($config);
 	}
 	
 	public function getParams()

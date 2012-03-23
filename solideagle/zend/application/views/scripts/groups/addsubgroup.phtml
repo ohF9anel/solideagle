@@ -22,7 +22,7 @@
 
 
 <form class="form-horizontal"
-	action="<?php echo $this->SE_path . "/groups/updategrouppost" ?>"
+	action="<?php echo $this->SE_path . "/groups/addsubgrouppost" ?>"
 	method="post" id="formAddGroup">
 	<fieldset>
 		<legend>Subgroep maken</legend>
@@ -30,7 +30,7 @@
 		<div class="control-group">
 			<label class="control-label" for="txtName">Naam</label>
 			<div class="controls">
-				<input id="txtName" class="input-xlarge" type="text"
+				<input id="txtName" name="groupName" class="input-xlarge" type="text"
 					value="">
 			</div>
 		</div>
@@ -38,17 +38,17 @@
 		<div class="control-group">
 			<label class="control-label" for="txtDescription">Omschrijving</label>
 			<div class="controls">
-				<textarea id="txtDescription" class="input-xlarge" rows="3"></textarea>
+				<textarea id="txtDescription" name="groupDescription" class="input-xlarge" rows="3"></textarea>
 			</div>
 		</div>
 		
 
 
 		<div class="form-actions">
-		<button class="btn btn-primary" type="submit">Opslaan</button>
+		<button class="btn btn-primary" type="submit">Subgroep maken</button>
 		
 		</div>
 		
-		<input type="hidden" id="groupid" value="<?php echo $this->groupid ?>">
+		<input type="hidden" name="parentgroupid" value="<?php echo $this->groupid ?>">
 	</fieldset>
 </form>

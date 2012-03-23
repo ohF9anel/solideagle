@@ -209,7 +209,7 @@ class Group
 		$cmd->newQuery($sql);
 			
 		$cmd->addParam(":name", $group->getName());
-		$cmd->addParam(":description", $group->getName());
+		$cmd->addParam(":description", $group->getDescription());
 		$cmd->addParam(":id", $group->getId());
 			
 		$cmd->execute();
@@ -475,13 +475,15 @@ class Group
 			}
 		}
 		
-		foreach(Validator::validateInt($group->getParentId()) as $valError)
-		{
-			if($valError == \Validation\ValidationError::NO_NUMBER)
+		//parentId can be NULL
+		if($group->getParentId() !== NULL)
+			foreach(Validator::validateInt($group->getParentId()) as $valError)
 			{
-				$validationErrors[] = "Parentid moet een nummer zijn!";
+				if($valError == \Validation\ValidationError::NO_NUMBER)
+				{
+					$validationErrors[] = "Parentid moet een nummer zijn!";
+				}
 			}
-		}
 
 
 		return $validationErrors;

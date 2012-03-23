@@ -11,6 +11,23 @@
 					<label>Dashboard</label>Gebruiker
 					<controller>index</controller>
 					<action>index</action>
+					
+					<pages>
+				
+					<deamon>
+					<label>Run deamon</label>
+					<uri>/SolidEagle/scripts/deamon</uri>
+					</deamon>
+					<tq>
+					<label>Clean tasks queue</label>
+					<uri>/SolidEagle/scripts/emptyqueue</uri>
+					</tq>
+					<og>
+					<label>Delete old groups</label>
+					<uri>/SolidEagle/scripts/DeleteDeletedGroups</uri>
+					</og>
+					</pages>
+					
 				</dashboard>
 			
 				<groupsandusers>
@@ -21,11 +38,8 @@
 					
 				</groupsandusers>	
 				
-				<deamon>
-				<label>Run deamon</label>
-				<uri>/SolidEagle/scripts/deamon</uri>
 				
-				</deamon>
+				
 				
 			</pages>
 		</home>

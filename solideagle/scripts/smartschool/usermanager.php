@@ -10,7 +10,7 @@ use DataAccess\TaskQueue;
 
 use Smartschool\SSUser;
 
-class usermanager extends \DataAccess\BaseTask
+class usermanager implements TaskInterface
 {
 	
         const ActionAddSsUser = 0;

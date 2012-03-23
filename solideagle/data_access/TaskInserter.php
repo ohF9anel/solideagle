@@ -5,19 +5,8 @@ namespace DataAccess;
 require_once 'data_access/TaskQueue.php';
 use DataAccess\TaskQueue;
 
-
-abstract class BaseTask
-{
-	/**
-	 *
-	 * @param TaskQueue $taskqueue
-	 */
-	public abstract function runTask($taskqueue);
-	
-	public abstract function getParams();
-	
-	public abstract function createTaskFromParams($params);
-	
+class TaskInserter
+{	
 	//impl
 	const TypeGroup = 0;
 	const TypePerson = 1;
@@ -27,19 +16,19 @@ abstract class BaseTask
 	private $personid = NULL;
 	private $groupid = NULL;
 	
-	protected function __construct($taskid,$personOrGroupId,$type)
+	public function __construct($taskid,$personOrGroupId,$type)
 	{
 		$this->taskid = $taskid;
-		if($type == BaseTask::TypeGroup)
+		if($type == self::TypeGroup)
 		{
 			$this->groupid = $personOrGroupId;
-		}elseif ($type == BaseTask::TypePerson)
+		}elseif ($type == self::TypePerson)
 		{
 			$this->personid = $personOrGroupId;
 		}
 	}
 	
-	protected function addToQueue($config)
+	public function addToQueue($config)
 	{
 		$tq = new TaskQueue();
 		$tq->setTaskId($this->taskid);
@@ -63,6 +52,22 @@ abstract class BaseTask
 	{
 	    return $this->groupid;
 	}
+}
+
+interface TaskInterface
+{
+
+	/**
+	 *
+	 * @param TaskQueue $taskqueue
+	 */
+	public function runTask($taskqueue);
+
+	public function getParams();
+
+	public function createTaskFromParams($params);
+
+
 }
 
 

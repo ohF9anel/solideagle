@@ -111,6 +111,26 @@ class ManageOU
         }
     }
     
+    public static function modifyOU($parents,$oldgroup,$newgroup)
+    {
+    	$connLdap = ConnectionLdap::singleton();
+    	
+    	
+    	$oldDn = "";
+    	for($i = 0; $i < sizeof($parents); $i++)
+    	{
+    	$oldDn .= "OU=" . $parents[$i]->getName() . ",";
+    	}
+    	$oldDn .= AD_DC;
+    	
+    	$sr = ldap_search($connLdap->getConn(), $oldDn, "(OU=" . $oldgroup->getName() . ")");
+    	$oldOuInfo = ldap_get_entries($connLdap->getConn(), $sr);
+    	
+    	$r = ldap_rename($connLdap->getConn(), $oldOuInfo[0]['distinguishedname'][0], "OU=" . $newgroup->getName(), NULL, true);
+    	
+    	return $r;
+    }
+    
     public static function removeOU($arrParentsGroups, $childGroup)
     {
         $connLdap = ConnectionLdap::singleton();

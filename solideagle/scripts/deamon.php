@@ -13,8 +13,11 @@ class deamon
 
 	private function runTasks()
 	{
-                var_dump("running tasks...");
+		echo "<pre>";
+                echo("running tasks...\n");
                 var_dump(TaskQueue::getTasksToRun());
+        echo "</pre>";
+                
 		foreach(TaskQueue::getTasksToRun() as $taskqueue)
 		{
 			$class = $taskqueue->getTask()->getName();
