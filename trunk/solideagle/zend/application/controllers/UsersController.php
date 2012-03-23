@@ -14,34 +14,7 @@ use DataAccess\Group;
 
 
 
-function groupsToJson($roots,$isfirst = true)
-{
-	if(count($roots) === 0)
-		return false;
-	 
-	$thisrootarr = array();
-	 
-	foreach($roots as $group)
-	{
-		$arr = array("data" => array("title" =>  ($group->getName()), "attr" => array("href" => "javascript:void(0)")), "attr" => array("id" => "tree" . $group->getId(),"groupid" => $group->getId(),"groupname" =>  htmlentities($group->getName())));
-		
-		if($isfirst)
-		{
-			$arr["state"] = "open";
-			$isfirst = false;
-		}
-		
-		if(($children = groupsToJson($group->getChildGroups(),$isfirst)) != false)
-		{
-			$arr["children"] = $children;
-		}
-		
-		$thisrootarr[] = $arr;
-	}
 
-	return $thisrootarr;
-	 
-}
 
 class UsersController extends Zend_Controller_Action
 {
@@ -57,20 +30,7 @@ class UsersController extends Zend_Controller_Action
     	$this->view->groups = Group::getTree();
     }
     
-    public function getgroupAction()
-    {
-    	$this->_helper->layout()->disableLayout();
-    	$this->_helper->viewRenderer->setNoRender(true);
-    	
-    	
-    	$arr = groupsToJson(Group::getTree());
-    	
-    	
-    	
-    	echo json_encode($arr);
-    	
-    
-    }
+
     
     
 
@@ -160,57 +120,10 @@ class UsersController extends Zend_Controller_Action
     	echo json_encode(array("aaData" => $persons));
     }
 
-    public function addgroupAction()
-    {
-        $this->view->groups = Group::getTree();
-     //   $this->view->tasks = 
-       
-        
-     
-        
-    }
 
 
-    public function addgrouppostAction()
-    {
-    	$this->_helper->layout()->disableLayout();
-    	$this->_helper->viewRenderer->setNoRender(true);
+
    
-    	$data = $this->_request->getParams();
-    	$group = new Group();
-    	$group->setParentId($data["parentId"]);
-    	$group->setName($data["txtName"]);
-    	
-    	
-    	
-    	if(count($errors = Group::validateGroup($group)) > 0)
-    	{
-    		echo "<pre>";
-    		var_dump($errors);
-    		echo "</pre>";
-    		return;
-    	}
-    	
-    	if(Group::getGroupById($group->getParentId()) === NULL)
-    	{
-    		echo "Parent bestaat niet!";
-    		return;
-    	}
-    	
-    	$groupid = Group::addGroup($group);
-    	
-    	$group->setId($groupid);
-    	
-    	$gtaskq = new GroupTaskQueue();
-    	
-    	$gtaskq->setGroup_id($groupid);
-    	$gtaskq->setTask_id("27");
-    	$gtaskq->setConfiguration(array("action" => "Add", "groupobj" => $group));
-    	
-    	GroupTaskQueue::addTaskToQueue($gtaskq);
-    	
-    	
-    }
     
 }
 

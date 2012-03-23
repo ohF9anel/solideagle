@@ -1,5 +1,5 @@
 <?php
-namespace adplugin;
+namespace scripts\ad;
 
 require_once 'data_access/TaskInserter.php';
 require_once 'data_access/TaskQueue.php';
