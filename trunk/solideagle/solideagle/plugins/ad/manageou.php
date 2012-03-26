@@ -34,7 +34,7 @@ class ManageOU
 
         if ($arrParentsGroups == null)
         {
-            ldap_add($connLdap->getConn(), "OU=" . ConnectionLdap::ldap_escape($childGroup->getName(), true) . ", " . AD_DC, $info);
+            ldap_add($connLdap->getConn(), "OU=" . ConnectionLdap::ldap_escape($childGroup->getName(), true) . ", " . Config::$ad_dc, $info);
         }
         else
         {
@@ -44,7 +44,7 @@ class ManageOU
                 $ouString .= "OU=" . $arrParentsGroups[$i]->getName() . ", ";
             }
           
-            $r = ldap_add($connLdap->getConn(), "OU=" . ConnectionLdap::ldap_escape($childGroup->getName(), true) . ", " . $ouString . AD_DC, $info);
+            $r = ldap_add($connLdap->getConn(), "OU=" . ConnectionLdap::ldap_escape($childGroup->getName(), true) . ", " . $ouString . Config::$ad_dc, $info);
         }
         
         return array($r,ldap_error($connLdap->getConn()));
@@ -60,14 +60,14 @@ class ManageOU
     	{
     	$oldDn .= "OU=" . $oldparents[$i]->getName() . ",";
     	}
-    	$oldDn .= AD_DC;
+    	$oldDn .= Config::$ad_dc;
     	
     	$newParentDn = "";
     	for($i = 0; $i < sizeof($newparents); $i++)
     	{
     	$newParentDn .= "OU=" . $newparents[$i]->getName() . ",";
     	}
-    	$newParentDn .= AD_DC;
+    	$newParentDn .= Config::$ad_dc;
     	 
     	$sr = ldap_search($connLdap->getConn(), $oldDn, "(OU=" . ConnectionLdap::escapeForLDAPSearch($group->getName()) . ")");
     	$oldOuInfo = ldap_get_entries($connLdap->getConn(), $sr);
@@ -89,7 +89,7 @@ class ManageOU
     	{
     	$oldDn .= "OU=" . ConnectionLdap::ldap_escape($parents[$i]->getName(), true) . ",";
     	}
-    	$oldDn .= AD_DC;
+    	$oldDn .= Config::$ad_dc;
     	
     	$sr = ldap_search($connLdap->getConn(), $oldDn, "(OU=" . ConnectionLdap::escapeForLDAPSearch($oldgroup->getName()) . ")");
     	$oldOuInfo = ldap_get_entries($connLdap->getConn(), $sr);
@@ -122,7 +122,7 @@ class ManageOU
         $info['objectClass'] = "organizationalUnit";
         $info["ou"] = ConnectionLDAP::escapeForLDAPSearch($childGroup->getName());
         
-        $sr = ldap_search($connLdap->getConn(), "OU=" . Config::$ad_users_ou . ", " . AD_DC, "(OU=" .  $info["ou"] . ")");
+        $sr = ldap_search($connLdap->getConn(), "OU=" . Config::$ad_users_ou . ", " . Config::$ad_dc, "(OU=" .  $info["ou"] . ")");
         $oldOuInfo = ldap_get_entries($connLdap->getConn(), $sr);
 
         if (!isset($oldOuInfo[0]))
@@ -136,7 +136,7 @@ class ManageOU
         {
             $parentDn .= "OU=" . $arrParentsGroups[$i]->getName() . ", ";
         }
-        $parentDn .= AD_DC;
+        $parentDn .= Config::$ad_dc;
         
         $ret = ldap_delete($connLdap->getConn(), $parentDn);
 

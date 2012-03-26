@@ -4,7 +4,7 @@ namespace solideagle;
 
 /* ----------GLOBAL CONFIG VARS---------- */
 
-//define('AD_DC', 'DC=solideagle, DC=lok');
+//define('Config::$ad_dc', 'DC=solideagle, DC=lok');
 //define('AD_NETBIOS', 'SOLIDEAGLE');
 //define('Config::$ad_dc_host', 'S1.solideagle.lok');
 //define('Config::$ad_groups_ou', 'groepen');
