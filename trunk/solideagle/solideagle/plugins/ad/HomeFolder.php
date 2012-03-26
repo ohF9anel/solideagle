@@ -36,7 +36,8 @@ class HomeFolder
         //$conn->write("mkdir " . $path . "\\" . $username . "\\" . "_scans\n");
         
         // set permissions to local folder
-        $conn->write("icacls " . $path . "\\" . $username . " /q /reset /t\n");
+        //$conn->write("icacls " . $path . "\\" . $username . " /q /reset /t\n");
+        $conn->write("setacl -ot file -actn ace -ace \"n:" . AD_NETBIOS . "\Domain Administrators;s:n;p:full;i:sc,so\" -on " . $path . "\\" . $username . "\n");        
         $conn->write("takeown /F " . $path . "\\" . $username . " /A /R /D Y\n");
         $conn->write("takeown /F " . $path . "\\" . $username . "\\*.* /A /R /D Y\n");
         
@@ -64,10 +65,10 @@ class HomeFolder
                 $cmd .= "/grant:" . AD_NETBIOS . "\\" . $group->getName() . ",read ";
             }
         }
-        $cmd .= "/cache:None\n";
+        $cmd .= " /cache:None\n";
         $conn->write($cmd);  
         
-//        while($data = $conn->_get_channel_packet(NET_SSH2_CHANNEL_SHELL)) echo $data;
+        //while($data = $conn->_get_channel_packet(NET_SSH2_CHANNEL_SHELL)) echo $data;
 
         $conn->write("exit\nexit\n");
         $conn->write("echo ENDOFCODE");
