@@ -1,7 +1,13 @@
 <?php
 
-require_once 'scripts/ad/usermanager.php';
-use scripts\ad\usermanager;
+namespace solideagle\test\queue;
+
+use solideagle\scripts\ad\usermanager;
+
+set_include_path(get_include_path().PATH_SEPARATOR."../../");
+
+spl_autoload_extensions(".php"); // comma-separated list
+spl_autoload_register();
 
 //$person = Person::getPersonById(85);
 

@@ -1,11 +1,9 @@
 <?php
 
-namespace AD;
+namespace solideagle\plugins\ad;
 
-require_once 'data_access/Person.php';
-require_once('User.php');
-use DataAccess\Person;
-use DataAccess\Group;
+use solideagle\data_access\Person;
+use solideagle\data_access\Group;
 
 class User 
 {

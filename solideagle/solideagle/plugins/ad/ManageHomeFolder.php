@@ -1,18 +1,13 @@
 <?php
 
-namespace AD;
+namespace solideagle\plugins\ad;
 
-require_once 'plugins/ad/HomeFolder.php';
-require_once 'plugins/ad/ScanFolder.php';
-require_once 'plugins/ad/WwwFolder.php';
-require_once 'plugins/ad/DownloadFolder.php';
-require_once 'plugins/ad/UploadFolder.php';
-//
-//use AD\HomeFolder;
-//use AD\ScanFolder;
-//use AD\WwwFolder;
-//use AD\DownloadFolder;
-//use AD\UploadFolder;
+use solideagle\plugins\ad\HomeFolder;
+use solideagle\plugins\ad\ScanFolder;
+use solideagle\plugins\ad\WwwFolder;
+use solideagle\plugins\ad\DownloadFolder;
+use solideagle\plugins\ad\UploadFolder;
+use solideagle\Config;
 
 class ManageHomeFolder
 {
@@ -38,10 +33,10 @@ class ManageHomeFolder
     public function startHomeFolderManager()
     {
         HomeFolder::createHomeFolder($this->server, $this->homeFolderPath, $this->username);
-        ScanFolder::setScanFolder($this->server, $this->homeFolderPath, $this->username);
-        WwwFolder::setWwwFolder($this->server, $this->homeFolderPath, $this->username);
-        DownloadFolder::setDownloadFolder($this->server, $this->homeFolderPath, $this->username);
-        UploadFolder::setUploadFolder($this->server, $this->homeFolderPath, $this->username);
+        ScanFolder::setScanFolder($this->server, $this->homeFolderPath, Config::$dir_name_scans, $this->username);
+        WwwFolder::setWwwFolder($this->server, $this->homeFolderPath, Config::$dir_name_www, $this->username);
+        DownloadFolder::setDownloadFolder($this->server, $this->homeFolderPath, Config::$dir_name_downloads, $this->username);
+        UploadFolder::setUploadFolder($this->server, $this->homeFolderPath, Config::$dir_name_uploads, $this->username);
     }
     
 }
