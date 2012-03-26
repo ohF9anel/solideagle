@@ -29,15 +29,16 @@ class daemon
 			$toRun =  "./" . $taskqueue->getTask()->getPathScript() . $class . ".php";
 			if(file_exists($toRun))
 			{
-				require_once $toRun;
+				//require_once $toRun;
 			}else{
 				$taskqueue->setErrorMessages("Task script: " .$toRun.  " does not exist!");
 				TaskQueue::increaseErrorCount($taskqueue);
 				return;
 			}
-			$class = "\\" . str_replace("/", "\\", "scripts\\" . $taskqueue->getTask()->getPathScript()) .  $taskqueue->getTask()->getName();
+			
+			$class = "solideagle\\" . str_replace("/", "\\", "scripts\\" . $taskqueue->getTask()->getPathScript()) .  $taskqueue->getTask()->getName();
 
-                        var_dump($class);
+                       
 			if(class_exists($class))
 			{
 				$script = new $class();

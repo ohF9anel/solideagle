@@ -20,7 +20,6 @@ class UsersController extends Zend_Controller_Action
     	$this->view->users = Person::getUsersForDisplayByGroup();
     	$this->view->groups = Group::getTree();
     }
-    
 
     public function adduserAction()
     {
@@ -80,8 +79,7 @@ class UsersController extends Zend_Controller_Action
  	
 
     }
-    
-    
+
     public function getusersAction()
     {
     	$this->_helper->layout()->disableLayout();
@@ -114,12 +112,15 @@ class UsersController extends Zend_Controller_Action
     	echo json_encode(array("aaData" => $persons));
     }
 
+    public function showdetailsAction()
+    {
+        // action body
+    }
 
 
-
-   
-    
 }
+
+
 
 
 

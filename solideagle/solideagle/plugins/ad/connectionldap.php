@@ -48,6 +48,27 @@ class ConnectionLDAP
         return $this->conn;
     }
     
+    
+    /**
+     *
+     * @param str $s    subject string
+     * @param bool $d   DN mode
+     * @param mixed $i  chars to ignore
+     * @return type
+     */
+    function ldap_escape ($s, $d = FALSE, $i = NULL)
+    {
+    	$m = ($d) ? array(1 => '\\',',','=','+','<','>',';','"','#') : array(1 => '\\','*','(',')',chr(0));
+    	if (is_string($i) && ($l = strlen($s))) {
+    		for ($n = 0; $n < $l; $n++) if ($k = array_search(substr($s,$n,1),$m)) unset($m[$k]);
+    	}
+    	else if (is_array($i)) foreach ($i as $c) if ($k = array_search($c,$m)) unset($m[$k]);
+    	$q = array();
+    	foreach ($m as $k => $c) $q[$k] = '\\'.str_pad(dechex(ord($c)),2,'0',STR_PAD_LEFT);
+    	return str_replace($m,$q,$s);
+    }
+    
+    
     public static function escapeForLDAPSearch($stringtoescape)
     {
     	$stringtoescape = str_replace("*","\*",$stringtoescape);

@@ -33,10 +33,7 @@ class OUmanager {
 		ad\oumanager::prepareMoveGroup($oldparents,$newparents,$group);
 	}
 	
-	public static function Move($oldparents,$newparents,$group)
-	{
-		\scripts\ad\oumanager::prepareMoveGroup($oldparents,$newparents,$group);
-	}
+
 }
 
 

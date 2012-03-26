@@ -4,7 +4,7 @@ namespace solideagle\scripts\ad;
 
 
 
-use plugins\AD\ManageOU;
+use solideagle\plugins\ad\ManageOU;
 
 use solideagle\data_access\TaskInserter;
 use solideagle\data_access\TaskQueue;
