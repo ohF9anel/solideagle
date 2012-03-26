@@ -1,21 +1,19 @@
 <?php
 
-namespace AD;
+namespace solideagle\plugins\ad;
 
-require_once('Net/SSH2.php');
-require_once 'logging/Logger.php';
-require_once 'config.php';
-use Logging\Logger;
+use solideagle\logging\Logger;
+use solideagle\Config;
 
 class DownloadFolder
 {
     public static function setDownloadFolder($server, $path, $shareDownloadPath, $username, $enabled = true)
     {
         $conn = new \Net_SSH2($server);
-        if (!$conn->login(S1_ADMINISTRATOR, AD_PASSWORD))
+        if (!$conn->login(Config::$ad_administrator, Config::$ad_password))
         {
             return false;
-            Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nLogin to SSH failed on " . AD_DC_HOST . ".", PEAR_LOG_ERR);
+            Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nLogin to SSH failed on " . Config::$ad_dc_host . ".", PEAR_LOG_ERR);
         }
         
         $conn->write("cmd\n");
@@ -23,20 +21,20 @@ class DownloadFolder
         if ($enabled)
         {
             // create download folder
-            $conn->write("mkdir " . $path . "\\" . $username . "\\" . DIR_NAME_DOWNLOADS . "\n");
+            $conn->write("mkdir " . $path . "\\" . $username . "\\" . Config::$dir_name_downloads . "\n");
 
             // deny some special permissions
-            $conn->write("icacls " . $path . "\\" . $username . "\\" . DIR_NAME_DOWNLOADS . " /q /deny " . AD_NETBIOS . "\\" . $username . ":(WDAC,WO,S)\n");
+            $conn->write("icacls " . $path . "\\" . $username . "\\" . Config::$dir_name_downloads . " /q /deny " . Config::$ad_netbios . "\\" . $username . ":(WDAC,WO,S)\n");
 
             // allow modify
-            $conn->write("icacls " . $path . "\\" . $username . "\\" . DIR_NAME_DOWNLOADS . " /q /grant " . AD_NETBIOS . "\\" . $username . ":M *S-1-5-32-544:F *S-1-5-18:F /inheritance:r /T /C\n");
+            $conn->write("icacls " . $path . "\\" . $username . "\\" . Config::$dir_name_downloads . " /q /grant " . Config::$ad_netbios . "\\" . $username . ":M *S-1-5-32-544:F *S-1-5-18:F /inheritance:r /T /C\n");
 
-            $conn->write("icacls " . $path . "\\" . $username . "\\" . DIR_NAME_DOWNLOADS . " /grant *S-1-5-11:(CI)(RX)\n");
+            $conn->write("icacls " . $path . "\\" . $username . "\\" . Config::$dir_name_downloads . " /grant *S-1-5-11:(CI)(RX)\n");
 
-            $conn->write("setacl -ot file -actn ace -ace \"n:" . AD_NETBIOS . "\\Domain Users;s:n;p:read;i:so,sc\" -on " . $path . "\\" . $username . "\\" . DIR_NAME_DOWNLOADS . "\n");
+            $conn->write("setacl -ot file -actn ace -ace \"n:" . Config::$ad_netbios . "\\Domain Users;s:n;p:read;i:so,sc\" -on " . $path . "\\" . $username . "\\" . Config::$dir_name_downloads . "\n");
 
             // make link
-            $conn->write("mklink /j " . $shareDownloadPath . "\\" . $username . ' ' . $path . "\\" . $username . "\\" . DIR_NAME_DOWNLOADS . "\n");
+            $conn->write("mklink /j " . $shareDownloadPath . "\\" . $username . ' ' . $path . "\\" . $username . "\\" . Config::$dir_name_downloads . "\n");
         }
         else
         {

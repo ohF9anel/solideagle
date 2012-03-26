@@ -1,15 +1,11 @@
 <?php
 
-namespace AD;
+namespace solideagle\plugins\ad;
 
-require_once 'data_access/Person.php';
-require_once 'data_access/Group.php';
-require_once 'logging/Logger.php';
-require_once 'config.php';
-use DataAccess\Person;
-use DataAccess\Group;
-use Logging\Logger;
-
+use solideagle\data_access\Person;
+use solideagle\data_access\Group;
+use solideagle\data_access\logging\Logger;
+use solideagle\Config;
 
 class ConnectionLDAP
 {
@@ -19,12 +15,12 @@ class ConnectionLDAP
 
     public function __construct()
     {
-        $this->conn = ldap_connect(AD_LDAPS_URL);
+        $this->conn = ldap_connect(Config::$ad_ldaps_url);
         if ($this->conn == null)
              Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nConnection to AD cannot be made.", PEAR_LOG_ERR);
         
         // bind to the LDAP server specified above 
-        if (!ldap_bind($this->conn, AD_USERNAME, AD_PASSWORD))
+        if (!ldap_bind($this->conn, Config::$ad_username, Config::$ad_password))
             Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nCould not bind to AD server with given credentials.", PEAR_LOG_ERR);  
 
         ldap_set_option($this->conn, LDAP_OPT_PROTOCOL_VERSION, 3);

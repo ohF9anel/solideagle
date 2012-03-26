@@ -1,6 +1,6 @@
 <?php
 
-namespace AD;
+namespace solideagle\plugins\ad;
 
 require_once 'ConnectionLdap.php';
 require_once 'data_access/Group.php';
@@ -122,12 +122,12 @@ class ManageOU
         $info['objectClass'] = "organizationalUnit";
         $info["ou"] = ConnectionLDAP::escapeForLDAPSearch($childGroup->getName());
         
-        $sr = ldap_search($connLdap->getConn(), "OU=" . AD_USERS_OU . ", " . AD_DC, "(OU=" .  $info["ou"] . ")");
+        $sr = ldap_search($connLdap->getConn(), "OU=" . Config::$ad_users_ou . ", " . AD_DC, "(OU=" .  $info["ou"] . ")");
         $oldOuInfo = ldap_get_entries($connLdap->getConn(), $sr);
 
         if (!isset($oldOuInfo[0]))
         {
-            Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nOU \"" . $childGroup->getName() . "\" trying to update in AD not found in: \"OU=" . AD_USERS_OU . ", " . AD_DC . "\".",PEAR_LOG_ERR);
+            Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nOU \"" . $childGroup->getName() . "\" trying to update in AD not found in: \"OU=" . Config::$ad_users_ou . ", " .Config::$ad_dc. "\".",PEAR_LOG_ERR);
             return false;
         }
         
