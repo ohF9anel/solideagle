@@ -1,6 +1,6 @@
 <?php
 
-namespace solideagle\data_access\database\validation;
+namespace solideagle\data_access\validation;
 
 class ValidationError {
     

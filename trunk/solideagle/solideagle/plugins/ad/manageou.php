@@ -2,11 +2,10 @@
 
 namespace solideagle\plugins\ad;
 
-require_once 'ConnectionLdap.php';
-require_once 'data_access/Group.php';
-require_once 'logging/Logger.php';
-use DataAccess\Group;
-use Logging\Logger;
+
+use solideagle\data_access\Group;
+use solideagle\logging\Logger;
+use solideagle\Config;
 
 class ManageOU
 {
