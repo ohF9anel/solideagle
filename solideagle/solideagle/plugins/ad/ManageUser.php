@@ -71,7 +71,7 @@ class ManageUser
         // add user to correct group
         foreach($groups as $group)
         {
-            $group_name = "CN=" . $group->getName() . ", OU=" . Config::$ad_groups_ou . ", " . AD_DC;
+            $group_name = "CN=" . $group->getName() . ", OU=" . Config::$ad_groups_ou . ", " . Config::$ad_dc;
             $group_info['member'] = $dn;
             if (!ldap_mod_add($connLdap->getConn(), $group_name, $group_info))
             {
@@ -102,10 +102,10 @@ class ManageUser
             $parentDn .= "OU=" . $arrParentsGroups[$i]->getName() . ", ";
         }
 
-        $parentDn .= AD_DC;
+        $parentDn .= Config::$ad_dc;
         $dn = "CN=" . $userInfo['cn'] . ", " . $parentDn;
         
-        $sr = ldap_search($connLdap->getConn(), "OU=" . Config::$ad_users_ou . ", " . AD_DC, "(uid=" . $userInfo['uid'] . ")");
+        $sr = ldap_search($connLdap->getConn(), "OU=" . Config::$ad_users_ou . ", " . Config::$ad_dc, "(uid=" . $userInfo['uid'] . ")");
         $oldUserInfo = ldap_get_entries($connLdap->getConn(), $sr);
         
         if (!isset($oldUserInfo[0]))
