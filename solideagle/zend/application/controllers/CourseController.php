@@ -1,7 +1,7 @@
 <?php
 
-require_once 'data_access/Course.php';
-use DataAccess\Course;
+
+use solideagle\data_access\Course;
 
 class CourseController extends Zend_Controller_Action
 {
@@ -35,7 +35,11 @@ class CourseController extends Zend_Controller_Action
 
     public function testAction()
     {
-       echo "ok";
+    	$this->_helper->layout()->disableLayout();
+    	$this->_helper->viewRenderer->setNoRender(true);
+ 
+    	
+      	 var_dump( $this->getRequest()->getParams());
     }
 
 

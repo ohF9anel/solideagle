@@ -1,9 +1,9 @@
 <?php
 
 
-require_once 'data_access/TaskQueue.php';
 
-use DataAccess\TaskQueue;
+
+use solideagle\data_access\TaskQueue;
 
 
 

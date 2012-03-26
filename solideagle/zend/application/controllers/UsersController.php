@@ -1,20 +1,10 @@
 <?php
 
-require_once 'data_access/Type.php';
-require_once 'data_access/Person.php';
-require_once 'data_access/Task.php';
 
-require_once 'data_access/Group.php';
-
-require_once "scripts/Usermanager.php";
-
-use DataAccess\Person;
-use DataAccess\Type;
-
-use DataAccess\Group;
-
-use scripts\Usermanager;
-
+use solideagle\data_access\Person;
+use solideagle\data_access\Type;
+use solideagle\data_access\Group;
+use solideagle\scripts\Usermanager;
 
 
 class UsersController extends Zend_Controller_Action
@@ -30,9 +20,6 @@ class UsersController extends Zend_Controller_Action
     	$this->view->users = Person::getUsersForDisplayByGroup();
     	$this->view->groups = Group::getTree();
     }
-    
-
-    
     
 
     public function adduserAction()
