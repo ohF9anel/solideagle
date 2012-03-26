@@ -1,12 +1,37 @@
 <?php
 
+
+
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
+	
+	/**
+	 * Bootstrap autoloader for application resources
+	 *
+	 * @return Zend_Application_Module_Autoloader
+	 */
+	protected function _initAutoload()
+	{
+		$autoloader = Zend_Loader_Autoloader::getInstance();
+		
+		set_include_path(get_include_path().PATH_SEPARATOR."../../");
+		
+		$autoloader->pushAutoloader(
+				function($class){
+
+			spl_autoload($class);
+			
+		},"solideagle");
+		
+		return $autoloader;
+	}
+	
+	
 	protected function _initDoctype()
 	{	
 		$this->bootstrap('view');
 		$view = $this->getResource('view');
-		//$view->doctype('XHTML1_STRICT');
+		
 	}
 	
 	protected function _initRequest()

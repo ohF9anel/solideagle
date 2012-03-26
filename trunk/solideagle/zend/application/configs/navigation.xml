@@ -16,15 +16,15 @@
 				
 					<deamon>
 					<label>Run deamon</label>
-					<uri>/SolidEagle/scripts/deamon</uri>
+					<uri>/SolidEagle/solideagle/scripts/deamon</uri>
 					</deamon>
 					<tq>
 					<label>Clean tasks queue</label>
-					<uri>/SolidEagle/scripts/emptyqueue</uri>
+					<uri>/SolidEagle/solideagle/scripts/emptyqueue</uri>
 					</tq>
 					<og>
 					<label>Delete old groups</label>
-					<uri>/SolidEagle/scripts/DeleteDeletedGroups</uri>
+					<uri>SolidEagle/solideagle/scripts/DeleteDeletedGroups.php</uri>
 					</og>
 					</pages>
 					

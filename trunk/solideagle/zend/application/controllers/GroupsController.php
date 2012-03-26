@@ -1,10 +1,7 @@
 <?php
 
-require_once 'data_access/Group.php';
-require_once 'scripts/OUmanager.php';
-
-use scripts\OUmanager;
-use DataAccess\Group;
+use solideagle\scripts\OUmanager;
+use solideagle\data_access\Group;
 
 class GroupsController extends Zend_Controller_Action
 {
