@@ -16,7 +16,7 @@
 				
 					<deamon>
 					<label>Run deamon</label>
-					<uri>/SolidEagle/solideagle/scripts/daemon</uri>
+					<uri>../../solideagle/scripts/daemon</uri>
 					</deamon>
 					<tq>
 					<label>Clean tasks queue</label>
