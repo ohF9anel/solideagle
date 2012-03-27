@@ -42,8 +42,7 @@ class ManageOU
             {
                 $ouString .= "OU=" . $arrParentsGroups[$i]->getName() . ", ";
             }
-          
-            $r = ldap_add($connLdap->getConn(), "OU=" . ConnectionLdap::ldap_escape($childGroup->getName(), true) . ", " . $ouString . Config::$ad_dc, $info);
+            $r = ldap_add($connLdap->getConn(), "OU=" . ConnectionLdap::ldap_escape($childGroup->getName()) . ", " . $ouString . Config::$ad_dc, $info);
         }
         
         return array($r,ldap_error($connLdap->getConn()));
