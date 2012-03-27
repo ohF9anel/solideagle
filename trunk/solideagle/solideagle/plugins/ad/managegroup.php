@@ -3,10 +3,11 @@
 namespace solideagle\plugins\ad;
 
 use solideagle\Config;
+use solideagle\logging\Logger;
 
 class managegroup
 {
-    public static function addGroup($group, $arrMemberOfGroups)
+    public static function addGroup($group, $memberOfGroup)
     {
         $connLdap = ConnectionLdap::singleton();
                 
@@ -15,18 +16,20 @@ class managegroup
         
         $info['objectClass'] = "group";
         $info["cn"] = $group->getName();
-        foreach($arrMemberOfGroups as $)
-        $info["member"] = 
         
         $dn = "CN=" . $group->getName() . ",OU=" . Config::$ad_groups_ou . "," . Config::$ad_dc;
-        $r = false;
-        if ($arrMemberOfGroups == null)
+        $r = ldap_add($connLdap->getConn(), $dn, $info);
+        
+        if ($memberOfGroup != null)
         {
-            $r = ldap_add($connLdap->getConn(), $dn, $info);
-        }
-        else 
-        {
-            
+            unset($info);
+            $info['member'] = "CN=" . $group->getName() . ", OU=" . Config::$ad_groups_ou . ", " . Config::$ad_dc;
+            $dn = "CN=" . $memberOfGroup->getName() . ", OU=" . Config::$ad_groups_ou . ", " . Config::$ad_dc;
+            if (!ldap_mod_add($connLdap->getConn(), $dn, $info))
+            {
+                Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \n Group cannot be added to group \"" . $memberOfGroup->getName() . "\"", PEAR_LOG_ERR);
+                return array($r,ldap_error($connLdap->getConn()));
+            }
         }
 
         return array($r,ldap_error($connLdap->getConn()));
