@@ -95,6 +95,8 @@ class UsersController extends Zend_Controller_Action
     	if(isset($data["gid"]))
     	{
     		$gid = $data["gid"];
+    	}else{
+    		return;
     	}
     	
     	foreach(Person::getUsersForDisplayByGroup($gid) as $gp)
@@ -114,7 +116,26 @@ class UsersController extends Zend_Controller_Action
 
     public function showdetailsAction()
     {
-        // action body
+		$this->_helper->layout()->disableLayout();
+		$this->_helper->viewRenderer->setNoRender(true);
+    	
+		
+		$data = $this->_request->getParams();
+		
+		if(isset($data["pid"]))
+		{
+			$pid = $data["pid"];
+		}else{
+			return;
+		}
+		
+
+		$person	= Person::getPersonById($pid);
+		
+		if($person === NULL)
+			return;
+		
+		echo $person->getJson();
     }
 
 

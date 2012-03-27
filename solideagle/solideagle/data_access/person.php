@@ -1364,6 +1364,11 @@ namespace solideagle\data_access;
 			
 		return $retArr;
         }
+        
+        public function getJson()
+        {
+        	return json_encode(get_object_vars($this));
+        }
 
     }
     

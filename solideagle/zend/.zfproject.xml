@@ -32,6 +32,11 @@
           <actionMethod actionName="addsubgrouppost"/>
           <actionMethod actionName="getgroup"/>
         </controllerFile>
+        <controllerFile controllerName="Usertasks">
+          <actionMethod actionName="index"/>
+          <actionMethod actionName="gettasksforuser"/>
+          <actionMethod actionName="posttasks"/>
+        </controllerFile>
       </controllersDirectory>
       <formsDirectory enabled="false"/>
       <layoutsDirectory>
@@ -75,6 +80,15 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Users">
             <viewScriptFile forActionName="showdetails"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Usertasks">
+            <viewScriptFile forActionName="index"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Usertasks">
+            <viewScriptFile forActionName="gettasksforuser"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Usertasks">
+            <viewScriptFile forActionName="posttasks"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>

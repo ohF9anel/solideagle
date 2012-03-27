@@ -2,7 +2,6 @@
 
 namespace solideagle\plugins\ad;
 
-require_once('Net/SSH2.php');
 use solideagle\logging\Logger;
 use solideagle\Config;
 
@@ -19,14 +18,10 @@ class HomeFolder
      */
     public static function createHomeFolder($server, $path, $username, $arrReadRightsGroups = null)
     {
-        $conn = new \Net_SSH2($server);
-        if (!$conn->login(Config::$ad_administrator, Config::$ad_password))
-        {
-            return false;
-            Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nLogin to SSH failed on " . $server . ".", PEAR_LOG_ERR);
-        }
+	
+    	$conn = SSHManager::singleton()->getConnection($server);
 
-        $conn->write("cmd\n");
+        
         
         // make folder & subfolders
         $conn->write("mkdir " . $path . "\\" . $username . "\n");
@@ -66,14 +61,7 @@ class HomeFolder
         $cmd .= "/cache:None\n";
         $conn->write($cmd);  
         
-        //while($data = $conn->_get_channel_packet(NET_SSH2_CHANNEL_SHELL)) echo $data;
 
-        $conn->write("exit\nexit\n");
-        $conn->write("echo ENDOFCODE");
-        $conn->read('ENDOFCODE');
-        $conn->_close_channel(NET_SSH2_CHANNEL_SHELL); 
-        $conn->disconnect();
-        
         return true;
     }
     
