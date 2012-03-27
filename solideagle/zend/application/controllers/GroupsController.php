@@ -2,7 +2,7 @@
 
 use solideagle\scripts\OUmanager;
 use solideagle\data_access\Group;
-use solideagle\utilities\FastJSON;
+use solideagle\utilities\SuperEntities;
 
 class GroupsController extends Zend_Controller_Action
 {
@@ -201,25 +201,7 @@ class GroupsController extends Zend_Controller_Action
 }
 
 
-function superentities( $str ){
-	// get rid of existing entities else double-escape
-	$str = html_entity_decode(stripslashes($str),ENT_QUOTES,'UTF-8');
-	$ar = preg_split('/(?<!^)(?!$)/u', $str );  // return array of every multi-byte character
-	$str2 = "";
-	foreach ($ar as $c){
-		$o = ord($c);
-		if ( (strlen($c) > 1) || /* multi-byte [unicode] */
-				($o <32 || $o > 126) || /* <- control / latin weirdos -> */
-				($o >33 && $o < 40) ||/* quotes + ambersand */
-				($o >59 && $o < 63) /* html */
-		) {
-			// convert to numeric entity
-			$c = mb_encode_numericentity($c,array (0x0, 0xffff, 0, 0xffff), 'UTF-8');
-		}
-		$str2 .= $c;
-	}
-	return $str2;
-}
+
 
 function groupsToJson($roots,$isfirst = true)
 {
@@ -230,7 +212,7 @@ function groupsToJson($roots,$isfirst = true)
 
 	foreach($roots as $group)
 	{
-		$arr = array("data" => array("title" =>  $group->getName(), "attr" => array("href" => "javascript:void(0)")), "attr" => array("id" => "tree" . $group->getId(),"groupid" => $group->getId(),"groupname" =>  superentities($group->getName())));
+		$arr = array("data" => array("title" =>  $group->getName(), "attr" => array("href" => "javascript:void(0)")), "attr" => array("id" => "tree" . $group->getId(),"groupid" => $group->getId(),"groupname" =>  SuperEntities::encode($group->getName())));
 
 		if($isfirst)
 		{
