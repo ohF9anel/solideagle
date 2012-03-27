@@ -5,21 +5,16 @@ namespace solideagle\plugins\ad;
 use Logging\Logger;
 use solideagle\Config;
 
-require_once('Net/SSH2.php');
+
 
 class WwwFolder
 {
     
     public static function setWwwFolder($server, $path, $wwwSharePath, $username, $enabled = true)
     {
-        $conn = new \Net_SSH2($server);
-        if (!$conn->login(Config::$ad_administrator, Config::$ad_password))
-        {
-            return false;
-            Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nLogin to SSH failed on " . Config::$ad_dc_host . ".", PEAR_LOG_ERR);
-        }
+        $conn = SSHManager::singleton()->getConnection($server);
         
-        $conn->write("cmd\n");
+      
         
         if ($enabled)
         {
@@ -42,11 +37,9 @@ class WwwFolder
         
         //while($data = $conn->_get_channel_packet(NET_SSH2_CHANNEL_SHELL)) echo $data;
         
-        $conn->write("exit\nexit\n");
-        $conn->write("echo ENDOFCODE");
-        $conn->read('ENDOFCODE');
-        $conn->_close_channel(NET_SSH2_CHANNEL_SHELL); 
-        $conn->disconnect();
+     
+  
+        
     }
     
 }

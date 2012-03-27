@@ -32,11 +32,17 @@ class ManageHomeFolder
 
     public function startHomeFolderManager()
     {
+    	
+    SSHManager::singleton()->getConnection($this->server)->write("cmd\n");
+    	
         HomeFolder::createHomeFolder($this->server, $this->homeFolderPath, $this->username);
         ScanFolder::setScanFolder($this->server, $this->homeFolderPath, $this->scanSharePath, $this->username);
         WwwFolder::setWwwFolder($this->server, $this->homeFolderPath, $this->wwwSharePath, $this->username);
         DownloadFolder::setDownloadFolder($this->server, $this->homeFolderPath, $this->downloadSharePath, $this->username);
         UploadFolder::setUploadFolder($this->server, $this->homeFolderPath, $this->uploadSharePath, $this->username);
+        
+        SSHManager::singleton()->getConnection($this->server)->write("exit\nexit\n");
+       
     }
     
 }

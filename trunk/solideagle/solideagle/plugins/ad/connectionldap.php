@@ -13,7 +13,7 @@ class ConnectionLDAP
     private static $instance;
     private $conn;
 
-    public function __construct()
+    private function __construct()
     {
         $this->conn = ldap_connect(Config::$ad_ldaps_url);
         if ($this->conn == null)
