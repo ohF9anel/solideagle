@@ -4,7 +4,7 @@ namespace solideagle\plugins\ad;
 
 use solideagle\data_access\Person;
 use solideagle\data_access\Group;
-use solideagle\data_access\logging\Logger;
+use solideagle\logging\Logger;
 use solideagle\Config;
 
 class ConnectionLDAP
@@ -56,7 +56,7 @@ class ConnectionLDAP
      * @param mixed $i  chars to ignore
      * @return type
      */
-    function ldap_escape ($s, $d = FALSE, $i = NULL)
+    public static function ldap_escape ($s, $d = FALSE, $i = NULL)
     {
     	$m = ($d) ? array(1 => '\\',',','=','+','<','>',';','"','#') : array(1 => '\\','*','(',')',chr(0));
     	if (is_string($i) && ($l = strlen($s))) {
