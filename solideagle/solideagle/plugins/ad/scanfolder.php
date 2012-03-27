@@ -10,7 +10,7 @@ require_once('Net/SSH2.php');
 class ScanFolder
 {
     
-    public static function setScanFolder($server, $path, $username, $enabled = true)
+    public static function setScanFolder($server, $path, $scanSharePath, $username, $enabled = true)
     {
         $conn = new \Net_SSH2($server);
         if (!$conn->login(Config::$ad_administrator, Config::$ad_password))
@@ -33,11 +33,11 @@ class ScanFolder
             // access sys scan user
             $conn->write("setacl -ot file -actn ace -ace \"n:" .Config::$ad_netbios . "\\sys_scan_user;s:n;m:grant;p:write;w:dacl\" -on " . $path . "\\" . $username . "\\" . Config::$dir_name_scans . "\n");
             // make link
-            $conn->write("mklink /j " . Config::$path_share_scans . "\\" . $username . ' ' . $path . "\\" . $username . "\\" . Config::$dir_name_scans . "\n");
+            $conn->write("mklink /j " . $scanSharePath . "\\" . $username . ' ' . $path . "\\" . $username . "\\" . Config::$dir_name_scans . "\n");
         }
         else 
         {
-            $conn->write("rmdir " . Config::$path_share_scans . "\\" . $username . " /s /q\n");
+            $conn->write("rmdir " . $scanSharePath . "\\" . $username . " /s /q\n");
         }
 //        
 //        while($data = $conn->_get_channel_packet(NET_SSH2_CHANNEL_SHELL))

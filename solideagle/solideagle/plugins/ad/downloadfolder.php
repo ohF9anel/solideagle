@@ -7,7 +7,7 @@ use solideagle\Config;
 
 class DownloadFolder
 {
-    public static function setDownloadFolder($server, $path, $shareDownloadPath, $username, $enabled = true)
+    public static function setDownloadFolder($server, $path, $downloadSharePath, $username, $enabled = true)
     {
         $conn = new \Net_SSH2($server);
         if (!$conn->login(Config::$ad_administrator, Config::$ad_password))
@@ -34,11 +34,11 @@ class DownloadFolder
             $conn->write("setacl -ot file -actn ace -ace \"n:" . Config::$ad_netbios . "\\Domain Users;s:n;p:read;i:so,sc\" -on " . $path . "\\" . $username . "\\" . Config::$dir_name_downloads . "\n");
 
             // make link
-            $conn->write("mklink /j " . $shareDownloadPath . "\\" . $username . ' ' . $path . "\\" . $username . "\\" . Config::$dir_name_downloads . "\n");
+            $conn->write("mklink /j " . $downloadSharePath . "\\" . $username . ' ' . $path . "\\" . $username . "\\" . Config::$dir_name_downloads . "\n");
         }
         else
         {
-            $conn->write("rmdir " . $shareDownloadPath . "\\" . $username . " /s /q\n");
+            $conn->write("rmdir " . $downloadSharePath . "\\" . $username . " /s /q\n");
         }
         
 //        while($data = $conn->_get_channel_packet(NET_SSH2_CHANNEL_SHELL))
