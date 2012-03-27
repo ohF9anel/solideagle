@@ -16,7 +16,7 @@
 				
 					<deamon>
 					<label>Run deamon</label>
-					<uri>../../solideagle/scripts/daemon</uri>
+					<uri>../../solideagle/scripts/daemon.php</uri>
 					</deamon>
 					<tq>
 					<label>Clean tasks queue</label>
