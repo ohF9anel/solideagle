@@ -1,9 +1,6 @@
 <?php
 namespace solideagle\scripts\ad;
 
-
-
-
 use solideagle\plugins\ad\ManageOU;
 
 use solideagle\data_access\TaskInserter;
@@ -20,9 +17,6 @@ class oumanager implements TaskInterface
 	
 	const myTaskId=27;
 
-	
-
-	
 	public function runTask($taskqueue)
 	{
 		$config = $taskqueue->getConfiguration();
@@ -105,10 +99,10 @@ class oumanager implements TaskInterface
 		$taskInserter->addToQueue($config);
 	}
 	
-	public static function prepareModifyGroup($parentgroups,$oldroup,$newgroup)
+	public static function prepareModifyGroup($parentgroups,$oldgroup,$newgroup)
 	{
 		$config["action"] = self::ActionModify;
-		$config["oldgroup"] = $oldroup;
+		$config["oldgroup"] = $oldgroup;
 		$config["newgroup"] = $newgroup;
 		$config["parents"] = $parentgroups;
 		
@@ -117,7 +111,7 @@ class oumanager implements TaskInterface
 		$taskInserter->addToQueue($config);
 	}
 	
-	public function prepareMoveGroup($newparentsgroup,$oldparentsgroup,$group)
+	public static function prepareMoveGroup($newparentsgroup,$oldparentsgroup,$group)
 	{
 		$config["action"] = self::ActionMove;
 		$config["newparents"] = $newparentsgroup;
@@ -131,7 +125,7 @@ class oumanager implements TaskInterface
 	
 	public function getParams()
 	{
-	
+                
 	}
 	
 	
