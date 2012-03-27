@@ -27,7 +27,7 @@ class managegroup
             $dn = "CN=" . $memberOfGroup->getName() . ", OU=" . Config::$ad_groups_ou . ", " . Config::$ad_dc;
             if (!ldap_mod_add($connLdap->getConn(), $dn, $info))
             {
-                Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \n Group cannot be added to group \"" . $memberOfGroup->getName() . "\"", PEAR_LOG_ERR);
+                Logger::log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \n Group cannot be added to group \"" . $memberOfGroup->getName() . "\"", PEAR_LOG_ERR);
                 return array($r,ldap_error($connLdap->getConn()));
             }
         }

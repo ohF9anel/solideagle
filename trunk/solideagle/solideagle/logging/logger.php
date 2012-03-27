@@ -2,7 +2,9 @@
 
 namespace solideagle\logging;
 
-use Log;
+use \Log;
+
+require_once('Log.php');
 
 class Logger
 {
@@ -16,7 +18,7 @@ class Logger
 	 * 
 	 * @return Log
 	 */
-	static function getLogger()
+	private static function getLogger()
 	{
 		if(Logger::$logger == NULL)
 		{
@@ -28,8 +30,22 @@ class Logger
 
 		}
 	
-
 		return Logger::$logger;
+	}
+	
+	public static function log($errormessage,$messagetype = PEAR_LOG_ERR)
+	{
+		
+		$traces = debug_backtrace();
+		
+		$logplace = "";
+		
+		if (isset($traces[2]))
+		{
+			$logplace = "Path: " . $traces[2]["file"] . "\nLine: " . $traces[2]["line"] . "\n\n";
+		}
+		
+		self::getLogger()->log("\n" . $logplace . $errormessage . "\n", $messagetype);
 	}
 }
 

@@ -24,7 +24,7 @@ class ManageOU
         
         if ($childGroup == null)
         {
-            Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nChild group cannot be null.", PEAR_LOG_ERR);
+            Logger::log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nChild group cannot be null.", PEAR_LOG_ERR);
             return array(false,"childgroup is null");
         }
         
@@ -107,14 +107,14 @@ class ManageOU
         
         if ($childGroup == null)
         {
-            Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nChild group cannot be null.", PEAR_LOG_ERR);
+            Logger::log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nChild group cannot be null.", PEAR_LOG_ERR);
             return false;
         }
         
         // every group should have a parent, because root is gebruikers
         if ($arrParentsGroups == null)
         {
-            Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \n\"" . $childGroup->getName() . "\" group has no parents, every group should be child of root!", PEAR_LOG_ERR);
+            Logger::log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \n\"" . $childGroup->getName() . "\" group has no parents, every group should be child of root!", PEAR_LOG_ERR);
             return false;
         }
         
@@ -126,7 +126,7 @@ class ManageOU
 
         if (!isset($oldOuInfo[0]))
         {
-            Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nOU \"" . $childGroup->getName() . "\" trying to update in AD not found in: \"OU=" . Config::$ad_users_ou . ", " .Config::$ad_dc. "\".",PEAR_LOG_ERR);
+            Logger::log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nOU \"" . $childGroup->getName() . "\" trying to update in AD not found in: \"OU=" . Config::$ad_users_ou . ", " .Config::$ad_dc. "\".",PEAR_LOG_ERR);
             return false;
         }
         
