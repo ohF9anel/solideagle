@@ -18,7 +18,7 @@ class ManageUser
         // every user should have a parent ou, because root ou is gebruikers
         if ($arrParentsOUs == null)
         {
-            Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \n" . var_export($arrParentsOUs, true) . "\nuser has no parent groups, every user should be at least child of root (gebruikers).", PEAR_LOG_ERR);
+            Logger::log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \n" . var_export($arrParentsOUs, true) . "\nuser has no parent groups, every user should be at least child of root (gebruikers).", PEAR_LOG_ERR);
             return false;
         }
 
@@ -53,7 +53,7 @@ class ManageUser
         }
         else 
         {
-            Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \n" . var_export($userInfo, true) . "\nReason: " . var_export(array($ret, ldap_error($connLdap->getConn())), true), PEAR_LOG_ERR);
+            Logger::log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \n" . var_export($userInfo, true) . "\nReason: " . var_export(array($ret, ldap_error($connLdap->getConn())), true), PEAR_LOG_ERR);
         }
 
         return array($ret, ldap_error($connLdap->getConn()));
@@ -75,7 +75,7 @@ class ManageUser
             $group_info['member'] = $dn;
             if (!ldap_mod_add($connLdap->getConn(), $group_name, $group_info))
             {
-                Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nUser cannot be added to group \"" . $group_name . "\"", PEAR_LOG_ERR);
+                Logger::log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nUser cannot be added to group \"" . $group_name . "\"", PEAR_LOG_ERR);
                 $ret = false;
             }
         }
@@ -110,7 +110,7 @@ class ManageUser
         
         if (!isset($oldUserInfo[0]))
         {
-            Logger::getLogger()->log("User \"" . $userInfo['uid'] . "\" trying to update in AD not found in: \"OU=" . Config::$ad_users_ou . ", " .Config::$ad_dc. "\".",PEAR_LOG_ERR);
+            Logger::log("User \"" . $userInfo['uid'] . "\" trying to update in AD not found in: \"OU=" . Config::$ad_users_ou . ", " .Config::$ad_dc. "\".",PEAR_LOG_ERR);
             return false;
         }
         // move user to other ou?
@@ -149,7 +149,7 @@ class ManageUser
         }
         else
         {
-            Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \n
+            Logger::log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \n
                 " . var_export($userInfo, true) . "\n: user cannot be modified", PEAR_LOG_ERR);
         }
         

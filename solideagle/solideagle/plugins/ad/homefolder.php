@@ -71,7 +71,7 @@ class HomeFolder
         if (!$conn->login(S1_ADMINISTRATOR, Config::$ad_password))
         {
             return false;
-            Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nLogin to SSH failed on " . Config::$ad_dc_host . ".", PEAR_LOG_ERR);
+            Logger::log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nLogin to SSH failed on " . Config::$ad_dc_host . ".", PEAR_LOG_ERR);
         }
         
         if (HomeFolder::createHomeFolder($newServer, $newPath, $username, $arrReadRightsGroups))
@@ -111,7 +111,7 @@ class HomeFolder
         if (!$conn->login(S1_ADMINISTRATOR, Config::$ad_password))
         {
             return false;
-            Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nLogin to SSH failed on " . Config::$ad_dc_host . ".", PEAR_LOG_ERR);
+            Logger::log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nLogin to SSH failed on " . Config::$ad_dc_host . ".", PEAR_LOG_ERR);
         }
         
         $conn->write("cmd\n");

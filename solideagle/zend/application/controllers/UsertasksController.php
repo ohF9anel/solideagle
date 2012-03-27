@@ -1,5 +1,7 @@
 <?php
 
+use solideagle\logging\Logger;
+
 use solideagle\scripts\ad\usermanager;
 
 use solideagle\data_access\Person;
@@ -14,7 +16,7 @@ class UsertasksController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        // action body
+        Logger::log("Hallo ik ben een test");
     }
 
     public function gettasksforuserAction()

@@ -418,13 +418,13 @@ namespace solideagle\data_access;
                 $err = Person::validatePerson($person);
                 if (!empty($err))
                 {
-                    Logger::getLogger()->log("Person not validated before saving! Validation errors:\n" . var_export($err,true) . "\nPerson object dump:\n" . var_export($person,true) . "\n",PEAR_LOG_ERR);
+                    Logger::log("Person not validated before saving! Validation errors:\n" . var_export($err,true) . "\nPerson object dump:\n" . var_export($person,true) . "\n",PEAR_LOG_ERR);
                     return false;
                 }
                 
                /* if (sizeof($person->getTypes()) < 1)
                 {
-                    Logger::getLogger()->log("Person does not have any type(s)! \nPerson object dump:\n" . var_export($person,true) . "\n",PEAR_LOG_ERR);
+                    Logger::log("Person does not have any type(s)! \nPerson object dump:\n" . var_export($person,true) . "\n",PEAR_LOG_ERR);
                     return false;
                 }
                 */
@@ -564,13 +564,13 @@ namespace solideagle\data_access;
                 $err = Person::validatePerson($person);
                 if (!empty($err))
                 {
-                    Logger::getLogger()->log("Person not validated before saving! Validation errors:\n" . var_export($err,true) . "\nPerson object dump:\n" . var_export($person,true) . "\n",PEAR_LOG_ERR);
+                    Logger::log("Person not validated before saving! Validation errors:\n" . var_export($err,true) . "\nPerson object dump:\n" . var_export($person,true) . "\n",PEAR_LOG_ERR);
                     return false;
                 }
                 
                 if (sizeof($person->getTypes()) < 1)
                 {
-                    Logger::getLogger()->log("Person does not have any type(s)! \nPerson object dump:\n" . var_export($person,true) . "\n",PEAR_LOG_ERR);
+                    Logger::log("Person does not have any type(s)! \nPerson object dump:\n" . var_export($person,true) . "\n",PEAR_LOG_ERR);
                     return false;
                 }
                 
