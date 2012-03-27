@@ -19,12 +19,12 @@ class ConnectionLDAP
         if ($this->conn == null)
              Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nConnection to AD cannot be made.", PEAR_LOG_ERR);
         
+        ldap_set_option($this->conn, LDAP_OPT_PROTOCOL_VERSION, 3);
+        ldap_set_option($this->conn, LDAP_OPT_REFERRALS, 0);
+        
         // bind to the LDAP server specified above 
         if (!ldap_bind($this->conn, Config::$ad_username, Config::$ad_password))
             Logger::getLogger()->log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nCould not bind to AD server with given credentials.", PEAR_LOG_ERR);  
-
-        ldap_set_option($this->conn, LDAP_OPT_PROTOCOL_VERSION, 3);
-        ldap_set_option($this->conn, LDAP_OPT_REFERRALS, 0);
     }
     
     public function __destruct()
