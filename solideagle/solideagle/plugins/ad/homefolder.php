@@ -55,7 +55,7 @@ class HomeFolder
         $conn->write($cmd);  
 
         // share and set permissions
-        $cmd = "net share " . $username . "$=" . $path . "\\" . $username . " /grant:" . Config::$ad_netbios . "\\" . $username . ",change /grant:\"" . Config::$ad_netbios . "\\Domain Admins\",read";
+        $cmd = "net share " . $username . "$=" . $path . "\\" . $username . " /grant:" . Config::$ad_netbios . "\\" . $username . ",change /grant:\"" . Config::$ad_netbios . "\\Domain Admins\",read ";
         if ($arrReadRightsGroups != null)
         {
             foreach($arrReadRightsGroups as $group)
@@ -66,7 +66,7 @@ class HomeFolder
         $cmd .= "/cache:None\n";
         $conn->write($cmd);  
         
-//        while($data = $conn->_get_channel_packet(NET_SSH2_CHANNEL_SHELL)) echo $data;
+        //while($data = $conn->_get_channel_packet(NET_SSH2_CHANNEL_SHELL)) echo $data;
 
         $conn->write("exit\nexit\n");
         $conn->write("echo ENDOFCODE");
