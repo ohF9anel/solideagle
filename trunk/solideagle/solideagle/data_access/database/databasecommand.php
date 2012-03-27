@@ -5,7 +5,7 @@ namespace solideagle\data_access\database;
 class DatabaseCommand
 {
 
-	private static $_defaultConnectionParams = array('mysql:host=10.3.7.102;dbname=CentralAccountDB',"dbuser","ChaCha69");
+	private static $_defaultConnectionParams = array('mysql:host=10.3.7.102;dbname=CentralAccountDB;charset=utf8',"dbuser","ChaCha69");
 
 	private $_isTransacion = false;
 	private $_sql; //string

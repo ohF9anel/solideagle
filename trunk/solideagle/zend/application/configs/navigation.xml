@@ -20,11 +20,11 @@
 					</deamon>
 					<tq>
 					<label>Clean tasks queue</label>
-					<uri>/SolidEagle/solideagle/scripts/emptyqueue</uri>
+					<uri>../../solideagle/scripts/emptyqueue.php</uri>
 					</tq>
 					<og>
 					<label>Delete old groups</label>
-					<uri>SolidEagle/solideagle/scripts/DeleteDeletedGroups.php</uri>
+					<uri>../../solideagle/scripts/DeleteDeletedGroups.php</uri>
 					</og>
 					</pages>
 					

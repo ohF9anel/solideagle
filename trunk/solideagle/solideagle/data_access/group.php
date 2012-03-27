@@ -345,6 +345,11 @@ class Group
 	
 	public static function getTree()
 	{
+		
+		
+		$cmd = new DatabaseCommand();
+		
+		
 		$sql = "SELECT p.id,p.name,p.description,t.length, 
 		(SELECT t1.parent_id FROM group_closure t1 WHERE t1.length=1 AND t1.child_id=t.child_id) AS parent
 		FROM `group` p JOIN group_closure t ON p.id=t.child_id  WHERE p.deleted = 0  order by t.length,parent";
@@ -352,7 +357,7 @@ class Group
 		$rootArr = array();
 		$completeArr = array();
 		
-		$cmd = new DatabaseCommand($sql);
+		$cmd->newQuery($sql);
 		$cmd->executeReader()->readAll(function($row) use (&$rootArr,&$completeArr) {
 			
 			$childGroup = new Group();
