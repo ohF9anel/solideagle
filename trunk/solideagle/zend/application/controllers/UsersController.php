@@ -61,7 +61,7 @@ class UsersController extends Zend_Controller_Action
  		$person->setName($data["txtName"]);
  		$person->setGroupId($data["groupid"]);
  		}else{
- 			echo "Alle velden moetten ingevuld zijn";
+ 			echo "Alle velden moeten ingevuld zijn";
  			return;
  		}
  		
