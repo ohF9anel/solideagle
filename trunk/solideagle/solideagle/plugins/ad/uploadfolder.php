@@ -10,7 +10,7 @@ require_once('Net/SSH2.php');
 class UploadFolder
 {
     
-    public static function setUploadFolder($server, $path, $username, $enabled = true)
+    public static function setUploadFolder($server, $path, $uploadSharePath, $username, $enabled = true)
     {
         $conn = new \Net_SSH2($server);
         if (!$conn->login(Config::$ad_administrator, Config::$ad_password))
@@ -33,13 +33,13 @@ class UploadFolder
             $conn->write("setacl -ot file -actn ace -ace \"n:Authenticated Users;s:n;p:FILE_LIST_DIRECTORY,FILE_ADD_FILE,FILE_ADD_SUBDIRECTORY;i:sc,so\" -on " . $path . "\\" . $username . "\\" . Config::$dir_name_uploads . "\n");
 
             // make link
-            $conn->write("mklink /j " . Config::$path_share_uploads . "\\" . $username . ' ' . $path . "\\" . $username . "\\" . Config::$dir_name_uploads . "\n");
+            $conn->write("mklink /j " . $uploadSharePath . "\\" . $username . ' ' . $path . "\\" . $username . "\\" . Config::$dir_name_uploads . "\n");
             // set permissions on link!
             $conn->write("setacl -ot file -actn ace -ace \"n:Authenticated Users;s:n;p:FILE_LIST_DIRECTORY,FILE_ADD_FILE,FILE_ADD_SUBDIRECTORY;i:sc,so\" -on " . Config::$path_share_uploads . "\\" . $username . "\n");
         }
         else
         {
-            $conn->write("rmdir " . Config::$path_share_uploads . "\\" . $username . " /s /q\n");
+            $conn->write("rmdir " . $uploadSharePath . "\\" . $username . " /s /q\n");
         }
         
         //while($data = $conn->_get_channel_packet(NET_SSH2_CHANNEL_SHELL))

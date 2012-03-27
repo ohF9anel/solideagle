@@ -10,7 +10,7 @@ require_once('Net/SSH2.php');
 class WwwFolder
 {
     
-    public static function setWwwFolder($server, $path, $username, $enabled = true)
+    public static function setWwwFolder($server, $path, $wwwSharePath, $username, $enabled = true)
     {
         $conn = new \Net_SSH2($server);
         if (!$conn->login(Config::$ad_administrator, Config::$ad_password))
@@ -33,11 +33,11 @@ class WwwFolder
             // access webserver with user sysweb
             $conn->write("setacl -ot file -actn ace -ace \"n:" .Config::$ad_netbios . "\\sysweb;s:n;m:grant;p:read;w:dacl\" -on " . $path . "\\" . $username . "\\" . Config::$dir_name_www . "\n");
             // make link
-            $conn->write("mklink /j " . Config::$path_share_www . "\\" . $username . ' ' . $path . "\\" . $username . "\\" . Config::$dir_name_www . "\n");
+            $conn->write("mklink /j " . $wwwSharePath . "\\" . $username . ' ' . $path . "\\" . $username . "\\" . Config::$dir_name_www . "\n");
         }
         else 
         {
-            $conn->write("rmdir " . Config::$path_share_www . "\\" . $username . " /s /q\n");
+            $conn->write("rmdir " . $wwwSharePath . "\\" . $username . " /s /q\n");
         }
         
         //while($data = $conn->_get_channel_packet(NET_SSH2_CHANNEL_SHELL)) echo $data;

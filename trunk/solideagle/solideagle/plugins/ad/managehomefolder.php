@@ -33,10 +33,10 @@ class ManageHomeFolder
     public function startHomeFolderManager()
     {
         HomeFolder::createHomeFolder($this->server, $this->homeFolderPath, $this->username);
-        ScanFolder::setScanFolder($this->server, $this->homeFolderPath, Config::$dir_name_scans, $this->username);
-        WwwFolder::setWwwFolder($this->server, $this->homeFolderPath, Config::$dir_name_www, $this->username);
-        DownloadFolder::setDownloadFolder($this->server, $this->homeFolderPath, Config::$dir_name_downloads, $this->username);
-        UploadFolder::setUploadFolder($this->server, $this->homeFolderPath, Config::$dir_name_uploads, $this->username);
+        ScanFolder::setScanFolder($this->server, $this->homeFolderPath, $this->scanSharePath, $this->username);
+        WwwFolder::setWwwFolder($this->server, $this->homeFolderPath, $this->wwwSharePath, $this->username);
+        DownloadFolder::setDownloadFolder($this->server, $this->homeFolderPath, $this->downloadSharePath, $this->username);
+        UploadFolder::setUploadFolder($this->server, $this->homeFolderPath, $this->uploadSharePath, $this->username);
     }
     
 }

@@ -2,7 +2,7 @@
 namespace solideagle\scripts\ad;
 
 
-use plugins\AD\ManageUser;
+use solideagle\plugins\ad\ManageHomeFolder;
 use solideagle\data_access\TaskInserter;
 use solideagle\data_access\TaskQueue;
 use solideagle\data_access\TaskInterface;
