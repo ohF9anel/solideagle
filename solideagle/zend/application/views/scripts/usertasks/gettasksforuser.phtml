@@ -20,9 +20,11 @@
 		<div class="control-group">
 			<label class="control-label" for="serverpath">Homefolder pad op server</label>
 			<div class="controls">
+			<div class="input-append">
 				<input id="serverpath" name="serverpath" class="input-xlarge" type="text"
-					value="<?php echo $this->defaults->serverpath; ?>"> \<?php echo $this->person->getAccountUsername(); ?>
+					value="<?php echo $this->defaults->serverpath; ?>"><span class="add-on">\<?php echo $this->person->getAccountUsername(); ?></span>
 					<p class="help-block "><i>c:\pad\naar\homefolders</i></p>
+					</div>
 			</div>
 		</div>
 

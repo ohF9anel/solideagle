@@ -106,28 +106,47 @@ body
 	padding-left:10px;
 	float:left;
 }
-/*
-form  p > label
+
+
+
+.SEsupermodal
 {
-	float:left;
-	line-height:26px;
+	 
+
+   
+    overflow: auto;
+     position: absolute;
+     left: 0px;
+     top: 0px;
+     width:100%;
+    
+     
+     display:block;
+   
+    z-index: 1050;
+   
+
 }
 
-form   p 
+.SEsupermodal >div
 {
-	 width: 264px;
-	clear:both;
+	 background-clip: padding-box;
+    background-color: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 6px 6px 6px 6px;
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+   
+   display: table;
+	/*width:90%;*/
+	margin: 100px auto;
 }
 
-form   p > input
+.SEsupermodal .modal-body
 {
-	float:right;
-	margin-bottom: 10px;
-	margin-left:10px;
-
+	max-height:none;
 }
 
-*/
+
 
 .etabs { margin: 0; padding: 0; }
 .tab { display: inline-block; zoom:1; *display:inline; background: #eee; border: solid 1px #999; border-bottom: none; -moz-border-radius: 4px 4px 0 0; -webkit-border-radius: 4px 4px 0 0; }
