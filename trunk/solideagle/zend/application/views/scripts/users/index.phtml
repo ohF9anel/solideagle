@@ -1,51 +1,33 @@
 <script>
 
-	var selectedGroupId = -1;
+	var selectedGroupId = 75;
 
 	$(function(){
+
 		updateTree();
-
-
-		
-
-		$("#ShowUsersLink").click(function(){
-			showUsers();
-		});
+		showUsers();
 
 		$("#EditGroupLink").click(function(){
-
-			/*$("#myModal .modal-body").load("<?php echo $this->SE_path . '/groups/editgroup?gid=' ?>" + selectedGroupId);
-
-			$("#modaltitle").html("Groep bewerken");
-			
-			$('#myModal').modal('show');*/
-
-			$("#groepcontent").load("<?php echo $this->SE_path . '/groups/editgroup?gid=' ?>" + selectedGroupId);
-		
-			
+			$("#modalholder").load("<?php echo $this->SE_path . '/groups/editgroup?gid=' ?>" + selectedGroupId);
 		});
 
 		$("#CreateSubGroupLink").click(function(){
-
-			$("#groepcontent").load("<?php echo $this->SE_path . '/groups/addsubgroup?gid=' ?>" + selectedGroupId);
-			
+			$("#modalholder").load("<?php echo $this->SE_path . '/groups/addsubgroup?gid=' ?>" + selectedGroupId);
 		});
 
 		$("#CreateUserLink").click(function(){
-
-			$("#groepcontent").load("<?php echo $this->SE_path . '/users/adduser?gid=' ?>" + selectedGroupId);
-			
+			$("#modalholder").load("<?php echo $this->SE_path . '/users/adduser?gid=' ?>" + selectedGroupId);
 		});
 		
 		
-		showUsers();
+		
 	});
 
 	function updateTree()
 	{
 		$("#grouptree").jstree({ 
 			"ui" : {	
-				"initially_select" : [ "tree75" ]
+				"initially_select" : [ "tree"+selectedGroupId ]
 			},
 			"json_data" : {
 				"ajax" : {
@@ -65,14 +47,17 @@
 
 			$("#groupname").html(groupname);
 
-			showUsers();
-
-			if($("#userstable").length)
-			{
-				$("#userstable").dataTable().fnReloadAjax('users/getusers?gid='+selectedGroupId);
-			}
+			updateUsers();
 			
 		});
+	}
+
+	function updateUsers()
+	{
+		if($("#userstable").length)
+		{
+			$("#userstable").dataTable().fnReloadAjax('users/getusers?gid='+selectedGroupId);
+		}
 	}
 
 
@@ -94,6 +79,7 @@
 
 		$("#userstable").dataTable({
 			"bSort":true,
+			"aaSorting" : [],
 			"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
 			  "sDom": '<"row-fluid"fl><"row-fluid"<"btn-group span6"p><"span6"i>>rt',//'<"row-fluid well"fl><"row-fluid well btn-group"<"span6"p><"span6"i>>rt',
 	        "bProcessing": true,
@@ -121,27 +107,8 @@
 		
 	}
 
-	
-	
-	
 </script>
 
-<?php //modal hide fade ?>
-
-<div class="hide SEsupermodal" id="myModal">
-<div>
-	<div class="modal-header">
-		<a class="close" data-dismiss="modal">×</a>
-		<h3 id="modaltitle"></h3>
-	</div>
-	<div class="modal-body">
-		<p>One fine body…</p>
-	</div>
-	<div class="modal-footer">
-		<a href="#" class="btn" data-dismiss="modal">Annuleren</a> <a href="#" class="btn btn-primary">Opslaan</a>
-	</div>
-	</div>
-</div>
 
 <div class="container-fluid">
 	<div class="row-fluid">
@@ -162,8 +129,7 @@
 					data-toggle="dropdown" href="#menu1"> Acties <b class="caret"></b>
 				</a>
 					<ul class="dropdown-menu">
-						  <li><a id="ShowUsersLink" href="#"><i class="icon-th-list"></i> Gebruikers
-								tonen</a></li>
+					
 						<li><a id="EditGroupLink" href="#"><i class="icon-pencil"></i>
 								Groep bewerken</a></li>
 						<li><a id="CreateSubGroupLink" href="#"><i class="icon-plus"></i>
@@ -184,5 +150,10 @@
 		</div>
 	</div>
 </div>
+
+
+
+
+<div id="modalholder"></div>
 
 

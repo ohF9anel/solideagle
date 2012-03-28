@@ -146,6 +146,12 @@ body
 	max-height:none;
 }
 
+.SEinline
+{
+	margin-left: 0;
+	margin-right: 10px;
+}
+
 
 
 .etabs { margin: 0; padding: 0; }

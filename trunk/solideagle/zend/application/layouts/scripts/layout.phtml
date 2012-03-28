@@ -12,12 +12,14 @@ $this->headScript()->prependFile($this->SE_path . "/js/jquery.easytabs.min.js");
 $this->headScript()->prependFile($this->SE_path . "/js/jstree/jquery.jstree.js");
 $this->headScript()->prependFile($this->SE_path . "/bootstrap/js/bootstrap.min.js");
 $this->headScript()->prependFile($this->SE_path . "/js/jquery.form.js");
+$this->headScript()->prependFile($this->SE_path . "/js/jquery-ui-1.8.18.custom.min.js");
 $this->headScript()->prependFile($this->SE_path . "/js/jquery-1.7.1.min.js");
 
 echo $this->headScript();
 
 echo "\n";
 
+$this->headLink()->appendStylesheet($this->SE_path.'/css/ui-custom/jquery-ui-1.8.18.custom.css') ;
 $this->headLink()->appendStylesheet($this->SE_path.'/css/style.css') ;
 $this->headLink()->appendStylesheet($this->SE_path.'/bootstrap/css/bootstrap.css');
 //$this->headLink()->appendStylesheet($this->SE_path.'/bootstrap/css/bootstrap-responsive.css');

@@ -352,7 +352,7 @@ class Group
 		
 		$sql = "SELECT p.id,p.name,p.description,t.length, 
 		(SELECT t1.parent_id FROM group_closure t1 WHERE t1.length=1 AND t1.child_id=t.child_id) AS parent
-		FROM `group` p JOIN group_closure t ON p.id=t.child_id  WHERE p.deleted = 0  order by t.length,parent";
+		FROM `group` p JOIN group_closure t ON p.id=t.child_id  WHERE p.deleted = 0  order by p.name";/*,t.length,parent";*/
 		
 		$rootArr = array();
 		$completeArr = array();

@@ -31,6 +31,7 @@
           <actionMethod actionName="addsubgroup"/>
           <actionMethod actionName="addsubgrouppost"/>
           <actionMethod actionName="getgroup"/>
+          <actionMethod actionName="getgroupbreadcrumbs"/>
         </controllerFile>
         <controllerFile controllerName="Usertasks">
           <actionMethod actionName="index"/>

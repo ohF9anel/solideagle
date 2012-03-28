@@ -4,12 +4,18 @@
 <script>
 	$(function(){
 
+
+		$('#myModal').modal('show');
+		
 		$("#lbldeletesure").hide();
 
 		$("#blnDelete").click(function(){
 			$("#lbldeletesure").toggle();
 			$("#blnDeleteSure").removeAttr("checked");
 		});
+
+		
+		$("#groupbreadcrumbs").load("<?php echo $this->SE_path . '/groups/getgroupbreadcrumbs?groupid=' . $this->group->getId() ?>");
 		
 		$("#formEditGroup").ajaxForm({
 			success: function(responseText, statusText, xhr, $form) { 
@@ -18,7 +24,7 @@
 				{
 					alert(responseText);
 				}else{
-					showUsers();
+					$('#myModal').modal('hide');
 					updateTree();
 				}
 				
@@ -36,63 +42,79 @@
 <form class="form-horizontal"
 	action="<?php echo $this->SE_path . "/groups/updategrouppost" ?>"
 	method="post" id="formEditGroup">
-	<fieldset>
-		<legend>Groep bewerken</legend>
 
-		<div class="control-group">
-			<label class="control-label" for="txtName">Naam</label>
-			<div class="controls">
-				<input id="txtName" name="groupName" class="input-xlarge"
-					type="text"
-					value="<?php echo SuperEntities::encode($this->group->getName()); ?>">
+	<div class="hide SEsupermodal" id="myModal">
+		<div>
+			<div class="modal-header">
+				<a class="close" data-dismiss="modal">×</a>
+				<h3 id="modaltitle">Groep bewerken<small id="groupbreadcrumbs"></small></h3>
 			</div>
-		</div>
+			<div class="modal-body">
 
-		<div class="control-group">
-			<label class="control-label" for="txtDescription">Omschrijving</label>
-			<div class="controls">
-				<textarea id="txtDescription" name="groupDescription"
-					class="input-xlarge" rows="3"><?php echo SuperEntities::encode($this->group->getDescription()) ?></textarea>
-			</div>
-		</div>
-		
-		
-		<div class="control-group">
-			<label class="control-label" for="txtDescription">Verplaatsen</label>
-			<div class="controls">
-				<select name="selectGroup">
-					<option value="ignore">Niet verplaatsen</option>
-					<?php foreach($this->groups as $group)
-					{
+				<fieldset>
 					
-					?>
-					
-					<option value ="<?php echo $group->getId(); ?>"><?php echo SuperEntities::encode($group->getName()); ?></option>
-						
-					<?php } ?>
-					
-				</select>
+
+					<div class="control-group">
+						<label class="control-label" for="txtName">Naam</label>
+						<div class="controls">
+							<input id="txtName" name="groupName" class="input-xlarge"
+								type="text"
+								value="<?php echo SuperEntities::encode($this->group->getName()); ?>">
+						</div>
+					</div>
+
+					<div class="control-group">
+						<label class="control-label" for="txtDescription">Omschrijving</label>
+						<div class="controls">
+							<textarea id="txtDescription" name="groupDescription"
+								class="input-xlarge" rows="3"><?php echo SuperEntities::encode($this->group->getDescription()) ?></textarea>
+						</div>
+					</div>
+
+
+					<div class="control-group">
+						<label class="control-label" for="txtDescription">Verplaatsen</label>
+						<div class="controls">
+							<select name="selectGroup">
+								<option value="ignore">Niet verplaatsen</option>
+								<?php foreach($this->groups as $group)
+								{
+
+									?>
+
+								<option value="<?php echo $group->getId(); ?>">
+									<?php echo SuperEntities::encode($group->getName()); ?>
+								</option>
+
+								<?php } ?>
+
+							</select>
+						</div>
+					</div>
+
+					<div class="control-group error">
+						<label class="control-label" for="blnDelete">Groep verwijderen</label>
+						<div class="controls">
+							<label class="checkbox"> <input id="blnDelete" name="delete"
+								type="checkbox" value="delete"> Ja, ik wil deze groep
+								verwijderen
+							</label> <label id="lbldeletesure" class="checkbox"> <input
+								id="blnDeleteSure" name="deletesure" type="checkbox"
+								value="delete"> Ja, ik ben zeker
+							</label>
+						</div>
+					</div>
+
+					<input type="hidden" name="groupid"
+						value="<?php echo $this->group->getId() ?>">
+				</fieldset>
+
+			</div>
+			<div class="modal-footer">
+				<a href="#" class="btn" data-dismiss="modal">Annuleren</a>
+				<button class="btn btn-primary" type="submit">Opslaan</button>
 			</div>
 		</div>
+	</div>
 
-		<div class="control-group error">
-			<label class="control-label" for="blnDelete">Groep verwijderen</label>
-			<div class="controls">
-				<label class="checkbox"> <input id="blnDelete" name="delete"
-					type="checkbox" value="delete"> Ja, ik wil deze groep verwijderen
-				</label> <label id="lbldeletesure" class="checkbox"> <input
-					id="blnDeleteSure" name="deletesure" type="checkbox" value="delete">
-					Ja, ik ben zeker
-				</label>
-			</div>
-		</div>
-
-		<div class="form-actions">
-			<button class="btn btn-primary" type="submit">Opslaan</button>
-
-		</div>
-
-		<input type="hidden" name="groupid"
-			value="<?php echo $this->group->getId() ?>">
-	</fieldset>
 </form>
