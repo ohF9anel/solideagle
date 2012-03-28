@@ -6,13 +6,22 @@
 		updateTree();
 
 
+		
+
 		$("#ShowUsersLink").click(function(){
 			showUsers();
 		});
 
 		$("#EditGroupLink").click(function(){
+
+			/*$("#myModal .modal-body").load("<?php echo $this->SE_path . '/groups/editgroup?gid=' ?>" + selectedGroupId);
+
+			$("#modaltitle").html("Groep bewerken");
 			
+			$('#myModal').modal('show');*/
+
 			$("#groepcontent").load("<?php echo $this->SE_path . '/groups/editgroup?gid=' ?>" + selectedGroupId);
+		
 			
 		});
 
@@ -69,7 +78,7 @@
 
 	function showUsers()
 	{
-		$("#groepcontent").html("<h2>Gebruikers</h2>");
+		$("#groepcontent").html("");
 
 		$("<table id='userstable' class='table'>").append("<thead>\
 				<tr>\
@@ -117,6 +126,23 @@
 	
 </script>
 
+<?php //modal hide fade ?>
+
+<div class="hide SEsupermodal" id="myModal">
+<div>
+	<div class="modal-header">
+		<a class="close" data-dismiss="modal">×</a>
+		<h3 id="modaltitle"></h3>
+	</div>
+	<div class="modal-body">
+		<p>One fine body…</p>
+	</div>
+	<div class="modal-footer">
+		<a href="#" class="btn" data-dismiss="modal">Annuleren</a> <a href="#" class="btn btn-primary">Opslaan</a>
+	</div>
+	</div>
+</div>
+
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span3">
@@ -129,22 +155,31 @@
 		<div class="span9">
 
 			<ul class="nav nav-pills ">
-				<li><h2  style="line-height: 30px"><span id="groupname"></span> <small>Groep opties</small></h2></li>
-				<li><a id="ShowUsersLink" href="#"><i class="icon-th-list"></i>Gebruikers
-						tonen</a></li>
-				<li><a id="EditGroupLink" href="#"><i class="icon-pencil"></i>Groep
-						bewerken</a></li>
-				<li><a id="CreateSubGroupLink" href="#"><i class="icon-plus"></i>Subgroep
-						maken</a></li>
-				<li><a id="CreateUserLink" href="#"><i class="icon-user"></i>Gebruiker
-						maken</a></li>
+				<li><h2 style="line-height: 30px">
+						Groep <span id="groupname"></span>
+					</h2></li>
+				<li class="dropdown" id="menu1"><a class="dropdown-toggle"
+					data-toggle="dropdown" href="#menu1"> Acties <b class="caret"></b>
+				</a>
+					<ul class="dropdown-menu">
+						  <li><a id="ShowUsersLink" href="#"><i class="icon-th-list"></i> Gebruikers
+								tonen</a></li>
+						<li><a id="EditGroupLink" href="#"><i class="icon-pencil"></i>
+								Groep bewerken</a></li>
+						<li><a id="CreateSubGroupLink" href="#"><i class="icon-plus"></i>
+								Subgroep maken</a></li>
+						<li><a id="CreateUserLink" href="#"><i class="icon-user"></i>
+								Gebruiker maken</a></li>
+						<li class="divider"></li>
+						<li><a href="#"><i class="icon-list-alt"></i> Multitask</a></li>
+					</ul>
+				</li>
+
+
+
 			</ul>
 
-			<div id="groepcontent">
-				
-
-				
-			</div>
+			<div id="groepcontent"></div>
 
 		</div>
 	</div>

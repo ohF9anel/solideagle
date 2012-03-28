@@ -3,6 +3,8 @@
 namespace solideagle\plugins\ad;
 
 
+use solideagle\plugins\StatusReport;
+
 use solideagle\data_access\Group;
 use solideagle\logging\Logger;
 use solideagle\Config;
@@ -20,12 +22,12 @@ class ManageOU
         $connLdap = ConnectionLdap::singleton();
                 
         if ($connLdap->getConn() == null)
-             return array(false, "LDAP Connectie mislukt");
+             return new StatusReport(false,"Connectie met LDAP mislukt");
         
         if ($childGroup == null)
         {
             Logger::log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nChild group cannot be null.", PEAR_LOG_ERR);
-            return array(false,"childgroup is null");
+            return new StatusReport(false,"Nieuwe group is NULL");
         }
         
         $info['objectClass'] = "organizationalUnit";
@@ -46,7 +48,8 @@ class ManageOU
             $r = ldap_add($connLdap->getConn(), "OU=" . ConnectionLdap::ldap_escape($childGroup->getName(),true) . ", " . $ouString . Config::$ad_dc, $info);
         }
         
-        return array($r,ldap_error($connLdap->getConn()));
+        return new StatusReport($r,ldap_error($connLdap->getConn()));
+       
     }
     
     public static function moveOU($oldparents,$newparents,$group)

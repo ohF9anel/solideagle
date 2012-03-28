@@ -29,16 +29,13 @@ class oumanager implements TaskInterface
 		
 		if($config["action"] == self::ActionAdd)
 		{
-			
-			
-			
 			$ret = ManageOU::addOU($config["parents"],$config["group"]);
 			
-			if($ret[0] === true)
+			if($ret->isSucces())
 			{
 				return true;	
 			}else{
-				$taskqueue->setErrorMessages($ret[1]);
+				$taskqueue->setErrorMessages($ret->getError());
 				return false;
 			}
 

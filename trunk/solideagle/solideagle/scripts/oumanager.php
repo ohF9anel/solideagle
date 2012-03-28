@@ -14,7 +14,7 @@ class OUmanager {
 	public static function Add($parents,$newgroup)
 	{
 		ad\oumanager::prepareAddGroup($parents, $newgroup);
-		
+		ad\groupmanager::prepareAddGroup($newgroup);
 	}
 	
 	public static function Modify($parents,$oldgroup,$newgroup)
