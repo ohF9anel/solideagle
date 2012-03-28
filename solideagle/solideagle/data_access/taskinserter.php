@@ -6,6 +6,9 @@ namespace solideagle\data_access;
 
 class TaskInserter
 {	
+	
+	private static $TASKINSERTER_ENABLED = false;
+	
 	//impl
 	const TypeGroup = 0;
 	const TypePerson = 1;
@@ -29,6 +32,12 @@ class TaskInserter
 	
 	public function addToQueue($config)
 	{
+		
+		if(!self::$TASKINSERTER_ENABLED)
+		{
+			return;
+		}
+		
 		$tq = new TaskQueue();
 		$tq->setTaskId($this->taskid);
 		$tq->setConfiguration($config);

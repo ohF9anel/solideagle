@@ -5,6 +5,8 @@ namespace solideagle\data_access;
 
 	
 
+	use solideagle\data_access\helpers\DateConverter;
+
 	function IsNullOrEmptyString($question){
 		return (!isset($question) || trim($question)==='');
 	}
@@ -414,6 +416,7 @@ namespace solideagle\data_access;
         {
                 $person->setAccountUsername(Person::tryCreateUsername($person));
                 $person->setAccountPassword(Person::generatePassword());
+                $person->setMadeOn(DateConverter::timestampDateToDb(time()));
         	
                 $err = Person::validatePerson($person);
                 if (!empty($err))
@@ -1305,9 +1308,10 @@ namespace solideagle\data_access;
 					`person`.`made_on`
 					FROM `CentralAccountDB`.`person`
 					WHERE 
-					`person`.`group_id` = :groupid;
+					`person`.`group_id` = :groupid
 					AND
-					`person`.`deleted` = 0";
+					`person`.`deleted` = 0 
+        			ORDER BY `person`.`made_on` desc";
         	}else{
 	        		$sql = "SELECT
 	        		`person`.`id`,
@@ -1316,7 +1320,7 @@ namespace solideagle\data_access;
 	        		`person`.`first_name`,
 	        		`person`.`name`,
 	        		`person`.`made_on`
-	        		FROM `CentralAccountDB`.`person`;";
+	        		FROM `CentralAccountDB`.`person` WHERE `person`.`deleted` = 0 ORDER BY `person`.`made_on` desc";
         	}
         	
         	$cmd = new DatabaseCommand($sql);

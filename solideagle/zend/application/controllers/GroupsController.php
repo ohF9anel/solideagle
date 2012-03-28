@@ -43,18 +43,43 @@ class GroupsController extends Zend_Controller_Action
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
 		
-		
-		 
 		$arr = groupsToJson(Group::getTree());
-		 
-		 
-	
 
 		echo json_encode($arr);
-		 
-		
-		
+	}
 	
+	public function getgroupbreadcrumbsAction()
+	{
+		$this->_helper->layout()->disableLayout();
+		$this->_helper->viewRenderer->setNoRender(true);
+		
+		$data = $this->_request->getParams();
+		
+		if(!isset($data["groupid"]))
+		{
+			return;
+		}
+			
+		$groupid = $data["groupid"];
+		
+		$group = Group::getGroupById($groupid);
+		
+		
+		
+		if($group === NULL)
+			return;
+		
+		$breadcrumbs= " ";
+		
+		foreach(array_reverse(Group::getParents($group)) as $parentgroup)
+		{
+			$breadcrumbs .= $parentgroup->getName() . " > ";
+		}
+		
+		$breadcrumbs  .= $group->getName();
+		
+		echo $breadcrumbs;
+		
 	}
 
 	public function updategrouppostAction()
@@ -128,7 +153,7 @@ class GroupsController extends Zend_Controller_Action
 					
 					OUManager::Move($oldparents,$newparents,$newGroup);
 				}else{
-					echo "Kan deze OU niet verplaatsen omdat hij subou's bevat";
+					echo "Deze groep kan niet verplaatst worden omdat hij subgroepen bevat.";
 				}
 			}
 			

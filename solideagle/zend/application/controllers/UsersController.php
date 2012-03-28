@@ -17,7 +17,7 @@ class UsersController extends Zend_Controller_Action
 
     public function indexAction()
     {
-    	$this->view->users = Person::getUsersForDisplayByGroup();
+    	//$this->view->users = Person::getUsersForDisplayByGroup();
     	$this->view->groups = Group::getTree();
     }
 
@@ -31,6 +31,7 @@ class UsersController extends Zend_Controller_Action
 		{
 			$groupid = $data["gid"];
 			$this->view->group = Group::getGroupById($groupid);
+			$this->view->types = Type::getAll();
 		}else{
 			exit();
 		}

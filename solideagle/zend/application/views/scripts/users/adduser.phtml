@@ -1,7 +1,37 @@
 <script>
 	$(function(){
 
+		$("#groupbreadcrumbs").load("<?php echo $this->SE_path . '/groups/getgroupbreadcrumbs?groupid=' . $this->group->getId() ?>");
+			
+				
+				$('#myModal').modal('show');
+		
+
                 $(".collapseAdditionalInfo").collapse();
+
+                $( "#txtBirthDate" ).datepicker({ 
+                    changeYear: true,
+                    changeMonth: true,
+                    minDate: new Date(1900, 1 - 1, 1),
+                    yearRange: "-100:+0",
+                    dateFormat: "dd-mm-yy"
+                }).css("cursor","default").attr("readonly","readonly");
+
+                $( "#txtActiveFrom" ).datepicker().datepicker({ 
+                    changeYear: true,
+                    changeMonth: true,
+                    minDate: new Date(1900, 1 - 1, 1),
+                    yearRange: "-100:+0",
+                    dateFormat: "dd-mm-yy"
+                }).css("cursor","default").attr("readonly","readonly");
+
+                $( "#txtActiveUntill" ).datepicker().datepicker({ 
+                    changeYear: true,
+                    changeMonth: true,
+                    minDate: new Date(1900, 1 - 1, 1),
+                    yearRange: "-100:+0",
+                    dateFormat: "dd-mm-yy"
+                }).css("cursor","default").attr("readonly","readonly");
 
 		$("#formAddUser").ajaxForm({
 			success: function(responseText, statusText, xhr, $form) { 
@@ -10,8 +40,9 @@
 				{
 					alert(responseText);
 				}else{
-					showUsers();
-					updateTree();
+					
+					$('#myModal').modal('hide');
+					updateUsers();
 				}
 	    } });
 		
@@ -20,254 +51,295 @@
 </script>
 
 
+<?php //modal hide fade ?>
 <form class="form-horizontal"
 	action="<?php echo $this->SE_path . "/users/adduserpost" ?>"
 	method="post" id="formAddUser">
-	<fieldset>
-		<legend>Gebruiker maken</legend>
-                
-                <div class="row-fluid">
-                    
-                    <div class="span6">
 
-                        <div class="control-group">
-                                <label class="control-label" for="txtFirstName">Voornaam</label>
-                                <div class="controls">
-                                        <input id="txtFirstName" name="txtFirstName" class="input-xlarge" type="text"
-                                                value="">
-                                </div>
-                        </div>
+	<div class="hide SEsupermodal" id="myModal">
+		<div>
+			<div class="modal-header">
+				<a class="close" data-dismiss="modal">×</a>
+				<h3 id="modaltitle">Gebruiker maken<small id="groupbreadcrumbs"></small></h3>
+			</div>
+			<div class="modal-body">
+				<fieldset>
+					<!--  <legend>Gebruiker maken</legend>-->
 
-                        <div class="control-group">
-                                <label class="control-label" for="txtName">Naam</label>
-                                <div class="controls">
-                                        <input id="txtName" name="txtName" class="input-xlarge" type="text"
-                                                value="">
-                                </div>
-                        </div>
+					<div class="row-fluid">
 
-                        <div class="control-group">
-                            <label class="control-label">Geslacht</label>
-                            <div class="controls">
-                                <label class="radio inline">
-                                    <input type="radio" checked="" value="M" id="btnGenderMale" name ="btnGender">
-                                    Man
-                                </label>
-                                <label class="radio inline">
-                                    <input type="radio" checked="" value="V" id="btnGenderFemale" name ="btnGender">
-                                    Vrouw
-                                </label>
-                            </div>
-                        </div>
-                        
-                        <div class="control-group">
-                            <label class="control-label" for="txtEmail">Email adres</label>
-                            <div class="controls">
-                                    <input id="txtEmail" name="txtEmail" class="input-xlarge" type="text"
-                                            value="">
-                            </div>
-                        </div>
-                        
-                        <div class="control-group">
-                            <label class="control-label" for="txtPhone">Telefoonnummer</label>
-                            <div class="controls">
-                                    <input id="txtPhone" name="txtPhone" class="input-xlarge" type="text"
-                                            value="">
-                            </div>
-                        </div>
+						<div class="span6">
 
-                    </div>
-                    
-                    <div class="span6">
-                        
-                        <div class="control-group">
-                                <label class="control-label" for="txtUsername">Gebruikersnaam</label>
-                                <div class="controls">
-                                    <div class="input-append">
-                                            <input id="txtUsername" size="16" name="txtUsername" class="span2" type="text"
-                                                    value=""><button type="button" id="btnGenerateUsername" class="btn">Genereer!</button>
-                                    </div>
-                                </div>
-                        </div>
-                      
-                        <div class="control-group">
-                                <label class="control-label" for="txtPassword">Wachtwoord</label>
-                                <div class="controls">
-                                    <div class="input-append">
-                                            <input id="txtPassword" size="16" name="txtPassword" class="span2" type="text"
-                                                    value=""><button type="button" id="btnGeneratePassword" class="btn">Genereer!</button>
-                                    </div>
-                                </div>
-                        </div>
-                        
-                        <div class="control-group">
-                                <label class="control-label" for="cbActive">Account</label>
-                                <div class="controls">
-                                    <label class="checkbox">
-                                        <input id="cbActive" name="cbActive" type="checkbox">
-                                        actief
-                                    </label>
-                                </div>
-                        </div>
-                        
-                        <div class="control-group">
-                                <label class="control-label" for="txtActiveUntill">Actief tot</label>
-                                <div class="controls">
-                                        <input id="txtActiveUntill" name="txtActiveUntill" class="input-xlarge" type="text"
-                                                value="">
-                                </div>
-                        </div>
-                        
-                        <div class="control-group">
-                                <label class="control-label" for="txtActiveFrom">Actief vanaf</label>
-                                <div class="controls">
-                                        <input id="txtActiveFrom" name="txtActiveFrom" class="input-xlarge" type="text"
-                                                value="">
-                                </div>
-                        </div>
-                        
-                    </div>
-                    
-                </div>
-                
-                <div class="accordion-heading">
-                    <a href="#collapseOne" data-toggle="collapse" class="accordion-toggle">
-                        Vul verdere gegevens in
-                    </a>
-                </div>
-                
-                <div class="accordion-body collapse" id="collapseOne" style="height: 0px;">
-                    
-                    <div class="accordion-inner">
-                        
-                        <div class="row-fluid">
-                    
-                            <div class="span6">
+							<div class="control-group">
+								<label class="control-label" for="cbActive">Type</label>
+								<div class="controls">
 
-                                <div class="control-group">
-                                        <label class="control-label" for="txtBirthPlace">Geboorteplaats</label>
-                                        <div class="controls">
-                                                <input id="txtBirthPlace" name="txtBirthPlace" class="input-xlarge" type="text"
-                                                        value="">
-                                        </div>
-                                </div>
+									<?php foreach($this->types as $type)
+                                        {?>
 
-                                <div class="control-group">
-                                        <label class="control-label" for="txtNatinality">Nationaliteit</label>
-                                        <div class="controls">
-                                                <input id="txtNationality" name="txtNationality" class="input-xlarge" type="text"
-                                                        value="">
-                                        </div>
-                                </div>
+									<label class="checkbox inline SEinline"> <input name="ptype[]"
+										value="<?php echo $type->getId(); ?>" type="checkbox"> <?php echo $type->getTypeName(); ?>
+									</label>
 
-                                <div class="control-group">
-                                        <label class="control-label" for="txtBirthDate">Geboortedatum</label>
-                                        <div class="controls">
-                                                <input id="txtBirthDate" name="txtBirthDate" class="input-xlarge" type="text"
-                                                        value="">
-                                        </div>
-                                </div>
+									<?php } ?>
 
-                                <div class="control-group">
-                                        <label class="control-label" for="txtStreet">Straat</label>
-                                        <div class="controls">
-                                                <input id="txtStreet" name="txtStreet" class="input-xlarge" type="text"
-                                                        value="">
-                                        </div>
-                                </div>
-
-                                <div class="control-group">
-                                        <label class="control-label" for="txtHouseNumber">Huisnummer</label>
-                                        <div class="controls">
-                                                <input id="txtHouseNumber" name="txtHouseNumber" class="input-xlarge" type="text"
-                                                        value="">
-                                        </div>
-                                </div>
-
-                                <div class="control-group">
-                                        <label class="control-label" for="txtCity">Woonplaats</label>
-                                        <div class="controls">
-                                                <input id="txtCity" name="txtCity" class="input-xlarge" type="text"
-                                                        value="">
-                                        </div>
-                                </div>
-
-                                <div class="control-group">
-                                        <label class="control-label" for="txtCountry">Land</label>
-                                        <div class="controls">
-                                                <input id="txtCountry" name="txtCountry" class="input-xlarge" type="text"
-                                                        value="">
-                                        </div>
-                                </div>
-
-                            </div>
-
-                            <div class="span6">
-
-                                <div class="control-group">
-                                        <label class="control-label" for="txtPhone2">Telefoonnummer 2</label>
-                                        <div class="controls">
-                                                <input id="txtPhone2" name="txtPhone2" class="input-xlarge" type="text"
-                                                        value="">
-                                        </div>
-                                </div>
-
-                                <div class="control-group">
-                                        <label class="control-label" for="txtMobile">GSM-nummer</label>
-                                        <div class="controls">
-                                                <input id="txtMobile" name="txtMobile" class="input-xlarge" type="text"
-                                                        value="">
-                                        </div>
-                                </div>
-
-                                <div class="control-group">
-                                        <label class="control-label" for="txtStamnumber">Stamnummer student</label>
-                                        <div class="controls">
-                                                <input id="txtStamnumber" name="txtStamnumber" class="input-xlarge" type="text"
-                                                        value="">
-                                        </div>
-                                </div>
-
-                                <div class="control-group">
-                                        <label class="control-label" for="txtPreviousSchool">Vorige school student</label>
-                                        <div class="controls">
-                                                <input id="txtPreviousSchool" name="txtPreviousSchool" class="input-xlarge" type="text"
-                                                        value="">
-                                        </div>
-                                </div>
-
-                                <div class="control-group">
-                                        <label class="control-label" for="txtParentOccupation">Beroep ouder</label>
-                                        <div class="controls">
-                                                <input id="txtParentOccupation" name="txtParentOccupation" class="input-xlarge" type="text"
-                                                        value="">
-                                        </div>
-                                </div>
-
-                                <div class="control-group">
-                                        <label class="control-label" for="txtOtherInformation">Extra informatie</label>
-                                        <div class="controls">
-                                                <textarea rows="1" id="txtOtherInformation" class="input-xlarge"></textarea>
-                                        </div>
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-              </div>
-                
-                
-                    
-                
+								</div>
+							</div>
 
 
-		<div class="form-actions">
-		<button class="btn btn-primary" type="submit">Opslaan</button>
-		
+							<div class="control-group">
+								<label class="control-label" for="txtFirstName">Voornaam</label>
+								<div class="controls">
+									<input id="txtFirstName" name="txtFirstName"
+										class="input-xlarge" type="text" value="">
+								</div>
+							</div>
+
+							<div class="control-group">
+								<label class="control-label" for="txtName">Naam</label>
+								<div class="controls">
+									<input id="txtName" name="txtName" class="input-xlarge"
+										type="text" value="">
+								</div>
+							</div>
+
+							<div class="control-group">
+								<label class="control-label">Geslacht</label>
+								<div class="controls">
+									<label class="radio inline"> <input type="radio"
+										checked="checked" value="M" id="btnGenderMale"
+										name="btnGender"> Man
+									</label> <label class="radio inline"> <input type="radio"
+										value="V" id="btnGenderFemale" name="btnGender"> Vrouw
+									</label>
+								</div>
+							</div>
+
+							<div class="control-group">
+								<label class="control-label" for="txtBirthDate">Geboortedatum</label>
+								<div class="controls">
+									<input id="txtBirthDate" name="txtBirthDate"
+										class="input-xlarge" type="text" value="">
+								</div>
+							</div>
+
+							<div class="control-group">
+								<label class="control-label" for="txtEmail">Email adres</label>
+								<div class="controls">
+									<input id="txtEmail" name="txtEmail" class="input-xlarge"
+										type="text" value="">
+								</div>
+							</div>
+
+							<div class="control-group">
+								<label class="control-label" for="txtPhone">Telefoonnummer</label>
+								<div class="controls">
+									<input id="txtPhone" name="txtPhone" class="input-xlarge"
+										type="text" value="">
+								</div>
+							</div>
+
+						</div>
+
+						<div class="span6">
+
+							<div class="control-group">
+								<label class="control-label" for="txtUsername">Gebruikersnaam</label>
+								<div class="controls">
+									<div class="input-append">
+										<input id="txtUsername" size="16" name="txtUsername"
+											class="span2" type="text" value="">
+										<button type="button" id="btnGenerateUsername" class="btn">Genereer!</button>
+									</div>
+								</div>
+							</div>
+
+							<div class="control-group">
+								<label class="control-label" for="txtPassword">Wachtwoord</label>
+								<div class="controls">
+									<div class="input-append">
+										<input id="txtPassword" size="16" name="txtPassword"
+											class="span2" type="text" value="">
+										<button type="button" id="btnGeneratePassword" class="btn">Genereer!</button>
+									</div>
+								</div>
+							</div>
+
+							<div class="control-group">
+								<label class="control-label" for="cbActive">Account</label>
+								<div class="controls">
+									<label class="checkbox"> <input id="cbActive" checked="checked"
+										name="cbActive" type="checkbox"> actief
+									</label>
+								</div>
+							</div>
+
+
+
+							<div class="control-group">
+								<label class="control-label" for="txtActiveFrom">Actief vanaf</label>
+								<div class="controls">
+									<input id="txtActiveFrom" name="txtActiveFrom"
+										class="input-xlarge" type="text" value="">
+								</div>
+							</div>
+
+							<div class="control-group">
+								<label class="control-label" for="txtActiveUntill">Actief tot</label>
+								<div class="controls">
+									<input id="txtActiveUntill" name="txtActiveUntill"
+										class="input-xlarge" type="text" value="">
+								</div>
+							</div>
+
+							<div class="control-group">
+								<label class="control-label" for="txtOtherInformation">Extra
+									informatie</label>
+								<div class="controls">
+									<textarea rows="1" id="txtOtherInformation"
+										class="input-xlarge"></textarea>
+								</div>
+							</div>
+
+						</div>
+
+					</div>
+
+					<div class="accordion-heading">
+						<a href="#collapseOne" data-toggle="collapse"
+							class="accordion-toggle"> Vul verdere gegevens in </a>
+					</div>
+
+					<div class="accordion-body collapse" id="collapseOne"
+						style="height: 0px;">
+
+						<div class="accordion-inner">
+
+							<div class="row-fluid">
+
+								<div class="span6">
+
+									<div class="control-group">
+										<label class="control-label" for="txtPhone2">Telefoonnummer 2</label>
+										<div class="controls">
+											<input id="txtPhone2" name="txtPhone2" class="input-xlarge"
+												type="text" value="">
+										</div>
+									</div>
+
+									<div class="control-group">
+										<label class="control-label" for="txtMobile">GSM-nummer</label>
+										<div class="controls">
+											<input id="txtMobile" name="txtMobile" class="input-xlarge"
+												type="text" value="">
+										</div>
+									</div>
+
+									<div class="control-group">
+										<label class="control-label" for="txtBirthPlace">Geboorteplaats</label>
+										<div class="controls">
+											<input id="txtBirthPlace" name="txtBirthPlace"
+												class="input-xlarge" type="text" value="">
+										</div>
+									</div>
+
+									<div class="control-group">
+										<label class="control-label" for="txtNatinality">Nationaliteit</label>
+										<div class="controls">
+											<input id="txtNationality" name="txtNationality"
+												class="input-xlarge" type="text" value="">
+										</div>
+									</div>
+
+
+
+									<div class="control-group">
+										<label class="control-label" for="txtStreet">Straat</label>
+										<div class="controls">
+											<input id="txtStreet" name="txtStreet" class="input-xlarge"
+												type="text" value="">
+										</div>
+									</div>
+
+									<div class="control-group">
+										<label class="control-label" for="txtHouseNumber">Huisnummer</label>
+										<div class="controls">
+											<input id="txtHouseNumber" name="txtHouseNumber"
+												class="input-xlarge" type="text" value="">
+										</div>
+									</div>
+
+									<div class="control-group">
+										<label class="control-label" for="txtCity">Woonplaats</label>
+										<div class="controls">
+											<input id="txtCity" name="txtCity" class="input-xlarge"
+												type="text" value="">
+										</div>
+									</div>
+
+									<div class="control-group">
+										<label class="control-label" for="txtCountry">Land</label>
+										<div class="controls">
+											<input id="txtCountry" name="txtCountry" class="input-xlarge"
+												type="text" value="">
+										</div>
+									</div>
+
+								</div>
+
+								<div class="span6">
+
+
+
+									<div class="control-group">
+										<label class="control-label" for="txtStamnumber">Stamnummer</label>
+										<div class="controls">
+											<input id="txtStamnumber" name="txtStamnumber"
+												class="input-xlarge" type="text" value="">
+										</div>
+									</div>
+
+									<div class="control-group">
+										<label class="control-label" for="txtPreviousSchool">Vorige
+											school</label>
+										<div class="controls">
+											<input id="txtPreviousSchool" name="txtPreviousSchool"
+												class="input-xlarge" type="text" value="">
+										</div>
+									</div>
+
+									<div class="control-group">
+										<label class="control-label" for="txtParentOccupation">Beroep</label>
+										<div class="controls">
+											<input id="txtParentOccupation" name="txtParentOccupation"
+												class="input-xlarge" type="text" value="">
+										</div>
+									</div>
+
+
+
+								</div>
+
+							</div>
+
+						</div>
+					</div>
+
+
+					<!--<div class="form-actions">
+						<button class="btn btn-primary" type="submit">Opslaan</button>
+
+					</div>-->
+
+					<input type="hidden" name="groupid"
+						value="<?php echo $this->group->getId(); ?>">
+				</fieldset>
+			</div>
+			 <div class="modal-footer">
+				<a href="#" class="btn" data-dismiss="modal">Annuleren</a> 
+				<button class="btn btn-primary" type="submit">Opslaan</button>
+			</div> 
 		</div>
-		
-		<input type="hidden" name="groupid" value="<?php echo $this->group->getId(); ?>">
-	</fieldset>
+	</div>
+
 </form>
