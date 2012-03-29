@@ -26,7 +26,7 @@ class ManageOU
         
         if ($childGroup == null)
         {
-            Logger::log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nChild group cannot be null.", PEAR_LOG_ERR);
+            Logger::log("Child group cannot be null.");
             return new StatusReport(false,"Nieuwe group is NULL");
         }
         
@@ -49,14 +49,12 @@ class ManageOU
         }
         
         return new StatusReport($r,ldap_error($connLdap->getConn()));
-       
     }
     
     public static function moveOU($oldparents,$newparents,$group)
     {
     	$connLdap = ConnectionLdap::singleton();
-    	 
-    	 
+	 
     	$oldDn = "";
     	for($i = 0; $i < sizeof($oldparents); $i++)
     	{
@@ -78,13 +76,12 @@ class ManageOU
     	 
     	echo ldap_error($connLdap->getConn());
     	
-    	return $r;
+    	return new StatusReport($r,ldap_error($connLdap->getConn()));
     }
     
     public static function modifyOU($parents,$oldgroup,$newgroup)
     {
     	$connLdap = ConnectionLdap::singleton();
-    	
     	
     	$oldDn = "";
     	for($i = 0; $i < sizeof($parents); $i++)
@@ -98,7 +95,7 @@ class ManageOU
     	
     	$r = ldap_rename($connLdap->getConn(), $oldOuInfo[0]['distinguishedname'][0], "OU=" . ConnectionLdap::ldap_escape($newgroup->getName(), true), NULL, true);
     	
-    	return $r;
+    	return new StatusReport($r,ldap_error($connLdap->getConn()));
     }
     
     public static function removeOU($arrParentsGroups, $childGroup)
@@ -110,26 +107,26 @@ class ManageOU
         
         if ($childGroup == null)
         {
-            Logger::log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nChild group cannot be null.", PEAR_LOG_ERR);
+            Logger::log("Child group cannot be null.");
             return false;
         }
         
         // every group should have a parent, because root is gebruikers
         if ($arrParentsGroups == null)
         {
-            Logger::log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \n\"" . $childGroup->getName() . "\" group has no parents, every group should be child of root!", PEAR_LOG_ERR);
+            Logger::log("\"" . $childGroup->getName() . "\" group has no parents, every group should be child of root (gebruikers)!");
             return false;
         }
         
         $info['objectClass'] = "organizationalUnit";
         $info["ou"] = ConnectionLDAP::escapeForLDAPSearch($childGroup->getName());
         
-        $sr = ldap_search($connLdap->getConn(), "OU=" . Config::$ad_users_ou . ", " . Config::$ad_dc, "(OU=" .  $info["ou"] . ")");
+        $sr = ldap_search($connLdap->getConn(), Config::$ad_dc, "(OU=" .  $info["ou"] . ")");
         $oldOuInfo = ldap_get_entries($connLdap->getConn(), $sr);
 
         if (!isset($oldOuInfo[0]))
         {
-            Logger::log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nOU \"" . $childGroup->getName() . "\" trying to update in AD not found in: \"OU=" . Config::$ad_users_ou . ", " .Config::$ad_dc. "\".",PEAR_LOG_ERR);
+            Logger::log("OU \"" . $childGroup->getName() . "\" trying to update in AD not found in: \"" . Config::$ad_dc. "\".");
             return false;
         }
         

@@ -5,28 +5,26 @@ namespace solideagle\plugins\ad;
 use solideagle\data_access\Group;
 use solideagle\logging\Logger;
 use solideagle\Config;
+use solideagle\plugins\StatusReport;
 
 class ManageUser
 {
     public static function addUser($userInfo, $arrParentsOUs)
     {
         $connLdap = ConnectionLDAP::singleton();
-        
         if ($connLdap->getConn() == null)
-            return false;
+            return new StatusReport(false, "Connection to AD cannot be made.");
         
         // every user should have a parent ou, because root ou is gebruikers
         if ($arrParentsOUs == null)
         {
-            Logger::log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \n" . var_export($arrParentsOUs, true) . "\nuser has no parent groups, every user should be at least child of root (gebruikers).", PEAR_LOG_ERR);
+            Logger::log(var_export($arrParentsOUs, true) . "\nuser has no parent groups, every user should be at least child of root (gebruikers).");
             return false;
         }
 
         $userInfo["objectclass"] = "user";
         $userInfo["useraccountcontrol"] = $userInfo['enabled'] ? "66048" : "66050";
-        
-//        $group = $userInfo['groups'][0];
-        
+
         // attribute "groups" and "enabled" not permitted in userInfo
         $groups = $userInfo['groups'];
         unset($userInfo['groups']);
@@ -46,27 +44,29 @@ class ManageUser
         }
         
         $dn .= Config::$ad_dc;
-        $ret = ldap_add($connLdap->getConn(), $dn, $userInfo);
-        if ($ret)
+        $r = ldap_add($connLdap->getConn(), $dn, $userInfo);
+        if ($r)
         {
             ManageUser::addUserToGroups($groups, $dn);
         }
         else 
         {
-            Logger::log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \n" . var_export($userInfo, true) . "\nReason: " . var_export(array($ret, ldap_error($connLdap->getConn())), true), PEAR_LOG_ERR);
+            Logger::log("User: " . var_export($userInfo, true) . " cannot be added in: " . $dn);
         }
-
-        return array($ret, ldap_error($connLdap->getConn()));
+        
+        return new StatusReport($r, ldap_error($connLdap->getConn()));
     }
     
     public static function addUserToGroups($groups, $dn)
     {
-        $connLdap = ConnectionLdap::singleton();
+        $connLdap = ConnectionLDAP::singleton();
+        if ($connLdap->getConn() == null)
+            return new StatusReport(false, "Connection to AD cannot be made.");
         
         if ($connLdap->getConn() == null)
             return false;
         
-        $ret = true;
+        $r = true;
         
         // add user to correct group
         foreach($groups as $group)
@@ -75,20 +75,19 @@ class ManageUser
             $group_info['member'] = $dn;
             if (!ldap_mod_add($connLdap->getConn(), $group_name, $group_info))
             {
-                Logger::log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \nUser cannot be added to group \"" . $group_name . "\"", PEAR_LOG_ERR);
-                $ret = false;
+                Logger::log("User cannot be added to group: \"" . $group_name . "\"");
+                $r = false;
             }
         }
         
-        return $ret;
+        return new StatusReport($r,ldap_error($connLdap->getConn()));
     }
     
     public static function updateUser($userInfo, $arrParentsOUs)
     {
         $connLdap = ConnectionLDAP::singleton();
-        
         if ($connLdap->getConn() == null)
-            return false;
+            return new StatusReport(false, "Connection to AD cannot be made.");
         
         $userInfo["objectclass"] = "user";
         $userInfo["useraccountcontrol"] = $userInfo['enabled'] ? "66048" : "66050";
@@ -105,12 +104,12 @@ class ManageUser
         $parentDn .= Config::$ad_dc;
         $dn = "CN=" . $userInfo['cn'] . ", " . $parentDn;
         
-        $sr = ldap_search($connLdap->getConn(), "OU=" . Config::$ad_users_ou . ", " . Config::$ad_dc, "(uid=" . $userInfo['uid'] . ")");
+        $sr = ldap_search($connLdap->getConn(), Config::$ad_dc, "(uid=" . $userInfo['uid'] . ")");
         $oldUserInfo = ldap_get_entries($connLdap->getConn(), $sr);
         
         if (!isset($oldUserInfo[0]))
         {
-            Logger::log("User \"" . $userInfo['uid'] . "\" trying to update in AD not found in: \"OU=" . Config::$ad_users_ou . ", " .Config::$ad_dc. "\".",PEAR_LOG_ERR);
+            Logger::log("User \"" . $userInfo['uid'] . "\" trying to update in AD not found in: \"" . Config::$ad_dc. "\".");
             return false;
         }
         // move user to other ou?
@@ -149,17 +148,31 @@ class ManageUser
         }
         else
         {
-            Logger::log(__FILE__ . " " . __FUNCTION__ . " on line " . __LINE__ . ": \n
-                " . var_export($userInfo, true) . "\n: user cannot be modified", PEAR_LOG_ERR);
+            Logger::log(var_export($userInfo, true) . "\n: user cannot be modified");
+            return new StatusReport($ret,ldap_error($connLdap->getConn()));
         }
         
-        return array($ret, ldap_error($connLdap->getConn()));
-        
+        return new StatusReport($ret, ldap_error($connLdap->getConn()));
     }
     
-    public static function delUser($userName, $arrParentsOUs)
+    public static function delUser($userName)
     {
-        
+        $connLdap = ConnectionLDAP::singleton();
+        if ($connLdap->getConn() == null)
+            return new StatusReport(false, "Connection to AD cannot be made.");
+        $sr = ldap_search($connLdap->getConn(), Config::$ad_dc, "(sAMAccountName=" . $userName . ")");
+        $userInfo = ldap_get_entries($connLdap->getConn(), $sr);
+        if (!isset($userInfo[0]))
+        {
+            Logger::log("User \"" . $userName . "\" trying to delete in AD not found in: \"" . Config::$ad_dc. "\".");
+            return new StatusReport(false, "Gebruiker \"" . $userName . "\" niet gevonden in: \"" . Config::$ad_dc. "\". Kan niet verwijderen.");
+        }
+        // delete user
+        else 
+        {
+            $r = ldap_delete($connLdap->getConn(), $userInfo[0]['dn']);
+        }
+        return new StatusReport($r,ldap_error($connLdap->getConn()));
     }
 }
 
