@@ -31,7 +31,10 @@ class ConnectionLDAP
             ldap_set_option($this->conn, LDAP_OPT_REFERRALS, 0);
             
             if (!ldap_bind($this->conn, Config::$ad_username, Config::$ad_password))
+            {
+                $this->conn = null;
                 Logger::log("Could not bind to AD server with given credentials.");  
+            }
         } 
     }
     
