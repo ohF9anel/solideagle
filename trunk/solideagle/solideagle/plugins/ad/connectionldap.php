@@ -15,22 +15,30 @@ class ConnectionLDAP
 
     private function __construct()
     {
-        $this->conn = ldap_connect(Config::$ad_ldaps_url);
-        if ($this->conn == null)
-             Logger::log("Connection to AD cannot be made.");
+        $this->conn = ldap_connect('ldaps://10.3.7.111');
         
-        ldap_set_option($this->conn, LDAP_OPT_PROTOCOL_VERSION, 3);
-        ldap_set_option($this->conn, LDAP_OPT_REFERRALS, 0);
-        
-        // bind to the LDAP server specified above 
-        if (!ldap_bind($this->conn, Config::$ad_username, Config::$ad_password))
-            Logger::log("Could not bind to AD server with given credentials.");  
+        // try anonymous login to test connection
+        $anon = @ldap_bind($this->conn);
+        if (!$anon) {
+            $this->conn = null;
+            // test connection failed
+            Logger::log("Connection to AD cannot be made on: " . Config::$ad_dc_host);
+        }
+        else {
+            // test passed
+            // bind to the LDAP server specified above 
+            ldap_set_option($this->conn, LDAP_OPT_PROTOCOL_VERSION, 3);
+            ldap_set_option($this->conn, LDAP_OPT_REFERRALS, 0);
+            
+            if (!ldap_bind($this->conn, Config::$ad_username, Config::$ad_password))
+                Logger::log("Could not bind to AD server with given credentials.");  
+        } 
     }
     
     public function __destruct()
     {
-        // all done? clean up
-        ldap_close($this->conn);
+        if ($this->conn != null)
+            ldap_close($this->conn);
     }
     
     public static function singleton()
@@ -44,7 +52,6 @@ class ConnectionLDAP
     
     public function getConn()
     {
-    
         return $this->conn;
     }
     

@@ -7,7 +7,7 @@ namespace solideagle\data_access;
 class TaskInserter
 {	
 	
-	private static $TASKINSERTER_ENABLED = false;
+	private static $TASKINSERTER_ENABLED = true;
 	
 	//impl
 	const TypeGroup = 0;

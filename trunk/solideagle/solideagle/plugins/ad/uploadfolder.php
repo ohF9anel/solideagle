@@ -20,10 +20,10 @@ class UploadFolder
         {
             $conn->write("mkdir " . $path . "\\" . $username . "\\" . Config::$dir_name_uploads . "\n");
             // give access to
-            $conn->write("setacl -ot file -actn ace -ace \"n:" .Config::$ad_netbios . "\\" . $username . ";s:n;p:change;i:sc,so\" -on " . $path . "\\" . $username . "\\" . Config::$dir_name_uploads. "\n");
-            $conn->write("setacl -ot file -actn ace -ace \"n:" .Config::$ad_netbios . "\\Domain Admins;s:n;p:full;i:sc,so\" -on " . $path . "\\" . $username . "\\" . Config::$dir_name_uploads. "\n");
+            $conn->write("setacl -ot file -actn ace -ace \"n:" .Config::$ad_dns . "\\" . $username . ";s:n;p:change;i:sc,so\" -on " . $path . "\\" . $username . "\\" . Config::$dir_name_uploads. "\n");
+            $conn->write("setacl -ot file -actn ace -ace \"n:" .Config::$ad_dns . "\\Domain Admins;s:n;p:full;i:sc,so\" -on " . $path . "\\" . $username . "\\" . Config::$dir_name_uploads. "\n");
             // protection folder
-            $conn->write("setacl -ot file -actn ace -ace \"n:" .Config::$ad_netbios . "\\" . $username . ";s:n;m:deny;p:delete;i:np\" -on " . $path . "\\" . $username . "\\" . Config::$dir_name_uploads . "\n");
+            $conn->write("setacl -ot file -actn ace -ace \"n:" .Config::$ad_dns . "\\" . $username . ";s:n;m:deny;p:delete;i:np\" -on " . $path . "\\" . $username . "\\" . Config::$dir_name_uploads . "\n");
             // people can write once
             $conn->write("setacl -ot file -actn ace -ace \"n:Authenticated Users;s:n;p:FILE_LIST_DIRECTORY,FILE_ADD_FILE,FILE_ADD_SUBDIRECTORY;i:sc,so\" -on " . $path . "\\" . $username . "\\" . Config::$dir_name_uploads . "\n");
 

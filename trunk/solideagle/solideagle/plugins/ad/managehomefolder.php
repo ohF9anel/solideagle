@@ -33,7 +33,7 @@ class ManageHomeFolder
     public function startHomeFolderManager()
     {
     	
-    SSHManager::singleton()->getConnection($this->server)->write("cmd\n");
+        SSHManager::singleton()->getConnection($this->server)->write("cmd\n");
     	
         HomeFolder::createHomeFolder($this->server, $this->homeFolderPath, $this->username);
         ScanFolder::setScanFolder($this->server, $this->homeFolderPath, $this->scanSharePath, $this->username);

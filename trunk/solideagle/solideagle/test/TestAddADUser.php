@@ -37,6 +37,7 @@ $user->addMemberOfGroups(Group::getGroupById($person->getGroupId()));
 
 $parents = Group::getParents(Group::getGroupById($person->getGroupId()));
 
-ManageUser::addUser($user->getUserInfo(), $parents);
+var_dump("start updating");
+ManageUser::updateUser($user->getUserInfo(), $parents);
 
 ?>
