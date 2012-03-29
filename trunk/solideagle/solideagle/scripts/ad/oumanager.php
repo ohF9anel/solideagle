@@ -2,8 +2,6 @@
 namespace solideagle\scripts\ad;
 
 use solideagle\plugins\ad\ManageOU;
-
-use solideagle\data_access\TaskInserter;
 use solideagle\data_access\TaskQueue;
 use solideagle\data_access\TaskInterface;
 
@@ -80,9 +78,9 @@ class oumanager implements TaskInterface
 		$config["parents"] = $parentgroups;
 		$config["group"] = $newgroup;
 		
-		$taskInserter = new TaskInserter(self::myTaskId,$newgroup->getId(),TaskInserter::TypeGroup);
+
 		
-		$taskInserter->addToQueue($config);
+		TaskQueue::insertNewTask($config,$newgroup->getId(),TaskQueue::TypeGroup);
 	}
 	
 	public static function prepareDeleteGroup($parentgroups,$newgroup)
@@ -91,9 +89,7 @@ class oumanager implements TaskInterface
 		$config["parents"] = $parentgroups;
 		$config["group"] = $newgroup;
 		
-		$taskInserter = new TaskInserter(self::myTaskId,$newgroup->getId(),TaskInserter::TypeGroup);
-		
-		$taskInserter->addToQueue($config);
+		TaskQueue::insertNewTask($config,$newgroup->getId(),TaskQueue::TypeGroup);
 	}
 	
 	public static function prepareModifyGroup($parentgroups,$oldgroup,$newgroup)
@@ -103,9 +99,7 @@ class oumanager implements TaskInterface
 		$config["newgroup"] = $newgroup;
 		$config["parents"] = $parentgroups;
 		
-		$taskInserter = new TaskInserter(self::myTaskId,$newgroup->getId(),TaskInserter::TypeGroup);
-		
-		$taskInserter->addToQueue($config);
+		TaskQueue::insertNewTask($config,$newgroup->getId(),TaskQueue::TypeGroup);
 	}
 	
 	public static function prepareMoveGroup($newparentsgroup,$oldparentsgroup,$group)
@@ -115,9 +109,7 @@ class oumanager implements TaskInterface
 		$config["oldparents"] = $oldparentsgroup;
 		$config["group"] = $group;
 		
-		$taskInserter = new TaskInserter(self::myTaskId,$group->getId(),TaskInserter::TypeGroup);
-		
-		$taskInserter->addToQueue($config);
+		TaskQueue::insertNewTask($config,$newgroup->getId(),TaskQueue::TypeGroup);
 	}
 	
 	public function getParams()

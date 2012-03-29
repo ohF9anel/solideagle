@@ -7,9 +7,7 @@ use solideagle\plugins\ad\ManageUser;
 use solideagle\data_access\Group;
 
 use solideagle\plugins\ad\User;
-
 use solideagle\plugins\ad\ManageHomeFolder;
-use solideagle\data_access\TaskInserter;
 use solideagle\data_access\TaskQueue;
 use solideagle\data_access\TaskInterface;
 
@@ -93,9 +91,8 @@ class usermanager implements TaskInterface
 		$config["action"] = self::ActionAddUser;
                 $config["userInfo"] = User::convertPersonToAdUser($person)->getUserInfo();
 		$config["arrParentsGroups"] = Group::getParents(Group::getGroupById($person->getGroupId()));
-		
-                $taskInserter = new TaskInserter(self::taskId, $person->getId(), TaskInserter::TypePerson);
-		$taskInserter->addToQueue($config);
+
+		TaskQueue::insertNewTask($config, $person->getId());
 	}
         
         public static function prepareUpdateUser($person)
@@ -104,31 +101,28 @@ class usermanager implements TaskInterface
                 $config["userInfo"] = User::convertPersonToAdUser($person)->getUserInfo();
 		$config["arrParentsGroups"] = Group::getParents(Group::getGroupById($person->getGroupId()));
 		
-                $taskInserter = new TaskInserter(self::taskId, $person->getId(), TaskInserter::TypePerson);
-		$taskInserter->addToQueue($config);
+		TaskQueue::insertNewTask($config, $person->getId());
 	}
         
         public static function prepareDelUser($person)
 	{
 		$config["action"] = self::ActionDelUser;
                 $config["username"] = $person->getAccountUsername();
-                $taskInserter = new TaskInserter(self::taskId, $person->getId(), TaskInserter::TypePerson);
-		$taskInserter->addToQueue($config);
+              TaskQueue::insertNewTask($config, $person->getId());
 	}
         
         public static function prepareAddHomeFolder($personId, $server, $username, $homeFolderPath, $scanSharePath, $wwwSharePath, $downloadSharePath, $uploadSharePath)
 	{
 		$config["action"] = self::ActionAddHomeFolder;
                 $config["server"] = $server;
-		$config["username"] = $username;
+				$config["username"] = $username;
                 $config["homeFolderPath"] = $homeFolderPath;
                 $config["scanSharePath"] = $scanSharePath;
                 $config["wwwSharePath"] = $wwwSharePath;
                 $config["downloadSharePath"] = $downloadSharePath;
                 $config["uploadSharePath"] = $uploadSharePath;
 		
-		$taskInserter = new TaskInserter(self::taskId, $personId, TaskInserter::TypePerson);
-		$taskInserter->addToQueue($config);
+	TaskQueue::insertNewTask($config, $personId);
 	}	
 	
 	public function getParams()
