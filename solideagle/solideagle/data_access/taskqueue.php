@@ -60,6 +60,8 @@ class TaskQueue
 	{
 		$tq = new TaskQueue();
 		
+		$traces = debug_backtrace();
+		
 		if($type === self::TypePerson)
 			$tq->setPersonid($personOrGroupid);
 		else 
