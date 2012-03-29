@@ -16,7 +16,9 @@ class UsertasksController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        Logger::log("Hallo ik ben een test");
+        
+    	\solideagle\scripts\Usermanager::Add(NULL);
+    	
     }
 
     public function gettasksforuserAction()

@@ -3,7 +3,6 @@
 namespace solideagle\scripts\ad;
 
 use solideagle\plugins\ad\managegroup;
-use solideagle\data_access\TaskInserter;
 use solideagle\data_access\TaskQueue;
 use solideagle\data_access\TaskInterface;
 use solideagle\data_access\Group;
@@ -65,9 +64,7 @@ class groupmanager implements TaskInterface
         
         $config["memberOfGroup"] = $memberof;
 
-        $taskInserter = new TaskInserter(self::taskId, $group->getId(), TaskInserter::TypeGroup);
-
-        $taskInserter->addToQueue($config);
+        TaskQueue::insertNewTask($config, $group->getId(), TaskQueue::TypeGroup);
     }
 
     public function getParams()

@@ -5,15 +5,20 @@ use solideagle\data_access\database\DatabaseCommand;
 
 class TaskQueue
 {
+	
+	const TypeGroup = 0;
+	const TypePerson = 1;
+	
 	private $id;
 	/**
 	 *
 	 * @var Task
 	 */
-	private $task;
+	
 	private $configuration = array();
 	private $errorcount;
 	private $errormessages;
+	private $task_class;
 	//---only one of these can not be NULL
 	private $groupid = NULL;
 	private $personid = NULL;
@@ -28,24 +33,41 @@ class TaskQueue
 		(
 		`person_id`,
 		`group_id`,
-		`task_id`,
+		`task_class`,
 		`configuration`
 		)
 		VALUES
 		(
 		:personid,
 		:groupid,
-		:task_id,
+		:task_class,
 		:config
 		);";
 
 		$cmd = new DatabaseCommand($sql);
 		$cmd->addParam(":personid", $taskQueue->getPersonid());
 		$cmd->addParam(":groupid", $taskQueue->getGroupid());
-		$cmd->addParam(":task_id", $taskQueue->getTask()->getId());
+		$cmd->addParam(":task_class", $taskQueue->getTask_class());
 		$cmd->addParam(":config", $taskQueue->getConfigurationForDb());
 
 		$cmd->execute();
+	}
+	
+	/*
+	 * default type is Person
+	 */
+	public static function insertNewTask($config,$personOrGroupid,$type = self::TypePerson)
+	{
+		$tq = new TaskQueue();
+		
+		if($type === self::TypePerson)
+			$tq->setPersonid($personOrGroupid);
+		else 
+			$tq->setGroupid($personOrGroupid);
+		
+		$tq->setConfiguration($config);
+		$tq->setTask_class($traces[1]["class"]);
+		self::addToQueue($tq);
 	}
 	
 	public static function getTasksToRun()
@@ -54,7 +76,7 @@ class TaskQueue
 			`task_queue`.`id`,
 			`task_queue`.`person_id`,
 			`task_queue`.`group_id`,
-			`task_queue`.`task_id`,
+			`task_queue`.`task_class`,
 			`task_queue`.`configuration`,
 			`task_queue`.`errorcount`,
 			`task_queue`.`errormessages`
@@ -70,7 +92,7 @@ class TaskQueue
 			$tq->setId($row->id);
 			$tq->setPersonid($row->person_id);
 			$tq->setGroupid($row->group_id);
-			$tq->setTask(Task::getTaskById($row->task_id));
+			$tq->setTask_class($row->task_class);
 			$tq->setConfigurationFromDb($row->configuration);
 			$tq->setErrorcount($row->errorcount);
 			$tq->setErrormessages($row->errormessages);
@@ -174,25 +196,6 @@ class TaskQueue
 		$this->id = $id;
 	}
 	
-	public function setTaskId($id)
-	{
-		$this->task = new Task($id);
-	}
-	
-	/**
-	 * 
-	 * @return Task
-	 */
-	public function getTask()
-	{
-		return $this->task;
-	}
-	
-	public function setTask($task)
-	{
-		$this->task = $task;
-	}
-	
 	public function getErrorcount()
 	{
 		return $this->errorcount;
@@ -211,6 +214,16 @@ class TaskQueue
 	public function setErrormessages($errormessages)
 	{
 		$this->errormessages = $errormessages;
+	}
+
+	public function getTask_class()
+	{
+	    return $this->task_class;
+	}
+
+	public function setTask_class($task_class)
+	{
+	    $this->task_class = $task_class;
 	}
 }
 
