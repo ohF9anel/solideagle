@@ -79,8 +79,9 @@
 								<option value="ignore">Niet verplaatsen</option>
 								<?php foreach($this->groups as $group)
 								{
-
-									?>
+									if($group->getId() === $this->group->getId())
+										continue;
+								?>
 
 								<option value="<?php echo $group->getId(); ?>">
 									<?php echo SuperEntities::encode($group->getName()); ?>
@@ -92,18 +93,6 @@
 						</div>
 					</div>
 
-					<div class="control-group error">
-						<label class="control-label" for="blnDelete">Groep verwijderen</label>
-						<div class="controls">
-							<label class="checkbox"> <input id="blnDelete" name="delete"
-								type="checkbox" value="delete"> Ja, ik wil deze groep
-								verwijderen
-							</label> <label id="lbldeletesure" class="checkbox"> <input
-								id="blnDeleteSure" name="deletesure" type="checkbox"
-								value="delete"> Ja, ik ben zeker
-							</label>
-						</div>
-					</div>
 
 					<input type="hidden" name="groupid"
 						value="<?php echo $this->group->getId() ?>">
@@ -112,7 +101,7 @@
 			</div>
 			<div class="modal-footer">
 				<a href="#" class="btn" data-dismiss="modal">Annuleren</a>
-				<button class="btn btn-primary" type="submit">Opslaan</button>
+				<button class="btn btn-primary" type="submit">Bijwerken</button>
 			</div>
 		</div>
 	</div>

@@ -7,18 +7,18 @@ use solideagle\utilities\SuperEntities;
 class GroupsController extends Zend_Controller_Action
 {
 
-	public function init()
-	{
+    public function init()
+    {
 		/* Initialize action controller here */
-	}
+    }
 
-	public function indexAction()
-	{
+    public function indexAction()
+    {
 		// action body
-	}
+    }
 
-	public function editgroupAction()
-	{
+    public function editgroupAction()
+    {
 		$this->_helper->layout()->disableLayout();
 
 		$data = $this->_request->getParams();
@@ -36,20 +36,20 @@ class GroupsController extends Zend_Controller_Action
 
 	
 
-	}
-	
-	public function getgroupAction()
-	{
+    }
+
+    public function getgroupAction()
+    {
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
 		
 		$arr = groupsToJson(Group::getTree());
 
 		echo json_encode($arr);
-	}
-	
-	public function getgroupbreadcrumbsAction()
-	{
+    }
+
+    public function getgroupbreadcrumbsAction()
+    {
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
 		
@@ -80,10 +80,10 @@ class GroupsController extends Zend_Controller_Action
 		
 		echo $breadcrumbs;
 		
-	}
+    }
 
-	public function updategrouppostAction()
-	{
+    public function updategrouppostAction()
+    {
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
 		 
@@ -98,31 +98,7 @@ class GroupsController extends Zend_Controller_Action
 		}
 		 
 		$groupid = $data["groupid"];
-		 
-		if(isset($data["delete"]) && isset($data["deletesure"]))
-		{
-			$deletethisgroup = Group::getGroupById($groupid);
-			if(count(Group::getChilderen($deletethisgroup)) !== 0)
-			{
-				echo "Deze groep kan niet verwijderd worden omdat hij subgroepen bevat.";
-				return;
-			}
-
-			//TODO: check for users
-
-			if(count(array()) !== 0)
-			{
-				echo "Deze groep kan niet verwijderd worden omdat hij gebruikers bevat.";
-				return;
-			}
-
-			$grp = Group::getGroupById($groupid);
-
-			OUManager::Delete(Group::getParents($grp), $grp);
-
-			Group::delGroupById($groupid);
-		}else{
-			
+		
 			$oldgroup = Group::getGroupById($groupid);
 			
 			
@@ -156,14 +132,54 @@ class GroupsController extends Zend_Controller_Action
 					echo "Deze groep kan niet verplaatst worden omdat hij subgroepen bevat.";
 				}
 			}
-			
-			
-		}
-		 
-	}
 
-	public function addsubgroupAction()
-	{
+    }
+
+    public function deletegrouppostAction()
+    {
+		$this->_helper->layout()->disableLayout();
+		$this->_helper->viewRenderer->setNoRender(true);
+			
+		$data = $this->getRequest()->getParams();
+		
+		if(!isset($data["groupid"]))
+		{
+			
+			return;
+		}
+			
+		$groupid = $data["groupid"];
+		
+		if(isset($data["delete"]) && isset($data["deletesure"]))
+		{
+			$deletethisgroup = Group::getGroupById($groupid);
+			if(count(Group::getChilderen($deletethisgroup)) !== 0)
+			{
+				echo "Deze groep kan niet verwijderd worden omdat hij subgroepen bevat.";
+				return;
+			}
+		
+			//TODO: check for users
+		
+			if(count(array()) !== 0)
+			{
+				echo "Deze groep kan niet verwijderd worden omdat hij gebruikers bevat.";
+				return;
+			}
+		
+			$grp = Group::getGroupById($groupid);
+		
+			OUManager::Delete(Group::getParents($grp), $grp);
+		
+			Group::delGroupById($groupid);
+		}else{
+			echo "U was niet zeker, groep niet verwijderd";
+		}
+		
+    }
+
+    public function addsubgroupAction()
+    {
 		$this->_helper->layout()->disableLayout();
 		 
 		$data = $this->getRequest()->getParams();
@@ -180,10 +196,10 @@ class GroupsController extends Zend_Controller_Action
 
 		}
 		 
-	}
+    }
 
-	public function addsubgrouppostAction()
-	{
+    public function addsubgrouppostAction()
+    {
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
 		 
@@ -220,10 +236,26 @@ class GroupsController extends Zend_Controller_Action
 		}
 		 
 		 
-	}
+    }
+
+    public function deletegroupAction()
+    {
+    	$this->_helper->layout()->disableLayout();
+
+		$data = $this->_request->getParams();
+
+		if(isset($data["gid"]))
+		{
+			$groupid = $data["gid"];
+			$this->view->group = Group::getGroupById($groupid);
+		}else{
+			exit();
+		}
+    }
 
 
 }
+
 
 
 
@@ -256,3 +288,4 @@ function groupsToJson($roots,$isfirst = true)
 	return $thisrootarr;
 
 }
+

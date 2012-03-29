@@ -38,6 +38,13 @@
 					
 				</groupsandusers>	
 				
+				<demo>
+				<label>Taken demo</label>
+					<controller>usertasks</controller>
+					<action>getalltasksforuser</action>
+				
+				
+				</demo>
 				
 				
 				

@@ -62,8 +62,34 @@ class UsertasksController extends Zend_Controller_Action
        		$data["uploadpath"]);
     }
 
+    public function getalltaskforuserAction()
+    {
+        // action body
+    }
+
+    public function getalltasksforuserAction()
+    {
+        if(($person = Person::getPersonById(4)) === NULL)
+      	 	return;
+      	 
+      	 $this->view->person=$person;
+      	 
+      	 $this->view->defaults = new stdClass();
+      	 
+      	 $this->view->defaults->server = "s1.solideagle.lok";
+      	 $this->view->defaults->serverpath = "c:\homefolders";
+      	 $this->view->defaults->scanpath = "c:\scans";
+      	 $this->view->defaults->wwwpath = "c:\www";
+      	 $this->view->defaults->downloadpath = "c:\downloads";
+      	 $this->view->defaults->uploadpath = "c:\uploads";
+    }
+
 
 }
+
+
+
+
 
 
 

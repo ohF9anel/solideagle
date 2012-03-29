@@ -1,0 +1,78 @@
+
+
+
+<script>
+	$(function(){
+
+
+		$('#myModal').modal('show');
+		
+		$("#lbldeletesure").hide();
+
+		$("#blnDelete").click(function(){
+			$("#lbldeletesure").toggle();
+			$("#blnDeleteSure").removeAttr("checked");
+		});
+
+		
+		$("#groupbreadcrumbs").load("<?php echo $this->SE_path . '/groups/getgroupbreadcrumbs?groupid=' . $this->group->getId() ?>");
+		
+		$("#formEditGroup").ajaxForm({
+			success: function(responseText, statusText, xhr, $form) { 
+
+				if(responseText.length > 0)
+				{
+					alert(responseText);
+				}else{
+					$('#myModal').modal('hide');
+					updateTree();
+				}
+				
+	    } });
+		
+	});
+
+</script>
+
+
+
+<form class="form-horizontal"
+	action="<?php echo $this->SE_path . "/groups/deletegrouppost" ?>"
+	method="post" id="formEditGroup">
+
+	<div class="hide SEsupermodal" id="myModal">
+		<div>
+			<div class="modal-header">
+				<a class="close" data-dismiss="modal">×</a>
+				<h3 id="modaltitle">Groep bewerken<small id="groupbreadcrumbs"></small></h3>
+			</div>
+			<div class="modal-body">
+
+				<fieldset>
+					
+					<div class="control-group error">
+						<label class="control-label" for="blnDelete">Groep verwijderen</label>
+						<div class="controls">
+							<label class="checkbox"> <input id="blnDelete" name="delete"
+								type="checkbox" value="delete"> Ja, ik wil deze groep
+								verwijderen
+							</label> <label id="lbldeletesure" class="checkbox"> <input
+								id="blnDeleteSure" name="deletesure" type="checkbox"
+								value="delete"> Ja, ik ben zeker
+							</label>
+						</div>
+					</div>
+
+					<input type="hidden" name="groupid"
+						value="<?php echo $this->group->getId() ?>">
+				</fieldset>
+
+			</div>
+			<div class="modal-footer">
+				<a href="#" class="btn" data-dismiss="modal">Annuleren</a>
+				<button class="btn btn-primary" type="submit">Verwijderen</button>
+			</div>
+		</div>
+	</div>
+
+</form>
