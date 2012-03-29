@@ -34,11 +34,11 @@ class Config
     static $ad_netbios  = 'SOLIDEAGLE';
     static $ad_dc_host = 'S1.solideagle.lok';
     static $ad_groups_ou = 'groepen';
-    static $ad_users_ou = 'gebruikers';
+    //static $ad_users_ou = 'gebruikers';
     static $ad_ldaps_url = 'ldaps://S1.solideagle.lok';
-    static $ad_username = 'Administrator@solideagle.lok';
-    static $ad_administrator = 'Administrator';
-    static $ad_password = 'Azerty1234';
+    static $ad_administrator = 'SYS_Solideagle';
+    static $ad_username = 'SYS_Solideagle@solideagle.lok';
+    static $ad_password = 'ChaCha69';
     
     static $ssh_server = 'S1.solideagle.lok';
     static $dir_name_downloads = '_downloads';

@@ -32,11 +32,15 @@
           <actionMethod actionName="addsubgrouppost"/>
           <actionMethod actionName="getgroup"/>
           <actionMethod actionName="getgroupbreadcrumbs"/>
+          <actionMethod actionName="deletegroup"/>
+          <actionMethod actionName="deletegrouppost"/>
         </controllerFile>
         <controllerFile controllerName="Usertasks">
           <actionMethod actionName="index"/>
           <actionMethod actionName="gettasksforuser"/>
           <actionMethod actionName="posttasks"/>
+          <actionMethod actionName="getalltaskforuser"/>
+          <actionMethod actionName="getalltasksforuser"/>
         </controllerFile>
       </controllersDirectory>
       <formsDirectory enabled="false"/>
@@ -90,6 +94,15 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Usertasks">
             <viewScriptFile forActionName="posttasks"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Groups">
+            <viewScriptFile forActionName="deletegroup"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Usertasks">
+            <viewScriptFile forActionName="getalltaskforuser"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Usertasks">
+            <viewScriptFile forActionName="getalltasksforuser"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>
