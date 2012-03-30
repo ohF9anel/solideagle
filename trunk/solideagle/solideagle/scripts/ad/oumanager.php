@@ -12,8 +12,6 @@ class oumanager implements TaskInterface
 	const ActionDelete = 1;
 	const ActionModify = 2;
 	const ActionMove = 3;
-	
-	const myTaskId=27;
 
 	public function runTask($taskqueue)
 	{
@@ -72,7 +70,7 @@ class oumanager implements TaskInterface
 	
 	}
 	
-	public static function prepareAddGroup($parentgroups,$newgroup)
+	public static function prepareAddOu($parentgroups,$newgroup)
 	{
 		$config["action"] = self::ActionAdd;
 		$config["parents"] = $parentgroups;
@@ -83,7 +81,7 @@ class oumanager implements TaskInterface
 		TaskQueue::insertNewTask($config,$newgroup->getId(),TaskQueue::TypeGroup);
 	}
 	
-	public static function prepareDeleteGroup($parentgroups,$newgroup)
+	public static function prepareDeleteOu($parentgroups,$newgroup)
 	{
 		$config["action"] = self::ActionDelete;
 		$config["parents"] = $parentgroups;
@@ -92,7 +90,7 @@ class oumanager implements TaskInterface
 		TaskQueue::insertNewTask($config,$newgroup->getId(),TaskQueue::TypeGroup);
 	}
 	
-	public static function prepareModifyGroup($parentgroups,$oldgroup,$newgroup)
+	public static function prepareModifyOu($parentgroups,$oldgroup,$newgroup)
 	{
 		$config["action"] = self::ActionModify;
 		$config["oldgroup"] = $oldgroup;
@@ -102,14 +100,14 @@ class oumanager implements TaskInterface
 		TaskQueue::insertNewTask($config,$newgroup->getId(),TaskQueue::TypeGroup);
 	}
 	
-	public static function prepareMoveGroup($newparentsgroup,$oldparentsgroup,$group)
+	public static function prepareMoveOu($newparentsgroup,$oldparentsgroup,$group)
 	{
 		$config["action"] = self::ActionMove;
 		$config["newparents"] = $newparentsgroup;
 		$config["oldparents"] = $oldparentsgroup;
 		$config["group"] = $group;
 		
-		TaskQueue::insertNewTask($config,$newgroup->getId(),TaskQueue::TypeGroup);
+		TaskQueue::insertNewTask($config,$group->getId(),TaskQueue::TypeGroup);
 	}
 	
 	public function getParams()

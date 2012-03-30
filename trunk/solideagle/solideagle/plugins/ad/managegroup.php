@@ -4,6 +4,7 @@ namespace solideagle\plugins\ad;
 
 use solideagle\Config;
 use solideagle\logging\Logger;
+use solideagle\plugins\StatusReport;
 
 class managegroup
 {
@@ -32,7 +33,7 @@ class managegroup
             }
         }
 
-        return array($r,ldap_error($connLdap->getConn()));
+        return new StatusReport($r,ldap_error($connLdap->getConn()));
     }
     
     // rename
@@ -49,10 +50,10 @@ class managegroup
         $rDn = "CN=" . $newGroup->getName();
         $r = ldap_rename($connLdap->getConn(), $oldDn, $rDn, null, true);
 
-        return array($r,ldap_error($connLdap->getConn()));
+        return new StatusReport($r,ldap_error($connLdap->getConn()));
     }
     
-    public static function modifyGroup($group, $newParent, $newChildren, $oldParent, $oldChildren)
+    public static function moveGroup($group, $newParent, $newChildren, $oldParent, $oldChildren)
     {
         $connLdap = ConnectionLdap::singleton();           
         if ($connLdap->getConn() == null)
@@ -63,13 +64,10 @@ class managegroup
         $sr = ldap_search($connLdap->getConn(), $dn, "(CN=" . ConnectionLdap::escapeForLDAPSearch($group->getName()) . ")");
     	$groupInfo = ldap_get_entries($connLdap->getConn(), $sr);
         
-        var_dump($groupInfo[0]['memberof']);
         // remove member in old parents
         $info['member'] = array();
         foreach($groupInfo[0]['memberof'] as $key => $parentDn) {
             if($key === 'count') continue;
-            var_dump($parentDn);
-            var_dump("CN=" . $oldParent->getName() . ",OU=" . Config::$ad_groups_ou . "," . Config::$ad_dc);
             // remove member in parent
             if("CN=" . $oldParent->getName() . ",OU=" . Config::$ad_groups_ou . "," . Config::$ad_dc == $parentDn)
             {
@@ -112,10 +110,9 @@ class managegroup
             if (!$r)
             {
                 Logger::log("Group cannot be added to group \"" . $newParent->getName() . "\"");
-                return array($r,ldap_error($connLdap->getConn()));
+                //return array($r,ldap_error($connLdap->getConn()));
             }
         }
-        
         // add new children to group
         if ($newChildren != null)
         {
@@ -127,16 +124,24 @@ class managegroup
                 if (!ldap_mod_add($connLdap->getConn(), $dn, $info))
                 {
                     Logger::log("Group \"" . $child->getName() . "\" cannot be added to group \"" . $group->getName() . "\"");
-                    return array($r,ldap_error($connLdap->getConn()));
+                    //return array($r,ldap_error($connLdap->getConn()));
                 }
             }
-           
-            if (!ldap_mod_add($connLdap->getConn(), $dn, $info))
-            {
-                Logger::log("Group cannot be added to group \"" . $newParent->getName() . "\"");
-                return array($r,ldap_error($connLdap->getConn()));
-            }
         }
+        
+        return new StatusReport();
+    }
+    
+    public static function removeGroup($group)
+    {
+        $connLdap = ConnectionLdap::singleton();           
+        if ($connLdap->getConn() == null)
+            return array(false, "LDAP Connectie mislukt");
+        
+        $dn = "CN=" . $group->getName() . ",OU=" . Config::$ad_groups_ou . "," . Config::$ad_dc;
+        $ret = ldap_delete($connLdap->getConn(), $dn);
+
+        return new StatusReport($ret ,ldap_error($connLdap->getConn()));
     }
 }
 
