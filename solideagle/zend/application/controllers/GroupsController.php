@@ -1,5 +1,6 @@
 <?php
 
+use solideagle\data_access\Type;
 use solideagle\scripts\groupmanager;
 use solideagle\data_access\Group;
 use solideagle\utilities\SuperEntities;
@@ -33,7 +34,7 @@ class GroupsController extends Zend_Controller_Action
 		
 		
 		$this->view->groups = Group::getAllGroups();
-
+		$this->view->types = Type::getAll();
 	
 
     }
@@ -194,6 +195,7 @@ class GroupsController extends Zend_Controller_Action
 			if(Group::getGroupById($groupid) != NULL)
 			{
 				$this->view->groupid = $groupid;
+				$this->view->types = Type::getAll();
 			}
 
 		}

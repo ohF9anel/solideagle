@@ -14,12 +14,9 @@ class daemon
 	{
 		if($this->isCli())
 		{
-		$this->runTasks();
+			$this->runTasks();
 		}
 	}
-	
-
-	
 	
 	private function isCli() {
 		return php_sapi_name()==="cli";
