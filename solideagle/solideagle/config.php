@@ -52,6 +52,10 @@ class Config
     
     static $ss_ws_url = 'http://dbz-tmp.smartschool.be/Webservices/V3?wsdl';
     static $ss_ws_psw = '2CyeBGuSyc38R561';
+    
+    const mysqlserver = "mysql:host=10.3.7.102;dbname=CentralAccountDB;charset=utf8";
+    const mysqluser = "dbuser";
+    const mysqlpass = "ChaCha69";
 
 }
 
