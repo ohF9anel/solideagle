@@ -1,6 +1,6 @@
 <?php
 
-use solideagle\scripts\OUmanager;
+use solideagle\scripts\groupmanager;
 use solideagle\data_access\Group;
 use solideagle\utilities\SuperEntities;
 
@@ -111,7 +111,7 @@ class GroupsController extends Zend_Controller_Action
 			
 			//only should update when name changes
 			if($newGroup->getName() !== $oldgroup->getName())
-				OUManager::Modify(Group::getParents($newGroup),$oldgroup,$newGroup);
+				groupmanager::Modify(Group::getParents($newGroup),$oldgroup,$newGroup);
 			
 			if($data["selectGroup"] !== "ignore")
 			{
@@ -122,12 +122,14 @@ class GroupsController extends Zend_Controller_Action
 				{
 				
 					$oldparents = Group::getParents($newGroup);
+                                        $oldchildren = Group::getChilderen($newGroup);
 					
 					Group::moveGroup($newGroup);
 					
 					$newparents = Group::getParents($newGroup);
+                                        $newchildren = Group::getChilderen($newGroup);
 					
-					OUManager::Move($oldparents,$newparents,$newGroup);
+					groupmanager::Move($oldparents,$newparents,$newGroup,$oldchildren,$newchildren);
 				}else{
 					echo "Deze groep kan niet verplaatst worden omdat hij subgroepen bevat.";
 				}
@@ -169,7 +171,7 @@ class GroupsController extends Zend_Controller_Action
 		
 			$grp = Group::getGroupById($groupid);
 		
-			OUManager::Delete(Group::getParents($grp), $grp);
+			groupmanager::Delete(Group::getParents($grp), $grp);
 		
 			Group::delGroupById($groupid);
 		}else{
@@ -227,7 +229,7 @@ class GroupsController extends Zend_Controller_Action
 			
 			
 			
-			OUmanager::Add(Group::getParents($newSubGroup), $newSubGroup);
+			groupmanager::Add(Group::getParents($newSubGroup), $newSubGroup);
 			
 			
 

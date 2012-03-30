@@ -10,8 +10,9 @@ use solideagle\data_access\Group;
 class groupmanager implements TaskInterface
 {
     const ActionAdd = 0;
-    
-    const taskId = 31;
+    const ActionRemove = 1;
+    const ActionRename = 2;
+    const ActionMove = 3;
 
     public function runTask($taskqueue)
     {
@@ -27,16 +28,54 @@ class groupmanager implements TaskInterface
         {
             $ret = managegroup::addGroup($config["group"], $config["memberOfGroup"]);
 
-            if ($ret[0] === true)
+            if($ret->isSucces())
             {
-                return true;
+                    return true;	
+            }else{
+                    $taskqueue->setErrorMessages($ret->getError());
+                    return false;
             }
-            else
+        }
+        else if ($config["action"] == self::ActionRename && isset($config["newGroup"]) && isset($config["oldGroup"]))
+        {
+            $ret = managegroup::renameGroup($config["newGroup"], $config["oldGroup"]);
+
+            if($ret->isSucces())
             {
-                $taskqueue->setErrorMessages($ret[1]);
-                return false;
+                    return true;	
+            }else{
+                    $taskqueue->setErrorMessages($ret->getError());
+                    return false;
             }
-        } 
+        }
+        else if ($config["action"] == self::ActionRemove && isset($config["group"]))
+        {
+            $ret = managegroup::removeGroup($config["group"]);
+
+            if($ret->isSucces())
+            {
+                    return true;	
+            }else{
+                    $taskqueue->setErrorMessages($ret->getError());
+                    return false;
+            }
+        }
+        else if ($config["action"] == self::ActionMove && isset($config["group"])
+                 && isset($config["newParent"]) && isset($config["newChildren"])
+                 && isset($config["oldParent"]) && isset($config["oldChildren"]))
+        {
+            $ret = managegroup::moveGroup($config["group"],
+                                          $config["newParent"], $config["newChildren"],
+                                          $config["oldParent"], $config["oldChildren"]);
+
+            if($ret->isSucces())
+            {
+                    return true;	
+            }else{
+                    $taskqueue->setErrorMessages($ret->getError());
+                    return false;
+            }
+        }
         else
         {
             $taskqueue->setErrorMessages("Probleem met configuratie");
@@ -66,6 +105,36 @@ class groupmanager implements TaskInterface
 
         TaskQueue::insertNewTask($config, $group->getId(), TaskQueue::TypeGroup);
     }
+    
+    public static function prepareRenameGroup($oldGroup, $newGroup)
+    {
+        $config["action"] = self::ActionRename;
+        $config["oldGroup"] = $oldGroup;
+        $config["newGroup"] = $newGroup;
+
+        TaskQueue::insertNewTask($config, $oldGroup->getId(), TaskQueue::TypeGroup);
+    }
+    
+    public static function prepareRemoveGroup($group)
+    {
+        $config["action"] = self::ActionRemove;
+        $config["group"] = $group;
+
+        TaskQueue::insertNewTask($config, $group->getId(), TaskQueue::TypeGroup);
+    }
+    
+    public static function prepareMoveGroup($group, $newParent, $newChildren, $oldParent, $oldChildren)
+    {
+        $config["action"] = self::ActionMove;
+        $config["group"] = $group;
+        $config["newParent"] = $newParent;
+        $config["newChildren"] = $newChildren;
+        $config["oldParent"] = $oldParent;
+        $config["oldChildren"] = $oldChildren;
+
+        TaskQueue::insertNewTask($config, $group->getId(), TaskQueue::TypeGroup);
+    }
+    
 
     public function getParams()
     {

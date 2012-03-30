@@ -62,8 +62,6 @@ class daemon
 			proc_terminate($p);
 			proc_close($p);
 			
-			
-			
 			echo "daemon ended\n";
 		
 					

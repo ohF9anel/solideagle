@@ -139,8 +139,7 @@ class ManageOU
         
         $ret = ldap_delete($connLdap->getConn(), $parentDn);
 
-        return $ret;
-        
+        return new StatusReport($ret ,ldap_error($connLdap->getConn()));
     }
 }
 
