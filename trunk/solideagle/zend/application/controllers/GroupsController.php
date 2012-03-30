@@ -260,10 +260,6 @@ class GroupsController extends Zend_Controller_Action
 
 }
 
-
-
-
-
 function groupsToJson($roots,$isfirst = true)
 {
 	if(count($roots) === 0)
