@@ -14,9 +14,7 @@ class daemon
 	{
 		if($this->isCli())
 		{
-
-			$this->startDaemon();
-			
+			$this->startDaemon();	
 		}else{
 			set_time_limit(60);
 			echo "Running from command line! Output will stop after 60 seconds or when all tasks have been run";
