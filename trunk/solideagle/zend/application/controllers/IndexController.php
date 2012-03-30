@@ -3,6 +3,7 @@
 
 
 
+use solideagle\data_access\Group;
 use solideagle\data_access\TaskQueue;
 
 
@@ -20,6 +21,13 @@ class IndexController extends Zend_Controller_Action
        	$this->view->taskQueue = TaskQueue::getTasksToRun();
     }
 
+    public function groupsandusersAction()
+    {
+       $this->view->groups = Group::getTree();
+    }
+
 
 }
+
+
 

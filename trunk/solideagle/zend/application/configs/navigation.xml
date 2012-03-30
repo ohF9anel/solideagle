@@ -32,10 +32,8 @@
 			
 				<groupsandusers>
 					<label>Groepen en gebruikers</label>
-					<controller>users</controller>
-					<action>index</action>
-					
-					
+					<controller>index</controller>
+					<action>groupsandusers</action>
 				</groupsandusers>	
 				
 				<demo>

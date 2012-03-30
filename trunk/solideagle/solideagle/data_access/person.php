@@ -5,6 +5,8 @@ namespace solideagle\data_access;
 
 	
 
+	use solideagle\data_access\helpers\UnicodeHelper;
+
 	use solideagle\data_access\helpers\DateConverter;
 
 	function IsNullOrEmptyString($question){
@@ -365,17 +367,19 @@ namespace solideagle\data_access;
             return $this->types;
         }
     
+        /*
+         * tries to generate a username
+         */
         public static function tryCreateUsername($person)
         {
         	
         	$counter = "";
         	
-        	$username = $person->getName() . substr($person->getFirstName(),0,1) . date("y");
+        	$username = $person->getName() . UnicodeHelper::substr_unicode($person->getFirstName(),0,1) . date("y");
         	
-        	$username = strtolower($username);
+        	$username = mb_strtolower($username, 'UTF-8');
         	
         	$sql = "select account_username from person where account_username = :accusername";
-        	
         	
         	$cmd = new DatabaseCommand($sql);
         	

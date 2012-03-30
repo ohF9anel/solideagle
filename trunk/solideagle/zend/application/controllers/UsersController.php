@@ -17,8 +17,7 @@ class UsersController extends Zend_Controller_Action
 
     public function indexAction()
     {
-    	//$this->view->users = Person::getUsersForDisplayByGroup();
-    	$this->view->groups = Group::getTree();
+
     }
 
     public function adduserAction()
@@ -35,7 +34,18 @@ class UsersController extends Zend_Controller_Action
 		}else{
 			exit();
 		}
+		
+		$this->view->stateNew = 0;
+		$this->view->stateEdit = 1;
+		$this->view->stateShow = 2;
+		
+		$this->view->state = 1;
     	
+		$this->view->person = Person::getPersonById(4);
+		
+		$p = Person::getPersonById(4);
+		
+		
     }
 
     public function adduserpostAction()

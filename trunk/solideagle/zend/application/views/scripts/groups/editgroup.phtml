@@ -39,35 +39,56 @@
 
 
 
-<form class="form-horizontal"
-	action="<?php echo $this->SE_path . "/groups/updategrouppost" ?>"
-	method="post" id="formEditGroup">
+<form class="form-horizontal" action="<?php echo $this->SE_path . "/groups/updategrouppost" ?>" method="post"
+	id="formEditGroup">
 
 	<div class="hide SEsupermodal" id="myModal">
 		<div>
 			<div class="modal-header">
 				<a class="close" data-dismiss="modal">×</a>
-				<h3 id="modaltitle">Groep bewerken<small id="groupbreadcrumbs"></small></h3>
+				<h3 id="modaltitle">
+					Groep bewerken<small id="groupbreadcrumbs"></small>
+				</h3>
 			</div>
 			<div class="modal-body">
 
 				<fieldset>
-					
+
 
 					<div class="control-group">
 						<label class="control-label" for="txtName">Naam</label>
 						<div class="controls">
-							<input id="txtName" name="groupName" class="input-xlarge"
-								type="text"
+							<input id="txtName" name="groupName" class="input-xlarge" type="text"
 								value="<?php echo SuperEntities::encode($this->group->getName()); ?>">
 						</div>
 					</div>
 
+
+
 					<div class="control-group">
 						<label class="control-label" for="txtDescription">Omschrijving</label>
 						<div class="controls">
-							<textarea id="txtDescription" name="groupDescription"
-								class="input-xlarge" rows="3"><?php echo SuperEntities::encode($this->group->getDescription()) ?></textarea>
+							<textarea id="txtDescription" name="groupDescription" class="input-xlarge" rows="3"><?php echo SuperEntities::encode($this->group->getDescription()) ?></textarea>
+						</div>
+					</div>
+
+					<div class="control-group">
+						<label class="control-label" for="cbActive">Standaard Types</label>
+						<div class="controls">
+							<?php foreach($this->types as $type)
+                                        {?>
+							<label class="checkbox">
+								<input name="ptype[]" value="<?php echo $type->getId(); ?>"
+								<?php
+								if(in_array($type,$this->group->getTypes()))
+								{
+									echo "checked='checked'";
+								}
+								?>
+									type="checkbox">
+								<?php echo $type->getTypeName(); ?>
+							</label>
+							<?php } ?>
 						</div>
 					</div>
 
@@ -81,7 +102,7 @@
 								{
 									if($group->getId() === $this->group->getId())
 										continue;
-								?>
+									?>
 
 								<option value="<?php echo $group->getId(); ?>">
 									<?php echo SuperEntities::encode($group->getName()); ?>
@@ -94,8 +115,7 @@
 					</div>
 
 
-					<input type="hidden" name="groupid"
-						value="<?php echo $this->group->getId() ?>">
+					<input type="hidden" name="groupid" value="<?php echo $this->group->getId() ?>">
 				</fieldset>
 
 			</div>

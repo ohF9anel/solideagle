@@ -15,8 +15,8 @@ class Group
 	private $name;
 	private $description;
 	private $childGroups = array();
-	private $groupTypes = array();
 	private $parentId = NULL;
+	private $types = array();
 
 	// getters, setters & functions
 
@@ -545,20 +545,18 @@ class Group
 	
 	}
 
+	public function getTypes()
+	{
+	    return $this->types;
+	}
 
-
+	public function setTypes($types)
+	{
+	    $this->types = $types;
+	}
 }
 
 
-/*select group_concat(n.name order by a.length desc separator ' -> ') as path
- from group_closure d
-join group_closure a on (a.child_id = d.child_id)
-join `group` n on (n.id = a.parent_id)
-where d.parent_id in
-(select parent_id  from group_closure tc  where
-not exists (
-select null    from group_closure tci    where tc.child_id = tci.child_id      and tci.length <> 0  ))
-and d.child_id != d.parent_id
-group by d.child_id */
+
 
 ?>

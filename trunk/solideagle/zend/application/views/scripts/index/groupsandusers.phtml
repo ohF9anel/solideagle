@@ -1,0 +1,196 @@
+<script>
+
+	var selectedGroupId = 1;
+
+	$(function(){
+
+		updateTree();
+		showUsers();
+
+		$("#EditGroupLink").click(function(){
+			$("#modalholder").load("<?php echo $this->SE_path . '/groups/editgroup?gid=' ?>" + selectedGroupId);
+		});
+
+		$("#CreateSubGroupLink").click(function(){
+			$("#modalholder").load("<?php echo $this->SE_path . '/groups/addsubgroup?gid=' ?>" + selectedGroupId);
+		});
+	
+		$("#CreateUserLink").click(function(){
+			$("#modalholder").load("<?php echo $this->SE_path . '/users/adduser?gid=' ?>" + selectedGroupId);
+		});
+
+		$("#RemoveGroupLink").click(function(){
+			$("#modalholder").load("<?php echo $this->SE_path . '/groups/deletegroup?gid=' ?>" + selectedGroupId);
+		});
+	});
+
+	function updateTree()
+	{
+		$("#grouptree").jstree({ 
+			"ui" : {	
+				"initially_select" : [ "tree"+selectedGroupId ]
+			},
+			"json_data" : {
+				"ajax" : {
+					"url" : "<?php echo $this->SE_path . '/groups/getgroup' ?>",
+					"data" : function (n) { 
+						return { id : n.attr ? n.attr("id") : 0 }; 
+					},
+					"progressive_render" : true,
+					"progressive_unload" : true
+				}
+			},
+			"plugins" : [ "themes", "json_data","ui" ]
+		}).bind("select_node.jstree", function (event, data) { 
+			selectedGroupId = data.rslt.obj.attr("groupid");
+
+			groupname =  data.rslt.obj.attr("groupname");
+
+			$("#groupname").html(groupname);
+
+			updateUsers();
+			
+		});
+
+	}
+
+	function updateUsers()
+	{
+		if($("#userstable").length)
+		{
+			$("#userstable").dataTable().fnReloadAjax("<?php echo $this->SE_path . '/users/getusers?gid=' ?>"+selectedGroupId);
+		}
+
+		$("#bofhexcuse").html(NewExcuse());
+	}
+
+
+	function showUsers()
+	{
+		$("#groepcontent").html("");
+
+		$("<table id='userstable' class='table'>").append("<thead>\
+				<tr>\
+				<td>ID <i class='icon-chevron-down'></i><i class='icon-chevron-up'></i></td>\
+				<td>Voornaam <i class='icon-chevron-down'></i><i class='icon-chevron-up'></i></td>\
+				<td>Achternaam <i class='icon-chevron-down'></i><i class='icon-chevron-up'></i></td>\
+				<td>Gebruikersnaam <i class='icon-chevron-down'></i><i class='icon-chevron-up'></i></td>\
+				<td>Actief <i class='icon-chevron-down'></i><i class='icon-chevron-up'></i></td>\
+				<td>Gemaakt op <i class='icon-chevron-down'></i><i class='icon-chevron-up'></i></td>\
+			</tr>\
+		</thead>").appendTo($("#groepcontent"));
+
+
+		$("#userstable").dataTable({
+			"bSort":true,
+			"aaSorting" : [[ 5, "desc" ]],
+			"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+			  "sDom": '<"row-fluid"fl><"row-fluid"<"btn-group span6"p><"span6"i>>r<"usertablewrapper"t>',//'<"row-fluid well"fl><"row-fluid well btn-group"<"span6"p><"span6"i>>rt',
+	        "bProcessing": true,
+	        "oLanguage": {
+	            "sProcessing": "Data ophalen...",
+	            "sLengthMenu": "Aantal resultaten per pagina: _MENU_ ",
+	            "sZeroRecords": "Geen resultaten gevonden",
+	            "sInfo": "_START_ tot _END_ van _TOTAL_ resultaten",
+	            "sInfoEmpty": "Geen resultaten om weer te geven",
+	            "sInfoFiltered": " (gefilterd uit _MAX_ resultaten)",
+	            "sInfoPostFix": "",
+	            "sSearch": "Zoeken:",
+	            "sEmptyTable": "Geen resultaten aanwezig in de tabel",
+	            "sInfoThousands": ".",
+	            "sLoadingRecords": "Een moment geduld aub - bezig met laden...",
+	            "oPaginate": {
+	                "sFirst": "Eerste",
+	                "sLast": "Laatste",
+	                "sNext": "Volgende",
+	                "sPrevious": "Vorige"
+	            }
+	        },
+
+	    });
+
+		$('#userstable tbody').on("contextmenu",'tr', function(e) {
+    		var clickedElem = $(this);
+    		
+    		$("#useractions > ul > li").addClass('open');
+
+			var userid = clickedElem.children().first().html();
+    	
+    		$("#useractions").css({       
+            		position: "absolute",
+    		        top: e.pageY + "px",
+    		        left: e.pageX + "px"});		
+
+ 	       return false;
+    	});
+		
+		 $('html').on('click',function(){
+			 $("#useractions > ul > li").removeClass('open');
+		 });
+		
+	}
+
+	
+</script>
+
+    <div class="alert">
+    <a class="close" data-dismiss="alert">×</a>
+    <strong>Warning!</strong> <span id="bofhexcuse"></span>
+    </div>
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span3">
+			<h1>Groepen</h1>
+
+			<div id="grouptree">
+				<!-- tree will be rendered here -->
+			</div>
+		</div>
+		<div class="span9">
+
+			<ul class="nav nav-pills ">
+				<li><h2 style="line-height: 30px">
+						Groep <span id="groupname"></span>
+					</h2></li>
+				<li class="dropdown" id="menu1"><a class="dropdown-toggle"
+					data-toggle="dropdown" href="#menu1"> Acties <b class="caret"></b>
+				</a>
+					<ul class="dropdown-menu">
+						<li><a id="CreateUserLink" href="#"><i class="icon-user"></i>
+								Gebruiker maken</a></li>
+						<li><a id="CreateSubGroupLink" href="#"><i class="icon-plus"></i>
+								Subgroep maken</a></li>
+						<li><a id="EditGroupLink" href="#"><i class="icon-pencil"></i>
+								Groep bewerken</a></li>
+						<li><a id="RemoveGroupLink" href="#"> <i class="icon-remove"></i>
+								Groep verwijderen
+						</a></li>
+						<li class="divider"></li>
+						<li><a href="#"><i class="icon-list-alt"></i> Multitask</a></li>
+					</ul>
+				</li>
+			</ul>
+			<div id="groepcontent"></div>
+		</div>
+	</div>
+</div>
+
+<div id="modalholder"></div>
+
+<div id="useractions">
+<ul class="nav nav-pills">
+	<li class="dropdown">
+		<ul class="dropdown-menu">
+			<li><a href="javascript:void(0)"><i class="icon-user"></i> Bekijken</a>
+			</li>
+			
+			<li><a  href="javascript:void(0)"><i class="icon-pencil"></i> 
+					Bewerken</a></li>
+			<li><a  href="javascript:void(0)"> <i class="icon-remove"></i>
+					Verwijderen
+			</a></li>
+
+		</ul>
+	</li>
+</ul>
+</div>
