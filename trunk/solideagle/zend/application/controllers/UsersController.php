@@ -100,6 +100,11 @@ class UsersController extends Zend_Controller_Action
     		return;
     	}
     	
+    	/*
+    	 * Fields for jquery datatable
+    	 *
+    	 */
+    	
     	foreach(Person::getUsersForDisplayByGroup($gid) as $gp)
     	{
     		$person[0] = $gp->getId();
@@ -107,11 +112,11 @@ class UsersController extends Zend_Controller_Action
     		$person[2] = $gp->getName();
     		$person[3] = $gp->getAccountUserName();
     		$person[4] = $gp->getAccountActive();
-    		$person[5] = $gp->getMadeOn();				
-    		
+    		$person[5] = $gp->getMadeOn();			
+    	
     		$persons[] = $person;
     	}
-    	
+    	//must be called aaData, see datatables ajax docs
     	echo json_encode(array("aaData" => $persons));
     }
 
