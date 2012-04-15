@@ -1,6 +1,7 @@
 <script>
 
 	var selectedGroupId = 1;
+	var clickedUserId = -1;
 
 	$(function(){
 
@@ -16,12 +17,26 @@
 		});
 	
 		$("#CreateUserLink").click(function(){
-			$("#modalholder").load("<?php echo $this->SE_path . '/users/adduser?gid=' ?>" + selectedGroupId);
+			$("#modalholder").load("<?php echo $this->SE_path . '/users/userform?state=new&gid=' ?>" + selectedGroupId);
 		});
 
 		$("#RemoveGroupLink").click(function(){
 			$("#modalholder").load("<?php echo $this->SE_path . '/groups/deletegroup?gid=' ?>" + selectedGroupId);
 		});
+
+		$("#ViewUserLink").click(function(){
+			$("#modalholder").load("<?php echo $this->SE_path . '/users/userform?state=show&pid=' ?>" + clickedUserId);
+		});
+
+		$("#EditUserLink").click(function(){
+			$("#modalholder").load("<?php echo $this->SE_path . '/users/userform?state=edit&pid=' ?>" + clickedUserId);
+		});
+
+		$("#RemoveUserLink").click(function(){
+			alert("Not Yet Implemented");
+			//$("#modalholder").load("<?php echo $this->SE_path . '/users/userform?state=edit&pid=' ?>" + clickedUserId);
+		});
+		
 	});
 
 	function updateTree()
@@ -67,7 +82,7 @@
 
 	function showUsers()
 	{
-		$("#groepcontent").html("");
+		<?php /*$("#groepcontent").html("");
 
 		$("<table id='userstable' class='table'>").append("<thead>\
 				<tr>\
@@ -78,14 +93,14 @@
 				<td>Actief <i class='icon-chevron-down'></i><i class='icon-chevron-up'></i></td>\
 				<td>Gemaakt op <i class='icon-chevron-down'></i><i class='icon-chevron-up'></i></td>\
 			</tr>\
-		</thead>").appendTo($("#groepcontent"));
+		</thead>").appendTo($("#groepcontent"));*/?>
 
 
 		$("#userstable").dataTable({
 			"bSort":true,
 			"aaSorting" : [[ 5, "desc" ]],
 			"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-			  "sDom": '<"row-fluid"fl><"row-fluid"<"btn-group span6"p><"span6"i>>r<"usertablewrapper"t>',//'<"row-fluid well"fl><"row-fluid well btn-group"<"span6"p><"span6"i>>rt',
+			"sDom": '<"row-fluid"fl><"row-fluid"<"btn-group span6"p><"span6"i>>r<"usertablewrapper"t>',
 	        "bProcessing": true,
 	        "oLanguage": {
 	            "sProcessing": "Data ophalen...",
@@ -109,12 +124,13 @@
 
 	    });
 
+		//table rightclick
 		$('#userstable tbody').on("contextmenu",'tr', function(e) {
     		var clickedElem = $(this);
     		
     		$("#useractions > ul > li").addClass('open');
 
-			var userid = clickedElem.children().first().html();
+    		clickedUserId = clickedElem.children().first().html();
     	
     		$("#useractions").css({       
             		position: "absolute",
@@ -133,10 +149,9 @@
 	
 </script>
 
-    <div class="alert">
-    <a class="close" data-dismiss="alert">×</a>
-    <strong>Warning!</strong> <span id="bofhexcuse"></span>
-    </div>
+<div class="alert">
+	<a class="close" data-dismiss="alert">×</a> <strong>Warning!</strong> <span id="bofhexcuse"></span>
+</div>
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span3">
@@ -152,25 +167,34 @@
 				<li><h2 style="line-height: 30px">
 						Groep <span id="groupname"></span>
 					</h2></li>
-				<li class="dropdown" id="menu1"><a class="dropdown-toggle"
-					data-toggle="dropdown" href="#menu1"> Acties <b class="caret"></b>
+				<li class="dropdown" id="menu1"><a class="dropdown-toggle" data-toggle="dropdown" href="#menu1"> Acties <b
+						class="caret"></b>
 				</a>
 					<ul class="dropdown-menu">
-						<li><a id="CreateUserLink" href="#"><i class="icon-user"></i>
-								Gebruiker maken</a></li>
-						<li><a id="CreateSubGroupLink" href="#"><i class="icon-plus"></i>
-								Subgroep maken</a></li>
-						<li><a id="EditGroupLink" href="#"><i class="icon-pencil"></i>
-								Groep bewerken</a></li>
-						<li><a id="RemoveGroupLink" href="#"> <i class="icon-remove"></i>
-								Groep verwijderen
+						<li><a id="CreateUserLink" href="#"><i class="icon-user"></i> Gebruiker maken</a></li>
+						<li><a id="CreateSubGroupLink" href="#"><i class="icon-plus"></i> Subgroep maken</a></li>
+						<li><a id="EditGroupLink" href="#"><i class="icon-pencil"></i> Groep bewerken</a></li>
+						<li><a id="RemoveGroupLink" href="#"> <i class="icon-remove"></i> Groep verwijderen
 						</a></li>
 						<li class="divider"></li>
 						<li><a href="#"><i class="icon-list-alt"></i> Multitask</a></li>
 					</ul>
 				</li>
 			</ul>
-			<div id="groepcontent"></div>
+			<div id="groepcontent">
+				<table id='userstable' class='table'>
+				<thead>
+				<tr>
+				<td>ID <i class='icon-chevron-down'></i><i class='icon-chevron-up'></i></td>
+				<td>Voornaam <i class='icon-chevron-down'></i><i class='icon-chevron-up'></i></td>
+				<td>Achternaam <i class='icon-chevron-down'></i><i class='icon-chevron-up'></i></td>
+				<td>Gebruikersnaam <i class='icon-chevron-down'></i><i class='icon-chevron-up'></i></td>
+				<td>Actief <i class='icon-chevron-down'></i><i class='icon-chevron-up'></i></td>
+				<td>Gemaakt op <i class='icon-chevron-down'></i><i class='icon-chevron-up'></i></td>
+			</tr>
+		</thead>
+				</table>
+			</div>
 		</div>
 	</div>
 </div>
@@ -178,19 +202,14 @@
 <div id="modalholder"></div>
 
 <div id="useractions">
-<ul class="nav nav-pills">
-	<li class="dropdown">
-		<ul class="dropdown-menu">
-			<li><a href="javascript:void(0)"><i class="icon-user"></i> Bekijken</a>
-			</li>
-			
-			<li><a  href="javascript:void(0)"><i class="icon-pencil"></i> 
-					Bewerken</a></li>
-			<li><a  href="javascript:void(0)"> <i class="icon-remove"></i>
-					Verwijderen
-			</a></li>
-
-		</ul>
-	</li>
-</ul>
+	<ul class="nav nav-pills">
+		<li class="dropdown">
+			<ul class="dropdown-menu">
+				<li><a href="javascript:void(0)" id="ViewUserLink"><i class="icon-user"></i> Bekijken</a></li>
+				<li><a href="javascript:void(0)" id="EditUserLink"><i class="icon-pencil"></i> Bewerken</a></li>
+				<li><a href="javascript:void(0)" id="RemoveUserLink"> <i class="icon-remove"></i> Verwijderen
+				</a></li>
+			</ul>
+		</li>
+	</ul>
 </div>

@@ -20,7 +20,7 @@
         </controllerFile>
         <controllerFile controllerName="Users">
           <actionMethod actionName="index"/>
-          <actionMethod actionName="adduser"/>
+          <actionMethod actionName="userform"/>
           <actionMethod actionName="adduserpost"/>
           <actionMethod actionName="getusers"/>
           <actionMethod actionName="showdetails"/>

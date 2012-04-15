@@ -1,17 +1,26 @@
+<?php 
+use solideagle\data_access\Person;
+use solideagle\data_access\helpers\DateConverter;
 
-
-
-
+$ppp = new Person();
+$ppp = $this->person; ?>
 
 <script>
 	$(function(){
-
-		$("#groupbreadcrumbs").load("<?php echo $this->SE_path . '/groups/getgroupbreadcrumbs?groupid=' . $this->group->getId() ?>");
+				<?php 
+				if($this->state === $this->stateShow){
+					?>
+					$("#formUser input").attr("disabled", "disabled");
+					$("#formUser textarea").attr("disabled", "disabled");
+					$("#formUser button").attr("disabled", "disabled");					
+					<?php
+				}
+				?>
+		
+				$("#groupbreadcrumbs").load("<?php echo $this->SE_path . '/groups/getgroupbreadcrumbs?groupid=' . $this->group->getId() ?>");
 			
-				
 				$('#myModal').modal('show');
 		
-
                 $(".collapseAdditionalInfo").collapse();
 
                 $( "#txtBirthDate" ).datepicker({ 
@@ -38,7 +47,7 @@
                     dateFormat: "dd-mm-yy"
                 }).css("cursor","default").attr("readonly","readonly");
 
-		$("#formAddUser").ajaxForm({
+		$("#formUser").ajaxForm({
 			success: function(responseText, statusText, xhr, $form) { 
 
 				if(responseText.length > 0)
@@ -55,35 +64,25 @@
 
 </script>
 
-
-<?php 
-use solideagle\data_access\Person;
-use solideagle\data_access\helpers\DateConverter;
-
-$ppp = new Person();
-$ppp = $this->person; ?>
-
-
-
-<form class="form-horizontal" action="<?php echo $this->SE_path . "/users/adduserpost" ?>" method="post"
-	id="formAddUser">
+<form class="form-horizontal" action="<?php echo $this->SE_path . "/users/adduserpost" ?>" method="post" id="formUser">
 
 	<div class="hide SEsupermodal" id="myModal">
 		<div>
 			<div class="modal-header">
 				<a class="close" data-dismiss="modal">×</a>
 				<h3 id="modaltitle">
-				
-				<?php 
-				if($this->state === $this->stateNew)
-				{
+
+					<?php 
+					if($this->state === $this->stateNew)
+					{
 						echo "Gebruiker maken";
-				}else if($this->state === $this->stateEdit){
+					}else if($this->state === $this->stateEdit){
 						echo "Gebruiker bewerken";
-				}else if($this->state === $this->stateShow){
+					}else if($this->state === $this->stateShow){
 						echo "Gebruiker bekijken";
-				}	
-				?><small id="groupbreadcrumbs"></small>
+					}
+					?>
+					<small id="groupbreadcrumbs"></small>
 				</h3>
 			</div>
 			<div class="modal-body">
@@ -99,7 +98,6 @@ $ppp = $this->person; ?>
 
 									<?php foreach($this->types as $type)
                                         {?>
-
 									<label class="checkbox inline SEinline">
 										<input name="ptype[]" value="<?php echo $type->getId(); ?>"
 										<?php
@@ -121,7 +119,7 @@ $ppp = $this->person; ?>
 							<div class="control-group">
 								<label class="control-label" for="txtFirstName">Voornaam</label>
 								<div class="controls">
-									<input id="txtFirstName" name="txtFirstName" class="input-xlarge" type="text"
+									<input id="txtFirstName" name="FirstName" class="input-xlarge" type="text"
 										value="<?php echo $ppp->getFirstName() ?>">
 								</div>
 							</div>
@@ -129,7 +127,7 @@ $ppp = $this->person; ?>
 							<div class="control-group">
 								<label class="control-label" for="txtName">Naam</label>
 								<div class="controls">
-									<input id="txtName" name="txtName" class="input-xlarge" type="text" value="<?php echo $ppp->getName() ?>">
+									<input id="txtName" name="Name" class="input-xlarge" type="text" value="<?php echo $ppp->getName() ?>">
 								</div>
 							</div>
 
@@ -137,11 +135,13 @@ $ppp = $this->person; ?>
 								<label class="control-label">Geslacht</label>
 								<div class="controls">
 									<label class="radio inline">
-										<input type="radio" <?php if ($ppp->getGender() === "M") echo 'checked="checked"' ?> value="M" id="btnGenderMale" name="btnGender">
+										<input type="radio" <?php if ($ppp->getGender() === "M") echo 'checked="checked"' ?> value="M"
+											id="btnGenderMale" name="Gender">
 										Man
 									</label>
 									<label class="radio inline">
-										<input type="radio" <?php if ($ppp->getGender() === "V") echo 'checked="checked"' ?> value="V" id="btnGenderFemale" name="btnGender">
+										<input type="radio" <?php if ($ppp->getGender() === "V") echo 'checked="checked"' ?> value="V"
+											id="btnGenderFemale" name="Gender">
 										Vrouw
 									</label>
 								</div>
@@ -150,21 +150,22 @@ $ppp = $this->person; ?>
 							<div class="control-group">
 								<label class="control-label" for="txtBirthDate">Geboortedatum</label>
 								<div class="controls">
-									<input id="txtBirthDate" name="txtBirthDate" class="input-xlarge" type="text" value="<?php echo DateConverter::dbDateToDisplayDate($ppp->getBirthDate()) ?>">
+									<input id="txtBirthDate" name="BirthDate" class="input-xlarge" type="text"
+										value="<?php echo DateConverter::dbDateToDisplayDate($ppp->getBirthDate()) ?>">
 								</div>
 							</div>
 
 							<div class="control-group">
 								<label class="control-label" for="txtEmail">Email adres</label>
 								<div class="controls">
-									<input id="txtEmail" name="txtEmail" class="input-xlarge" type="text" value="<?php echo $ppp->getEmail() ?>">
+									<input id="txtEmail" name="Email" class="input-xlarge" type="text" value="<?php echo $ppp->getEmail() ?>">
 								</div>
 							</div>
 
 							<div class="control-group">
 								<label class="control-label" for="txtPhone">Telefoonnummer</label>
 								<div class="controls">
-									<input id="txtPhone" name="txtPhone" class="input-xlarge" type="text" value="<?php echo $ppp->getPhone() ?>">
+									<input id="txtPhone" name="Phone" class="input-xlarge" type="text" value="<?php echo $ppp->getPhone() ?>">
 								</div>
 							</div>
 
@@ -176,7 +177,8 @@ $ppp = $this->person; ?>
 								<label class="control-label" for="txtUsername">Gebruikersnaam</label>
 								<div class="controls">
 									<div class="input-append">
-										<input id="txtUsername" size="16" name="txtUsername" class="span2" type="text" value="<?php echo $ppp->getAccountUsername() ?>">
+										<input id="txtUsername" size="16" name="AccountUsername" class="span2" type="text"
+											value="<?php echo $ppp->getAccountUsername() ?>">
 										<button type="button" id="btnGenerateUsername" class="btn">Genereer!</button>
 									</div>
 								</div>
@@ -186,7 +188,8 @@ $ppp = $this->person; ?>
 								<label class="control-label" for="txtPassword">Wachtwoord</label>
 								<div class="controls">
 									<div class="input-append">
-										<input id="txtPassword" size="16" name="txtPassword" class="span2" type="text" value="<?php echo $ppp->getAccountPassword() ?>">
+										<input id="txtPassword" size="16" name="AccountPassword" class="span2" type="text"
+											value="<?php echo $ppp->getAccountPassword() ?>">
 										<button type="button" id="btnGeneratePassword" class="btn">Genereer!</button>
 									</div>
 								</div>
@@ -196,7 +199,8 @@ $ppp = $this->person; ?>
 								<label class="control-label" for="cbActive">Account</label>
 								<div class="controls">
 									<label class="checkbox">
-										<input id="cbActive" <?php if($ppp->getAccountActive()){echo 'checked="checked"';} ?> name="cbActive" type="checkbox">
+										<input id="cbActive" <?php if($ppp->getAccountActive()){echo 'checked="checked"';} ?> value="1" name="AccountActive"
+											type="checkbox">
 										actief
 									</label>
 								</div>
@@ -207,21 +211,23 @@ $ppp = $this->person; ?>
 							<div class="control-group">
 								<label class="control-label" for="txtActiveFrom">Actief vanaf</label>
 								<div class="controls">
-									<input id="txtActiveFrom" name="txtActiveFrom" class="input-xlarge" type="text" value="<?php echo DateConverter::dbDateToDisplayDate($ppp->getAccountActiveFrom()) ?>">
+									<input id="txtActiveFrom" name="AccountActiveFrom" class="input-xlarge" type="text"
+										value="<?php echo DateConverter::dbDateToDisplayDate($ppp->getAccountActiveFrom()) ?>">
 								</div>
 							</div>
 
 							<div class="control-group">
 								<label class="control-label" for="txtActiveUntill">Actief tot</label>
 								<div class="controls">
-									<input id="txtActiveUntill" name="txtActiveUntill" class="input-xlarge" type="text" value="<?php echo DateConverter::dbDateToDisplayDate($ppp->getAccountActiveUntill()) ?>">
+									<input id="txtActiveUntill" name="AccountActiveUntill" class="input-xlarge" type="text"
+										value="<?php echo DateConverter::dbDateToDisplayDate($ppp->getAccountActiveUntill()) ?>">
 								</div>
 							</div>
 
 							<div class="control-group">
 								<label class="control-label" for="txtOtherInformation">Extra informatie</label>
 								<div class="controls">
-									<textarea rows="1" id="txtOtherInformation" class="input-xlarge"><?php echo $ppp->getOtherInformation() ?></textarea>
+									<textarea rows="1" id="txtOtherInformation" name="OtherInformation" class="input-xlarge"><?php echo $ppp->getOtherInformation() ?></textarea>
 								</div>
 							</div>
 
@@ -336,17 +342,35 @@ $ppp = $this->person; ?>
 					</div>
 
 
-					<!--<div class="form-actions">
-						<button class="btn btn-primary" type="submit">Opslaan</button>
-
-					</div>-->
-
-					<input type="hidden" name="groupid" value="<?php echo $this->group->getId(); ?>">
+				
+					<?php if($this->state === $this->stateNew)
+					{?>
+						<input type="hidden" name="GroupId" value="<?php echo $this->group->getId(); ?>">
+					<?php } ?>
 				</fieldset>
 			</div>
 			<div class="modal-footer">
+
+				<?php 
+				if($this->state === $this->stateNew)
+				{
+					?>
 				<a href="#" class="btn" data-dismiss="modal">Annuleren</a>
-				<button class="btn btn-primary" type="submit">Opslaan</button>
+				<button class="btn btn-primary" type="submit">Maken</button>
+				<?
+				}else if($this->state === $this->stateEdit){
+					?>
+				<a href="#" class="btn" data-dismiss="modal">Annuleren</a>
+				<button class="btn btn-primary" type="submit">Bijwerken</button>
+				<?
+				}else if($this->state === $this->stateShow){
+					?>
+				<a href="#" class="btn" data-dismiss="modal">Sluiten</a>
+				<?
+				}
+				?>
+
+
 			</div>
 		</div>
 	</div>
