@@ -88,6 +88,37 @@ class UsersController extends Zend_Controller_Action
 		$this->_helper->viewRenderer->setNoRender(true);
 				
 		$person = new Person();
+		
+		
+		$postmode = $this->getRequest()->getPost('submit');
+	
+		
+		if($postmode === "generateUsername")
+		{
+			$isStudent = true;
+			foreach($this->getRequest()->getPost('ptype', array()) as $id)
+			{
+				if($id === 2)
+					$isStudent = false;
+			}
+			$person->setFirstName($this->getRequest()->getPost('FirstName'));
+			$person->setName($this->getRequest()->getPost('Name'));
+			
+			echo "GeneratedUsername:" . Person::generateUsername($person,$isStudent);
+			return;
+		}
+		else if($postmode === "generatePassword")
+		{
+			echo "GeneratedPassword:" . Person::generatePassword();
+			return;
+		}
+		else if($postmode === "edit")
+		{
+			
+		}
+		
+		//it's a new user
+		
 				
 		foreach($this->getRequest()->getPost('ptype', array()) as $id)
 		{
