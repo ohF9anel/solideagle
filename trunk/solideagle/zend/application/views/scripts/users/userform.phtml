@@ -10,9 +10,9 @@ $ppp = $this->person; ?>
 				<?php 
 				if($this->state === $this->stateShow){
 					?>
-					$("#formUser input").attr("disabled", "disabled");
-					$("#formUser textarea").attr("disabled", "disabled");
-					$("#formUser button").attr("disabled", "disabled");					
+					$("#formUser input").attr("disabled", "disabled").css("cursor","default");
+					$("#formUser textarea").attr("disabled", "disabled").css("cursor","default");
+					$("#formUser button").attr("disabled", "disabled").css("cursor","default");					
 					<?php
 				}
 				?>
@@ -52,9 +52,20 @@ $ppp = $this->person; ?>
 
 				if(responseText.length > 0)
 				{
-					alert(responseText);
+					if(responseText.indexOf("GeneratedUsername:") != -1)
+					{
+						var cutoff = responseText.indexOf(":");
+						
+						$("#txtUsername").val(responseText.substring(cutoff+1));
+						
+					}else if(responseText.indexOf("GeneratedPassword:") != -1)
+					{
+						var cutoff = responseText.indexOf(":");
+						$("#txtPassword").val(responseText.substring(cutoff+1));
+					}else{
+						alert(responseText);
+					}
 				}else{
-					
 					$('#myModal').modal('hide');
 					updateUsers();
 				}
@@ -178,8 +189,7 @@ $ppp = $this->person; ?>
 								<div class="controls">
 									<div class="input-append">
 										<input id="txtUsername" size="16" name="AccountUsername" class="span2" type="text"
-											value="<?php echo $ppp->getAccountUsername() ?>">
-										<button type="button" id="btnGenerateUsername" class="btn">Genereer!</button>
+											value="<?php echo $ppp->getAccountUsername() ?>"><button type="submit" name="submit" value="generateUsername" id="btnGenerateUsername" class="btn">Genereer!</button>
 									</div>
 								</div>
 							</div>
@@ -189,8 +199,7 @@ $ppp = $this->person; ?>
 								<div class="controls">
 									<div class="input-append">
 										<input id="txtPassword" size="16" name="AccountPassword" class="span2" type="text"
-											value="<?php echo $ppp->getAccountPassword() ?>">
-										<button type="button" id="btnGeneratePassword" class="btn">Genereer!</button>
+											value="<?php echo $ppp->getAccountPassword() ?>"><button type="submit" name="submit" value="generatePassword" id="btnGeneratePassword" class="btn">Genereer!</button>
 									</div>
 								</div>
 							</div>

@@ -370,7 +370,7 @@ namespace solideagle\data_access;
         /*
          * tries to generate a username
          */
-        public static function generateUsername($person,$isStudent=true)
+        public static function generateUsername($person,$isStudent)
         {
         	
         	$counter = "";
