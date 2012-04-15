@@ -28,8 +28,8 @@ namespace solideagle\data_access;
         private $accountUsername;
         private $accountPassword;
         private $accountActive = 1;
-        private $accountActiveUntill  = "";
-        private $accountActiveFrom  = "";
+        private $accountActiveUntill;
+        private $accountActiveFrom;
         private $startDate;
         private $firstName;
         private $name;
@@ -370,20 +370,25 @@ namespace solideagle\data_access;
         /*
          * tries to generate a username
          */
-        public static function tryCreateUsername($person)
+        public static function generateUsername($person,$isStudent=true)
         {
         	
         	$counter = "";
         	
-        	$username = $person->getName() . UnicodeHelper::substr_unicode($person->getFirstName(),0,1) . date("y");
+        	$username = $person->getName() . UnicodeHelper::substr_unicode($person->getFirstName(),0,1);
+        	
+        	if($isStudent)
+        	{
+        		$username .= date("y");
+        	}
         	
         	$username = mb_strtolower($username, 'UTF-8');
         	
         	$sql = "select account_username from person where account_username = :accusername";
         	
-        	$cmd = new DatabaseCommand($sql);
+        	$cmd = new DatabaseCommand();
         	
-        	$cmd->BeginTransaction();
+        	$cmd->BeginTransaction(); //should lock the table, even though we are only reading
         	
         	for(;;)
         	{
@@ -418,8 +423,8 @@ namespace solideagle\data_access;
          */
         public static function addPerson($person)
         {
-                $person->setAccountUsername(Person::tryCreateUsername($person));
-                $person->setAccountPassword(Person::generatePassword());
+               // $person->setAccountUsername(Person::tryCreateUsername($person));
+               // $person->setAccountPassword(Person::generatePassword());
                 $person->setMadeOn(DateConverter::timestampDateToDb(time()));
         	
                 $err = Person::validatePerson($person);
@@ -978,19 +983,17 @@ namespace solideagle\data_access;
             if(!IsNullOrEmptyString($person->getAccountActiveUntill()))
             {
             // account active untill
-            $valErrors = Validator::validateDateTime($person->getAccountActiveUntill(), true);
+            $valErrors = Validator::validateDate($person->getAccountActiveUntill(), true);
             foreach ($valErrors as $valError)
             {
                 switch($valError) {
                     case ValidationError::DATE_BAD_SYNTAX;
-                        $validationErrors[] = "Account actief tot: tijdstip moet ingegeven worden als YYYYMMDDHHMMSS.";
+                        $validationErrors[] = "Account actief tot: tijdstip moet ingegeven worden als YYYYMMDD.";
                         break;
                     case ValidationError::DATE_DOES_NOT_EXIST;
                         $validationErrors[] = "Account actief tot: deze datum bestaat niet.";
                         break;
-                    case ValidationError::TIME_DOES_NOT_EXIST;
-                        $validationErrors[] = "Account actief tot: dit tijdstip bestaat niet.";
-                        break;
+                   
                     default:
                         $validationErrors[] = "Account actief tot: fout."; break;
                 }
@@ -1000,19 +1003,17 @@ namespace solideagle\data_access;
             if(!IsNullOrEmptyString($person->getAccountActiveFrom()))
             {
             // account active from
-            $valErrors = Validator::validateDateTime($person->getAccountActiveFrom(), true);
+            $valErrors = Validator::validateDate($person->getAccountActiveFrom(), true);
             foreach ($valErrors as $valError)
             {
                 switch($valError) {
                     case ValidationError::DATE_BAD_SYNTAX;
-                        $validationErrors[] = "Account actief vanaf: Tijdstip moet ingegeven worden als YYYYMMDDHHMMSS.";
+                        $validationErrors[] = "Account actief vanaf: Tijdstip moet ingegeven worden als YYYYMMDD.";
                         break;
                     case ValidationError::DATE_DOES_NOT_EXIST;
                         $validationErrors[] = "Account actief vanaf: Deze datum bestaat niet.";
                         break;
-                    case ValidationError::TIME_DOES_NOT_EXIST;
-                        $validationErrors[] = "Account actief vanaf: Dit tijdstip bestaat niet.";
-                        break;
+                    
                     default:
                         $validationErrors[] = "Account actief vanaf: fout."; break;
                 }
