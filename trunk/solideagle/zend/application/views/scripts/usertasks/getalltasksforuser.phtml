@@ -1,121 +1,241 @@
+<script>
+	$(function(){
 
-<section id="activedirectory">
-	<div class="page-header">
-		<h1>
-			Active directory <small>taken</small>
-		</h1>
-	</div>
+		$('#myModal').modal('show');
 
-	<div class="row">
-		<div class="span12">
+		var selectedArr = new Array();
 
-			<label class="checkbox"><input name="" type="checkbox"  value=""> Account maken
-			</label>
-			
-			
+		$(".selectUser[checked]").each( 
+			    function(k,v) { 
+			    	selectedArr.push($(v).attr("value"));
+			    } 
+			);
+					
+		$("#formTasks").ajaxForm({
+			data:  {"users":selectedArr},
+			success: function(responseText, statusText, xhr, $form) { 
 
-			<label class="checkbox"><input name="" type="checkbox" data-toggle="collapse" data-target="#demo" value=""> Homedir maken
-			</label>
-			
-			<div id="demo" class="collapse out">
-			
-			<form class="form-horizontal"
+				if(responseText.length > 0)
+				{
+					alert(responseText);
+				}else{
+					$('#myModal').modal('hide');
+					updateTree();
+				}
+				
+	    } });
+
+		
+	});
+
+</script>
+
+<form
+	class="form-horizontal"
 	action="<?php echo $this->SE_path . "/usertasks/posttasks" ?>"
-	method="post" id="formAddUser">
-	<fieldset>
-		<legend>Homefolder</legend>
+	method="post"
+	id="formTasks">
 
-		<div class="control-group">
-			<label class="control-label" for="server">Server</label>
-			<div class="controls">
-				<input id="server" name="server" class="input-xlarge" type="text"
-					value="<?php echo $this->defaults->server; ?>">
-					<p class="help-block "><i>server.domain.example</i></p>
+	<div
+		class="hide SEsupermodal"
+		id="myModal">
+		<div>
+			<div class="modal-header">
+				<a
+					class="close"
+					data-dismiss="modal">×</a>
+				<h3 id="modaltitle">Taken uitvoeren</h3>
 			</div>
-			
-		</div>
-		
-		<div class="control-group">
-			<label class="control-label" for="serverpath">Homefolder pad op server</label>
-			<div class="controls">
-			<div class="input-append">
-				<input id="serverpath" name="serverpath" class="input-xlarge" type="text"
-					value="<?php echo $this->defaults->serverpath; ?>"><span class="add-on">\<?php echo $this->person->getAccountUsername(); ?></span>
-					<p class="help-block "><i>c:\pad\naar\homefolders</i></p>
+			<div class="modal-body">
+
+
+				<section id="activedirectory">
+					<div class="page-header">
+						<h1>
+							Active directory <small>taken</small>
+						</h1>
 					</div>
+
+					<div class="row">
+						<div class="span12">
+
+							<label class="checkbox">
+								<input
+									name="createAdAccount"
+									type="checkbox"
+									value="true">
+								Account maken
+							</label>
+
+							<label class="checkbox">
+								<input
+									name="createAdHomedir"
+									type="checkbox"
+									data-toggle="collapse"
+									data-target="#demo"
+									value="true">
+								Homedir maken
+							</label>
+
+							<div
+								id="demo"
+								class="collapse out">
+								<fieldset>
+									<legend>Homefolder</legend>
+
+									<div class="control-group">
+										<label
+											class="control-label"
+											for="server">Server</label>
+										<div class="controls">
+											<input
+												id="server"
+												name="server"
+												class="input-xlarge"
+												type="text"
+												value="<?php echo $this->defaults->server; ?>">
+											<p class="help-block ">
+												<i>server.domain.example</i>
+											</p>
+										</div>
+
+									</div>
+
+									<div class="control-group">
+										<label
+											class="control-label"
+											for="serverpath">Homefolder pad op server</label>
+										<div class="controls">
+											<div class="input-append">
+												<input
+													id="serverpath"
+													name="serverpath"
+													class="input-xlarge"
+													type="text"
+													value="<?php echo $this->defaults->serverpath; ?>">
+												<span class="add-on">\<?php echo $this->person->getAccountUsername(); ?>
+												</span>
+												<p class="help-block ">
+													<i>c:\pad\naar\homefolders</i>
+												</p>
+											</div>
+										</div>
+									</div>
+
+									<div class="control-group">
+										<label
+											class="control-label"
+											for="scanpath">Scanpad op server</label>
+										<div class="controls">
+											<input
+												id="scanpath"
+												name="scanpath"
+												class="input-xlarge"
+												type="text"
+												value="<?php echo $this->defaults->scanpath; ?>">
+											<p class="help-block ">
+												<i>c:\pad\naar\scanshare</i>
+											</p>
+										</div>
+									</div>
+
+									<div class="control-group">
+										<label
+											class="control-label"
+											for="wwwpath">WWW pad op server</label>
+										<div class="controls">
+											<input
+												id="wwwpath"
+												name="wwwpath"
+												class="input-xlarge"
+												type="text"
+												value="<?php echo $this->defaults->wwwpath; ?>">
+											<p class="help-block ">
+												<i>c:\pad\naar\wwwshare</i>
+											</p>
+										</div>
+									</div>
+
+								</fieldset>
+
+							</div>
+
+							<label class="checkbox">
+								<input
+									name=""
+									type="checkbox"
+									value="">
+								Homedir verplaatsen
+							</label>
+
+							<label class="checkbox">
+								<input
+									name=""
+									type="checkbox"
+									value="">
+								Upload & Download folders maken
+							</label>
+
+						</div>
+					</div>
+				</section>
+
+				<section id="smartschool">
+					<div class="page-header">
+						<h1>
+							Smartschool <small>taken</small>
+						</h1>
+					</div>
+
+					<div class="row">
+						<div class="span12">
+
+							<label class="checkbox">
+								<input
+									name="createSSAccount"
+									type="checkbox"
+									value="true">
+								Account maken
+							</label>
+
+						</div>
+					</div>
+				</section>
+
+				<section id="googleapps">
+					<div class="page-header">
+						<h1>
+							Google <small>taken</small>
+						</h1>
+					</div>
+
+					<div class="row">
+						<div class="span12">
+
+							<label class="checkbox">
+								<input
+									name="createGappAccount"
+									type="checkbox"
+									value="true">
+								Account maken
+							</label>
+
+						</div>
+					</div>
+				</section>
+
+			</div>
+			<div class="modal-footer">
+				<a
+					href="#"
+					class="btn"
+					data-dismiss="modal">Annuleren</a>
+				<button
+					class="btn btn-primary"
+					type="submit">Uitvoeren</button>
 			</div>
 		</div>
+	</div>
 
-		<div class="control-group">
-			<label class="control-label" for="scanpath">Scanpad op server</label>
-			<div class="controls">
-				<input id="scanpath" name="scanpath" class="input-xlarge" type="text"
-					value="<?php echo $this->defaults->scanpath; ?>">
-					<p class="help-block "><i>c:\pad\naar\scanshare</i></p>
-			</div>
-		</div>
-		
-				<div class="control-group">
-			<label class="control-label" for="wwwpath">WWW pad op server</label>
-			<div class="controls">
-				<input id="wwwpath" name="wwwpath" class="input-xlarge" type="text"
-					value="<?php echo $this->defaults->wwwpath; ?>">
-					<p class="help-block "><i>c:\pad\naar\wwwshare</i></p>
-			</div>
-		</div>
 
-	
-	
-	
-
-		
-	
-	</fieldset>
-		
 </form>
-			
-			</div>
-			
-			<label class="checkbox"><input name="" type="checkbox" value=""> Homedir verplaatsen
-			</label>
-
-			<label class="checkbox"><input name="" type="checkbox" value=""> Upload & Download folders maken
-			</label>
-
-		</div>
-	</div>
-</section>
-
-<section id="smartschool">
-	<div class="page-header">
-		<h1>
-			Smartschool <small>taken</small>
-		</h1>
-	</div>
-
-	<div class="row">
-		<div class="span12">
-
-			<label class="checkbox"><input name="" type="checkbox" value=""> Account maken
-			</label>
-			
-		</div>
-	</div>
-</section>
-
-<section id="googleapps">
-	<div class="page-header">
-		<h1>
-			Google <small>taken</small>
-		</h1>
-	</div>
-
-	<div class="row">
-		<div class="span12">
-
-			<label class="checkbox"><input name="" type="checkbox" value=""> Account maken
-			</label>
-			
-		</div>
-	</div>
-</section>
