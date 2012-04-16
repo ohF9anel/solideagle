@@ -60,7 +60,8 @@ class TaskQueue
 	{
 		$tq = new TaskQueue();
 		
-		$traces = debug_backtrace();
+		//get the class that called this function to insert in db
+		$traces = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 		
 		if($type === self::TypePerson)
 			$tq->setPersonid($personOrGroupid);

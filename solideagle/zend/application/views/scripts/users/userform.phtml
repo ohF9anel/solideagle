@@ -1,4 +1,6 @@
 <?php 
+use solideagle\utilities\SuperEntities;
+
 use solideagle\data_access\Person;
 use solideagle\data_access\helpers\DateConverter;
 
@@ -131,14 +133,14 @@ $ppp = $this->person; ?>
 								<label class="control-label" for="txtFirstName">Voornaam</label>
 								<div class="controls">
 									<input id="txtFirstName" name="FirstName" class="input-xlarge" type="text"
-										value="<?php echo $ppp->getFirstName() ?>">
+										value="<?php echo SuperEntities::encode($ppp->getFirstName()) ?>">
 								</div>
 							</div>
 
 							<div class="control-group">
 								<label class="control-label" for="txtName">Naam</label>
 								<div class="controls">
-									<input id="txtName" name="Name" class="input-xlarge" type="text" value="<?php echo $ppp->getName() ?>">
+									<input id="txtName" name="Name" class="input-xlarge" type="text" value="<?php echo SuperEntities::encode($ppp->getName()) ?>">
 								</div>
 							</div>
 
@@ -169,14 +171,14 @@ $ppp = $this->person; ?>
 							<div class="control-group">
 								<label class="control-label" for="txtEmail">Email adres</label>
 								<div class="controls">
-									<input id="txtEmail" name="Email" class="input-xlarge" type="text" value="<?php echo $ppp->getEmail() ?>">
+									<input id="txtEmail" name="Email" class="input-xlarge" type="text" value="<?php echo SuperEntities::encode($ppp->getEmail()) ?>">
 								</div>
 							</div>
 
 							<div class="control-group">
 								<label class="control-label" for="txtPhone">Telefoonnummer</label>
 								<div class="controls">
-									<input id="txtPhone" name="Phone" class="input-xlarge" type="text" value="<?php echo $ppp->getPhone() ?>">
+									<input id="txtPhone" name="Phone" class="input-xlarge" type="text" value="<?php echo SuperEntities::encode($ppp->getPhone()) ?>">
 								</div>
 							</div>
 
@@ -192,7 +194,7 @@ $ppp = $this->person; ?>
 								<div class="controls">
 									<div class="input-append">
 										<input id="txtUsername" size="16" name="AccountUsername" readonly="readonly" class="span2" type="text"
-											value="<?php echo $ppp->getAccountUsername() ?>">
+											value="<?php echo SuperEntities::encode($ppp->getAccountUsername()) ?>">
 									</div>
 								</div>
 							</div>
@@ -203,7 +205,7 @@ $ppp = $this->person; ?>
 								<div class="controls">
 									<div class="input-append">
 										<input id="txtUsername" size="16" name="AccountUsername" class="span2" type="text"
-											value="<?php echo $ppp->getAccountUsername() ?>"><button type="submit" name="submit" value="generateUsername" id="btnGenerateUsername" class="btn">Genereer!</button>
+											value="<?php echo SuperEntities::encode($ppp->getAccountUsername()) ?>"><button type="submit" name="submit" value="generateUsername" id="btnGenerateUsername" class="btn">Genereer!</button>
 									</div>
 								</div>
 							</div>
@@ -218,7 +220,7 @@ $ppp = $this->person; ?>
 								<div class="controls">
 									<div class="input-append">
 										<input id="txtPassword" size="16" name="AccountPassword" readonly="readonly" class="span2" type="text"
-											value="<?php echo $ppp->getAccountPassword() ?>">
+											value="<?php echo SuperEntities::encode($ppp->getAccountPassword()) ?>">
 									</div>
 								</div>
 							</div>
@@ -230,7 +232,7 @@ $ppp = $this->person; ?>
 								<div class="controls">
 									<div class="input-append">
 										<input id="txtPassword" size="16" name="AccountPassword" class="span2" type="text"
-											value="<?php echo $ppp->getAccountPassword() ?>"><button type="submit" name="submit" value="generatePassword" id="btnGeneratePassword" class="btn">Genereer!</button>
+											value="<?php echo SuperEntities::encode($ppp->getAccountPassword()) ?>"><button type="submit" name="submit" value="generatePassword" id="btnGeneratePassword" class="btn">Genereer!</button>
 									</div>
 								</div>
 							</div>
@@ -273,7 +275,7 @@ $ppp = $this->person; ?>
 							<div class="control-group">
 								<label class="control-label" for="txtOtherInformation">Extra informatie</label>
 								<div class="controls">
-									<textarea rows="1" id="txtOtherInformation" name="OtherInformation" class="input-xlarge"><?php echo $ppp->getOtherInformation() ?></textarea>
+									<textarea rows="1" id="txtOtherInformation" name="OtherInformation" class="input-xlarge"><?php echo SuperEntities::encode($ppp->getOtherInformation()) ?></textarea>
 								</div>
 							</div>
 

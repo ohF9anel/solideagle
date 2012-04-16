@@ -40,6 +40,41 @@ class UsertasksController extends Zend_Controller_Action
     		$users[] = Person::getPersonById($userid);
     	}
     	
+    	if($this->getRequest()->getPost('createAdHomedir',false))
+    	{
+    		
+    		$server = $this->getRequest()->getPost("HomefolderServer",NULL);
+    		$homeFolderPath = $this->getRequest()->getPost("HomefolderPath",NULL);
+    		$scanSharePath  = $this->getRequest()->getPost("ScanSharePath",NULL);
+    		$wwwSharePath = $this->getRequest()->getPost("WWWSharePath",NULL);
+    		
+    		foreach($users as $user)
+    		{
+    			/*solideagle\scripts\ad\usermanager::prepareAddHomeFolder($user->getId(),
+    					 $server, $user->getAccountUsername(), $homeFolderPath, $scanSharePath,
+    					 $wwwSharePath, $downloadSharePath, $uploadSharePath);*/
+    		}
+    	
+    	}
+    	
+    	if($this->getRequest()->getPost('createUpDownFolders',false))
+    	{
+    	
+    		$downloadSharePath = $this->getRequest()->getPost("DownloadSharePath",NULL);
+    		$uploadSharePath = $this->getRequest()->getPost("UploadSharePath",NULL);
+    		
+    	
+    		foreach($users as $user)
+    		{
+    			/*solideagle\scripts\ad\usermanager::prepareAddHomeFolder($user->getId(),
+    			 $server, $user->getAccountUsername(), $homeFolderPath, $scanSharePath,
+    					$wwwSharePath, $downloadSharePath, $uploadSharePath);*/
+    		}
+    		 
+    	}
+    	
+    	
+    	
     	if($this->getRequest()->getPost('createAdAccount',false))
     	{
     		foreach($users as $user)
@@ -53,7 +88,7 @@ class UsertasksController extends Zend_Controller_Action
     	{
     		foreach($users as $user)
     		{
-    			//solideagle\scripts\ss\usermanager::prepareAddUser($user);
+    			//solideagle\scripts\smartschool\usermanager::prepareAddUser($user);
     		}
     	}
     	
@@ -64,10 +99,7 @@ class UsertasksController extends Zend_Controller_Action
     			//solideagle\scripts\gapp\usermanager::prepareAddUser($user);
     		}
     	}
-    	
 
-    	
-    	
     	return;
     }
 
@@ -75,11 +107,6 @@ class UsertasksController extends Zend_Controller_Action
     {
     	$this->_helper->layout()->disableLayout();
     
-        if(($person = Person::getPersonById(4)) === NULL)
-      	 	return;
-      	 
-      	 $this->view->person=$person;
-      	 
       	 $this->view->defaults = new stdClass();
       	 
       	 $this->view->defaults->server = "s1.solideagle.lok";

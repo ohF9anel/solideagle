@@ -1,6 +1,8 @@
 <?php
 
 
+use solideagle\utilities\SuperEntities;
+
 use solideagle\data_access\helpers\DateConverter;
 
 use solideagle\data_access\Person;
@@ -184,9 +186,9 @@ class UsersController extends Zend_Controller_Action
 		{
 			$person[0] = $gp->getId();
 			$person[1] = $gp->getId();
-			$person[2] = $gp->getFirstName();
-			$person[3] = $gp->getName();
-			$person[4] = $gp->getAccountUserName();
+			$person[2] = SuperEntities::encode($gp->getFirstName());
+			$person[3] = SuperEntities::encode($gp->getName());
+			$person[4] = SuperEntities::encode($gp->getAccountUserName());
 			$person[5] = $gp->getAccountActive();
 			$person[6] = DateConverter::longDbDateToDisplayDate($gp->getMadeOn());
 			 
