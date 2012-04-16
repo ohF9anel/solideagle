@@ -2,7 +2,7 @@
 use solideagle\data_access\Person;
 use solideagle\data_access\helpers\DateConverter;
 
-$ppp = new Person();
+//$ppp = new Person();
 $ppp = $this->person; ?>
 
 <script>
@@ -184,7 +184,21 @@ $ppp = $this->person; ?>
 
 						<div class="span6">
 
-							<div class="control-group">
+						
+						<?php if($this->state === $this->stateEdit)
+					{?>
+						<div class="control-group">
+								<label class="control-label" for="txtUsername">Gebruikersnaam</label>
+								<div class="controls">
+									<div class="input-append">
+										<input id="txtUsername" size="16" name="AccountUsername" readonly="readonly" class="span2" type="text"
+											value="<?php echo $ppp->getAccountUsername() ?>">
+									</div>
+								</div>
+							</div>
+					<?php }else{ ?>
+					
+						<div class="control-group">
 								<label class="control-label" for="txtUsername">Gebruikersnaam</label>
 								<div class="controls">
 									<div class="input-append">
@@ -193,7 +207,24 @@ $ppp = $this->person; ?>
 									</div>
 								</div>
 							</div>
-
+					
+					<?php } ?>
+					
+						<?php if($this->state === $this->stateEdit)
+					{?>
+						
+							<div class="control-group">
+								<label class="control-label" for="txtPassword">Wachtwoord</label>
+								<div class="controls">
+									<div class="input-append">
+										<input id="txtPassword" size="16" name="AccountPassword" readonly="readonly" class="span2" type="text"
+											value="<?php echo $ppp->getAccountPassword() ?>">
+									</div>
+								</div>
+							</div>
+					<?php }else{ ?>
+					
+						
 							<div class="control-group">
 								<label class="control-label" for="txtPassword">Wachtwoord</label>
 								<div class="controls">
@@ -203,8 +234,14 @@ $ppp = $this->person; ?>
 									</div>
 								</div>
 							</div>
+					
+					<?php } ?>
+						
+							
 
-							<div class="control-group">
+						
+
+							<?php /*<div class="control-group">
 								<label class="control-label" for="cbActive">Account</label>
 								<div class="controls">
 									<label class="checkbox">
@@ -213,7 +250,7 @@ $ppp = $this->person; ?>
 										actief
 									</label>
 								</div>
-							</div>
+							</div>*/ ?>
 
 
 
@@ -356,6 +393,12 @@ $ppp = $this->person; ?>
 					{?>
 						<input type="hidden" name="GroupId" value="<?php echo $this->group->getId(); ?>">
 					<?php } ?>
+					
+					<?php if($this->state === $this->stateEdit)
+					{?>
+						<input type="hidden" name="Id" value="<?php echo $ppp->getId(); ?>">
+					<?php } ?>
+					
 				</fieldset>
 			</div>
 			<div class="modal-footer">
@@ -366,16 +409,16 @@ $ppp = $this->person; ?>
 					?>
 				<a href="#" class="btn" data-dismiss="modal">Annuleren</a>
 				<button class="btn btn-primary" type="submit">Maken</button>
-				<?
+				<?php
 				}else if($this->state === $this->stateEdit){
 					?>
 				<a href="#" class="btn" data-dismiss="modal">Annuleren</a>
-				<button class="btn btn-primary" type="submit">Bijwerken</button>
-				<?
+				<button class="btn btn-primary" name="submit" value="edit" type="submit">Bijwerken</button>
+				<?php
 				}else if($this->state === $this->stateShow){
 					?>
 				<a href="#" class="btn" data-dismiss="modal">Sluiten</a>
-				<?
+				<?php
 				}
 				?>
 

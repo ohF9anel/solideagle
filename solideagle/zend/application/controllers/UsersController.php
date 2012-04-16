@@ -40,12 +40,11 @@ class UsersController extends Zend_Controller_Action
 			
 		
 		$state = $data["state"];
-		
-		echo $state;
+
 		
 		if($state === "show" && isset($data["pid"]) && is_numeric($data["pid"]))
 		{
-			$this->view->state = 2;
+			$this->view->state = $this->view->stateShow;
 			$this->view->person = Person::getPersonById($data["pid"]);
 			if($this->view->person === NULL)
 			{
@@ -55,7 +54,7 @@ class UsersController extends Zend_Controller_Action
 		}
 		else if($state === "edit" && isset($data["pid"]) && is_numeric($data["pid"]))
 		{
-			$this->view->state = 1;
+			$this->view->state = $this->view->stateEdit;
 			$this->view->person = Person::getPersonById($data["pid"]);
 			if($this->view->person === NULL)
 			{
@@ -65,7 +64,7 @@ class UsersController extends Zend_Controller_Action
 		}
 		else
 		{
-			$this->view->state = 0;
+			$this->view->state = $this->view->stateNew;
 			$this->view->person = new Person(); //We don't want errors when rendering the form
 			if(isset($data["gid"]) && is_numeric($data["gid"]))
 			{
@@ -98,8 +97,11 @@ class UsersController extends Zend_Controller_Action
 			$isStudent = true;
 			foreach($this->getRequest()->getPost('ptype', array()) as $id)
 			{
-				if($id === 2)
+				if($id == 2)
+				{
 					$isStudent = false;
+				}
+					
 			}
 			$person->setFirstName($this->getRequest()->getPost('FirstName'));
 			$person->setName($this->getRequest()->getPost('Name'));
@@ -112,12 +114,9 @@ class UsersController extends Zend_Controller_Action
 			echo "GeneratedPassword:" . Person::generatePassword();
 			return;
 		}
-		else if($postmode === "edit")
-		{
-			
-		}
 		
-		//it's a new user
+		
+		//it's a new user or edit
 		
 				
 		foreach($this->getRequest()->getPost('ptype', array()) as $id)
@@ -145,7 +144,15 @@ class UsersController extends Zend_Controller_Action
 			return;
 		}
 			
-		Person::addPerson($person);
+	
+		if($postmode === "edit")
+		{
+			$person->setId($this->getRequest()->getPost('Id'));
+			Person::updatePerson($person);
+		}else{
+			Person::addPerson($person);
+		}
+		
 
 	}
 
@@ -176,11 +183,12 @@ class UsersController extends Zend_Controller_Action
 		foreach(Person::getUsersForDisplayByGroup($gid) as $gp)
 		{
 			$person[0] = $gp->getId();
-			$person[1] = $gp->getFirstName();
-			$person[2] = $gp->getName();
-			$person[3] = $gp->getAccountUserName();
-			$person[4] = $gp->getAccountActive();
-			$person[5] = DateConverter::longDbDateToDisplayDate($gp->getMadeOn());
+			$person[1] = $gp->getId();
+			$person[2] = $gp->getFirstName();
+			$person[3] = $gp->getName();
+			$person[4] = $gp->getAccountUserName();
+			$person[5] = $gp->getAccountActive();
+			$person[6] = DateConverter::longDbDateToDisplayDate($gp->getMadeOn());
 			 
 			$persons[] = $person;
 		}

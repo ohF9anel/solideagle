@@ -370,20 +370,28 @@ namespace solideagle\data_access;
         /*
          * tries to generate a username
          */
-        public static function generateUsername($person,$isStudent)
+        public static function generateUsername($person,$isStudent=false)
         {
         	
         	$counter = "";
         	
-        	$username = $person->getName() . UnicodeHelper::substr_unicode($person->getFirstName(),0,1);
+        	setlocale(LC_CTYPE, 'en_US.utf8'); //need to use an installed locale
         	
+        	$saneName = iconv("UTF-8", "ASCII//TRANSLIT",$person->getName());
+        	$saneFirstName = iconv("UTF-8", "ASCII//TRANSLIT",$person->getFirstName());
+        	
+        	$username =  $saneName . substr($saneFirstName,0,1);
+        	
+        	//strip all non letters
+        	$username = ereg_replace("[^A-Za-z]", "", $username);
+        	
+        	$username = strtolower($username);// mb_strtolower($username, 'UTF-8');
+
         	if($isStudent)
         	{
         		$username .= date("y");
         	}
-        	
-        	$username = mb_strtolower($username, 'UTF-8');
-        	
+
         	$sql = "select account_username from person where account_username = :accusername";
         	
         	$cmd = new DatabaseCommand();
@@ -568,7 +576,7 @@ namespace solideagle\data_access;
         }
         
         /**
-         *
+         * Update user information, does not move user to group
          * @param Person $person 
          */
         public static function updatePerson($person)
@@ -580,194 +588,43 @@ namespace solideagle\data_access;
                     return false;
                 }
                 
-                if (sizeof($person->getTypes()) < 1)
-                {
-                    Logger::log("Person does not have any type(s)! \nPerson object dump:\n" . var_export($person,true) . "\n",PEAR_LOG_ERR);
-                    return false;
-                }
-                
-                // save old data to person_revision
-                
-                $sql = "SELECT * FROM `CentralAccountDB`.`person`
-                        WHERE `id` = :id;";
-                
-                $cmd = new DatabaseCommand($sql);
-                $cmd->addParam(":id", $person->getId());
-
-                $reader = $cmd->executeReader();
-                
-                $retObj = $reader->read();
-                
-                $oldPerson = new Person();
-
-                $oldPerson->setId($retObj->id);
-                $oldPerson->setAccountUsername($retObj->account_username);
-                $oldPerson->setAccountPassword($retObj->account_password);
-                $oldPerson->setAccountActive($retObj->account_active);
-                $oldPerson->setAccountActiveUntill($retObj->account_active_untill);
-                $oldPerson->setAccountActiveFrom($retObj->account_active_from);
-                $oldPerson->setFirstName($retObj->first_name);
-                $oldPerson->setName($retObj->name);
-                $oldPerson->setGender($retObj->gender);
-                $oldPerson->setBirthDate($retObj->birth_date);
-                $oldPerson->setBirthPlace($retObj->birth_place);
-                $oldPerson->setNationality($retObj->nationality);
-                $oldPerson->setStreet($retObj->street);
-                $oldPerson->setHouseNumber($retObj->house_number);
-                $oldPerson->setPostCode($retObj->post_code);
-                $oldPerson->setCity($retObj->city);
-                $oldPerson->setCountry($retObj->country);
-                $oldPerson->setEmail($retObj->email);
-                $oldPerson->setPhone($retObj->phone);
-                $oldPerson->setPhone2($retObj->phone2);
-                $oldPerson->setMobile($retObj->mobile);
-                $oldPerson->setMadeOn($retObj->made_on);
-                $oldPerson->setOtherInformation($retObj->other_information);
-                $oldPerson->setDeleted($retObj->deleted);
-                $oldPerson->setStudentPreviousSchool($retObj->student_previous_school);
-                $oldPerson->setStudentStamnr($retObj->student_stamnr);
-                $oldPerson->setParentOccupation($retObj->parent_occupation);
-                $oldPerson->setGroupId($retObj->group_id);
-                
-                // no difference, no update!
-                if($oldPerson == $person)
-                    return false;     
-
-                $sql = "INSERT INTO `CentralAccountDB`.`person_revision`
-                        (
-                        `id`,
-                        `account_username`,
-                        `account_password`,
-                        `account_active`,
-                        `account_active_untill`,
-                        `account_active_from`,
-                        `first_name`,
-                        `name`,
-                        `gender`,
-                        `birth_date`,
-                        `birth_place`,
-                        `nationality`,
-                        `street`,
-                        `house_number`,
-                        `post_code`,
-                        `city`,
-                        `country`,
-                        `email`,
-                        `phone`,
-                        `phone2`,
-                        `mobile`,
-                        `made_on`,
-                        `other_information`,
-                        `deleted`,
-                        `student_previous_school`,
-                        `student_stamnr`,
-                        `parent_occupation`,
-                        `group_id`
-                        )
-                        VALUES
-                        (
-                        :id,
-                        :account_username,
-                        :account_password,
-                        :account_active,
-                        :account_active_untill,
-                        :account_active_from,
-                        :first_name,
-                        :name,
-                        :gender,
-                        :birth_date,
-                        :birth_place,
-                        :nationality,
-                        :street,
-                        :house_number,
-                        :post_code,
-                        :city,
-                        :country,
-                        :email,
-                        :phone,
-                        :phone2,
-                        :mobile,
-                        :made_on,
-                        :other_information,
-                        :deleted,
-                        :student_previous_school,
-                        :student_stamnr,
-                        :parent_occupation,
-                        :group_id
-                        );
-                        ";
-
-                $cmd = new DatabaseCommand($sql);
-                $cmd->addParam(":id", $oldPerson->getId());
-                $cmd->addParam(":account_username", $oldPerson->getAccountUsername());
-                $cmd->addParam(":account_password", $oldPerson->getAccountPassword());
-                $cmd->addParam(":account_active", $oldPerson->getAccountActive());
-                $cmd->addParam(":account_active_untill", $oldPerson->getAccountActiveUntill());
-                $cmd->addParam(":account_active_from", $oldPerson->getAccountActiveFrom());
-                $cmd->addParam(":first_name", $oldPerson->getFirstName());
-                $cmd->addParam(":name", $oldPerson->getName());
-                $cmd->addParam(":gender", $oldPerson->getGender());
-                $cmd->addParam(":birth_date", $oldPerson->getBirthDate());
-                $cmd->addParam(":birth_place", $oldPerson->getBirthPlace());
-                $cmd->addParam(":nationality", $oldPerson->getNationality());
-                $cmd->addParam(":street", $oldPerson->getStreet());
-                $cmd->addParam(":house_number", $oldPerson->getHouseNumber());
-                $cmd->addParam(":post_code", $oldPerson->getPostCode());
-                $cmd->addParam(":city", $oldPerson->getCity());
-                $cmd->addParam(":country", $oldPerson->getCountry());
-                $cmd->addParam(":email", $oldPerson->getEmail());
-                $cmd->addParam(":phone", $oldPerson->getPhone());
-                $cmd->addParam(":phone2", $oldPerson->getPhone2());
-                $cmd->addParam(":mobile", $oldPerson->getMobile());
-                $cmd->addParam(":made_on", $oldPerson->getMadeOn());
-                $cmd->addParam(":other_information", $oldPerson->getOtherInformation());
-                $cmd->addParam(":deleted", $oldPerson->getDeleted());
-                $cmd->addParam(":student_previous_school", $oldPerson->getStudentPreviousSchool());
-                $cmd->addParam(":student_stamnr", $oldPerson->getStudentStamNr());
-                $cmd->addParam(":parent_occupation", $oldPerson->getParentOccupation());
-                $cmd->addParam(":group_id", $oldPerson->getGroupId());
+                $cmd = new DatabaseCommand();
                 
                 $cmd->BeginTransaction();
-
-                $cmd->execute();
                 
                 // update new person's data
                 
                 $sql = "UPDATE `CentralAccountDB`.`person` SET
-                        `id` = :id,
-                        `account_username` = :account_username,
-                        `account_password` = :account_password,
-                        `account_active` = :account_active,
-                        `account_active_untill` = :account_active_untill,
-                        `account_active_from` = :account_active_from,
-                        `first_name` = :first_name,
-                        `name` = :name,
-                        `gender` = :gender,
-                        `birth_date` = :birth_date,
-                        `birth_place` = :birth_place,
-                        `nationality` = :nationality,
-                        `street` = :street,
-                        `house_number` = :house_number,
-                        `post_code` = :post_code,
-                        `city` = :city,
-                        `country` = :country,
-                        `email` = :email,
-                        `phone` = :phone,
-                        `phone2` = :phone2,
-                        `mobile` = :mobile,
-                        `made_on` = :made_on,
-                        `other_information` = :other_information,
-                        `deleted` = :deleted,
-                        `student_previous_school` = :student_previous_school,
-                        `student_stamnr` = :student_stamnr,
-                        `parent_occupation` = :parent_occupation,
-                        `group_id` = :group_id
-                        WHERE id = :id;
-                        ";
+                        
+						`account_active` = :account_active,
+						`first_name` = :first_name,
+						`name` = :name,
+						`deleted` = :deleted,
+						`account_password` = :account_password,
+						`account_active_untill` = :account_active_untill,
+						`account_active_from` = :account_active_from,
+						`gender` = :gender,
+						`birth_date` = :birth_date,
+						`birth_place` = :birth_place,
+						`nationality` = :nationality,
+						`street` = :street,
+						`house_number` = :house_number,
+						`post_code` = :post_code,
+						`city` = :city,
+						`country` = :country,
+						`email` = :email,
+						`phone` = :phone,
+						`phone2` = :phone2,
+						`mobile` = :mobile,
+						`other_information` = :other_information,
+						`student_previous_school` = :student_previous_school,
+						`student_stamnr` = :student_stamnr,
+						`parent_occupation` = :parent_occupation
+                        WHERE id = :id;";
 
                 $cmd = new DatabaseCommand($sql);
                 $cmd->addParam(":id", $person->getId());
-                $cmd->addParam(":account_username", $person->getAccountUsername());
+               //$cmd->addParam(":account_username", $person->getAccountUsername());
                 $cmd->addParam(":account_password", $person->getAccountPassword());
                 $cmd->addParam(":account_active", $person->getAccountActive());
                 $cmd->addParam(":account_active_untill", $person->getAccountActiveUntill());
@@ -787,14 +644,11 @@ namespace solideagle\data_access;
                 $cmd->addParam(":phone", $person->getPhone());
                 $cmd->addParam(":phone2", $person->getPhone2());
                 $cmd->addParam(":mobile", $person->getMobile());
-                $cmd->addParam(":made_on", $person->getMadeOn());
                 $cmd->addParam(":other_information", $person->getOtherInformation());
                 $cmd->addParam(":deleted", $person->getDeleted());
                 $cmd->addParam(":student_previous_school", $person->getStudentPreviousSchool());
                 $cmd->addParam(":student_stamnr", $person->getStudentStamNr());
                 $cmd->addParam(":parent_occupation", $person->getParentOccupation());
-                $cmd->addParam(":group_id", $person->getGroupId());
-
                 $cmd->execute();
                 
                 // updates person's type(s)

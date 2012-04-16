@@ -2,6 +2,7 @@
 
 	var selectedGroupId = 1;
 	var clickedUserId = -1;
+	var dataTable;
 
 	$(function(){
 
@@ -36,7 +37,24 @@
 			alert("Not Yet Implemented");
 			//$("#modalholder").load("<?php echo $this->SE_path . '/users/userform?state=edit&pid=' ?>" + clickedUserId);
 		});
+
+		$("#MultiTaskLink").click(function(){
+			
+			$("#modalholder").load("<?php echo $this->SE_path . '/usertasks/getalltasksforuser' ?>");
+		});
+
 		
+
+		$("#selectAllCheckbox").click(function(){
+
+			if($(this).attr("checked"))
+			{
+				$(".selectUser").attr("checked","checked");
+			}else{
+				$(".selectUser").removeAttr("checked");
+			}
+			
+		});
 	});
 
 	function updateTree()
@@ -96,11 +114,22 @@
 		</thead>").appendTo($("#groepcontent"));*/?>
 
 
-		$("#userstable").dataTable({
+		dataTable = $("#userstable").dataTable({
 			"bSort":true,
-			"aaSorting" : [[ 5, "desc" ]],
-			"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-			"sDom": '<"row-fluid"fl><"row-fluid"<"btn-group span6"p><"span6"i>>r<"usertablewrapper"t>',
+			"aaSorting" : [[ 6, "desc" ]],
+			 "aoColumns": [
+			               { "bSortable": false },
+			               null,
+			               null,
+			               null,
+			               null,
+			               null,
+			               null
+			             ] ,
+			"iDisplayLength": -1,
+			//"aLengthMenu": [[-1, 10, 25, 50], ["All",10, 25, 50]],
+			//"sDom": '<"row-fluid"fl><"row-fluid"<"btn-group span6"p><"span6"i>>r<"usertablewrapper"t>',
+			"sDom": '<"row-fluid"f>r<"usertablewrapper"t>',
 	        "bProcessing": true,
 	        "oLanguage": {
 	            "sProcessing": "Data ophalen...",
@@ -120,6 +149,12 @@
 	                "sNext": "Volgende",
 	                "sPrevious": "Vorige"
 	            }
+	        }, 
+	        "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
+	            /* Append the grade to the default row class name */
+	          
+	                $('td:eq(0)', nRow).html( "<input class='selectUser' type=checkbox name='user[]' value='"+ aData[0] +"'/>"  );
+	            
 	        },
 
 	    });
@@ -130,8 +165,10 @@
     		
     		$("#useractions > ul > li").addClass('open');
 
-    		clickedUserId = clickedElem.children().first().html();
+    		clickedUserId = clickedElem.find(".selectUser").attr("value");
+
     	
+        	
     		$("#useractions").css({       
             		position: "absolute",
     		        top: e.pageY + "px",
@@ -177,7 +214,7 @@
 						<li><a id="RemoveGroupLink" href="#"> <i class="icon-remove"></i> Groep verwijderen
 						</a></li>
 						<li class="divider"></li>
-						<li><a href="#"><i class="icon-list-alt"></i> Multitask</a></li>
+						<li><a id="MultiTaskLink" href="#"><i class="icon-list-alt"></i> Multitask</a></li>
 					</ul>
 				</li>
 			</ul>
@@ -185,7 +222,8 @@
 				<table id='userstable' class='table'>
 				<thead>
 				<tr>
-				<td>ID <i class='icon-chevron-down'></i><i class='icon-chevron-up'></i></td>
+				<td><input type="checkbox" id="selectAllCheckbox"/></td>
+				<td> ID <i class='icon-chevron-down'></i><i class='icon-chevron-up'></i></td>
 				<td>Voornaam <i class='icon-chevron-down'></i><i class='icon-chevron-up'></i></td>
 				<td>Achternaam <i class='icon-chevron-down'></i><i class='icon-chevron-up'></i></td>
 				<td>Gebruikersnaam <i class='icon-chevron-down'></i><i class='icon-chevron-up'></i></td>
