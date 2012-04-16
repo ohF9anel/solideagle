@@ -1,3 +1,8 @@
+<?php 
+use solideagle\utilities\SuperEntities;
+
+?>
+
 <script>
 	$(function(){
 
@@ -72,13 +77,13 @@
 									name="createAdHomedir"
 									type="checkbox"
 									data-toggle="collapse"
-									data-target="#demo"
+									data-target="#adHomeDirParams"
 									value="true">
 								Homedir maken
 							</label>
 
 							<div
-								id="demo"
+								id="adHomeDirParams"
 								class="collapse out">
 								<fieldset>
 									<legend>Homefolder</legend>
@@ -90,10 +95,10 @@
 										<div class="controls">
 											<input
 												id="server"
-												name="server"
+												name="HomefolderServer"
 												class="input-xlarge"
 												type="text"
-												value="<?php echo $this->defaults->server; ?>">
+												value="<?php echo SuperEntities::encode($this->defaults->server); ?>">
 											<p class="help-block ">
 												<i>server.domain.example</i>
 											</p>
@@ -109,12 +114,11 @@
 											<div class="input-append">
 												<input
 													id="serverpath"
-													name="serverpath"
+													name="HomefolderPath"
 													class="input-xlarge"
 													type="text"
-													value="<?php echo $this->defaults->serverpath; ?>">
-												<span class="add-on">\<?php echo $this->person->getAccountUsername(); ?>
-												</span>
+													value="<?php echo SuperEntities::encode($this->defaults->serverpath); ?>"
+													><span class="add-on">\janssensj</span>
 												<p class="help-block ">
 													<i>c:\pad\naar\homefolders</i>
 												</p>
@@ -129,10 +133,10 @@
 										<div class="controls">
 											<input
 												id="scanpath"
-												name="scanpath"
+												name="ScanSharePath"
 												class="input-xlarge"
 												type="text"
-												value="<?php echo $this->defaults->scanpath; ?>">
+												value="<?php echo SuperEntities::encode($this->defaults->scanpath); ?>">
 											<p class="help-block ">
 												<i>c:\pad\naar\scanshare</i>
 											</p>
@@ -146,14 +150,67 @@
 										<div class="controls">
 											<input
 												id="wwwpath"
-												name="wwwpath"
+												name="WWWSharePath"
 												class="input-xlarge"
 												type="text"
-												value="<?php echo $this->defaults->wwwpath; ?>">
+												value="<?php echo SuperEntities::encode($this->defaults->wwwpath); ?>">
 											<p class="help-block ">
 												<i>c:\pad\naar\wwwshare</i>
 											</p>
 										</div>
+									</div>
+
+								</fieldset>
+
+							</div>
+							
+							<label class="checkbox">
+								<input
+									name="createUpDownFolders"
+									type="checkbox"
+									data-toggle="collapse"
+									data-target="#adUpDownParams"
+									value="true">
+								Upload &amp; Downloadfolders maken
+							</label>
+
+							<div
+								id="adUpDownParams"
+								class="collapse out">
+								<fieldset>
+									<legend>Upload & Downloadfolders</legend>
+
+									<div class="control-group">
+										<label
+											class="control-label"
+											for="server">Uploadpad</label>
+										<div class="controls">
+											<input
+												id="server"
+												name="UploadSharePath"
+												class="input-xlarge"
+												type="text"
+												value="<?php echo SuperEntities::encode($this->defaults->uploadpath); ?>">
+											<p class="help-block ">
+												<i>c:\pad\naar\upload</i>
+											</p>
+										</div>
+										
+											<label
+											class="control-label"
+											for="server">Downloadpad</label>
+										<div class="controls">
+											<input
+												id="server"
+												name="DownloadSharePath"
+												class="input-xlarge"
+												type="text"
+												value="<?php echo SuperEntities::encode($this->defaults->downloadpath); ?>">
+											<p class="help-block ">
+												<i>c:\pad\naar\download</i>
+											</p>
+										</div>
+
 									</div>
 
 								</fieldset>
@@ -166,14 +223,6 @@
 									type="checkbox"
 									value="">
 								Homedir verplaatsen
-							</label>
-
-							<label class="checkbox">
-								<input
-									name=""
-									type="checkbox"
-									value="">
-								Upload & Download folders maken
 							</label>
 
 						</div>

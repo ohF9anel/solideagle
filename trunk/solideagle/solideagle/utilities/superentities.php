@@ -6,7 +6,7 @@ class SuperEntities
 {
 	public static function encode( $str ){
 		// get rid of existing entities else double-escape
-		$str = html_entity_decode(stripslashes($str),ENT_QUOTES,'UTF-8');
+		//$str = html_entity_decode(stripslashes($str),ENT_QUOTES,'UTF-8');
 		$ar = preg_split('/(?<!^)(?!$)/u', $str );  // return array of every multi-byte character
 		$str2 = "";
 		foreach ($ar as $c){

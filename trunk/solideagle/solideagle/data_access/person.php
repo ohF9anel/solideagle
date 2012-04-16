@@ -104,7 +104,8 @@ namespace solideagle\data_access;
 
         public function setAccountActive($accountActive)
         {
-            $this->accountActive = $accountActive;
+        	//TODO
+            //$this->accountActive = $accountActive;
         }
 
         public function getAccountActiveUntill()
