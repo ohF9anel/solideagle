@@ -1,6 +1,6 @@
 <?php
 
-namespace Smartschool;
+namespace solideagle\plugins\smartschool;
 
 require_once 'config.php';
 use SoapClient;

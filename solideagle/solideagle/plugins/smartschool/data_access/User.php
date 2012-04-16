@@ -1,12 +1,10 @@
 <?php
-namespace Smartschool;
-require_once 'Api.php';
-require_once 'data_access/Person.php';
+namespace solideagle\plugins\smartschool;
 
 use DataAccess\Person;
 use DataAccess\Group;
 
-class SSUser
+class User
 {
 	
 	//saveUser properties

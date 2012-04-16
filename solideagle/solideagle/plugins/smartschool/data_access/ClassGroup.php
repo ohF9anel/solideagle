@@ -1,5 +1,5 @@
 <?php
-namespace Smartschool;
+namespace solideagle\plugins\smartschool;
 require_once 'Api.php';
 
 class ClassGroup{

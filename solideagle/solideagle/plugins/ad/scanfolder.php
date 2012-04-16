@@ -33,7 +33,6 @@ class ScanFolder
             $conn->write("rmdir " . $scanSharePath . "\\" . $username . " /s /q\n");
         }
 //        
-//        while($data = $conn->_get_channel_packet(NET_SSH2_CHANNEL_SHELL))
 //{
 //	echo $data;
 //}
