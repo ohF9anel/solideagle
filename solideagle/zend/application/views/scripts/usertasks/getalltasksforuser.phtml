@@ -10,7 +10,7 @@ use solideagle\utilities\SuperEntities;
 
 		var selectedArr = new Array();
 
-		$(".selectUser[checked]").each( 
+		$(".selectUser:checked").each( 
 			    function(k,v) { 
 			    	selectedArr.push($(v).attr("value"));
 			    } 
