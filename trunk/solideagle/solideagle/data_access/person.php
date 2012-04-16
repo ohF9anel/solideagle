@@ -384,7 +384,7 @@ namespace solideagle\data_access;
         	$username =  $saneName . substr($saneFirstName,0,1);
         	
         	//strip all non letters
-        	$username = ereg_replace("[^A-Za-z]", "", $username);
+        	$username = preg_replace("[^A-Za-z]", "", $username);
         	
         	$username = strtolower($username);// mb_strtolower($username, 'UTF-8');
 
