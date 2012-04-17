@@ -118,7 +118,7 @@ class daemon
 		foreach(TaskQueue::getAllPlatforms() as $platform)
 		{
 			$tasksss = TaskQueue::getTasksToRunForPlatform($platform);
-			echo("running " . count($tasks) . " tasks for platform " . $platform . "...\n");
+			echo("running " . count($tasksss) . " tasks for platform " . $platform . "...\n");
 			
 			foreach($tasksss as $taskqueue)
 			{
