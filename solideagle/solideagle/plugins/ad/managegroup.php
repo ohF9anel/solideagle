@@ -18,14 +18,14 @@ class managegroup
         $info['objectClass'] = "group";
         $info["cn"] = $group->getName();
         
-        $dn = "CN=" . $group->getName() . ",OU=" . Config::$ad_groups_ou . "," . Config::$ad_dc;
+        $dn = "CN=" . $group->getName() . ",OU=" . Config::singleton()->ad_groups_ou . "," . Config::singleton()->ad_dc;
         $r = ldap_add($connLdap->getConn(), $dn, $info);
         
         if ($memberOfGroup != null && $r)
         {
             unset($info);
-            $info['member'] = "CN=" . $group->getName() . ", OU=" . Config::$ad_groups_ou . ", " . Config::$ad_dc;
-            $dn = "CN=" . $memberOfGroup->getName() . ", OU=" . Config::$ad_groups_ou . ", " . Config::$ad_dc;
+            $info['member'] = "CN=" . $group->getName() . ", OU=" . Config::singleton()->ad_groups_ou . ", " . Config::singleton()->ad_dc;
+            $dn = "CN=" . $memberOfGroup->getName() . ", OU=" . Config::singleton()->ad_groups_ou . ", " . Config::singleton()->ad_dc;
             if (!ldap_mod_add($connLdap->getConn(), $dn, $info))
             {
                 Logger::log("Group cannot be added to group \"" . $memberOfGroup->getName() . "\"");
@@ -46,7 +46,7 @@ class managegroup
         $info['objectClass'] = "group";
         $info["cn"] = $oldGroup->getName();
         
-        $oldDn = "CN=" . $oldGroup->getName() . ",OU=" . Config::$ad_groups_ou . "," . Config::$ad_dc;
+        $oldDn = "CN=" . $oldGroup->getName() . ",OU=" . Config::singleton()->ad_groups_ou . "," . Config::singleton()->ad_dc;
         $rDn = "CN=" . $newGroup->getName();
         $r = ldap_rename($connLdap->getConn(), $oldDn, $rDn, null, true);
 
@@ -59,7 +59,7 @@ class managegroup
         if ($connLdap->getConn() == null)
             return array(false, "LDAP Connectie mislukt");
         
-        $dn = "OU=" . Config::$ad_groups_ou . "," . Config::$ad_dc;
+        $dn = "OU=" . Config::singleton()->ad_groups_ou . "," . Config::singleton()->ad_dc;
         
         $sr = ldap_search($connLdap->getConn(), $dn, "(CN=" . ConnectionLdap::escapeForLDAPSearch($group->getName()) . ")");
     	$groupInfo = ldap_get_entries($connLdap->getConn(), $sr);
@@ -69,7 +69,7 @@ class managegroup
         foreach($groupInfo[0]['memberof'] as $key => $parentDn) {
             if($key === 'count') continue;
             // remove member in parent
-            if("CN=" . $oldParent->getName() . ",OU=" . Config::$ad_groups_ou . "," . Config::$ad_dc == $parentDn)
+            if("CN=" . $oldParent->getName() . ",OU=" . Config::singleton()->ad_groups_ou . "," . Config::singleton()->ad_dc == $parentDn)
             {
                 var_dump("REMOVING PARENT" . $parentDn);
                 $info['member'] = "CN=" . $group->getName() . "," . $dn;
@@ -85,12 +85,12 @@ class managegroup
             {
                 foreach($groupInfo[0]['member'] as $memberDn)
                 {
-                    if($memberDn == "CN=" . $child->getName() . ",OU=" . Config::$ad_groups_ou . "," . Config::$ad_dc)
+                    if($memberDn == "CN=" . $child->getName() . ",OU=" . Config::singleton()->ad_groups_ou . "," . Config::singleton()->ad_dc)
                     {
                         unset($info);
                         var_dump("REMOVING CHILD" . $child->getName());
                         $info['member'] = $memberDn;
-                        ldap_mod_del($connLdap->getConn(), "CN=" . $group->getName() . ",OU=" . Config::$ad_groups_ou . "," . Config::$ad_dc, $info);
+                        ldap_mod_del($connLdap->getConn(), "CN=" . $group->getName() . ",OU=" . Config::singleton()->ad_groups_ou . "," . Config::singleton()->ad_dc, $info);
                     }
                 }
             }
@@ -104,8 +104,8 @@ class managegroup
         if ($newParent != null)
         {
             unset($info);
-            $info['member'] = "CN=" . $group->getName() . ", OU=" . Config::$ad_groups_ou . ", " . Config::$ad_dc;
-            $dn = "CN=" . $newParent->getName() . ", OU=" . Config::$ad_groups_ou . ", " . Config::$ad_dc;
+            $info['member'] = "CN=" . $group->getName() . ", OU=" . Config::singleton()->ad_groups_ou . ", " . Config::singleton()->ad_dc;
+            $dn = "CN=" . $newParent->getName() . ", OU=" . Config::singleton()->ad_groups_ou . ", " . Config::singleton()->ad_dc;
             $r = ldap_mod_add($connLdap->getConn(), $dn, $info);
             if (!$r)
             {
@@ -119,8 +119,8 @@ class managegroup
             foreach($newChildren as $child)
             {
                 unset($info);
-                $info['member'] = "CN=" . $child->getName() . ", OU=" . Config::$ad_groups_ou . ", " . Config::$ad_dc;
-                $dn = "CN=" . $group->getName() . ", OU=" . Config::$ad_groups_ou . ", " . Config::$ad_dc;
+                $info['member'] = "CN=" . $child->getName() . ", OU=" . Config::singleton()->ad_groups_ou . ", " . Config::singleton()->ad_dc;
+                $dn = "CN=" . $group->getName() . ", OU=" . Config::singleton()->ad_groups_ou . ", " . Config::singleton()->ad_dc;
                 if (!ldap_mod_add($connLdap->getConn(), $dn, $info))
                 {
                     Logger::log("Group \"" . $child->getName() . "\" cannot be added to group \"" . $group->getName() . "\"");
@@ -138,7 +138,7 @@ class managegroup
         if ($connLdap->getConn() == null)
             return array(false, "LDAP Connectie mislukt");
         
-        $dn = "CN=" . $group->getName() . ",OU=" . Config::$ad_groups_ou . "," . Config::$ad_dc;
+        $dn = "CN=" . $group->getName() . ",OU=" . Config::singleton()->ad_groups_ou . "," . Config::singleton()->ad_dc;
         $ret = ldap_delete($connLdap->getConn(), $dn);
 
         return new StatusReport($ret ,ldap_error($connLdap->getConn()));

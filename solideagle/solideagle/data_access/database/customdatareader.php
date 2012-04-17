@@ -13,7 +13,12 @@ class CustomDataReader
 		$this->_stmt = $stmt;
 	}
 	
-	public function read() //false on no more records
+	/*
+	 * returns one record
+	 * return false on no more records
+	 * 
+	 */
+	public function read() 
 	{
 		return $this->_stmt->fetch(PDO::FETCH_OBJ);
 	}	

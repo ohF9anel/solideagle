@@ -11,8 +11,8 @@ class Api
 
 	private function __construct()
 	{
-		$this->client = new SoapClient(Config::$ss_ws_url);
-		$this->apiKey = Config::$ss_ws_psw;
+		$this->client = new SoapClient(Config::singleton()->ss_ws_url);
+		$this->apiKey = Config::singleton()->ss_ws_psw;
 	}
 
 	public static function singleton()

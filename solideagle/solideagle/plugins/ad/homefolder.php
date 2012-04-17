@@ -29,18 +29,18 @@ class HomeFolder
         
         // set permissions to local folder
         //$conn->write("icacls " . $path . "\\" . $username . " /q /reset /t\n");
-        $conn->write("setacl -ot file -actn ace -ace \"n:" . Config::$ad_dns . "\Domain Administrators;s:n;p:full;i:sc,so\" -on " . $path . "\\" . $username . "\n");        
+        $conn->write("setacl -ot file -actn ace -ace \"n:" . Config::singleton()->ad_dns . "\Domain Administrators;s:n;p:full;i:sc,so\" -on " . $path . "\\" . $username . "\n");        
         $conn->write("takeown /F " . $path . "\\" . $username . " /A /R /D Y\n");
         $conn->write("takeown /F " . $path . "\\" . $username . "\\*.* /A /R /D Y\n");
         
         // add read groups
-        $cmd = "icacls " . $path . "\\" . $username . " /q /grant *S-1-5-32-544:F *S-1-5-18:F " . Config::$ad_dns . "\\" . $username . ":M ";
+        $cmd = "icacls " . $path . "\\" . $username . " /q /grant *S-1-5-32-544:F *S-1-5-18:F " . Config::singleton()->ad_dns . "\\" . $username . ":M ";
         
         if ($arrReadRightsGroups != null)
         {
             foreach($arrReadRightsGroups as $group)
             {
-                $cmd .= Config::$ad_dns . "\\" . $group->getName() . ":R ";
+                $cmd .= Config::singleton()->ad_dns . "\\" . $group->getName() . ":R ";
             }
         }
         
@@ -49,12 +49,12 @@ class HomeFolder
         $conn->write($cmd);  
 
         // share and set permissions
-        $cmd = "net share " . $username . "$=" . $path . "\\" . $username . " /grant:" . Config::$ad_dns . "\\" . $username . ",change /grant:\"" . Config::$ad_dns . "\\Domain Admins\",read ";
+        $cmd = "net share " . $username . "$=" . $path . "\\" . $username . " /grant:" . Config::singleton()->ad_dns . "\\" . $username . ",change /grant:\"" . Config::singleton()->ad_dns . "\\Domain Admins\",read ";
         if ($arrReadRightsGroups != null)
         {
             foreach($arrReadRightsGroups as $group)
             {
-                $cmd .= "/grant:" .Config::$ad_dns . "\\" . $group->getName() . ",read ";
+                $cmd .= "/grant:" .Config::singleton()->ad_dns . "\\" . $group->getName() . ",read ";
             }
         }
         $cmd .= "/cache:None\n";
@@ -82,10 +82,10 @@ class HomeFolder
             if (HomeFolder::removeHomeFolder($oldServer, $oldPath, $username))
             {
                 // share and set permissions
-                $cmd = "net share " . $username . "$=" . $newPath . "\\" . $username . " /grant:" .Config::$ad_dns . "\\" . $username . ",change /grant:\"" .Config::$ad_dns . "\\Domain Admins\",read ";
+                $cmd = "net share " . $username . "$=" . $newPath . "\\" . $username . " /grant:" .Config::singleton()->ad_dns . "\\" . $username . ",change /grant:\"" .Config::singleton()->ad_dns . "\\Domain Admins\",read ";
                 foreach($arrReadRightsGroups as $group)
                 {
-                    $cmd .= "/grant:" .Config::$ad_dns . "\\" . $group->getName() . ",read ";
+                    $cmd .= "/grant:" .Config::singleton()->ad_dns . "\\" . $group->getName() . ",read ";
                 }
                 $cmd .= "/cache:None\n";
 

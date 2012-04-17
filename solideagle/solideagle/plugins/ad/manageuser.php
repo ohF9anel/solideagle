@@ -43,7 +43,7 @@ class ManageUser
             $dn .= "OU=" . $arrParentsOUs[$i]->getName() . ", ";
         }
         
-        $dn .= Config::$ad_dc;
+        $dn .= Config::singleton()->ad_dc;
         $r = ldap_add($connLdap->getConn(), $dn, $userInfo);
         if ($r)
         {
@@ -71,7 +71,7 @@ class ManageUser
         // add user to correct group
         foreach($groups as $group)
         {
-            $group_name = "CN=" . $group->getName() . ", OU=" . Config::$ad_groups_ou . ", " . Config::$ad_dc;
+            $group_name = "CN=" . $group->getName() . ", OU=" . Config::singleton()->ad_groups_ou . ", " . Config::singleton()->ad_dc;
             $group_info['member'] = $dn;
             if (!ldap_mod_add($connLdap->getConn(), $group_name, $group_info))
             {
@@ -101,15 +101,15 @@ class ManageUser
             $parentDn .= "OU=" . $arrParentsOUs[$i]->getName() . ", ";
         }
 
-        $parentDn .= Config::$ad_dc;
+        $parentDn .= Config::singleton()->ad_dc;
         $dn = "CN=" . $userInfo['cn'] . ", " . $parentDn;
         
-        $sr = ldap_search($connLdap->getConn(), Config::$ad_dc, "(uid=" . $userInfo['uid'] . ")");
+        $sr = ldap_search($connLdap->getConn(), Config::singleton()->ad_dc, "(uid=" . $userInfo['uid'] . ")");
         $oldUserInfo = ldap_get_entries($connLdap->getConn(), $sr);
         
         if (!isset($oldUserInfo[0]))
         {
-            Logger::log("User \"" . $userInfo['uid'] . "\" trying to update in AD not found in: \"" . Config::$ad_dc. "\".");
+            Logger::log("User \"" . $userInfo['uid'] . "\" trying to update in AD not found in: \"" . Config::singleton()->ad_dc. "\".");
             return false;
         }
         // move user to other ou?
@@ -160,12 +160,12 @@ class ManageUser
         $connLdap = ConnectionLDAP::singleton();
         if ($connLdap->getConn() == null)
             return new StatusReport(false, "Connection to AD cannot be made.");
-        $sr = ldap_search($connLdap->getConn(), Config::$ad_dc, "(sAMAccountName=" . $userName . ")");
+        $sr = ldap_search($connLdap->getConn(), Config::singleton()->ad_dc, "(sAMAccountName=" . $userName . ")");
         $userInfo = ldap_get_entries($connLdap->getConn(), $sr);
         if (!isset($userInfo[0]))
         {
-            Logger::log("User \"" . $userName . "\" trying to delete in AD not found in: \"" . Config::$ad_dc. "\".");
-            return new StatusReport(false, "Gebruiker \"" . $userName . "\" niet gevonden in: \"" . Config::$ad_dc. "\". Kan niet verwijderen.");
+            Logger::log("User \"" . $userName . "\" trying to delete in AD not found in: \"" . Config::singleton()->ad_dc. "\".");
+            return new StatusReport(false, "Gebruiker \"" . $userName . "\" niet gevonden in: \"" . Config::singleton()->ad_dc. "\". Kan niet verwijderen.");
         }
         // delete user
         else 
