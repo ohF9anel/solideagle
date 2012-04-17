@@ -1,5 +1,7 @@
 <?php
 
+use solideagle\Config;
+
 use solideagle\data_access\Type;
 
 use solideagle\scripts\ad\homefoldermanager;
@@ -55,6 +57,8 @@ class UsertasksController extends Zend_Controller_Action
     	{
     		foreach($users as $user)
     		{
+    			
+    			
     			solideagle\scripts\ad\usermanager::prepareAddUser($user);
     		}
     		
@@ -111,12 +115,12 @@ class UsertasksController extends Zend_Controller_Action
     
       	 $this->view->defaults = new stdClass();
       	 
-      	 $this->view->defaults->server = "s1.solideagle.lok";
-      	 $this->view->defaults->serverpath = "c:\homefolders";
-      	 $this->view->defaults->scanpath = "c:\scans";
-      	 $this->view->defaults->wwwpath = "c:\www";
-      	 $this->view->defaults->downloadpath = "c:\downloads";
-      	 $this->view->defaults->uploadpath = "c:\uploads";
+      	 $this->view->defaults->server = Config::$ssh_server;
+      	 $this->view->defaults->serverpath = Config::$path_homefolders;
+      	 $this->view->defaults->scanpath = Config::$path_share_scans;/
+      	 $this->view->defaults->wwwpath = Config::$path_share_www;
+      	 $this->view->defaults->downloadpath =   Config::$path_share_downloads;
+      	 $this->view->defaults->uploadpath =  Config::$path_share_uploads;
     }
 
 

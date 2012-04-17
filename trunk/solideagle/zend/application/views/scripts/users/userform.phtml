@@ -50,7 +50,10 @@ $ppp = $this->person; ?>
                 }).css("cursor","default").attr("readonly","readonly");
 
 		$("#formUser").ajaxForm({
+			beforeSubmit:  preventDobuleSubmit,
 			success: function(responseText, statusText, xhr, $form) { 
+
+				isSubmitting = false;
 
 				if(responseText.length > 0)
 				{
@@ -72,6 +75,19 @@ $ppp = $this->person; ?>
 					updateUsers();
 				}
 	    } });
+
+		var isSubmitting = false;
+		
+		function preventDobuleSubmit(formData, jqForm, options) { 
+			
+		    if(isSubmitting)
+		    {
+			    return false;
+		    }else{
+		    	isSubmitting = true;
+		    	return true;
+		    }
+		} 
 		
 	});
 
