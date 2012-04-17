@@ -89,7 +89,7 @@ class oumanager implements TaskInterface
                 $config["ou"] = $ou;
                 $config["parentous"] = Group::getParents($ou);
 
-		TaskQueue::insertNewTask($config, $ou->getId());
+		TaskQueue::insertNewTask($config, $ou->getId(), TaskQueue::TypeGroup);
 	}
         
         public static function prepareMoveOu($ou, $oldparents)
@@ -99,7 +99,7 @@ class oumanager implements TaskInterface
                 $config["oldparents"] = $oldparents;
                 $config["newparents"] = Group::getParents($ou);
 
-		TaskQueue::insertNewTask($config, $ou->getId());
+		TaskQueue::insertNewTask($config, $ou->getId(), TaskQueue::TypeGroup);
 	}
         
         public static function prepareUpdateOu($oldou, $newou)
@@ -109,15 +109,16 @@ class oumanager implements TaskInterface
                 $config["newou"] = $newou;
                 $config["parentous"] = Group::getParents($oldou);
 
-		TaskQueue::insertNewTask($config, $oldou->getId());
+		TaskQueue::insertNewTask($config, $oldou->getId(), TaskQueue::TypeGroup);
 	}
         
         public static function prepareRemoveOu($ou)
 	{
 		$config["action"] = self::ActionRemoveOu;
                 $config["ou"] = $ou;
+                $config["parentous"] = Group::getParents($ou);
 
-		TaskQueue::insertNewTask($config, $ou->getId());
+		TaskQueue::insertNewTask($config, $ou->getId(), TaskQueue::TypeGroup);
 	}
 
 	public function getParams()
