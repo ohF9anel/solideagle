@@ -1,5 +1,9 @@
 <?php
 
+use solideagle\data_access\Type;
+
+use solideagle\scripts\ad\homefoldermanager;
+
 use solideagle\data_access\Person;
 
 use solideagle\logging\Logger;
@@ -40,38 +44,10 @@ class UsertasksController extends Zend_Controller_Action
     		$users[] = Person::getPersonById($userid);
     	}
     	
-    	if($this->getRequest()->getPost('createAdHomedir',false))
-    	{
-    		
-    		$server = $this->getRequest()->getPost("HomefolderServer",NULL);
-    		$homeFolderPath = $this->getRequest()->getPost("HomefolderPath",NULL);
-    		$scanSharePath  = $this->getRequest()->getPost("ScanSharePath",NULL);
-    		$wwwSharePath = $this->getRequest()->getPost("WWWSharePath",NULL);
-    		
-    		foreach($users as $user)
-    		{
-    			/*solideagle\scripts\ad\usermanager::prepareAddHomeFolder($user->getId(),
-    					 $server, $user->getAccountUsername(), $homeFolderPath, $scanSharePath,
-    					 $wwwSharePath, $downloadSharePath, $uploadSharePath);*/
-    		}
+    
     	
-    	}
     	
-    	if($this->getRequest()->getPost('createUpDownFolders',false))
-    	{
     	
-    		$downloadSharePath = $this->getRequest()->getPost("DownloadSharePath",NULL);
-    		$uploadSharePath = $this->getRequest()->getPost("UploadSharePath",NULL);
-    		
-    	
-    		foreach($users as $user)
-    		{
-    			/*solideagle\scripts\ad\usermanager::prepareAddHomeFolder($user->getId(),
-    			 $server, $user->getAccountUsername(), $homeFolderPath, $scanSharePath,
-    					$wwwSharePath, $downloadSharePath, $uploadSharePath);*/
-    		}
-    		 
-    	}
     	
     	
     	
@@ -98,6 +74,31 @@ class UsertasksController extends Zend_Controller_Action
     		{
     			solideagle\scripts\ga\usermanager::prepareAddUser($user);
                         solideagle\scripts\ga\usermanager::prepareAddUserToOu($user);
+    		}
+    	}
+    	
+    	
+    	if($this->getRequest()->getPost('createAdHomedir',false))
+    	{
+    	
+    		$server = $this->getRequest()->getPost("HomefolderServer",NULL);
+    		$homeFolderPath = $this->getRequest()->getPost("HomefolderPath",NULL);
+    		$scanSharePath  = $this->getRequest()->getPost("ScanSharePath",NULL);
+    		$wwwSharePath = $this->getRequest()->getPost("WWWSharePath",NULL);
+    	
+    		//up & down folders
+    		$downloadSharePath = NULL;
+    		$uploadSharePath = NULL;
+    		if($this->getRequest()->getPost('createUpDownFolders',false))
+    		{
+    			$downloadSharePath = $this->getRequest()->getPost("DownloadSharePath",NULL);
+    			$uploadSharePath = $this->getRequest()->getPost("UploadSharePath",NULL);
+    		}
+    	
+    		foreach($users as $user)
+    		{
+    			solideagle\scripts\ad\homefoldermanager::prepareAddHomefolder($server, $homeFolderPath, $scanSharePath,
+    					$wwwSharePath, $user,$uploadSharePath,$downloadSharePath);
     		}
     	}
 

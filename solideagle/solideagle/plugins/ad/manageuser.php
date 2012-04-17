@@ -16,11 +16,11 @@ class ManageUser
             return new StatusReport(false, "Connection to AD cannot be made.");
         
         // every user should have a parent ou, because root ou is gebruikers
-        if ($arrParentsOUs == null)
+        /*if ($arrParentsOUs == null)
         {
             Logger::log(var_export($arrParentsOUs, true) . "\nuser has no parent groups, every user should be at least child of root (gebruikers).");
-            return false;
-        }
+            return new StatusReport(false,"user has no parents group (OU does not exist?)");
+        }*/
 
         $userInfo["objectclass"] = "user";
         $userInfo["useraccountcontrol"] = $userInfo['enabled'] ? "66048" : "66050";
