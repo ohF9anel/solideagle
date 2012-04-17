@@ -22,7 +22,7 @@ class ConnectionLDAP
         if (!$anon) {
             $this->conn = null;
             // test connection failed
-            Logger::log("Connection to AD cannot be made on: " . Config::$ad_dc_host);
+            Logger::log("Connection to AD cannot be made on: " . Config::singleton()->ad_dc_host);
         }
         else {
             // test passed
@@ -30,7 +30,7 @@ class ConnectionLDAP
             ldap_set_option($this->conn, LDAP_OPT_PROTOCOL_VERSION, 3);
             ldap_set_option($this->conn, LDAP_OPT_REFERRALS, 0);
             
-            if (!ldap_bind($this->conn, Config::$ad_username, Config::$ad_password))
+            if (!ldap_bind($this->conn, Config::singleton()->ad_username, Config::singleton()->ad_password))
             {
                 $this->conn = null;
                 Logger::log("Could not bind to AD server with given credentials.");  

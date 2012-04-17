@@ -25,6 +25,7 @@ class UsertasksController extends Zend_Controller_Action
     public function indexAction()
     {
        
+
     }
 
 
@@ -115,12 +116,12 @@ class UsertasksController extends Zend_Controller_Action
     
       	 $this->view->defaults = new stdClass();
       	 
-      	 $this->view->defaults->server = Config::$ssh_server;
-      	 $this->view->defaults->serverpath = Config::$path_homefolders;
-      	 $this->view->defaults->scanpath = Config::$path_share_scans;/
-      	 $this->view->defaults->wwwpath = Config::$path_share_www;
-      	 $this->view->defaults->downloadpath =   Config::$path_share_downloads;
-      	 $this->view->defaults->uploadpath =  Config::$path_share_uploads;
+      		$this->view->defaults->server = Config::singleton()->ssh_server;
+      	 $this->view->defaults->serverpath = Config::singleton()->path_homefolders;
+      	 $this->view->defaults->scanpath = Config::singleton()->path_share_scans;
+      	 $this->view->defaults->wwwpath = Config::singleton()->path_share_www;
+      	 $this->view->defaults->downloadpath =   Config::singleton()->path_share_downloads;
+      	 $this->view->defaults->uploadpath =  Config::singleton()->path_share_uploads;
     }
 
 
