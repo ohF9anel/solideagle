@@ -6,6 +6,7 @@ use solideagle\plugins\ad\SSHManager;
 use solideagle\data_access\Type;
 
 use solideagle\data_access\person;
+use solideagle\plugins\ad\ManageUser;
 use solideagle\plugins\ad\HomeFolder;
 use solideagle\plugins\ad\ScanFolder;
 use solideagle\plugins\ad\WwwFolder;
@@ -37,7 +38,15 @@ class homefoldermanager implements TaskInterface
 			ScanFolder::setScanFolder($config["server"], $config["homefolderpath"], $config["scansharepath"], $config["username"]);
 			WwwFolder::setWwwFolder($config["server"], $config["homefolderpath"],$config["wwwsharepath"], $config["username"]);
 			SSHManager::singleton()->getConnection($config["server"])->write("exit\n");
-			return true;
+                        
+                        $ret = ManageUser::setHomeFolder($config["username"], "\\\\" . $config["server"]);
+			if($ret->isSucces())
+                        {
+                                return true;	
+                        }else{
+                                $taskqueue->setErrorMessages($ret->getError());
+                                return false;
+                        }
 		}
 		else if($config["action"] == self::ActionAddUploadFolder && isset($config["server"]) && isset($config["homefolderpath"]) && isset($config["uploadsharepath"]) && isset($config["username"]))
 		{
@@ -77,7 +86,7 @@ class homefoldermanager implements TaskInterface
 		$config["username"] = $user->getAccountUsername();
 		
 		if ($user->isTypeOf(Type::TYPE_LEERLING))
-			$config["homefolderpath"] .= "/" . substr($user->getMadeOn(), 2, 2);
+                    $config["homefolderpath"] .= "\\" . substr($user->getMadeOn(), 2, 2);
 
 		TaskQueue::insertNewTask($config, $user->getId(), TaskQueue::TypePerson);
 
