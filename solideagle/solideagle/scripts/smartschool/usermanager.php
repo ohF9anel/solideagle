@@ -1,92 +1,64 @@
 <?php
-namespace smartschoolplugin;
+namespace solideagle\scripts\smartschool;
 
-require_once 'data_access/BaseTask.php';
-require_once 'data_access/TaskQueue.php';
-require_once 'plugins/smartschool/data_access/SSUser.php';
 
-use DataAccess\BaseTask;
-use DataAccess\TaskQueue;
 
-use Smartschool\SSUser;
+use solideagle\data_access\TaskQueue;
+
+use solideagle\plugins\smartschool\data_access\User;
+use solideagle\data_access\TaskInterface;
 
 class usermanager implements TaskInterface
 {
-	
-        const ActionAddSsUser = 0;
-    
-	public function __construct($taskid = NULL,$personid= NULL)
-	{
-		parent::__construct($taskid, $personid, parent::TypePerson);
-	}
-	
-	public function getParams()
-	{
-		
-	}
-	
+
+	const ActionAddUser = 0;
+
 	public function runTask($taskqueue)
 	{
 		$config = $taskqueue->getConfiguration();
-		
+
 		if(!isset($config["action"]))
 		{
 			$taskqueue->setErrorMessages("Probleem met configuratie");
 			return false;
 		}
-		
-		if($config["action"] == self::ActionAddSsUser)
+
+		if($config["action"] == self::ActionAddUser)
 		{
-                        if (!isset($config["user"]))
-                        {
-                                $taskqueue->setErrorMessages("Probleem met configuratie");
-                                return false;
-                        }
-                        
-                        $ret = SSUser::saveUser($config["user"]);
-			
-			if($ret == "SUCCESS")
+			if (!isset($config["user"]))
 			{
-				return true;	
-			}
-                        else{
-				$taskqueue->setErrorMessages($ret);
+				$taskqueue->setErrorMessages("Probleem met configuratie");
 				return false;
 			}
-                }
-                else if($config["action"] == self::ActionAddHomeFolder)
-                {
-                        if (!isset($config["server"]) || !isset($config["username"]) || !isset($config["homeFolderPath"]) || !isset($config["scanSharePath"]) || !isset($config["downloadSharePath"]) || !isset($config["uploadSharePath"]) || !isset($config["wwwSharePath"]))
-                        {
-                                $taskqueue->setErrorMessages("Probleem met configuratie");
-                                return false;
-                        }
-                        $mhf = new ManageHomeFolder($config["server"], $config["username"], $config["homeFolderPath"], $config["scanSharePath"], $config["wwwSharePath"], $config["downloadSharePath"], $config["uploadSharePath"]);
-                        $mhf->startHomeFolderManager();
-                }
-                else
-                {
-			$taskqueue->setErrorMessages("Probleem met configuratie");
-			return false; //it failed for some reason
+
+			$ret = User::saveUser($config["user"]);
+				
+			if($ret->isSucces())
+			{
+				return true;
+			}
+			else{
+				$taskqueue->setErrorMessages($ret->getError());
+				return false;
+			}
 		}
 		
+
 		$taskqueue->setErrorMessages("Probleem met configuratie");
 		return false;
 	}
-	
-	public function createTaskFromParams($params)
+
+
+	public static function prepareAddUser($person)
 	{
-	
-	}
-	
-	public function prepareAddSsUser($user)
-	{
-		$config["action"] = self::ActionAddSsUser;
-                $config["user"] = $user;
+		$config["action"] = self::ActionAddUser;
+		$config["user"] = User::convertPersonToSsUser($person);
+
 		
-		$this->addToQueue($config);
+		TaskQueue::insertNewTask($config, $person->getId());
+		
 	}
-	
-	
-	
+
+
+
 }

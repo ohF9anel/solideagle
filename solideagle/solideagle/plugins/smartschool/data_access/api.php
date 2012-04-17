@@ -1,8 +1,10 @@
 <?php
 
-namespace solideagle\plugins\smartschool;
+namespace solideagle\plugins\smartschool\data_access;
 
-require_once 'config.php';
+
+use solideagle\Config;
+
 use SoapClient;
 
 
@@ -125,6 +127,11 @@ class Api
 	public function __wakeup()
 	{
 		trigger_error('Unserializing is not allowed.', E_USER_ERROR);
+	}
+	
+	public static function getErrorFromCode($code)
+	{
+		return Error::getErrorFromCode($code);
 	}
 }
 

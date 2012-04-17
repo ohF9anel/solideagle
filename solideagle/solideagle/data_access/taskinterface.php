@@ -10,9 +10,9 @@ interface TaskInterface
 	 */
 	public function runTask($taskqueue);
 
-	public function getParams();
+	//public function getParams();
 
-	public function createTaskFromParams($params);
+	//public function createTaskFromParams($params);
 
 
 }

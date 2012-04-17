@@ -18,7 +18,10 @@ class IndexController extends Zend_Controller_Action
 
     public function indexAction()
     {
-       	$this->view->taskQueue = TaskQueue::getTasksToRun();
+       	$this->view->taskQueue = array();
+       	$this->view->taskQueue[] = 	TaskQueue::getTasksToRunForPlatform(TaskQueue::PLATFORM_AD);
+       	$this->view->taskQueue[] = 	TaskQueue::getTasksToRunForPlatform(TaskQueue::PLATFORM_GAPP);
+       	$this->view->taskQueue[] = 	TaskQueue::getTasksToRunForPlatform(TaskQueue::PLATFORM_SMARTSCHOOL);
     }
 
     public function groupsandusersAction()
