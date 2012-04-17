@@ -17,59 +17,66 @@ class daemon
 			$this->runTasks();
 		}
 	}
-	
+
 	private function isCli() {
 		return php_sapi_name()==="cli";
 	}
 
 	private function runTasks()
 	{
-		
-        echo("running " . count(TaskQueue::getTasksToRun()) . " tasks...\n");
 
-     
-		foreach(TaskQueue::getTasksToRun() as $taskqueue)
+
+
+		 
+
+		foreach(TaskQueue::getAllPlatforms() as $platform)
 		{
-         
-			$class = $taskqueue->getTask_class();
-			
-			echo "Running task: " . $class . "\n";
-			var_dump($taskqueue);
-			flush();
-			
-			if(class_exists($class))
+			$tasksss = TaskQueue::getTasksToRunForPlatform($platform);
+			echo("running " . count($tasks) . " tasks for platform " . $platform . "...\n");
+				
+			foreach($tasksss as $taskqueue)
 			{
-				$script = new $class();
-			
-			}else{
-				$taskqueue->setErrorMessages("Task class: " .$class.  " does not exist!");
-				TaskQueue::increaseErrorCount($taskqueue);
-				return;
-			}
-			
-			
-			if(method_exists($script,"runTask"))
-			{
-				if($script->runTask($taskqueue))
+				 
+				$class = $taskqueue->getTask_class();
+					
+				echo "Running task: " . $class . "\n";
+				var_dump($taskqueue);
+				flush();
+					
+				if(class_exists($class))
 				{
-					TaskQueue::addToRollback($taskqueue);
-					
-					echo("Task ran succesfully!\n");
-					
+					$script = new $class();
+						
 				}else{
-					
+					$taskqueue->setErrorMessages("Task class: " .$class.  " does not exist!");
 					TaskQueue::increaseErrorCount($taskqueue);
-					
-					echo("Task failed\n");
-					
 					return;
 				}
-			}else{
-				$taskqueue->setErrorMessages("Task method: runScript does not exist!");
-				TaskQueue::increaseErrorCount($taskqueue);
-				return;
+					
+					
+				if(method_exists($script,"runTask"))
+				{
+					if($script->runTask($taskqueue))
+					{
+						TaskQueue::addToRollback($taskqueue);
+							
+						echo("Task ran succesfully!\n");
+							
+					}else{
+							
+						TaskQueue::increaseErrorCount($taskqueue);
+							
+						echo("Task failed\n");
+							
+						return;
+					}
+				}else{
+					$taskqueue->setErrorMessages("Task method: runScript does not exist!");
+					TaskQueue::increaseErrorCount($taskqueue);
+					return;
+				}
+					
 			}
-			
 		}
 	}
 }
