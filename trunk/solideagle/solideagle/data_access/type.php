@@ -6,6 +6,14 @@ namespace solideagle\data_access;
 use solideagle\data_access\database\DatabaseCommand;
 class Type
 {
+	
+	//these one should be the same as the database
+	const TYPE_ADMIN = 1;
+	const TYPE_LEERKRACHT = 2;
+	const TYPE_LEERLING =3;
+	const TYPE_STAGIAR =4;
+	const TYPE_OUDER =5;
+	
 	// variables
 	private $id;
 	private $typeName;

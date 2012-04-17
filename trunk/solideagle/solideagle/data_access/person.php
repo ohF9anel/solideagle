@@ -22,7 +22,6 @@ namespace solideagle\data_access;
     
     class Person
     {
-
         // variables
         private $id;
         private $accountUsername;
@@ -1205,6 +1204,17 @@ namespace solideagle\data_access;
         	
         	
         	return $retarr;
+        }
+        
+        public function isTypeOf($type)
+        {
+        	foreach($this->types as $type)
+        	{
+        		if($type->getId() == $type)
+        		{
+        			return true;
+        		}
+        	}
         }
         
         public static function getTypesByPersonId($personId)

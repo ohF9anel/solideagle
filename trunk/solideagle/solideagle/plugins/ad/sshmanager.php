@@ -32,7 +32,7 @@ class SSHManager
 		$conn = new \Net_SSH2($servername);	
 		if (!$conn->login(Config::$ad_administrator, Config::$ad_password))
 		{
-			Logger::getLogger()->log("Login to SSH failed on " . $servername);
+			Logger::log("Login to SSH failed on " . $servername);
 			return null;
 		}
 		
