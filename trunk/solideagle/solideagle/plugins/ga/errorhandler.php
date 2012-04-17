@@ -2,8 +2,7 @@
 
 namespace solideagle\plugins\ga;
 
-require_once('Zend/Loader.php');
-\Zend_Loader::loadClass('Zend_Gdata_Gapps');
+
 
 class errorhandler
 {

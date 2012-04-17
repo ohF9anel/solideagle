@@ -10,8 +10,9 @@ class Config
 	
 	public function __get($name)
 	{
-		
-		if (array_key_exists($name, $this->configarr)) {
+		//isset gives better performance but does not return true on NULL values, so we add array key exists which is slower
+		//but will rarely be called due to short circuiting
+		if (isset($this->configarr[$name]) || array_key_exists($name, $this->configarr)) {
 			return $this->configarr[$name];
 		}
 	}

@@ -9,6 +9,15 @@ class TaskQueue
 	const TypeGroup = 0;
 	const TypePerson = 1;
 	
+	const PLATFORM_AD = "active directory";
+	const PLATFORM_SMARTSCHOOL = "smartschool";
+	const PLATFORM_GAPP = "google apps";
+	
+	public static function getAllPlatforms()
+	{
+		return array(self::PLATFORM_AD,self::PLATFORM_SMARTSCHOOL,self::PLATFORM_GAPP);
+	}
+	
 	private $id;
 	/**
 	 *
@@ -19,6 +28,7 @@ class TaskQueue
 	private $errorcount;
 	private $errormessages;
 	private $task_class;
+	private $platform;
 	//---only one of these can not be NULL
 	private $groupid = NULL;
 	private $personid = NULL;
@@ -34,14 +44,16 @@ class TaskQueue
 		`person_id`,
 		`group_id`,
 		`task_class`,
-		`configuration`
+		`configuration`,
+		`platform`
 		)
 		VALUES
 		(
 		:personid,
 		:groupid,
 		:task_class,
-		:config
+		:config,
+		:platform
 		);";
 
 		$cmd = new DatabaseCommand($sql);
@@ -49,6 +61,7 @@ class TaskQueue
 		$cmd->addParam(":groupid", $taskQueue->getGroupid());
 		$cmd->addParam(":task_class", $taskQueue->getTask_class());
 		$cmd->addParam(":config", $taskQueue->getConfigurationForDb());
+		$cmd->addParam(":platform", $taskQueue->getPlatform());
 
 		$cmd->execute();
 	}
@@ -68,12 +81,28 @@ class TaskQueue
 		else 
 			$tq->setGroupid($personOrGroupid);
 		
+		//get the class that called
+		$class = $traces[1]["class"];
+		
+		$platform ="";
+		//lets get the platform by searching the namespace
+		if(!(strpos($class,"\\ad\\") === false))
+		{
+			$platform = self::PLATFORM_AD;
+		}else if(!(strpos($class,"\\smartschool\\") === false)){
+			$platform = self::PLATFORM_SMARTSCHOOL;
+		}else if(!(strpos($class,"\\ga\\") === false)){
+			$platform = self::PLATFORM_GAPP;
+		}
+		
+		
 		$tq->setConfiguration($config);
-		$tq->setTask_class($traces[1]["class"]);
+		$tq->setTask_class($class);
+		$tq->setPlatform($platform);
 		self::addToQueue($tq);
 	}
 	
-	public static function getTasksToRun()
+	/*public static function getTasksToRun()
 	{
 		$sql = "SELECT
 			`task_queue`.`id`,
@@ -100,6 +129,43 @@ class TaskQueue
 			$tq->setErrorcount($row->errorcount);
 			$tq->setErrormessages($row->errormessages);
 			
+			$retarr[] = $tq;
+		});
+		
+		return $retarr;
+	}*/
+	
+	public static function getTasksToRunForPlatform($platform)
+	{
+		$sql = "SELECT
+		`task_queue`.`id`,
+		`task_queue`.`person_id`,
+		`task_queue`.`group_id`,
+		`task_queue`.`task_class`,
+		`task_queue`.`configuration`,
+		`task_queue`.`errorcount`,
+		`task_queue`.`errormessages`,
+		`task_queue`.`platform`
+		FROM `CentralAccountDB`.`task_queue` 
+		WHERE `task_queue`.`platform` = :platform;";
+		
+		$cmd = new DatabaseCommand($sql);
+		$cmd->addParam(":platform", $platform);
+		
+		$retarr = array();
+		
+		$cmd->executeReader()->readAll(function($row) use (&$retarr){
+				
+			$tq = new TaskQueue();
+			$tq->setId($row->id);
+			$tq->setPersonid($row->person_id);
+			$tq->setGroupid($row->group_id);
+			$tq->setTask_class($row->task_class);
+			$tq->setConfigurationFromDb($row->configuration);
+			$tq->setErrorcount($row->errorcount);
+			$tq->setErrormessages($row->errormessages);
+			$tq->setPlatform($row->platform);
+				
 			$retarr[] = $tq;
 		});
 		
@@ -227,6 +293,16 @@ class TaskQueue
 	public function setTask_class($task_class)
 	{
 	    $this->task_class = $task_class;
+	}
+
+	public function getPlatform()
+	{
+	    return $this->platform;
+	}
+
+	public function setPlatform($platform)
+	{
+	    $this->platform = $platform;
 	}
 }
 

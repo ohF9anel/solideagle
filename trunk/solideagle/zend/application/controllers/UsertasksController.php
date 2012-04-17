@@ -1,5 +1,7 @@
 <?php
 
+use solideagle\scripts\smartschool\usermanager;
+
 use solideagle\Config;
 
 use solideagle\data_access\Type;
@@ -69,7 +71,7 @@ class UsertasksController extends Zend_Controller_Action
     	{
     		foreach($users as $user)
     		{
-    			//solideagle\scripts\smartschool\usermanager::prepareAddUser($user);
+    			solideagle\scripts\smartschool\usermanager::prepareAddUser($user);
     		}
     	}
     	

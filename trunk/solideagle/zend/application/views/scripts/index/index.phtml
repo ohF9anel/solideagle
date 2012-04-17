@@ -9,7 +9,7 @@
 
 <div class="row-fluid">
 	<div class="span12">
-		<h2>Task queue</h2>
+		<h2>Task queue AD</h2>
 
 
 		<table class="table">
@@ -27,7 +27,7 @@
 
 
 				<?php 
-				foreach ($this->taskQueue as $tq)
+				foreach ($this->taskQueue[0] as $tq)
 				{?>
 
 				<tr
@@ -54,7 +54,105 @@
 			</tbody>
 		</table>
 	</div>
+</div>
 
 
+<div class="row-fluid">
+	<div class="span12">
+		<h2>Task queue GAPP</h2>
+
+
+		<table class="table">
+			<thead>
+				<tr>
+					<td>Group id</td>
+					<td>Person id</td>
+					<td>Task</td>
+
+					<td>Error count</td>
+					<td>Error messages</td>
+				</tr>
+			</thead>
+			<tbody>
+
+
+				<?php 
+				foreach ($this->taskQueue[1] as $tq)
+				{?>
+
+				<tr
+				<?php if($tq->getErrorCount()>0){echo 'class="alert alert-error"';} ?>>
+					<td><?php echo $tq->getGroupid() ?>
+					</td>
+					<td><?php echo $tq->getPersonid() ?>
+					</td>
+
+					<td><span class="label label-inverse" data-toggle="collapse"
+						data-target="<?php echo "#tqid" . $tq->getId(); ?>"> <?php echo $tq->gettask_class() ?>
+					</span> <pre id="<?php echo "tqid" . $tq->getId(); ?>"
+							class="collapse out"><?php var_dump( $tq->getConfiguration()) ?></pre>
+					</td>
+
+
+					<td><?php echo $tq->getErrorCount() ?>
+					</td>
+					<td><pre><?php echo $tq->getErrorMessages() ?></pre>
+					</td>
+				</tr>
+
+				<?php } ?>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
+<div class="row-fluid">
+	<div class="span12">
+		<h2>Task queue SMARTSCHOOL</h2>
+
+
+		<table class="table">
+			<thead>
+				<tr>
+					<td>Group id</td>
+					<td>Person id</td>
+					<td>Task</td>
+
+					<td>Error count</td>
+					<td>Error messages</td>
+				</tr>
+			</thead>
+			<tbody>
+
+
+				<?php 
+				foreach ($this->taskQueue[2] as $tq)
+				{?>
+
+				<tr
+				<?php if($tq->getErrorCount()>0){echo 'class="alert alert-error"';} ?>>
+					<td><?php echo $tq->getGroupid() ?>
+					</td>
+					<td><?php echo $tq->getPersonid() ?>
+					</td>
+
+					<td><span class="label label-inverse" data-toggle="collapse"
+						data-target="<?php echo "#tqid" . $tq->getId(); ?>"> <?php echo $tq->gettask_class() ?>
+					</span> <pre id="<?php echo "tqid" . $tq->getId(); ?>"
+							class="collapse out"><?php var_dump( $tq->getConfiguration()) ?></pre>
+					</td>
+
+
+					<td><?php echo $tq->getErrorCount() ?>
+					</td>
+					<td><pre><?php echo $tq->getErrorMessages() ?></pre>
+					</td>
+				</tr>
+
+				<?php } ?>
+			</tbody>
+		</table>
+	</div>
 </div>
 

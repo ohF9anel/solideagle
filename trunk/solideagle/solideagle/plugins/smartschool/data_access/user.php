@@ -1,8 +1,15 @@
 <?php
-namespace solideagle\plugins\smartschool;
+namespace solideagle\plugins\smartschool\data_access;
 
-use DataAccess\Person;
-use DataAccess\Group;
+
+
+use solideagle\data_access\Group;
+
+use solideagle\data_access\Type;
+
+use solideagle\data_access\Person;
+
+use solideagle\plugins\StatusReport;
 
 class User
 {
@@ -80,21 +87,22 @@ class User
 		$api = Api::singleton();
 		$returnvalue += $api->saveUser($user->internnumber,$user->username,$user->passwd1,$user->passwd2,$user->passwd3,$user->name,$user->surname,$user->extranames,$user->initials,$user->sex,$user->birthday,$user->birthplace,$user->birthcountry,$user->address,$user->postalcode,$user->location,$user->country,$user->email,$user->mobilephone,$user->homephone,$user->fax,$user->prn,$user->stamboeknummer,$user->basisrol,$user->untis);
 		
-		assert('$returnvalue == 0 /* return value not zero, something went wrong!*/');
+	
 		if($returnvalue != 0)
-			return $returnvalue;
+			return new StatusReport(false,Api::singleton()->getErrorFromCode($returnvalue));
 		
 		$returnvalue += $api->saveUserToClasses($user->internnumber,$user->classCodes);
 		
-		assert('$returnvalue == 0 /* return value not zero, something went wrong!*/');
+	
 		if($returnvalue != 0)
-			return $returnvalue;
+			return new StatusReport(false,Api::singleton()->getErrorFromCode($returnvalue));
 		
 		$returnvalue += $api->setAccountStatus($user->internnumber,$user->accountStatus);		
 		
-		assert('$returnvalue == 0 /* return value not zero, something went wrong!*/');
-		
-		return $returnvalue;
+		if($returnvalue != 0)
+			return new StatusReport(false,Api::singleton()->getErrorFromCode($returnvalue));
+	
+		return new StatusReport();
 	}
 	
 	public static function removeUser($user)
@@ -164,7 +172,7 @@ class User
 	{
 	    $this->sex = $sex;
 	}
-
+	
 	public function setBirthday($birthday)
 	{
 	    $this->birthday = $birthday;
@@ -375,14 +383,16 @@ class User
             return $this->classCodes;
         }
 
+       
         public function getAccountStatus()
         {
             return $this->accountStatus;
         }
         
+    	
         public static function convertPersonToSsUser($person)
         {
-            $user = new SSUser();
+            $user = new User();
             
             $user->setInternnumber($person->getId());
             $user->setPasswd1($person->getAccountPassword());
@@ -408,9 +418,16 @@ class User
             $user->setPrn("");
             $user->setStamboeknummer($person->getStudentStamnr());
             
-            $types = Person::getTypesByPersonId($person->getId());
+            $user->addClass(Group::getGroupById($person->getGroupId())->getName());
             
-            $user->setBasisrol($types[0]);
+          	if($person->isTypeOf(Type::TYPE_LEERLING))
+          	{
+          		$user->setBasisrol("leerling");
+          	}else{
+          		$user->setBasisrol("leerkracht");
+          	}
+            
+           
             $user->setUntis("");
             
             $user->setAccountStatus($person->getAccountActive() ? "actief" : "inactief");
