@@ -3,8 +3,6 @@
 
 namespace solideagle\data_access;
 
-	
-
 	use solideagle\data_access\helpers\UnicodeHelper;
 
 	use solideagle\data_access\helpers\DateConverter;
@@ -13,8 +11,6 @@ namespace solideagle\data_access;
 		return (!isset($question) || trim($question)==='');
 	}
 
-
-	
 	use solideagle\data_access\database\DatabaseCommand;
 	use solideagle\data_access\validation\Validator;
 	use solideagle\data_access\validation\ValidationError;
@@ -795,14 +791,14 @@ namespace solideagle\data_access;
             $validationErrors = array();
            
             // account username
-            $valErrors = Validator::validateString($person->getAccountUsername(), 0, 45, false);
+            $valErrors = Validator::validateString($person->getAccountUsername(), 1, 45, false);
             foreach ($valErrors as $valError)
             {
                 switch($valError) {
                     case ValidationError::STRING_TOO_LONG:
                         $validationErrors[] = "Gebruikersnaam: mag niet langer zijn dan 45 karakters."; break;
                     case ValidationError::STRING_TOO_SHORT:
-                        $validationErrors[] = "Gebruikersnaam: niet ingevoerd."; break;
+                        $validationErrors[] = "Gebruikersnaam: te kort."; break;
                     case ValidationError::STRING_HAS_SPECIAL_CHARS:
                         $validationErrors[] = "Gebruikersnaam: mag geen speciale tekens bevatten."; break;
                     default:
@@ -811,7 +807,7 @@ namespace solideagle\data_access;
             }
             
             // account password
-            $valErrors = Validator::validatePassword($person->getAccountPassword(), 0, 64, true, true, true);
+            $valErrors = Validator::validateString($person->getAccountPassword(), 1, 64, true);
             foreach ($valErrors as $valError)
             {
                 switch($valError) {
@@ -819,16 +815,7 @@ namespace solideagle\data_access;
                         $validationErrors[] = "Wachtwoord: mag niet langer zijn dan 45 karakters.";
                         break;
                     case ValidationError::STRING_TOO_SHORT:
-                        $validationErrors[] = "Wachtwoord: moet langer zijn dan 8 karakters.";
-                        break;
-                    case ValidationError::PSW_NO_LOWER_CASE:
-                        $validationErrors[] = "Wachtwoord: moet een kleine letter bevatten.";
-                        break;
-                    case ValidationError::PSW_NO_UPPER_CASE:
-                        $validationErrors[] = "Wachtwoord: moet een hoofdletter bevatten.";
-                        break;
-                    case ValidationError::PSW_NO_NUMBER:
-                        $validationErrors[] = "Wachtwoord: moet een nummer bevatten.";
+                        $validationErrors[] = "Wachtwoord: te kort.";
                         break;
                     default:
                         $validationErrors[] = "Wachtwoord: fout."; break;
@@ -1206,11 +1193,11 @@ namespace solideagle\data_access;
         	return $retarr;
         }
         
-        public function isTypeOf($type)
+        public function isTypeOf($typeToCheck)
         {
         	foreach($this->types as $type)
         	{
-        		if($type->getId() == $type)
+        		if($type->getId() == $typeToCheck)
         		{
         			return true;
         		}
