@@ -116,7 +116,7 @@ class UsertasksController extends Zend_Controller_Action
     
       	 $this->view->defaults = new stdClass();
       	 
-      		$this->view->defaults->server = Config::singleton()->ssh_server;
+      	 $this->view->defaults->server = Config::singleton()->ssh_server;
       	 $this->view->defaults->serverpath = Config::singleton()->path_homefolders;
       	 $this->view->defaults->scanpath = Config::singleton()->path_share_scans;
       	 $this->view->defaults->wwwpath = Config::singleton()->path_share_www;

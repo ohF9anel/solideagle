@@ -27,6 +27,7 @@ class User
     private $mobile;
     private $mail;
     private $info;
+    private $homeDirectory;    
     
     // to be unset before adding
     private $groups = array();
@@ -40,7 +41,6 @@ class User
     {
         return get_object_vars($this);
     }
-    
 
     public function setCn($cn)
     {
@@ -163,6 +163,11 @@ class User
         return $this->cn;
     }
     
+    public function setHomeDirectory($homeDirectory)
+    {
+        $this->homeDirectory = $homeDirectory;
+    }
+    
     public static function convertPersonToAdUser($person)
     {
         $user = new User();
@@ -185,6 +190,9 @@ class User
         $user->setMail($person->getEmail());
         $user->setInfo($person->getOtherInformation());
 
+        //home folder
+        //$user->setHomeDirectory($person->);
+        
         $user->setEnabled($person->getAccountActive());
         $user->addMemberOfGroups(Group::getGroupById($person->getGroupId()));
         

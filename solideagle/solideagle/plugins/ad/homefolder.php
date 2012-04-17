@@ -60,6 +60,9 @@ class HomeFolder
         $cmd .= "/cache:None\n";
         $conn->write($cmd);  
         
+        // set homefolder attribute in ad
+        
+        
         return true;
     }
     

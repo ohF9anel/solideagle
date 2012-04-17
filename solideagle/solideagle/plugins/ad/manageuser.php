@@ -174,6 +174,30 @@ class ManageUser
         }
         return new StatusReport($r,ldap_error($connLdap->getConn()));
     }
+    
+    public static function setHomeFolder($username, $share)
+    {
+        $connLdap = ConnectionLDAP::singleton();
+        if ($connLdap->getConn() == null)
+            return new StatusReport(false, "Connection to AD cannot be made.");
+
+        $sr = ldap_search($connLdap->getConn(), Config::singleton()->ad_dc, "(sAMAccountName=" . $username . ")");
+        $userInfo = ldap_get_entries($connLdap->getConn(), $sr);
+        
+        if (!isset($userInfo[0]))
+        {
+            Logger::log("User \"" . $username . "\" trying to set homefolder attribute in AD not found in: \"" . Config::singleton()->ad_dc. "\".");
+            return new StatusReport(false, "User \"" . $username . "\" trying to set homefolder attribute in AD not found in: \"" . Config::singleton()->ad_dc. "\".");
+        }
+        
+        $update["homeDirectory"] = $share;
+        
+        $ret = ldap_modify($connLdap->getConn(), $userInfo[0]["distinguishedname"][0], $update);
+        if (!$ret)
+            Logger::log(var_export($userInfo, true) . "\n: user cannot be modified");
+
+        return new StatusReport($ret, ldap_error($connLdap->getConn()));
+    }
 }
 
 ?>
