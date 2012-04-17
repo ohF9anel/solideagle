@@ -96,7 +96,8 @@ class UsertasksController extends Zend_Controller_Action
     	{
     		foreach($users as $user)
     		{
-    			//solideagle\scripts\gapp\usermanager::prepareAddUser($user);
+    			solideagle\scripts\ga\usermanager::prepareAddUser($user);
+                        solideagle\scripts\ga\usermanager::prepareAddUserToOu($user);
     		}
     	}
 
