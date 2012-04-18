@@ -1,11 +1,14 @@
 <?php
 
+
+
 namespace solideagle\data_access;
 
 	use solideagle\data_access\database\DatabaseCommand;
 	use solideagle\data_access\validation\Validator;
 	use solideagle\data_access\validation\ValidationError;
 	use solideagle\logging\Logger;
+	use solideagle\data_access\Type;
 
 class Group
 {
@@ -161,6 +164,27 @@ class Group
 		$cmd->addParam(":parentid", $group->getParentId());
 
 		$cmd->execute();
+		
+		
+		$sql = "INSERT INTO `CentralAccountDB`.`default_type_group`
+				(`type`,
+				`group`)
+				VALUES
+				(
+				:type,
+				:group
+				);";
+		
+		foreach($types as $type)
+		{
+			$cmd->newQuery($sql);
+			
+			$cmd->addParam(":group", $group->getId());
+			$cmd->addParam(":type", $type->getId());
+			
+			$cmd->execute();
+		}
+		
 
 	
 
@@ -207,8 +231,34 @@ class Group
 		$cmd->addParam(":id", $group->getId());
 			
 		$cmd->execute();
-
-
+		
+		//remove types
+		$sql = "DELETE FROM `CentralAccountDB`.`default_type_group`
+		WHERE `group` = :groupid; ";
+		
+		$cmd->newQuery($sql);
+		$cmd->addParam(":groupid", $group->getId());
+		$cmd->execute();
+		
+		//reinsert types
+		$sql = "INSERT INTO `CentralAccountDB`.`default_type_group`
+		(`type`,
+		`group`)
+		VALUES
+		(
+		:type,
+		:group
+		);";
+		
+		foreach($group->types as $type)
+		{
+			$cmd->newQuery($sql);
+				
+			$cmd->addParam(":group", $group->getId());
+			$cmd->addParam(":type", $type->getId());
+				
+			$cmd->execute();
+		}
 	}
 
 	/**
@@ -540,6 +590,8 @@ class Group
 			$tmpgroup->setName($row->name);
 			$tmpgroup->setDescription($row->description);
 		}
+		
+		
 
 		return $tmpgroup;
 	
@@ -547,12 +599,27 @@ class Group
 
 	public function getTypes()
 	{
-	    return $this->types;
+	    $sql = "SELECT 		`type`.`id`, `type`.`type_name`
+				
+				FROM `CentralAccountDB`.`default_type_group`, `CentralAccountDB`.`type`
+				WHERE `default_type_group`.`type` = `type`.`id` AND `default_type_group`.`group` = :groupid;";
+		
+		$cmd = new DatabaseCommand($sql);
+		$cmd->addParam(":groupid", $this->getId());
+		
+		$types=array();
+		
+		$cmd->executeReader()->readAll(function($dataobj) use (&$types)
+		{
+			$types[] = new Type($dataobj->id,$dataobj->type_name);
+		});
+
+		return $types;
 	}
 
-	public function setTypes($types)
+	public function addType($type)
 	{
-	    $this->types = $types;
+	    $this->types[] = $type;
 	}
 }
 

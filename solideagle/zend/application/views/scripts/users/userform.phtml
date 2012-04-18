@@ -130,10 +130,14 @@ $ppp = $this->person; ?>
 									<label class="checkbox inline SEinline">
 										<input name="ptype[]" value="<?php echo $type->getId(); ?>"
 										<?php
-										if(in_array($type,$ppp->getTypes()))
+										if( //put some checkmarks
+												in_array($type,$ppp->getTypes())
+												|| ($this->state === $this->stateNew && in_array($type,$this->group->getTypes()))
+										)
 										{
 											echo "checked='checked'";
 										}
+											
 										?>
 											type="checkbox">
 										<?php echo $type->getTypeName(); ?>

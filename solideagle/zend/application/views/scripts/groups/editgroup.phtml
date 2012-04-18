@@ -80,6 +80,7 @@
 							<label class="checkbox">
 								<input name="ptype[]" value="<?php echo $type->getId(); ?>"
 								<?php
+								
 								if(in_array($type,$this->group->getTypes()))
 								{
 									echo "checked='checked'";
