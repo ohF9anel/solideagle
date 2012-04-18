@@ -108,9 +108,14 @@ class GroupsController extends Zend_Controller_Action
 			$newGroup->setName($data["groupName"]);
 			$newGroup->setDescription($data["groupDescription"]);
 			
+			foreach($this->getRequest()->getPost('ptype', array()) as $id)
+			{
+				$newGroup->addType(new Type($id));
+			}
+			
 			Group::updateGroup($newGroup);
 			
-			//only should update when name changes
+			//only should update externally when name changes
 			if($newGroup->getName() !== $oldgroup->getName())
 				groupmanager::Modify(Group::getParents($newGroup),$oldgroup,$newGroup);
 			
@@ -229,6 +234,10 @@ class GroupsController extends Zend_Controller_Action
 
 			$newSubGroup->setId($newsubgroupid);
 			
+			foreach($this->getRequest()->getPost('ptype', array()) as $id)
+			{
+				$newSubGroup->addType(new Type($id));
+			}
 			
 			
 			groupmanager::Add(Group::getParents($newSubGroup), $newSubGroup);

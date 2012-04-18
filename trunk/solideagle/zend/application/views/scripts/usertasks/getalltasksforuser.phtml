@@ -6,9 +6,20 @@ use solideagle\utilities\SuperEntities;
 <script>
 	$(function(){
 
-		$('#myModal').modal('show');
-
 		var selectedArr = new Array();
+		$(".selectUser:checked").each( 
+			    function(k,v) { 
+			    	selectedArr.push($(v).attr("value"));
+			    } 
+			);
+
+		if(selectedArr.length > 0)
+		{
+			$('#myModal').modal('show');
+		}else{
+			alert("Geen gebruikers geselecteerd");
+
+		}
 
 		$(".selectUser:checked").each( 
 			    function(k,v) { 
