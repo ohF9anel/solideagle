@@ -1,9 +1,5 @@
 <?php
 
-error_reporting(E_ALL);
-
-ini_set('error_reporting', E_ALL);
-
 ini_set('default_charset','UTF-8');
 
 // Define path to application directory
