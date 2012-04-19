@@ -6,8 +6,6 @@ ini_set('error_reporting', E_ALL);
 
 ini_set('default_charset','UTF-8');
 
-define('APPLICATION_ENV','development');
-
 // Define path to application directory
 defined('APPLICATION_PATH')
     || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application'));
