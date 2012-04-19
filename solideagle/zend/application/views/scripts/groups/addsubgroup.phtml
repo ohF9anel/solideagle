@@ -57,7 +57,17 @@
 							<?php foreach($this->types as $type)
                                         {?>
 							<label class="checkbox">
-								<input name="ptype[]" value="<?php echo $type->getId(); ?>" type="checkbox">
+								<input name="ptype[]"
+							<?php
+							
+							if(in_array($type, $this->parentTypes))
+									{
+										echo 'checked="checked"';
+									}
+							
+							?>
+								
+								 value="<?php echo $type->getId(); ?>" type="checkbox">
 								<?php echo $type->getTypeName(); ?>
 							</label>
 							<?php } ?>

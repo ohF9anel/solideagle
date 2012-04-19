@@ -113,26 +113,11 @@
 
 	function showUsers()
 	{
-		<?php /*$("#groepcontent").html("");
-
-		$("<table id='userstable' class='table'>").append("<thead>\
-				<tr>\
-				<td>ID <i class='icon-chevron-down'></i><i class='icon-chevron-up'></i></td>\
-				<td>Voornaam <i class='icon-chevron-down'></i><i class='icon-chevron-up'></i></td>\
-				<td>Achternaam <i class='icon-chevron-down'></i><i class='icon-chevron-up'></i></td>\
-				<td>Gebruikersnaam <i class='icon-chevron-down'></i><i class='icon-chevron-up'></i></td>\
-				<td>Actief <i class='icon-chevron-down'></i><i class='icon-chevron-up'></i></td>\
-				<td>Gemaakt op <i class='icon-chevron-down'></i><i class='icon-chevron-up'></i></td>\
-			</tr>\
-		</thead>").appendTo($("#groepcontent"));*/?>
-
-
 		dataTable = $("#userstable").dataTable({
 			"bSort":true,
-			"aaSorting" : [[ 6, "desc" ]],
+			"aaSorting" : [[ 5, "desc" ]],
 			 "aoColumns": [
 			               { "bSortable": false },
-			               null,
 			               null,
 			               null,
 			               null,
@@ -240,7 +225,7 @@
 				<td>Voornaam <i class='icon-chevron-down'></i><i class='icon-chevron-up'></i></td>
 				<td>Achternaam <i class='icon-chevron-down'></i><i class='icon-chevron-up'></i></td>
 				<td>Gebruikersnaam <i class='icon-chevron-down'></i><i class='icon-chevron-up'></i></td>
-				<td>Actief <i class='icon-chevron-down'></i><i class='icon-chevron-up'></i></td>
+				
 				<td>Gemaakt op <i class='icon-chevron-down'></i><i class='icon-chevron-up'></i></td>
 			</tr>
 		</thead>

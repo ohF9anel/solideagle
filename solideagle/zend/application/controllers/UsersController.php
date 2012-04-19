@@ -187,8 +187,7 @@ class UsersController extends Zend_Controller_Action
 			$person[2] = SuperEntities::encode($gp->getFirstName());
 			$person[3] = SuperEntities::encode($gp->getName());
 			$person[4] = SuperEntities::encode($gp->getAccountUserName());
-			$person[5] = $gp->getAccountActive();
-			$person[6] = DateConverter::longDbDateToDisplayDate($gp->getMadeOn());
+			$person[5] = DateConverter::longDbDateToDisplayDate($gp->getMadeOn());
 			 
 			$persons[] = $person;
 		}

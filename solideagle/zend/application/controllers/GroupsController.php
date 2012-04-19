@@ -201,6 +201,7 @@ class GroupsController extends Zend_Controller_Action
 			{
 				$this->view->groupid = $groupid;
 				$this->view->types = Type::getAll();
+				$this->view->parentTypes = Group::getGroupById($groupid)->getTypes();
 			}
 
 		}
