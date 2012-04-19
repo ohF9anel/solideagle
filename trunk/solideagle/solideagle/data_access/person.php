@@ -371,7 +371,7 @@ class Person
 		 
 		$counter = "";
 		 
-		setlocale(LC_CTYPE, 'en_US.utf8'); //need to use an installed locale
+		//setlocale(LC_CTYPE, 'en_US.utf8'); //need to use an installed locale
 		 
 		$saneName = iconv("UTF-8", "ASCII//TRANSLIT",$person->getName());
 		$saneFirstName = iconv("UTF-8", "ASCII//TRANSLIT",$person->getFirstName());
