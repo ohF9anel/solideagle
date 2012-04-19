@@ -22,7 +22,6 @@ class Person
 	private $id;
 	private $accountUsername;
 	private $accountPassword;
-	private $accountActive = 1;
 	private $accountActiveUntill;
 	private $accountActiveFrom;
 	private $startDate;
@@ -92,16 +91,9 @@ class Person
 		$this->accountPassword = $accountPassword;
 	}
 
-	public function getAccountActive()
-	{
-		return $this->accountActive;
-	}
 
-	public function setAccountActive($accountActive)
-	{
-		//TODO
-		//$this->accountActive = $accountActive;
-	}
+
+
 
 	public function getAccountActiveUntill()
 	{
@@ -511,7 +503,7 @@ class Person
 		$cmd->addParam(":id", $person->getId());
 		$cmd->addParam(":account_username", $person->getAccountUsername());
 		$cmd->addParam(":account_password", $person->getAccountPassword());
-		$cmd->addParam(":account_active", $person->getAccountActive());
+		
 		$cmd->addParam(":account_active_untill", $person->getAccountActiveUntill());
 		$cmd->addParam(":account_active_from", $person->getAccountActiveFrom());
 		$cmd->addParam(":first_name", $person->getFirstName());
@@ -592,7 +584,7 @@ class Person
 
 		$sql = "UPDATE  `person` SET
 
-		`account_active` = :account_active,
+		
 		`first_name` = :first_name,
 		`name` = :name,
 		`deleted` = :deleted,
@@ -622,7 +614,7 @@ class Person
 		$cmd->addParam(":id", $person->getId());
 		//$cmd->addParam(":account_username", $person->getAccountUsername());
 		$cmd->addParam(":account_password", $person->getAccountPassword());
-		$cmd->addParam(":account_active", $person->getAccountActive());
+		
 		$cmd->addParam(":account_active_untill", $person->getAccountActiveUntill());
 		$cmd->addParam(":account_active_from", $person->getAccountActiveFrom());
 		$cmd->addParam(":first_name", $person->getFirstName());
@@ -718,7 +710,7 @@ class Person
 		$person->setId($retObj->id);
 		$person->setAccountUsername($retObj->account_username);
 		$person->setAccountPassword($retObj->account_password);
-		$person->setAccountActive($retObj->account_active);
+		
 		$person->setAccountActiveUntill($retObj->account_active_untill);
 		$person->setAccountActiveFrom($retObj->account_active_from);
 		$person->setFirstName($retObj->first_name);
@@ -1158,7 +1150,7 @@ class Person
 			$sql = "SELECT
 			`person`.`id`,
 			`person`.`account_username`,
-			`person`.`account_active`,
+			
 			`person`.`first_name`,
 			`person`.`name`,
 			`person`.`made_on`
@@ -1172,7 +1164,7 @@ class Person
 			$sql = "SELECT
 			`person`.`id`,
 			`person`.`account_username`,
-			`person`.`account_active`,
+			
 			`person`.`first_name`,
 			`person`.`name`,
 			`person`.`made_on`
@@ -1192,7 +1184,7 @@ class Person
 			$tempperson->setName($row->name);
 			$tempperson->setFirstName($row->first_name);
 			$tempperson->setAccountUsername($row->account_username);
-			$tempperson->setAccountActive($row->account_active);
+			
 			$tempperson->setMadeOn($row->made_on);
 
 			$retarr[] = $tempperson;
