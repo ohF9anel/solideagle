@@ -50,7 +50,7 @@ class Type
 
 	public static function addType($type)
 	{
-		$sql = "INSERT INTO `CentralAccountDB`.`type`
+		$sql = "INSERT INTO  `type`
 		(
 		`id`,
 		`type_name`,
@@ -79,7 +79,7 @@ class Type
 
 	public static function delTypeById($typeId)
 	{
-		$sql = "DELETE FROM `CentralAccountDB`.`type`
+		$sql = "DELETE FROM  `type`
 		WHERE `id` = :id;";
 
 		$cmd = new DatabaseCommand($sql);
@@ -93,7 +93,7 @@ class Type
 		$sql = "SELECT
 		`type`.`id`,
 		`type`.`type_name`
-		FROM `CentralAccountDB`.`type`;";
+		FROM  `type`;";
 		 
 		$cmd = new DatabaseCommand($sql);
 		 

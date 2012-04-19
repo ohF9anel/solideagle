@@ -130,7 +130,7 @@ class Group
 		}
 
 
-		$sql = "INSERT INTO `CentralAccountDB`.`group`
+		$sql = "INSERT INTO  `group`
         						(
         						`name`,
         						`description`)
@@ -166,7 +166,7 @@ class Group
 		$cmd->execute();
 		
 		
-		$sql = "INSERT INTO `CentralAccountDB`.`default_type_group`
+		$sql = "INSERT INTO  `default_type_group`
 				(`type`,
 				`group`)
 				VALUES
@@ -217,7 +217,7 @@ class Group
 			return false;
 		}
 
-		$sql = "UPDATE `CentralAccountDB`.`group`
+		$sql = "UPDATE  `group`
 				SET
 				`name` = :name,
 				`description` = :description
@@ -233,7 +233,7 @@ class Group
 		$cmd->execute();
 		
 		//remove types
-		$sql = "DELETE FROM `CentralAccountDB`.`default_type_group`
+		$sql = "DELETE FROM  `default_type_group`
 		WHERE `group` = :groupid; ";
 		
 		$cmd->newQuery($sql);
@@ -241,7 +241,7 @@ class Group
 		$cmd->execute();
 		
 		//reinsert types
-		$sql = "INSERT INTO `CentralAccountDB`.`default_type_group`
+		$sql = "INSERT INTO  `default_type_group`
 		(`type`,
 		`group`)
 		VALUES
@@ -301,7 +301,7 @@ class Group
 				`group`.`id`,
 				`group`.`name`,
 				`group`.`description`
-				FROM `CentralAccountDB`.`group`, group_closure AS c 
+				FROM  `group`, group_closure AS c 
                 LEFT OUTER JOIN group_closure AS anc
 				ON anc.child_id = c.child_id AND anc.parent_id <> c.parent_id
 				WHERE anc.parent_id IS NULL and  `group`.`id` = c.parent_id";
@@ -451,7 +451,7 @@ class Group
 
 	public static function delGroupById($groupId)
 	{
-		$sql = "UPDATE `CentralAccountDB`.`group`
+		$sql = "UPDATE  `group`
 				SET 
 				`deleted` = 1
 				WHERE `id` = :groupid;";
@@ -474,14 +474,14 @@ class Group
 		$cmd->BeginTransaction();
 		$cmd->execute();
 
-		$sql = "DELETE gc FROM `CentralAccountDB`.`group_closure` as gc
+		$sql = "DELETE gc FROM  `group_closure` as gc
 			WHERE (gc.parent_id = :groupid OR gc.child_id = :groupid);";
 		
 		$cmd->newQuery($sql);
 		$cmd->addParam(":groupid", $groupId);
 		$cmd->execute();
 		
-		$sql = "DELETE g FROM  `CentralAccountDB`.`group` as g
+		$sql = "DELETE g FROM   `group` as g
 			WHERE g.id = :groupid;";
 		
 		$cmd->newQuery($sql);
@@ -601,7 +601,7 @@ class Group
 	{
 	    $sql = "SELECT 		`type`.`id`, `type`.`type_name`
 				
-				FROM `CentralAccountDB`.`default_type_group`, `CentralAccountDB`.`type`
+				FROM  `default_type_group`,  `type`
 				WHERE `default_type_group`.`type` = `type`.`id` AND `default_type_group`.`group` = :groupid;";
 		
 		$cmd = new DatabaseCommand($sql);

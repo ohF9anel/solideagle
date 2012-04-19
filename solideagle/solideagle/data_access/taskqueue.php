@@ -39,7 +39,7 @@ class TaskQueue
 	 */
 	public static function addToQueue($taskQueue)
 	{
-		$sql = "INSERT INTO `CentralAccountDB`.`task_queue`
+		$sql = "INSERT INTO  `task_queue`
 		(
 		`person_id`,
 		`group_id`,
@@ -112,7 +112,7 @@ class TaskQueue
 			`task_queue`.`configuration`,
 			`task_queue`.`errorcount`,
 			`task_queue`.`errormessages`
-			FROM `CentralAccountDB`.`task_queue`;";
+			FROM  `task_queue`;";
 		
 		$cmd = new DatabaseCommand($sql);
 		
@@ -146,7 +146,7 @@ class TaskQueue
 		`task_queue`.`errorcount`,
 		`task_queue`.`errormessages`,
 		`task_queue`.`platform`
-		FROM `CentralAccountDB`.`task_queue` 
+		FROM  `task_queue` 
 		WHERE `task_queue`.`platform` = :platform;";
 		
 		$cmd = new DatabaseCommand($sql);
@@ -174,7 +174,7 @@ class TaskQueue
 	
 	public static function addToRollback($taskQueue)
 	{
-		$sql = "DELETE FROM  `CentralAccountDB`.`task_queue` WHERE `task_queue`.`id` = :tqid";
+		$sql = "DELETE FROM   `task_queue` WHERE `task_queue`.`id` = :tqid";
 		
 		$cmd = new DatabaseCommand($sql);
 		
@@ -194,7 +194,7 @@ class TaskQueue
 	public static function increaseErrorCount($taskQueue)
 	{
 		
-	$sql = "UPDATE `CentralAccountDB`.`task_queue`
+	$sql = "UPDATE  `task_queue`
 				SET
 				`errorcount` = `errorcount` + 1,
 				`errormessages` = :errormessages

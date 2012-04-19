@@ -49,7 +49,7 @@ namespace solideagle\data_access;
 			if(!Course::isValidCourse($course))
 			return false;
 
-			$sql = "INSERT INTO `CentralAccountDB`.`course`
+			$sql = "INSERT INTO  `course`
 			(
 				`name`
 			)
@@ -81,7 +81,7 @@ namespace solideagle\data_access;
 		 */
 		public static function updateCourse($course)
 		{
-			$sql = "UPDATE `CentralAccountDB`.`course`
+			$sql = "UPDATE  `course`
 				SET
 				`name` = :name
 				WHERE 
@@ -99,7 +99,7 @@ namespace solideagle\data_access;
 		public static function delCourseById($courseId)
 		{
 
-			$sql = "DELETE FROM `CentralAccountDB`.`course`
+			$sql = "DELETE FROM  `course`
 					WHERE `id` = :id;";
 
 			$cmd = new DatabaseCommand($sql);
@@ -117,7 +117,7 @@ namespace solideagle\data_access;
 			$sql = "SELECT
 					`course`.`id`,
 					`course`.`name`
-					FROM `CentralAccountDB`.`course`;";
+					FROM  `course`;";
 
 			$cmd = new DatabaseCommand($sql);
 

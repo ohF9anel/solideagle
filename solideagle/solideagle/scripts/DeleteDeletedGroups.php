@@ -22,7 +22,7 @@ $cmd = new DatabaseCommand($sql);
 $cmd->execute();
 
 
-$sql = "DELETE FROM `CentralAccountDB`.`group`
+$sql = "DELETE FROM  `group`
 WHERE deleted = 1;";
 
 $cmd->newQuery($sql);

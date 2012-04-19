@@ -445,7 +445,7 @@ class Person
 		}
 		*/
 
-		$sql = "INSERT INTO `CentralAccountDB`.`person`
+		$sql = "INSERT INTO  `person`
 		(`id`,
 		`account_username`,
 		`account_password`,
@@ -547,7 +547,7 @@ class Person
 
 		// add person to correct type(s)
 
-		$sql = "INSERT INTO `CentralAccountDB`.`type_person`
+		$sql = "INSERT INTO  `type_person`
 		(
 		`type_id`,
 		`person_id`
@@ -590,7 +590,7 @@ class Person
 
 		// update new person's data
 
-		$sql = "UPDATE `CentralAccountDB`.`person` SET
+		$sql = "UPDATE  `person` SET
 
 		`account_active` = :account_active,
 		`first_name` = :first_name,
@@ -649,7 +649,7 @@ class Person
 
 		// updates person's type(s)
 
-		$sql = "DELETE FROM `CentralAccountDB`.`type_person`
+		$sql = "DELETE FROM  `type_person`
 		WHERE `person_id` = :personId;";
 
 		$cmd->newQuery($sql);
@@ -657,7 +657,7 @@ class Person
 
 		$cmd->execute();
 
-		$sql = "INSERT INTO `CentralAccountDB`.`type_person`
+		$sql = "INSERT INTO  `type_person`
 		(
 		`type_id`,
 		`person_id`
@@ -681,7 +681,7 @@ class Person
 
 	public static function delPersonById($personId)
 	{
-		$sql = "DELETE FROM `CentralAccountDB`.`type_person`
+		$sql = "DELETE FROM  `type_person`
 		WHERE `person_id` = :personId;";
 
 		$cmd = new DatabaseCommand($sql);
@@ -691,7 +691,7 @@ class Person
 
 		$cmd->execute();
 
-		$sql = "DELETE FROM `CentralAccountDB`.`person`
+		$sql = "DELETE FROM  `person`
 		WHERE `id` = :id;";
 
 		 
@@ -703,7 +703,7 @@ class Person
 
 	public static function getPersonById($id)
 	{
-		$sql = "SELECT * FROM `CentralAccountDB`.`person`
+		$sql = "SELECT * FROM  `person`
 		WHERE `id` = :id;";
 
 		$cmd = new DatabaseCommand($sql);
@@ -744,8 +744,8 @@ class Person
 		$person->setParentOccupation($retObj->parent_occupation);
 		$person->setGroupId($retObj->group_id);
 
-		$sql = "SELECT `type`.`id`, `type`.`type_name` FROM `CentralAccountDB`.`type_person`,
-		`CentralAccountDB`.`type`
+		$sql = "SELECT `type`.`id`, `type`.`type_name` FROM  `type_person`,
+		 `type`
 		WHERE `person_id` = :person_id
 		AND `type`.`id` = `type_person`.`type_id`
 		";
@@ -772,9 +772,9 @@ class Person
 	{
 		$sql = "SELECT
 		`person`.`id`, `person`.`account_username`
-		FROM `CentralAccountDB`.`person`,
-		`CentralAccountDB`.`type_person`,
-		`CentralAccountDB`.`type`
+		FROM  `person`,
+		 `type_person`,
+		 `type`
 		WHERE `person`.`account_username` = :accountUsername
 		AND `person`.`account_password` = :accountPassword
 		AND `person`.`id` = `type_person`.`person_id`
@@ -1162,7 +1162,7 @@ class Person
 			`person`.`first_name`,
 			`person`.`name`,
 			`person`.`made_on`
-			FROM `CentralAccountDB`.`person`
+			FROM  `person`
 			WHERE
 			`person`.`group_id` = :groupid
 			AND
@@ -1176,7 +1176,7 @@ class Person
 			`person`.`first_name`,
 			`person`.`name`,
 			`person`.`made_on`
-			FROM `CentralAccountDB`.`person` WHERE `person`.`deleted` = 0 ORDER BY `person`.`made_on` desc";
+			FROM  `person` WHERE `person`.`deleted` = 0 ORDER BY `person`.`made_on` desc";
 		}
 		 
 		$cmd = new DatabaseCommand($sql);
@@ -1216,9 +1216,9 @@ class Person
 
 	public static function getTypesByPersonId($personId)
 	{
-		$sql = "SELECT `type`.`type_name` FROM `CentralAccountDB`.`person`,
-		`CentralAccountDB`.`type_person`,
-		`CentralAccountDB`.type
+		$sql = "SELECT `type`.`type_name` FROM  `person`,
+		 `type_person`,
+		 type
 		WHERE `person`.`id` = :id
 		&& `type_person`.`person_id` = `person`.`id`
 		&& `type_person`.`type_id` = `type`.`id`";
