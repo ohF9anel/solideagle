@@ -2,6 +2,7 @@
 
 ini_set('default_charset','UTF-8');
 date_default_timezone_set("Europe/Brussels");
+setlocale(LC_CTYPE, 'en_US.utf8'); //need to use an installed locale!!!
 
 
 // Define path to application directory
