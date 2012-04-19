@@ -2,6 +2,7 @@
 namespace solideagle\scripts\ga;
 
 use solideagle\data_access\Person;
+use solideagle\data_access\platforms;
 
 use solideagle\plugins\ga\manageuser;
 use solideagle\data_access\TaskQueue;
@@ -25,7 +26,12 @@ class usermanager implements TaskInterface
                         
                     if($ret->isSucces())
                     {
-                        return true;	
+                        $platform = new platforms();
+                        $platform->setPlatformType(platforms::PLATFORM_GAPP);
+                        $platform->setPersonId($config["user"]->getId());
+                        $platform->setEnabled($config["user"]->getAccountActive());
+                        platforms::addPlatform($platform);
+                        return true;
                     }
                     else{
                         $taskqueue->setErrorMessages($ret->getError());

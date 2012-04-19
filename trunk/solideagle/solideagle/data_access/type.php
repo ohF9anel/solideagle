@@ -53,12 +53,12 @@ class Type
 		$sql = "INSERT INTO  `type`
 		(
 		`id`,
-		`type_name`,
+		`type_name`
 		)
 		VALUES
 		(
 		:id,
-		:type_name,
+		:type_name
 		);";
 
 		$cmd = new DatabaseCommand($sql);

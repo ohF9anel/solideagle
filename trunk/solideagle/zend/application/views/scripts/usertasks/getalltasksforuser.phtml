@@ -8,11 +8,11 @@ use solideagle\utilities\SuperEntities;
 
 		var selectedArr = new Array();
 
-		$(".selectUser:checked").each( 
-			    function(k,v) { 
-			    	selectedArr.push($(v).attr("value"));
-			    } 
-			);
+                $(".selectUser:checked").each( 
+                    function(k,v) { 
+                        selectedArr.push($(v).attr("value"));
+                    } 
+                );
 
 		if(selectedArr.length > 0)
 		{
@@ -21,7 +21,6 @@ use solideagle\utilities\SuperEntities;
 			alert("Geen gebruikers geselecteerd");
 
 		}
-
 
 					
 		$("#formTasks").ajaxForm({
@@ -71,14 +70,24 @@ use solideagle\utilities\SuperEntities;
 
 					<div class="row">
 						<div class="span12">
-
-							<label class="checkbox">
-								<input
-									name="createAdAccount"
-									type="checkbox"
-									value="true">
-								Account maken
-							</label>
+                                                        
+                                                        <?php if($this->hasAdAccount)
+                                                        {?>
+                                                           
+                                                            
+                                                        <?php
+                                                        }
+                                                        else
+                                                        {?>
+                                                            <label class="checkbox">
+                                                                    <input
+                                                                            name="createAdAccount"
+                                                                            type="checkbox"
+                                                                            value="true">
+                                                                    Account maken
+                                                            </label>
+                                                        <?php
+                                                        }?>
 
 							<label class="checkbox">
 								<input

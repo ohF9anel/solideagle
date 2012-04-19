@@ -1,6 +1,7 @@
 <?php
 namespace solideagle\data_access;
 
+use solideagle\data_access\platforms;
 use solideagle\data_access\database\DatabaseCommand;
 
 class TaskQueue
@@ -9,13 +10,9 @@ class TaskQueue
 	const TypeGroup = 0;
 	const TypePerson = 1;
 	
-	const PLATFORM_AD = "active directory";
-	const PLATFORM_SMARTSCHOOL = "smartschool";
-	const PLATFORM_GAPP = "google apps";
-	
 	public static function getAllPlatforms()
 	{
-		return array(self::PLATFORM_AD,self::PLATFORM_SMARTSCHOOL,self::PLATFORM_GAPP);
+		return array(platforms::PLATFORM_AD,platforms::PLATFORM_SMARTSCHOOL,platforms::PLATFORM_GAPP);
 	}
 	
 	private $id;
@@ -88,11 +85,11 @@ class TaskQueue
 		//lets get the platform by searching the namespace
 		if(!(strpos($class,"\\ad\\") === false))
 		{
-			$platform = self::PLATFORM_AD;
+			$platform = platforms::PLATFORM_AD;
 		}else if(!(strpos($class,"\\smartschool\\") === false)){
-			$platform = self::PLATFORM_SMARTSCHOOL;
+			$platform = platforms::PLATFORM_SMARTSCHOOL;
 		}else if(!(strpos($class,"\\ga\\") === false)){
-			$platform = self::PLATFORM_GAPP;
+			$platform = platforms::PLATFORM_GAPP;
 		}
 		
 		

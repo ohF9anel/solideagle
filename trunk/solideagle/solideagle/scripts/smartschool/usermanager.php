@@ -2,7 +2,7 @@
 namespace solideagle\scripts\smartschool;
 
 
-
+use solideagle\data_access\platforms;
 use solideagle\data_access\TaskQueue;
 
 use solideagle\plugins\smartschool\data_access\User;
@@ -12,6 +12,9 @@ class usermanager implements TaskInterface
 {
 
 	const ActionAddUser = 0;
+        const ActionUpdateUser = 1;
+        const ActionRemoveUser = 2;
+        const ActionMoveUser = 3;
 
 	public function runTask($taskqueue)
 	{
@@ -25,16 +28,22 @@ class usermanager implements TaskInterface
 
 		if($config["action"] == self::ActionAddUser)
 		{
-			if (!isset($config["user"]))
+			if (!isset($config["person"]))
 			{
 				$taskqueue->setErrorMessages("Probleem met configuratie");
 				return false;
 			}
 
-			$ret = User::saveUser($config["user"]);
+			$ret = User::saveUser(User::convertPersonToSsUser($config["person"]));
 				
 			if($ret->isSucces())
 			{
+                                $platform = new platforms();
+                                $platform->setPlatformType(platforms::PLATFORM_SMARTSCHOOL);
+                                $platform->setPersonId($config["person"]->getId());
+                                $platform->setEnabled($config["person"]->getAccountActive());
+                                platforms::addPlatform($platform);
+                                return true;
 				return true;
 			}
 			else{
@@ -48,17 +57,13 @@ class usermanager implements TaskInterface
 		return false;
 	}
 
-
 	public static function prepareAddUser($person)
 	{
 		$config["action"] = self::ActionAddUser;
-		$config["user"] = User::convertPersonToSsUser($person);
+		$config["person"] = $person;
 
-		
 		TaskQueue::insertNewTask($config, $person->getId());
-		
 	}
-
 
 
 }
