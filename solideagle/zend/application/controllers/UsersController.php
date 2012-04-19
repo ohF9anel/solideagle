@@ -117,10 +117,8 @@ class UsersController extends Zend_Controller_Action
 			return;
 		}
 		
-		
 		//it's a new user or edit
 		
-				
 		foreach($this->getRequest()->getPost('ptype', array()) as $id)
 		{
 			$person->addType(new Type($id));

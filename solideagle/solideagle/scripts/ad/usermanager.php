@@ -1,10 +1,10 @@
 <?php
 namespace solideagle\scripts\ad;
 
-
 use solideagle\plugins\ad\ManageUser;
 
 use solideagle\data_access\Group;
+use solideagle\data_access\platforms;
 
 use solideagle\plugins\ad\User;
 use solideagle\plugins\ad\ManageHomeFolder;
@@ -17,68 +17,73 @@ class usermanager implements TaskInterface
 	const ActionAddUser = 0;
         const ActionUpdateUser = 1;
         const ActionDelUser = 2;
-        //const ActionAddHomeFolder = 3;
         
         const taskId = 29;
         
         public function runTask($taskqueue)
 	{
-		$config = $taskqueue->getConfiguration();
+            $config = $taskqueue->getConfiguration();
 
-		if($config["action"] == self::ActionAddUser || $config["action"] == self::ActionUpdateUser)
-		{
-                        if (!isset($config["userInfo"]) || !isset($config["arrParentsGroups"]))
-                        {
-                                $taskqueue->setErrorMessages("Probleem met configuratie");
-                                return false;
-                        }
-                        if($config["action"] == self::ActionAddUser)
-                        {
-                            $ret = ManageUser::addUser($config["userInfo"],$config["arrParentsGroups"]);
-                        }
-                        else if ($config["action"] == self::ActionUpdateUser)
-                        {
-                            $ret = ManageUser::updateUser($config["userInfo"],$config["arrParentsGroups"]);
-                        }
-                        else if ($config["action"] == self::ActionDelUser)
-                        {
-                            $ret = ManageUser::delUser($config["username"]);
-                        }
-			if($ret->isSucces())
-			{
-                            return true;	
-			}
-                        else{
-                            $taskqueue->setErrorMessages($ret->getError());
-                            return false;
-			}
-                }
-                else if($config["action"] == self::ActionDelUser && isset($config["username"]))
+            // add user in ad
+            if($config["action"] == self::ActionAddUser)
+            {
+                if (!isset($config["arrParentsGroups"]) || !isset($config["person"]))
                 {
-                    if ($config["action"] == self::ActionDelUser)
-                    {
-                        $ret = ManageUser::delUser($config["username"]);
-                    }
-                    if($ret->isSucces())
-                    {
-                        return true;
-                    }
-                    else{
-                        $taskqueue->setErrorMessages($ret->getError());
+                        $taskqueue->setErrorMessages("Probleem met configuratie");
                         return false;
-                    }
                 }
-//                else if($config["action"] == self::ActionAddHomeFolder && isset($config["server"]) && isset($config["username"]) && isset($config["homeFolderPath"]) && isset($config["scanSharePath"]) && isset($config["downloadSharePath"]) && isset($config["uploadSharePath"]) && isset($config["wwwSharePath"]))
-//                {
-//                        $mhf = new ManageHomeFolder($config["server"], $config["username"], $config["homeFolderPath"], $config["scanSharePath"], $config["wwwSharePath"], $config["downloadSharePath"], $config["uploadSharePath"]);
-//                        $mhf->startHomeFolderManager();
-//                        return true;
-//                }
-                else
+                   
+                $userInfo = User::convertPersonToAdUser($config["person"])->getUserInfo();
+                $ret = ManageUser::addUser($userInfo, $config["arrParentsGroups"]);
+
+                if($ret->isSucces())
                 {
-			$taskqueue->setErrorMessages("Probleem met configuratie");
-			return false; //it failed for some reason
-		}
+                    $platform = new platforms();
+                    $platform->setPlatformType(platforms::PLATFORM_AD);
+                    $platform->setPersonId($config["person"]->getId());
+                    $platform->setEnabled($config["person"]->getAccountActive());
+                    platforms::addPlatform($platform);
+                    return true;	
+                }
+                else{
+                    $taskqueue->setErrorMessages($ret->getError());
+                    return false;
+                }
+            }
+            // update user in ad
+            else if($config["action"] == self::ActionUpdateUser && isset($config["userInfo"]) && isset($config["arrParentsGroups"]))
+            {
+                $ret = ManageUser::updateUser($config["userInfo"],$config["arrParentsGroups"]);
+
+                if($ret->isSucces())
+                    {
+                        return true;	
+                    }
+                else{
+                    $taskqueue->setErrorMessages($ret->getError());
+                    return false;
+                }
+            }
+            // delete user in ad
+            else if($config["action"] == self::ActionDelUser && isset($config["username"]))
+            {
+                $ret = ManageUser::delUser($config["username"]);
+
+                if($ret->isSucces())
+                {
+                    return true;
+                }
+                else{
+                    $taskqueue->setErrorMessages($ret->getError());
+                    return false;
+                }
+            }
+            // problem!
+            else
+            {
+                    $taskqueue->setErrorMessages("Probleem met configuratie");
+                    return false; //it failed for some reason
+            }
 	}
 	
 	public function createTaskFromParams($params)
@@ -89,7 +94,7 @@ class usermanager implements TaskInterface
 	public static function prepareAddUser($person)
 	{
 		$config["action"] = self::ActionAddUser;
-                $config["userInfo"] = User::convertPersonToAdUser($person)->getUserInfo();
+                $config["person"] = $person;
 		$config["arrParentsGroups"] = Group::getParents(Group::getGroupById($person->getGroupId()));
 
 		TaskQueue::insertNewTask($config, $person->getId());

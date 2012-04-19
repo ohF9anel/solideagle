@@ -4,6 +4,8 @@ use solideagle\scripts\smartschool\usermanager;
 
 use solideagle\Config;
 
+use solideagle\data_access\platforms;
+
 use solideagle\data_access\Type;
 
 use solideagle\scripts\ad\homefoldermanager;
@@ -55,8 +57,6 @@ class UsertasksController extends Zend_Controller_Action
     	
     		foreach($users as $user)
     		{
-    			
-    			
     			solideagle\scripts\ad\usermanager::prepareAddUser($user);
     		}
     		
@@ -119,6 +119,21 @@ class UsertasksController extends Zend_Controller_Action
       	 $this->view->defaults->wwwpath = Config::singleton()->path_share_www;
       	 $this->view->defaults->downloadpath =   Config::singleton()->path_share_downloads;
       	 $this->view->defaults->uploadpath =  Config::singleton()->path_share_uploads;
+        
+         $userId;
+         var_dump($this->getRequest()->getParams());
+         
+         $platformAd = platforms::getPlatformAdByPersonId($userId);
+         $this->view->hasAdAccount = true;
+         if ($platformAd != null)
+         {
+             $this->view->hasAdAccount = true;
+             $this->view->hasAdAccountEnabled = $platformAd->getEnabled();
+         }
+         else
+         {
+             $this->view->hasAdAccount = false;
+         }
     }
 
 
