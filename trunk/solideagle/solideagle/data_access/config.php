@@ -10,7 +10,7 @@ class Config
 	{
 		$sql = "SELECT
 				`config`.`config`
-				FROM `CentralAccountDB`.`config`;";
+				FROM  `config`;";
 		$cmd = new DatabaseCommand($sql);
 		
 		$compressedConfig = $cmd->executeReader()->read();
@@ -23,7 +23,7 @@ class Config
 	
 	public static function setConfig($conf)
 	{
-		$sql = "UPDATE `CentralAccountDB`.`config` SET `config` = :config;";
+		$sql = "UPDATE  `config` SET `config` = :config;";
 		$cmd = new DatabaseCommand($sql);
 		
 		$conf = base64_encode(serialize($conf));
