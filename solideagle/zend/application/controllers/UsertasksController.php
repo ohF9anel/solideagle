@@ -49,15 +49,10 @@ class UsertasksController extends Zend_Controller_Action
     		$users[] = Person::getPersonById($userid);
     	}
     	
-    
-    	
-    	
-    	
-    	
-    	
-    	
+
     	if($this->getRequest()->getPost('createAdAccount',false))
     	{
+    	
     		foreach($users as $user)
     		{
     			
