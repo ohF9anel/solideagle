@@ -1,6 +1,8 @@
 <?php
 
 ini_set('default_charset','UTF-8');
+date_default_timezone_set("Europe/Brussels");
+
 
 // Define path to application directory
 defined('APPLICATION_PATH')
