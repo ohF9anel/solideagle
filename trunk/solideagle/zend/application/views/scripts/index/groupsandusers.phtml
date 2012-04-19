@@ -39,14 +39,16 @@
 		});
 
 		$("#MultiTaskLink").click(function(){
+
 			var selectedArr = new Array();
                         $(".selectUser:checked").each( 
                             function(k,v) { 
                                 selectedArr.push($(v).attr("value"));
                             } 
                         );
+
                         
-			$("#modalholder").load("<?php echo $this->SE_path . '/usertasks/getalltasksforuser' ?>", selectedArr);
+			$("#modalholder").load("<?php echo $this->SE_path . '/usertasks/getalltasksforuser' ?>", new makePostArray(selectedArr));
 		});
 
 		
@@ -63,6 +65,11 @@
 		});
 	});
 
+
+	function makePostArray(jspostArr) {
+		   this.jspostArr = jspostArr;
+		}
+	
 	function updateTree()
 	{
 		$("#grouptree").jstree({ 

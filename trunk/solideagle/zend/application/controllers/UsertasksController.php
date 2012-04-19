@@ -21,120 +21,132 @@ use solideagle\logging\Logger;
 class UsertasksController extends Zend_Controller_Action
 {
 
-    public function init()
-    {
-        /* Initialize action controller here */
-    }
+	public function init()
+	{
+		/* Initialize action controller here */
+	}
 
-    public function indexAction()
-    {
-       
+	public function indexAction()
+	{
+		 
 
-    }
+	}
 
 
-    public function posttasksAction()
-    {
-    	$this->_helper->layout()->disableLayout();
-    	$this->_helper->viewRenderer->setNoRender(true);
-    	
-    	if(count($this->getRequest()->getPost('users',array())) <= 0)
-    	{
-    		echo "Geen gebruikers geselecteerd!";
-    		return;
-    	}
-    	
-    	$users = array();
-    	
-    	foreach($this->getRequest()->getPost('users') as $userid)
-    	{
-    		$users[] = Person::getPersonById($userid);
-    	}
-    	
+	public function posttasksAction()
+	{
+		$this->_helper->layout()->disableLayout();
+		$this->_helper->viewRenderer->setNoRender(true);
+		 
+		if(count($this->getRequest()->getPost('users',array())) <= 0)
+		{
+			echo "Geen gebruikers geselecteerd!";
+			return;
+		}
+		 
+		$users = array();
+		 
+		foreach($this->getRequest()->getPost('users') as $userid)
+		{
+			$users[] = Person::getPersonById($userid);
+		}
+		 
 
-    	if($this->getRequest()->getPost('createAdAccount',false))
-    	{
-    	
-    		foreach($users as $user)
-    		{
-    			solideagle\scripts\ad\usermanager::prepareAddUser($user);
-    		}
-    		
-    	}
-    	
-    	if($this->getRequest()->getPost('createSSAccount',false))
-    	{
-    		foreach($users as $user)
-    		{
-    			solideagle\scripts\smartschool\usermanager::prepareAddUser($user);
-    		}
-    	}
-    	
-    	if($this->getRequest()->getPost('createGappAccount',false))
-    	{
-    		foreach($users as $user)
-    		{
-    			solideagle\scripts\ga\usermanager::prepareAddUser($user);
-                        solideagle\scripts\ga\usermanager::prepareAddUserToOu($user);
-    		}
-    	}
+		if($this->getRequest()->getPost('createAdAccount',false))
+		{
+			 
+			foreach($users as $user)
+			{
+				solideagle\scripts\ad\usermanager::prepareAddUser($user);
+			}
 
-    	
-    	if($this->getRequest()->getPost('createAdHomedir',false))
-    	{
-    	
-    		$server = $this->getRequest()->getPost("HomefolderServer",NULL);
-    		$homeFolderPath = $this->getRequest()->getPost("HomefolderPath",NULL);
-    		$scanSharePath  = $this->getRequest()->getPost("ScanSharePath",NULL);
-    		$wwwSharePath = $this->getRequest()->getPost("WWWSharePath",NULL);
-    	
-    		//up & down folders
-    		$downloadSharePath = NULL;
-    		$uploadSharePath = NULL;
-    		if($this->getRequest()->getPost('createUpDownFolders',false))
-    		{
-    			$downloadSharePath = $this->getRequest()->getPost("DownloadSharePath",NULL);
-    			$uploadSharePath = $this->getRequest()->getPost("UploadSharePath",NULL);
-    		}
-    	
-    		foreach($users as $user)
-    		{
-    			solideagle\scripts\ad\homefoldermanager::prepareAddHomefolder($server, $homeFolderPath, $scanSharePath,
-    					$wwwSharePath, $user,$uploadSharePath,$downloadSharePath);
-    		}
-    	}
+		}
+		 
+		if($this->getRequest()->getPost('createSSAccount',false))
+		{
+			foreach($users as $user)
+			{
+				solideagle\scripts\smartschool\usermanager::prepareAddUser($user);
+			}
+		}
+		 
+		if($this->getRequest()->getPost('createGappAccount',false))
+		{
+			foreach($users as $user)
+			{
+				solideagle\scripts\ga\usermanager::prepareAddUser($user);
+				solideagle\scripts\ga\usermanager::prepareAddUserToOu($user);
+			}
+		}
 
-    	return;
-    }
+		 
+		if($this->getRequest()->getPost('createAdHomedir',false))
+		{
+			 
+			$server = $this->getRequest()->getPost("HomefolderServer",NULL);
+			$homeFolderPath = $this->getRequest()->getPost("HomefolderPath",NULL);
+			$scanSharePath  = $this->getRequest()->getPost("ScanSharePath",NULL);
+			$wwwSharePath = $this->getRequest()->getPost("WWWSharePath",NULL);
+			 
+			//up & down folders
+			$downloadSharePath = NULL;
+			$uploadSharePath = NULL;
+			if($this->getRequest()->getPost('createUpDownFolders',false))
+			{
+				$downloadSharePath = $this->getRequest()->getPost("DownloadSharePath",NULL);
+				$uploadSharePath = $this->getRequest()->getPost("UploadSharePath",NULL);
+			}
+			 
+			foreach($users as $user)
+			{
+				solideagle\scripts\ad\homefoldermanager::prepareAddHomefolder($server, $homeFolderPath, $scanSharePath,
+						$wwwSharePath, $user,$uploadSharePath,$downloadSharePath);
+			}
+		}
 
-    public function getalltasksforuserAction()
-    {
-    	$this->_helper->layout()->disableLayout();
-    
-      	 $this->view->defaults = new stdClass();
-      	 
-      	 $this->view->defaults->server = Config::singleton()->ssh_server;
-      	 $this->view->defaults->serverpath = Config::singleton()->path_homefolders;
-      	 $this->view->defaults->scanpath = Config::singleton()->path_share_scans;
-      	 $this->view->defaults->wwwpath = Config::singleton()->path_share_www;
-      	 $this->view->defaults->downloadpath =   Config::singleton()->path_share_downloads;
-      	 $this->view->defaults->uploadpath =  Config::singleton()->path_share_uploads;
-        
-         $userId;
-         var_dump($this->getRequest()->getParams());
-         
-         $platformAd = platforms::getPlatformAdByPersonId($userId);
-         $this->view->hasAdAccount = true;
-         if ($platformAd != null)
-         {
-             $this->view->hasAdAccount = true;
-             $this->view->hasAdAccountEnabled = $platformAd->getEnabled();
-         }
-         else
-         {
-             $this->view->hasAdAccount = false;
-         }
-    }
+		return;
+	}
+
+	public function getalltasksforuserAction()
+	{
+		$this->_helper->layout()->disableLayout();
+
+		$this->view->defaults = new stdClass();
+
+		$this->view->defaults->server = Config::singleton()->ssh_server;
+		$this->view->defaults->serverpath = Config::singleton()->path_homefolders;
+		$this->view->defaults->scanpath = Config::singleton()->path_share_scans;
+		$this->view->defaults->wwwpath = Config::singleton()->path_share_www;
+		$this->view->defaults->downloadpath =   Config::singleton()->path_share_downloads;
+		$this->view->defaults->uploadpath =  Config::singleton()->path_share_uploads;
+
+
+
+		$usersArr = $this->getRequest()->getPost('jspostArr',array());
+
+		if(count($usersArr) < 2 && count($usersArr) > 0)
+		{
+			$userId = $usersArr[0];
+			$platformAd = platforms::getPlatformAdByPersonId($userId);
+			$this->view->hasAdAccount = true;
+			if ($platformAd != null)
+			{
+				$this->view->hasAdAccount = true;
+				$this->view->hasAdAccountEnabled = $platformAd->getEnabled();
+			}
+			else
+			{
+				$this->view->hasAdAccount = false;
+			}
+		}else if(count($usersArr) < 1) {
+			// geen
+			exit();
+		}
+
+		//veeeel gebruikers
+		 
+
+	}
 
 
 }
