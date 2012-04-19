@@ -36,7 +36,7 @@ class Config
 		return self::$instance;
 	}
 	
-    const mysqlserver = "mysql:host=10.3.7.102;dbname=CentralAccountDB;charset=utf8";
+    const mysqlserver = "mysql:host=10.3.7.102;dbname=CentralAccountDB;charset=utf-8";
     const mysqluser = "dbuser";
     const mysqlpass = "ChaCha69";
 
