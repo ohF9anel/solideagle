@@ -1,5 +1,7 @@
 <?php
 
+use solideagle\data_access\Person;
+
 use solideagle\scripts\groupmanager;
 
 use solideagle\data_access\Type;
@@ -23,6 +25,18 @@ class ImportsController extends Zend_Controller_Action
     public function indexAction()
     {
 		
+    	/*for($i=0;$i<3000;$i++)
+    	{
+    		$person  = new Person();
+    		$person->setName("NAMETESTUSER".$i);
+    		$person->setFirstName("FIRSTNAMETESTUSER".$i);
+    		$person->setAccountUsername("TESTUSER".$i);
+    		$person->setAccountPassword(Person::generatePassword());
+    		$person->addType(new Type(Type::TYPE_LEERKRACHT));
+    		$person->setGroupId(127);
+    		
+    		Person::addPerson($person);
+    	}*/
 		
 		
 		/*$this->_helper->layout()->disableLayout();

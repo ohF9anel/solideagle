@@ -22,6 +22,13 @@ JOIN  `group` as g ON a.group_id = g.id WHERE g.deleted = 1;";
 $cmd = new DatabaseCommand($sql);
 $cmd->execute();
 
+$sql = "DELETE a FROM `default_type_group` as a
+
+JOIN  `group` as g ON a.`group` = g.id WHERE g.deleted = 1;";
+
+$cmd = new DatabaseCommand($sql);
+$cmd->execute();
+
 
 $sql = "DELETE a FROM `person` as a
 JOIN `group` as g ON a.group_id = g.id WHERE g.deleted = 1;";

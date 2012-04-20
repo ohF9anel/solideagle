@@ -68,6 +68,8 @@ class TaskQueue
 	 */
 	public static function insertNewTask($config,$personOrGroupid,$type = self::TypePerson)
 	{
+		set_time_limit(5);
+		
 		$tq = new TaskQueue();
 		
 		//get the class that called this function to insert in db
