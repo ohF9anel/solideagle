@@ -13,7 +13,7 @@ require_once('Zend/Loader.php');
 
 class manageuser
 {
-    public static function addUser($person)
+    public static function addUser($person, $enabled = true)
     {
         $errorHandler = new errorhandler();
         
@@ -27,6 +27,8 @@ class manageuser
         $cmd .= "lastname " . $person->getName() . " ";
         $cmd .= "password " . $person->getAccountPassword();
         
+        if (!$enabled)
+            $cmd .= " suspended on";
         
         
         // add user
@@ -105,7 +107,7 @@ class manageuser
         return new StatusReport(!$errorHandler->hasErrors(), $errorHandler->toString());
     }
     
-    public static function updateUser($person, $oldUsername)
+    public static function updateUser($person, $oldUsername, $enabled = true)
     {
         $errorHandler = new errorhandler();
         
@@ -120,8 +122,10 @@ class manageuser
         $cmd .= "lastname " . $person->getName() . " ";
         $cmd .= "password " . $person->getAccountPassword() . " ";
         
-    
-        $cmd .= "suspended off";
+        if (!$enabled)
+            $cmd .= "suspended on";
+        else
+            $cmd .= "suspended off";
 
         $proc_ls = proc_open($cmd, $descriptorspec, $pipes);
 

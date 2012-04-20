@@ -116,14 +116,32 @@ class UsertasksController extends Zend_Controller_Action
 			}
 		}
                 
+                //remove account?
+                if($this->getRequest()->getPost('deleteGappAccountSure',false))
+		{
+			foreach($users as $user)
+			{
+				solideagle\scripts\ga\usermanager::prepareDelUser($user);
+			}
+                }
+                
                 // disable account?
-//                if($this->getRequest()->getPost('blnGappDisable',false))
-//		{
-//			foreach($users as $user)
-//			{
-//				solideagle\scripts\ad\usermanager::prepareUpdateUser($user, false);
-//			}
-//		}
+                if($this->getRequest()->getPost('blnGappDisable',false))
+		{
+			foreach($users as $user)
+			{
+				solideagle\scripts\ga\usermanager::prepareUpdateUser($user, $user->getAccountUsername(), false);
+			}
+		}
+                
+                // enable account?
+                if($this->getRequest()->getPost('blnGappEnable',false))
+		{
+			foreach($users as $user)
+			{
+				solideagle\scripts\ga\usermanager::prepareUpdateUser($user, $user->getAccountUsername(), true);
+			}
+		}
 		 
 		if($this->getRequest()->getPost('createAdHomedir',false))
 		{
