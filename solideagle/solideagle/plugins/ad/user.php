@@ -168,7 +168,7 @@ class User
         $this->homeDirectory = $homeDirectory;
     }
     
-    public static function convertPersonToAdUser($person)
+    public static function convertPersonToAdUser($person, $enabled = true)
     {
         $user = new User();
         
@@ -190,10 +190,8 @@ class User
         $user->setMail($person->getEmail());
         $user->setInfo($person->getOtherInformation());
 
-        //home folder
-        //$user->setHomeDirectory($person->);
+        $user->setEnabled($enabled);
         
-        $user->setEnabled($person->getAccountActive());
         $user->addMemberOfGroups(Group::getGroupById($person->getGroupId()));
         
         return $user;

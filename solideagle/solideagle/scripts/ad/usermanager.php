@@ -27,13 +27,13 @@ class usermanager implements TaskInterface
             // add user in ad
             if($config["action"] == self::ActionAddUser)
             {
-                if (!isset($config["arrParentsGroups"]) || !isset($config["person"]))
+                if (!isset($config["arrParentsGroups"]) || !isset($config["person"]) || !isset($config["enabled"]))
                 {
                         $taskqueue->setErrorMessages("Probleem met configuratie");
                         return false;
                 }
                    
-                $userInfo = User::convertPersonToAdUser($config["person"])->getUserInfo();
+                $userInfo = User::convertPersonToAdUser($config["person"], $config["enabled"])->getUserInfo();
                 $ret = ManageUser::addUser($userInfo, $config["arrParentsGroups"]);
 
                 if($ret->isSucces())
@@ -41,7 +41,7 @@ class usermanager implements TaskInterface
                     $platform = new platforms();
                     $platform->setPlatformType(platforms::PLATFORM_AD);
                     $platform->setPersonId($config["person"]->getId());
-                    $platform->setEnabled($config["person"]->getAccountActive());
+                    $platform->setEnabled($config["enabled"]);
                     platforms::addPlatform($platform);
                     return true;	
                 }
@@ -51,26 +51,36 @@ class usermanager implements TaskInterface
                 }
             }
             // update user in ad
-            else if($config["action"] == self::ActionUpdateUser && isset($config["userInfo"]) && isset($config["arrParentsGroups"]))
+            else if($config["action"] == self::ActionUpdateUser && isset($config["person"]) && isset($config["arrParentsGroups"]) && isset($config["enabled"]))
             {
-                $ret = ManageUser::updateUser($config["userInfo"],$config["arrParentsGroups"]);
+                $userInfo = User::convertPersonToAdUser($config["person"], $config["enabled"])->getUserInfo();
+                $ret = ManageUser::updateUser($userInfo, $config["arrParentsGroups"]);
 
                 if($ret->isSucces())
-                    {
-                        return true;	
-                    }
+                {
+                    $platform = new platforms();
+                    $platform->setPlatformType(platforms::PLATFORM_AD);
+                    $platform->setPersonId($config["person"]->getId());
+                    $platform->setEnabled($config["enabled"]);
+                    platforms::updatePlatform($platform);
+                    return true;	
+                }
                 else{
                     $taskqueue->setErrorMessages($ret->getError());
                     return false;
                 }
             }
             // delete user in ad
-            else if($config["action"] == self::ActionDelUser && isset($config["username"]))
+            else if($config["action"] == self::ActionDelUser && isset($config["person"]))
             {
-                $ret = ManageUser::delUser($config["username"]);
+                $ret = ManageUser::delUser($config["person"]->getAccountUsername());
 
                 if($ret->isSucces())
                 {
+                    $platform = new platforms();
+                    $platform->setPlatformType(platforms::PLATFORM_AD);
+                    $platform->setPersonId($config["person"]->getId());
+                    platforms::removePlatform($platform);
                     return true;
                 }
                 else{
@@ -91,19 +101,21 @@ class usermanager implements TaskInterface
 	
 	}
 	
-	public static function prepareAddUser($person)
+	public static function prepareAddUser($person, $enabled = true)
 	{
 		$config["action"] = self::ActionAddUser;
                 $config["person"] = $person;
+                $config["enabled"] = $enabled;
 		$config["arrParentsGroups"] = Group::getParents(Group::getGroupById($person->getGroupId()));
 
 		TaskQueue::insertNewTask($config, $person->getId());
 	}
         
-        public static function prepareUpdateUser($person)
+        public static function prepareUpdateUser($person, $enabled = true)
 	{
 		$config["action"] = self::ActionUpdateUser;
-                $config["userInfo"] = User::convertPersonToAdUser($person)->getUserInfo();
+                $config["person"] = $person;
+                $config["enabled"] = $enabled;
 		$config["arrParentsGroups"] = Group::getParents(Group::getGroupById($person->getGroupId()));
 		
 		TaskQueue::insertNewTask($config, $person->getId());
@@ -112,7 +124,7 @@ class usermanager implements TaskInterface
         public static function prepareDelUser($person)
 	{
 		$config["action"] = self::ActionDelUser;
-                $config["username"] = $person->getAccountUsername();
+                $config["person"] = $person;
               TaskQueue::insertNewTask($config, $person->getId());
 	}
         

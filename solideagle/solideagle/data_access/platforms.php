@@ -99,7 +99,7 @@ class platforms
                     WHERE `person_id` = :person_id;";
 
             $cmd = new DatabaseCommand($sql);
-            $cmd->addParam(":person_id", $person->getId());
+            $cmd->addParam(":person_id", $platform->getPersonId());
 
             $cmd->execute();
         }
