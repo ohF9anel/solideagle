@@ -134,7 +134,7 @@ class UsersController extends Zend_Controller_Action
 		$person->setPhone($this->getRequest()->getPost('Phone'));
 		$person->setAccountUsername($this->getRequest()->getPost('AccountUsername'));
 		$person->setAccountPassword($this->getRequest()->getPost('AccountPassword'));
-		$person->setAccountActive($this->getRequest()->getPost('AccountActive'));
+		//$person->setAccountActive($this->getRequest()->getPost('AccountActive'));
 		$person->setAccountActiveFrom(DateConverter::DisplayDateTodbDate($this->getRequest()->getPost('AccountActiveFrom')));
 		$person->setAccountActiveUntill(DateConverter::DisplayDateTodbDate($this->getRequest()->getPost('AccountActiveUntill')));
 		$person->setOtherInformation($this->getRequest()->getPost('OtherInformation'));

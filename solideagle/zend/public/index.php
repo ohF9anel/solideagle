@@ -1,5 +1,9 @@
 <?php
 
+if((strpos($_SERVER['REMOTE_ADDR'], "10.3.7.") ===false ))
+	exit("No acces for: " . $_SERVER['REMOTE_ADDR']);
+
+
 ini_set('default_charset','UTF-8');
 date_default_timezone_set("Europe/Brussels");
 setlocale(LC_CTYPE, 'en_US.utf8'); //need to use an installed locale!!!

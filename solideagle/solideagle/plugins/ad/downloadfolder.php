@@ -7,9 +7,9 @@ use solideagle\Config;
 
 class DownloadFolder
 {
-    public static function setDownloadFolder($server, $path, $downloadSharePath, $username, $enabled = true)
+    public static function setDownloadFolder($conn,$server, $path, $downloadSharePath, $username, $enabled = true)
     {
-        $conn = SSHManager::singleton()->getConnection($server);
+       
         
         if ($enabled)
         {

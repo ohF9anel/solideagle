@@ -175,7 +175,7 @@ class Group
 				:group
 				);";
 		
-		foreach($types as $type)
+		foreach($group->types as $type)
 		{
 			$cmd->newQuery($sql);
 			

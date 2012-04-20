@@ -363,15 +363,13 @@ class Person
 		 
 		$counter = "";
 		 
-	
-		 
 		$saneName = iconv("UTF-8", "ASCII//TRANSLIT",$person->getName());
 		$saneFirstName = iconv("UTF-8", "ASCII//TRANSLIT",$person->getFirstName());
 		 
 		$username =  $saneName . substr($saneFirstName,0,1);
 		 
 		//strip all non letters
-		$username = preg_replace("[^A-Za-z]", "", $username);
+		$username = preg_replace("/[^A-Za-z]/", "", $username);
 		 
 		$username = strtolower($username);// mb_strtolower($username, 'UTF-8');
 
@@ -407,9 +405,17 @@ class Person
 		return $username . $counter;
 	}
 
-	public static function generatePassword()
+	public static function generatePassword($length = 8)
 	{
-		return "P@ssw0rd"; //cool and 1337 password that is as good as any other password!
+			$passchars = 'aeuybdghjmnpqrstvzBDGHJLMNPQRSTVWXZAEUY23456789';
+
+			$password = '';
+			
+			for ($i = 0; $i < $length; $i++) {		
+					$password .= $passchars[(rand() % strlen($passchars))];
+			}
+			return $password;
+			//return "P@ssw0rd"; //cool and 1337 password that is as good as any other password!
 	}
 
 	/**
@@ -441,7 +447,7 @@ class Person
 		(`id`,
 		`account_username`,
 		`account_password`,
-		`account_active`,
+		
 		`account_active_untill`,
 		`account_active_from`,
 		`first_name`,
@@ -471,7 +477,7 @@ class Person
 		:id,
 		:account_username,
 		:account_password,
-		:account_active,
+		
 		:account_active_untill,
 		:account_active_from,
 		:first_name,

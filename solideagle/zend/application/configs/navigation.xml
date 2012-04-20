@@ -36,13 +36,21 @@
 					<action>groupsandusers</action>
 				</groupsandusers>	
 				
-				<!--<demo>
-				<label>Taken demo</label>
-					<controller>usertasks</controller>
-					<action>getalltasksforuser</action>
+				<importExport>
+					<label>Import &amp; Export</label>
+					<controller>imports</controller>
+					<action>index</action>
+					
+					<pages>
+						<klassenImport>
+							<label>Import klassen</label>
+							<controller>imports</controller>
+							<action>importklassen</action>
+						</klassenImport>
+					</pages>
 				
 				
-				</demo>-->
+				</importExport>
 				
 				
 				

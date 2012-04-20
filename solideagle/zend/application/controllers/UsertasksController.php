@@ -141,6 +141,8 @@ class UsertasksController extends Zend_Controller_Action
 				$downloadSharePath = $this->getRequest()->getPost("DownloadSharePath",NULL);
 				$uploadSharePath = $this->getRequest()->getPost("UploadSharePath",NULL);
 			}
+			
+			
 			 
 			foreach($users as $user)
 			{

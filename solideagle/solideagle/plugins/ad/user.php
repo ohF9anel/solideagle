@@ -192,6 +192,7 @@ class User
 
         $user->setEnabled($enabled);
         
+
         $user->addMemberOfGroups(Group::getGroupById($person->getGroupId()));
         
         return $user;

@@ -2,6 +2,8 @@
 
 namespace solideagle\logging;
 
+use solideagle\Config;
+
 use \Log;
 
 require_once('Log.php');
@@ -20,12 +22,14 @@ class Logger
 	 */
 	private static function getLogger()
 	{
+		$loglevel = Config::singleton()->debugLevel;
+		
 		if(Logger::$logger == NULL)
 		{
 			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-			  	Logger::$logger  = Log::singleton('file', 'c:\out.log', 'ident', Logger::$conf);
+			  	Logger::$logger  = &Log::singleton('file', 'c:\out.log', 'ident', Logger::$conf,$loglevel);
 			} else {
-			   	Logger::$logger  = Log::singleton('file', '/tmp/out.log', 'ident', Logger::$conf);
+			   	Logger::$logger  = &Log::singleton('file', '/tmp/out.log', 'ident', Logger::$conf,$loglevel);
 			}
 
 		}
@@ -35,6 +39,8 @@ class Logger
 	
 	public static function log($errormessage,$messagetype = PEAR_LOG_ERR)
 	{
+		
+		
 		
 		$traces = debug_backtrace();
 		

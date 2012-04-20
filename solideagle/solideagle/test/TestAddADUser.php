@@ -32,7 +32,7 @@ $user->setMobile($person->getMobile());
 $user->setMail($person->getEmail());
 $user->setInfo($person->getOtherInformation());
 
-$user->setEnabled($person->getAccountActive());
+$user->setEnabled(1);
 $user->addMemberOfGroups(Group::getGroupById($person->getGroupId()));
 
 $parents = Group::getParents(Group::getGroupById($person->getGroupId()));
