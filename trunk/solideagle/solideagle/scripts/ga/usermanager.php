@@ -29,7 +29,7 @@ class usermanager implements TaskInterface
                         $platform = new platforms();
                         $platform->setPlatformType(platforms::PLATFORM_GAPP);
                         $platform->setPersonId($config["user"]->getId());
-                        $platform->setEnabled($config["user"]->getAccountActive());
+                        $platform->setEnabled(1);
                         platforms::addPlatform($platform);
                         return true;
                     }

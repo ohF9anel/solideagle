@@ -10,12 +10,10 @@ use solideagle\Config;
 class WwwFolder
 {
     
-    public static function setWwwFolder($server, $path, $wwwSharePath, $username, $enabled = true)
+    public static function setWwwFolder($conn,$server, $path, $wwwSharePath, $username, $enabled = true)
     {
-        $conn = SSHManager::singleton()->getConnection($server);
-        
       
-        
+
         if ($enabled)
         {
             // make www folder in homedir
@@ -35,9 +33,9 @@ class WwwFolder
             $conn->write("rmdir " . $wwwSharePath . "\\" . $username . " /s /q\n");
         }
         
-        $conn->write("echo ENDOFCODE\n");
-        $conn->read("ENDOFCODE");
-        //while($data = $conn->_get_channel_packet(NET_SSH2_CHANNEL_SHELL)) echo $data;
+
+       	return true;
+
         
     }
     

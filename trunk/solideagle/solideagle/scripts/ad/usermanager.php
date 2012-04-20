@@ -41,7 +41,9 @@ class usermanager implements TaskInterface
                     $platform = new platforms();
                     $platform->setPlatformType(platforms::PLATFORM_AD);
                     $platform->setPersonId($config["person"]->getId());
+
                     $platform->setEnabled($config["enabled"]);
+
                     platforms::addPlatform($platform);
                     return true;	
                 }
@@ -128,19 +130,7 @@ class usermanager implements TaskInterface
               TaskQueue::insertNewTask($config, $person->getId());
 	}
         
-//        public static function prepareAddHomeFolder($personId, $server, $username, $homeFolderPath, $scanSharePath, $wwwSharePath, $downloadSharePath, $uploadSharePath)
-//	{
-//		$config["action"] = self::ActionAddHomeFolder;
-//                $config["server"] = $server;
-//				$config["username"] = $username;
-//                $config["homeFolderPath"] = $homeFolderPath;
-//                $config["scanSharePath"] = $scanSharePath;
-//                $config["wwwSharePath"] = $wwwSharePath;
-//                $config["downloadSharePath"] = $downloadSharePath;
-//                $config["uploadSharePath"] = $uploadSharePath;
-//		
-//	TaskQueue::insertNewTask($config, $personId);
-//	}	
+
 	
 	public function getParams()
 	{

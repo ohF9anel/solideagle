@@ -15,6 +15,14 @@ JOIN `group` as g ON a.child_id = g.id WHERE g.deleted = 1;";
 $cmd = new DatabaseCommand($sql);
 $cmd->execute();
 
+$sql = "DELETE pt FROM `type_person` as pt
+JOIN `person` as a ON a.id = pt.person_id
+JOIN  `group` as g ON a.group_id = g.id WHERE g.deleted = 1;";
+
+$cmd = new DatabaseCommand($sql);
+$cmd->execute();
+
+
 $sql = "DELETE a FROM `person` as a
 JOIN `group` as g ON a.group_id = g.id WHERE g.deleted = 1;";
 

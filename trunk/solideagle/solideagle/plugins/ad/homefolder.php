@@ -16,19 +16,14 @@ class HomeFolder
      * @param group[] $arrReadRightsGroups 
      * @return boolean 
      */
-    public static function createHomeFolder($server, $path, $username, $arrReadRightsGroups = null)
+    public static function createHomeFolder($conn,$server, $path, $username, $arrReadRightsGroups = null)
     {
-    	$conn = SSHManager::singleton()->getConnection($server);
-        if ($conn == null)
-            return false;
 
         // make folder & subfolders
         $conn->write("mkdir " . $path . "\\" . $username . "\n");
-        //if ($www) $conn->write("mkdir " . $path . "\\" . $username . "\\" . "_www\n");
-        //$conn->write("mkdir " . $path . "\\" . $username . "\\" . "_scans\n");
-        
+       
         // set permissions to local folder
-        //$conn->write("icacls " . $path . "\\" . $username . " /q /reset /t\n");
+        
         $conn->write("setacl -ot file -actn ace -ace \"n:" . Config::singleton()->ad_dns . "\Domain Administrators;s:n;p:full;i:sc,so\" -on " . $path . "\\" . $username . "\n");        
         $conn->write("takeown /F " . $path . "\\" . $username . " /A /R /D Y\n");
         $conn->write("takeown /F " . $path . "\\" . $username . "\\*.* /A /R /D Y\n");
@@ -99,9 +94,7 @@ class HomeFolder
 
                 $conn->write($cmd);  
 
-                $conn->write("exit\nexit\n");
-                $conn->_close_channel(NET_SSH2_CHANNEL_SHELL); 
-                $conn->disconnect();
+              
                 
                 return true;
             }

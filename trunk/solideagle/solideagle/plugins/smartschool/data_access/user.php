@@ -430,7 +430,7 @@ class User
            
             $user->setUntis("");
             
-            $user->setAccountStatus($person->getAccountActive() ? "actief" : "inactief");
+            $user->setAccountStatus("actief");
             //$user->setClass(Group::getGroupById($person->getId())->getName());
             
             return $user;

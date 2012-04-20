@@ -10,9 +10,9 @@ require_once('Net/SSH2.php');
 class UploadFolder
 {
     
-    public static function setUploadFolder($server, $path, $uploadSharePath, $username, $enabled = true)
+    public static function setUploadFolder($conn,$server, $path, $uploadSharePath, $username, $enabled = true)
     {
-        $conn = SSHManager::singleton()->getConnection($server);
+    
         
         if ($enabled)
         {

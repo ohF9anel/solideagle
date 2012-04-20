@@ -1,6 +1,8 @@
 <?php
 namespace solideagle\scripts\ad;
 
+use solideagle\logging\Logger;
+
 use solideagle\plugins\ad\SSHManager;
 
 use solideagle\data_access\Type;
@@ -33,34 +35,43 @@ class homefoldermanager implements TaskInterface
 		}
 		else if($config["action"] == self::ActionAddHomefolder && isset($config["server"]) && isset($config["homefolderpath"]) && isset($config["scansharepath"]) && isset($config["wwwsharepath"]) && isset($config["username"]))
 		{
-			SSHManager::singleton()->getConnection($config["server"])->write("cmd\n");
-			HomeFolder::createHomeFolder($config["server"], $config["homefolderpath"], $config["username"]);
-			ScanFolder::setScanFolder($config["server"], $config["homefolderpath"], $config["scansharepath"], $config["username"]);
-			WwwFolder::setWwwFolder($config["server"], $config["homefolderpath"],$config["wwwsharepath"], $config["username"]);
-			SSHManager::singleton()->getConnection($config["server"])->write("exit\nexit\n");
-                        
-                        $ret = ManageUser::setHomeFolder($config["username"], "\\\\" . $config["server"]);
+			$conn = SSHManager::singleton()->getConnection($config["server"]);
+			
+			if(!HomeFolder::createHomeFolder($conn, $config["server"], $config["homefolderpath"], $config["username"]))
+			{
+				Logger::log("Creating homefolder failed! " . $key ,PEAR_LOG_ERR);
+			}
+			if(!ScanFolder::setScanFolder($conn, $config["server"], $config["homefolderpath"], $config["scansharepath"], $config["username"]))
+			{
+				
+				Logger::log("Setting scanfolder failed! " . $key ,PEAR_LOG_ERR);
+			}
+			if(!WwwFolder::setWwwFolder($conn ,$config["server"], $config["homefolderpath"],$config["wwwsharepath"], $config["username"]))
+			{
+				Logger::log("Setting www folder failed! " . $key ,PEAR_LOG_ERR);
+			}
+				
+			if(isset($config["uploadsharepath"]))
+				UploadFolder::setUploadFolder($conn,$config["server"], $config["homefolderpath"], $config["uploadsharepath"], $config["username"]);
+				
+			if(isset($config["downloadsharepath"]))
+				DownloadFolder::setDownloadFolder($conn,$config["server"], $config["homefolderpath"], $config["downloadsharepath"], $config["username"]);
+				
+			$conn->exitShell();
+		
+			//debug!
+			Logger::log("SSH SESSION:\n" . $conn->read(),PEAR_LOG_DEBUG);
+			
+			
+
+			$ret = ManageUser::setHomeFolder($config["username"], "\\\\" . $config["server"]);
 			if($ret->isSucces())
-                        {
-                                return true;	
-                        }else{
-                                $taskqueue->setErrorMessages($ret->getError());
-                                return false;
-                        }
-		}
-		else if($config["action"] == self::ActionAddUploadFolder && isset($config["server"]) && isset($config["homefolderpath"]) && isset($config["uploadsharepath"]) && isset($config["username"]))
-		{
-			SSHManager::singleton()->getConnection($config["server"])->write("cmd\n");
-			UploadFolder::setUploadFolder($config["server"], $config["homefolderpath"], $config["uploadsharepath"], $config["username"]);
-			SSHManager::singleton()->getConnection($config["server"])->write("exit\nexit\n");
-			return true;
-		}
-		else if($config["action"] == self::ActionAddDownloadFolder && isset($config["server"]) && isset($config["homefolderpath"]) && isset($config["downloadsharepath"]) && isset($config["username"]))
-		{
-			SSHManager::singleton()->getConnection($config["server"])->write("cmd\n");
-			DownloadFolder::setDownloadFolder($config["server"], $config["homefolderpath"], $config["downloadsharepath"], $config["username"]);
-			SSHManager::singleton()->getConnection($config["server"])->write("exit\nexit\n");
-			return true;
+			{
+				return true;
+			}else{
+				$taskqueue->setErrorMessages($ret->getError());
+				return false;
+			}
 		}
 		else{
 			$taskqueue->setErrorMessages("Probleem met configuratie");
@@ -84,42 +95,21 @@ class homefoldermanager implements TaskInterface
 		$config["scansharepath"] = $scansharepath;
 		$config["wwwsharepath"] = $wwwsharepath;
 		$config["username"] = $user->getAccountUsername();
-		
+
+
 		if ($user->isTypeOf(Type::TYPE_LEERLING))
-                    $config["homefolderpath"] .= "\\" . substr($user->getMadeOn(), 2, 2);
+			$config["homefolderpath"] .= "\\" . substr($user->getMadeOn(), 2, 2);
 
-		TaskQueue::insertNewTask($config, $user->getId(), TaskQueue::TypePerson);
-
-		if(!($user->isTypeOf(Type::TYPE_LEERLING)) && $uploadsharepath!=NULL && $downloadsharepath!=NULL)
+		if((!$user->isTypeOf(Type::TYPE_LEERLING)) && $uploadsharepath!=NULL && $downloadsharepath!=NULL)
 		{
-			self::prepareAddUploadFolder($server,$homefolderpath,$uploadsharepath, $user);
-			self::prepareAddDownloadFolder($server, $homefolderpath, $downloadsharepath, $user);
+			$config["uploadsharepath"] = $uploadsharepath;
+			$config["downloadsharepath"] = $downloadsharepath;
 		}
-	}
-
-	private static function prepareAddUploadFolder($server, $homefolderpath, $uploadsharepath, $user)
-	{
-		$config["action"] = self::ActionAddUploadFolder;
-		$config["server"] = $server;
-		$config["homefolderpath"] = $homefolderpath;
-		$config["uploadsharepath"] = $uploadsharepath;
-		$config["username"] = $user->getAccountUsername();
-
-
+		
 		TaskQueue::insertNewTask($config, $user->getId(), TaskQueue::TypePerson);
 	}
 
-	private static function prepareAddDownloadFolder($server, $homefolderpath, $downloadsharepath, $user)
-	{
-		$config["action"] = self::ActionAddDownloadFolder;
-		$config["server"] = $server;
-		$config["homefolderpath"] = $homefolderpath;
-		$config["downloadsharepath"] = $downloadsharepath;
-		$config["username"] = $user->getAccountUsername();
 
-
-		TaskQueue::insertNewTask($config, $user->getId(), TaskQueue::TypePerson);
-	}
 
 	public function getParams()
 	{

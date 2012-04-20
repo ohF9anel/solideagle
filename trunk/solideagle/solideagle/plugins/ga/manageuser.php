@@ -27,8 +27,7 @@ class manageuser
         $cmd .= "lastname " . $person->getName() . " ";
         $cmd .= "password " . $person->getAccountPassword();
         
-        if (!$person->getAccountActive())
-            $cmd .= " suspended on";
+        
         
         // add user
         $proc_ls = proc_open($cmd, $descriptorspec, $pipes);
@@ -121,10 +120,8 @@ class manageuser
         $cmd .= "lastname " . $person->getName() . " ";
         $cmd .= "password " . $person->getAccountPassword() . " ";
         
-        if (!$person->getAccountActive())
-            $cmd .= "suspended on";
-        else
-            $cmd .= "suspended off";
+    
+        $cmd .= "suspended off";
 
         $proc_ls = proc_open($cmd, $descriptorspec, $pipes);
 

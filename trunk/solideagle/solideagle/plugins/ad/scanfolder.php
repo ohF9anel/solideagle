@@ -10,9 +10,9 @@ require_once('Net/SSH2.php');
 class ScanFolder
 {
     
-    public static function setScanFolder($server, $path, $scanSharePath, $username, $enabled = true)
+    public static function setScanFolder($conn,$server, $path, $scanSharePath, $username, $enabled = true)
     {
-        $conn = SSHManager::singleton()->getConnection($server);
+   
         
         if ($enabled)
         {
@@ -32,18 +32,9 @@ class ScanFolder
         {
             $conn->write("rmdir " . $scanSharePath . "\\" . $username . " /s /q\n");
         }
+
         
-        $conn->write("echo ENDOFCODE\n");
-        $conn->read("ENDOFCODE");
-        
-        return true;
-//        
-//{
-//	echo $data;
-//}
-        
-     
-       
+		return true;
         
         
     }

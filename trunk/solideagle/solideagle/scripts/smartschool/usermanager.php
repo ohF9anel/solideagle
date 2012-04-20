@@ -41,7 +41,7 @@ class usermanager implements TaskInterface
                                 $platform = new platforms();
                                 $platform->setPlatformType(platforms::PLATFORM_SMARTSCHOOL);
                                 $platform->setPersonId($config["person"]->getId());
-                                $platform->setEnabled($config["person"]->getAccountActive());
+                                $platform->setEnabled(1);
                                 platforms::addPlatform($platform);
                                 return true;
 				return true;
