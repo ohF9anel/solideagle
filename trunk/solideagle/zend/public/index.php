@@ -1,7 +1,7 @@
 <?php
 
 if((strpos($_SERVER['REMOTE_ADDR'], "10.3.7.") ===false ) && (strpos($_SERVER['REMOTE_ADDR'], "127.0.0.1") ===false ))
-	exit("No acces for: " . $_SERVER['REMOTE_ADDR']);
+	exit("No access for: " . $_SERVER['REMOTE_ADDR']);
 
 
 ini_set('default_charset','UTF-8');
