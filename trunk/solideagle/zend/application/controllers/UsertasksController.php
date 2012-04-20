@@ -78,7 +78,6 @@ class UsertasksController extends Zend_Controller_Action
 				solideagle\scripts\ga\usermanager::prepareAddUserToOu($user);
 			}
 		}
-
 		 
 		if($this->getRequest()->getPost('createAdHomedir',false))
 		{
@@ -120,31 +119,59 @@ class UsertasksController extends Zend_Controller_Action
 		$this->view->defaults->downloadpath =   Config::singleton()->path_share_downloads;
 		$this->view->defaults->uploadpath =  Config::singleton()->path_share_uploads;
 
-
-
 		$usersArr = $this->getRequest()->getPost('jspostArr',array());
 
+                // single user selected
 		if(count($usersArr) < 2 && count($usersArr) > 0)
 		{
+                        $this->view->singleAccountSelected = true;
+                    
 			$userId = $usersArr[0];
 			$platformAd = platforms::getPlatformAdByPersonId($userId);
-			$this->view->hasAdAccount = true;
+                        $platformSs = platforms::getPlatformSmartschoolByPersonId($userId);
+                        $platformGa = platforms::getPlatformGappByPersonId($userId);
+                        
+                        // ad?
 			if ($platformAd != null)
 			{
-				$this->view->hasAdAccount = true;
-				$this->view->hasAdAccountEnabled = $platformAd->getEnabled();
+                            $this->view->hasAdAccount = true;
+                            $this->view->hasAdAccountEnabled = $platformAd->getEnabled();
 			}
 			else
-			{
-				$this->view->hasAdAccount = false;
-			}
-		}else if(count($usersArr) < 1) {
-			// geen
-			exit();
-		}
+                            $this->view->hasAdAccount = false;
+                        
+                        // smartschool?
+                        if ($platformSs != null)
+                        {
+                            $this->view->hasSsAccount = true;
+                            $this->view->hasSsAccountEnabled = $platformSs->getEnabled();
+                        }
+                        else
+                            $this->view->hasSSAccount = false;
+                        
+                        // gapps?
+                        if ($platformGa != null)
+                        {
+                            $this->view->hasGappAccount = true;
+                            $this->view->hasGappAccountEnabled = $platformGa->getEnabled();
+                        }
+                        else
+                            $this->view->hasSSAccount = false;
+                // multiple accounts selected
+                }else if(count($usersArr > 1))
+                {                    
+                        $this->view->multipleAccountsSelected = true;
+                        
+                        $this->view->hasAdAccount = true;
 
-		//veeeel gebruikers
-		 
+                        $this->view->hasSsAccount = true;
+
+                        $this->view->hasGappAccount = true;
+ 
+		}
+                // geen
+                else
+                    exit();
 
 	}
 

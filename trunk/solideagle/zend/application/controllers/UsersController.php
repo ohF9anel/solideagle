@@ -6,6 +6,7 @@ use solideagle\utilities\SuperEntities;
 use solideagle\data_access\helpers\DateConverter;
 
 use solideagle\data_access\Person;
+use solideagle\data_access\platforms;
 use solideagle\data_access\Type;
 use solideagle\data_access\Group;
 use solideagle\scripts\Usermanager;
@@ -148,7 +149,16 @@ class UsersController extends Zend_Controller_Action
 		if($postmode === "edit")
 		{
 			$person->setId($this->getRequest()->getPost('Id'));
+                        $oldPerson = Person::getPersonById($person->getId());
 			Person::updatePerson($person);
+                        $person->setGroupId($oldPerson->getGroupId());
+                        if (platforms::getPlatformAdByPersonId($person->getId()) != null);
+                            solideagle\scripts\ad\usermanager::prepareUpdateUser($person);
+                        if (platforms::getPlatformGappByPersonId($person->getId()) != null)
+                            solideagle\scripts\ga\usermanager::prepareUpdateUser($person, $oldPerson->getAccountUsername());
+//                        if (platforms::getPlatformSmartschoolByPersonIdByPersonId($person->getId()) != null)
+//                            solideagle\scripts\smartschool\usermanager::prepareUpdateUser($person);
+                        
 		}else{
 			Person::addPerson($person);
 		}

@@ -95,15 +95,16 @@ class ManageUser
         $group = $userInfo['groups'][0];
         $groups = $userInfo['groups'];
         
-        $parentDn = "OU=" . $group->getName() . ", ";
+        $parentDn = "OU=" . $group->getName() . ",";
         for($i = 0; $i < sizeof($arrParentsOUs); $i++)
         {
-            $parentDn .= "OU=" . $arrParentsOUs[$i]->getName() . ", ";
+            $parentDn .= "OU=" . $arrParentsOUs[$i]->getName() . ",";
         }
 
         $parentDn .= Config::singleton()->ad_dc;
-        $dn = "CN=" . $userInfo['cn'] . ", " . $parentDn;
+        $dn = "CN=" . $userInfo['cn'] . "," . $parentDn;
         
+        // get old userinfo
         $sr = ldap_search($connLdap->getConn(), Config::singleton()->ad_dc, "(uid=" . $userInfo['uid'] . ")");
         $oldUserInfo = ldap_get_entries($connLdap->getConn(), $sr);
         
@@ -112,11 +113,10 @@ class ManageUser
             Logger::log("User \"" . $userInfo['uid'] . "\" trying to update in AD not found in: \"" . Config::singleton()->ad_dc. "\".");
             return false;
         }
-        // move user to other ou?
+        
+        // rename dn?
         if ($oldUserInfo[0]['distinguishedname'][0] != $dn)
-        {
-            ldap_rename($connLdap->getConn(), $oldUserInfo[0]['distinguishedname'][0], 'CN=' . $oldUserInfo[0]['cn'][0], $parentDn, true);
-        }
+            ldap_rename($connLdap->getConn(), $oldUserInfo[0]['distinguishedname'][0], 'CN=' . $userInfo['cn'], $parentDn, true);
         
         $ac = $oldUserInfo[0]["useraccountcontrol"][0];
 
@@ -141,6 +141,14 @@ class ManageUser
         unset($userInfo['enabled']);
         unset($userInfo['cn']);
         
+        // unset empty values
+        foreach($userInfo as $key => $attr)
+        {
+            if ($attr == '' || $attr == null) {
+                unset($userInfo[$key]);
+            }
+        }
+
         $ret = ldap_modify($connLdap->getConn(), $dn, $userInfo);
         if ($ret)
         {
