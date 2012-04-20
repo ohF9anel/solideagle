@@ -369,7 +369,7 @@ use solideagle\utilities\SuperEntities;
                                                 {?>
                                                     <label class="checkbox">
                                                         Account verwijderen
-                                                        <input name="deleteAdAccount" id="blnDeleteGapp" type="checkbox" value="false">
+                                                        <input name="deleteGappAccount" id="blnDeleteGapp" type="checkbox" value="false">
                                                     </label>
                                                     <div class="control-group error" id="deletegappsure">
                                                         <label class="checkbox error" id="lbldeletegappsure">
@@ -382,14 +382,14 @@ use solideagle\utilities\SuperEntities;
                                                 {?>
                                                     <label class="checkbox">
                                                             Account deactiveren
-                                                            <input name="blnAdDisable" id="blnGappDisable" type="checkbox" >
+                                                            <input name="blnGappDisable" id="blnGappDisable" type="checkbox" >
                                                     </label>
                                                 <?php
                                                 }if($this->multipleAccountsSelected || !$this->hasGappAccountEnabled)
                                                 {?>
                                                     <label class="checkbox">
                                                             Account activeren
-                                                            <input name="blnAdEnable" id="blnGappEnable" type="checkbox" >
+                                                            <input name="blnGappEnable" id="blnGappEnable" type="checkbox" >
                                                     </label>
                                                 <?php
                                                 }?>

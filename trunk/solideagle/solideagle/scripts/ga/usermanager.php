@@ -20,16 +20,16 @@ class usermanager implements TaskInterface
 	{
 		$config = $taskqueue->getConfiguration();
 
-		if($config["action"] == self::ActionAddUser && isset($config["user"]))
+		if($config["action"] == self::ActionAddUser && isset($config["user"]) && isset($config["enabled"]))
 		{  
-                    $ret = manageuser::addUser($config["user"]);
+                    $ret = manageuser::addUser($config["user"], $config["enabled"]);
                         
                     if($ret->isSucces())
                     {
                         $platform = new platforms();
                         $platform->setPlatformType(platforms::PLATFORM_GAPP);
                         $platform->setPersonId($config["user"]->getId());
-                        $platform->setEnabled(1);
+                        $platform->setEnabled($config["enabled"]);
                         platforms::addPlatform($platform);
                         return true;
                     }
@@ -38,12 +38,17 @@ class usermanager implements TaskInterface
                         return false;
                     }
                 }
-                else if($config["action"] == self::ActionUpdateUser && isset($config["user"]) && isset($config["oldUsername"]))
+                else if($config["action"] == self::ActionUpdateUser && isset($config["user"]) && isset($config["oldUsername"]) && isset($config["enabled"]))
                 {
-                    $ret = manageuser::updateUser($config["user"], $config["oldUsername"]);
+                    $ret = manageuser::updateUser($config["user"], $config["oldUsername"], $config["enabled"]);
                     
                     if($ret->isSucces())
                     {
+                        $platform = new platforms();
+                        $platform->setPlatformType(platforms::PLATFORM_GAPP);
+                        $platform->setPersonId($config["user"]->getId());
+                        $platform->setEnabled($config["enabled"]);
+                        platforms::updatePlatform($platform);
                         return true;
                     }
                     else{
@@ -57,6 +62,10 @@ class usermanager implements TaskInterface
   
                     if($ret->isSucces())
                     {
+                        $platform = new platforms();
+                        $platform->setPlatformType(platforms::PLATFORM_GAPP);
+                        $platform->setPersonId($config["person"]->getId());
+                        platforms::removePlatform($platform);
                         return true;
                     }
                     else{
@@ -89,19 +98,21 @@ class usermanager implements TaskInterface
 	
 	}
 	
-	public static function prepareAddUser($person)
+	public static function prepareAddUser($person, $enabled = true)
 	{
 		$config["action"] = self::ActionAddUser;
                 $config["user"] = $person;
+                $config["enabled"] = $enabled;
 
 		TaskQueue::insertNewTask($config, $person->getId());
 	}
         
-        public static function prepareUpdateUser($person, $oldUsername)
+        public static function prepareUpdateUser($person, $oldUsername, $enabled)
 	{
 		$config["action"] = self::ActionUpdateUser;
                 $config["user"] = $person;
 		$config["oldUsername"] = $oldUsername;
+                $config["enabled"] = $enabled;
 		
 		TaskQueue::insertNewTask($config, $person->getId());
 	}
