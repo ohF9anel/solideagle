@@ -1,6 +1,6 @@
 <?php
 
-if((strpos($_SERVER['REMOTE_ADDR'], "10.3.7.") ===false ))
+if((strpos($_SERVER['REMOTE_ADDR'], "10.3.7.") ===false ) && (strpos($_SERVER['REMOTE_ADDR'], "127.0.0.1") ===false ))
 	exit("No acces for: " . $_SERVER['REMOTE_ADDR']);
 
 
