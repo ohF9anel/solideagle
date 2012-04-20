@@ -37,7 +37,7 @@ class homefoldermanager implements TaskInterface
 			HomeFolder::createHomeFolder($config["server"], $config["homefolderpath"], $config["username"]);
 			ScanFolder::setScanFolder($config["server"], $config["homefolderpath"], $config["scansharepath"], $config["username"]);
 			WwwFolder::setWwwFolder($config["server"], $config["homefolderpath"],$config["wwwsharepath"], $config["username"]);
-			SSHManager::singleton()->getConnection($config["server"])->write("exit\n");
+			SSHManager::singleton()->getConnection($config["server"])->write("exit\nexit\n");
                         
                         $ret = ManageUser::setHomeFolder($config["username"], "\\\\" . $config["server"]);
 			if($ret->isSucces())
@@ -52,14 +52,14 @@ class homefoldermanager implements TaskInterface
 		{
 			SSHManager::singleton()->getConnection($config["server"])->write("cmd\n");
 			UploadFolder::setUploadFolder($config["server"], $config["homefolderpath"], $config["uploadsharepath"], $config["username"]);
-			SSHManager::singleton()->getConnection($config["server"])->write("exit\n");
+			SSHManager::singleton()->getConnection($config["server"])->write("exit\nexit\n");
 			return true;
 		}
 		else if($config["action"] == self::ActionAddDownloadFolder && isset($config["server"]) && isset($config["homefolderpath"]) && isset($config["downloadsharepath"]) && isset($config["username"]))
 		{
 			SSHManager::singleton()->getConnection($config["server"])->write("cmd\n");
 			DownloadFolder::setDownloadFolder($config["server"], $config["homefolderpath"], $config["downloadsharepath"], $config["username"]);
-			SSHManager::singleton()->getConnection($config["server"])->write("exit\n");
+			SSHManager::singleton()->getConnection($config["server"])->write("exit\nexit\n");
 			return true;
 		}
 		else{

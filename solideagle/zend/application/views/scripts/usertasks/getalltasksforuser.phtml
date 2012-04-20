@@ -17,6 +17,31 @@ use solideagle\utilities\SuperEntities;
 		if(selectedArr.length > 0)
 		{
 			$('#myModal').modal('show');
+                        
+                        $("#deleteadsure").hide();
+                        $("#deletesssure").hide();
+                        $("#deletegappsure").hide();
+                        $("#radioAdEnableAccounts").hide();
+                        $("#radioAdDisableAccounts").hide();
+
+                        $("#blnDeleteAd").click(function(){
+                                $("#deleteadsure").toggle();
+                                $("#blnDeleteAdSure").removeAttr("checked");
+                        });
+                        $("#blnAdMultipleEnableDisable").click(function(){
+                                $("#radioAdEnableAccounts").toggle();
+                                $("#radioAdDisableAccounts").toggle();
+                                $("#optionAdMultipleEnable").removeAttr("checked");
+                                $("#optionAdMultipleDisable").removeAttr("checked");
+                        });
+                        $("#blnDeleteSs").click(function(){
+                                $("#deletesssure").toggle();
+                                $("#blnDeleteSsSure").removeAttr("checked");
+                        });
+                        $("#blnDeleteGapp").click(function(){
+                                $("#deletegappsure").toggle();
+                                $("#blnDeleteGappSure").removeAttr("checked");
+                        });
 		}else{
 			alert("Geen gebruikers geselecteerd");
 
@@ -70,15 +95,7 @@ use solideagle\utilities\SuperEntities;
 
 					<div class="row">
 						<div class="span12">
-                                                        
-                                                        <?php if($this->hasAdAccount)
-                                                        {?>
-                                                           
                                                             
-                                                        <?php
-                                                        }
-                                                        else
-                                                        {?>
                                                             <label class="checkbox">
                                                                     <input
                                                                             name="createAdAccount"
@@ -86,18 +103,35 @@ use solideagle\utilities\SuperEntities;
                                                                             value="true">
                                                                     Account maken
                                                             </label>
-                                                        <?php
-                                                        }?>
+                                                            <label class="checkbox">
+                                                                Account verwijderen
+                                                                <input name="deleteAdAccount" id="blnDeleteAd" type="checkbox" value="false">
+                                                            </label>
+                                                            <div class="control-group error" id="deleteadsure">
+                                                                <label class="checkbox error" id="lbldeleteadsure">
+                                                                        Ja, ik ben zeker
+                                                                        <input id="blndeleteadsure" name="deleteAdAccountSure" type="checkbox" value="false">
+                                                                </label>  
+                                                            </div>
 
-							<label class="checkbox">
-								<input
-									name="createAdHomedir"
-									type="checkbox"
-									data-toggle="collapse"
-									data-target="#adHomeDirParams"
-									value="true">
-								Homedir maken
-							</label>
+                                                            <label class="checkbox">
+                                                                    Account deactiveren
+                                                                    <input name="blnAdDisable" id="blnAdDisable" type="checkbox" >
+                                                            </label>
+                                                            <label class="checkbox">
+                                                                    Account activeren
+                                                                    <input name="blnAdEnable" id="blnAdEnable" type="checkbox" >
+                                                            </label>
+
+                                                        <label class="checkbox">
+                                                                <input
+                                                                        name="createAdHomedir"
+                                                                        type="checkbox"
+                                                                        data-toggle="collapse"
+                                                                        data-target="#adHomeDirParams"
+                                                                        value="true">
+                                                                Homedir maken
+                                                        </label>
 
 							<div
 								id="adHomeDirParams"
@@ -255,14 +289,47 @@ use solideagle\utilities\SuperEntities;
 
 					<div class="row">
 						<div class="span12">
-
-							<label class="checkbox">
-								<input
-									name="createSSAccount"
-									type="checkbox"
-									value="true">
-								Account maken
-							</label>
+                                                    
+                                                    <?php if($this->hasSsAccount)
+                                                    {?>
+                                                        <label class="checkbox">
+                                                            Account verwijderen
+                                                            <input name="deleteSSAccount" id="blnDeleteSs" type="checkbox" value="false">
+                                                        </label>
+                                                        <div class="control-group error" id="deletesssure">
+                                                            <label class="checkbox error" id="lbldeletesssure">
+                                                                    Ja, ik ben zeker
+                                                                    <input id="blndeletesssure" name="deleteSSAccountSure" type="checkbox" value="false">
+                                                            </label>  
+                                                        </div>
+                                                        <label class="checkbox">
+                                                            <?php if($this->hasSsAccountEnabled)
+                                                            {?>
+                                                                Account deactiveren
+                                                                <input name="blnSsDisable" id="blnSsDisable" type="checkbox" >
+                                                            <?php
+                                                            }
+                                                            else
+                                                            {?>
+                                                                Account activeren
+                                                                <input name="blnSsEnable" id="blnSsEnable" type="checkbox" >
+                                                            <?php
+                                                            }?>
+                                                        </label>
+                                                    <?php
+                                                    }
+                                                    else
+                                                    {?>
+                                                        <label class="checkbox">
+                                                            <input
+                                                                name="createSSAccount"
+                                                                type="checkbox"
+                                                                value="true">
+                                                            Account maken
+                                                        </label>
+                                                    <?php
+                                                    }
+                                                    ?>
 
 						</div>
 					</div>
@@ -276,15 +343,48 @@ use solideagle\utilities\SuperEntities;
 					</div>
 
 					<div class="row">
-						<div class="span12">
-
-							<label class="checkbox">
-								<input
-									name="createGappAccount"
-									type="checkbox"
-									value="true">
-								Account maken
-							</label>
+                                            <div class="span12">
+                                                
+                                                <?php if($this->hasSsAccount)
+                                                {?>
+                                                    <label class="checkbox">
+                                                        Account verwijderen
+                                                        <input name="deleteGappAccount" id="blnDeleteGapp" type="checkbox" value="false">
+                                                    </label>
+                                                    <div class="control-group error" id="deletegappsure">
+                                                        <label class="checkbox error" id="lbldeletegappsure">
+                                                                Ja, ik ben zeker
+                                                                <input id="blndeletegappsure" name="deleteGappAccountSure" type="checkbox" value="false">
+                                                        </label>  
+                                                    </div>
+                                                    <label class="checkbox">
+                                                        <?php if($this->hasGappAccountEnabled)
+                                                        {?>
+                                                            Account deactiveren
+                                                            <input name="blnGappDisable" id="blnGappDisable" type="checkbox" >
+                                                        <?php
+                                                        }
+                                                        else
+                                                        {?>
+                                                            Account activeren
+                                                            <input name="blnGappEnable" id="blnGappEnable" type="checkbox" >
+                                                        <?php
+                                                        }?>
+                                                    </label>
+                                                <?php
+                                                }
+                                                else
+                                                {?>
+                                                    <label class="checkbox">
+                                                        <input
+                                                            name="createGappAccount"
+                                                            type="checkbox"
+                                                            value="true">
+                                                        Account maken
+                                                    </label>
+                                                <?php
+                                                }
+                                                ?>
 
 						</div>
 					</div>

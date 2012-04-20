@@ -2,7 +2,7 @@
 
 namespace solideagle\plugins\ad;
 
-use Logging\Logger;
+use solideagle\logging\Logger;
 use solideagle\Config;
 
 require_once('Net/SSH2.php');
@@ -13,8 +13,6 @@ class UploadFolder
     public static function setUploadFolder($server, $path, $uploadSharePath, $username, $enabled = true)
     {
         $conn = SSHManager::singleton()->getConnection($server);
-        
-      
         
         if ($enabled)
         {
@@ -37,9 +35,11 @@ class UploadFolder
             $conn->write("rmdir " . $uploadSharePath . "\\" . $username . " /s /q\n");
         }
         
-        //while($data = $conn->_get_channel_packet(NET_SSH2_CHANNEL_SHELL))
+        $conn->write("echo ENDOFCODE\n");
+        $conn->read("ENDOFCODE");
         
-     
+//        while($data = $conn->_get_channel_packet(NET_SSH2_CHANNEL_SHELL))
+//            echo $data;
      
         
     }

@@ -32,6 +32,11 @@ class ScanFolder
         {
             $conn->write("rmdir " . $scanSharePath . "\\" . $username . " /s /q\n");
         }
+        
+        $conn->write("echo ENDOFCODE\n");
+        $conn->read("ENDOFCODE");
+        
+        return true;
 //        
 //{
 //	echo $data;

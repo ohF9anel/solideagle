@@ -60,8 +60,13 @@ class HomeFolder
         $cmd .= "/cache:None\n";
         $conn->write($cmd);  
         
-        // set homefolder attribute in ad
-        
+        $conn->write("echo ENDOFCODE\n");
+        $conn->read("ENDOFCODE");
+//        
+//        while($data = $conn->_get_channel_packet(NET_SSH2_CHANNEL_SHELL))
+//{
+//	echo $data;
+//}
         
         return true;
     }

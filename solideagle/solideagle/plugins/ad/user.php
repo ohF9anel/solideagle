@@ -23,7 +23,7 @@ class User
     private $postalcode;
     private $l;
     private $co;
-    private $homephone;
+    private $telephoneNumber;
     private $mobile;
     private $mail;
     private $info;
@@ -118,9 +118,9 @@ class User
         $this->co = $co;
     }
 
-    public function setHomephone($homephone)
+    public function setTelephoneNumber($telephoneNumber)
     {
-        $this->homephone = $homephone;
+        $this->telephoneNumber = $telephoneNumber;
     }
 
     public function setMobile($mobile)
@@ -185,7 +185,7 @@ class User
         $user->setPostalcode($person->getPostCode());
         $user->setL($person->getCity());
         $user->setCo($person->getCountry());
-        $user->setHomephone($person->getPhone());
+        $user->setTelephoneNumber($person->getPhone());
         $user->setMobile($person->getMobile());
         $user->setMail($person->getEmail());
         $user->setInfo($person->getOtherInformation());
