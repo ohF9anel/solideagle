@@ -50,18 +50,50 @@ class UsertasksController extends Zend_Controller_Action
 		{
 			$users[] = Person::getPersonById($userid);
 		}
-		 
+		
+                /**
+                 * ACTIVE DIRECTORY 
+                 */
 
 		if($this->getRequest()->getPost('createAdAccount',false))
 		{
-			 
 			foreach($users as $user)
 			{
 				solideagle\scripts\ad\usermanager::prepareAddUser($user);
 			}
-
 		}
+                
+                if($this->getRequest()->getPost('deleteAdAccountSure',false))
+		{
+			foreach($users as $user)
+			{
+				solideagle\scripts\ad\usermanager::prepareDelUser($user);
+			}
+                }
+                
+                // disable account?
+                if($this->getRequest()->getPost('blnAdDisable',false))
+		{
+			foreach($users as $user)
+			{
+				solideagle\scripts\ad\usermanager::prepareUpdateUser($user, false);
+			}
+		}
+                
+                // enabled account?
+                if($this->getRequest()->getPost('blnAdEnable',false))
+		{
+			foreach($users as $user)
+			{
+				solideagle\scripts\ad\usermanager::prepareUpdateUser($user, true);
+			}
+		}
+                
+                /**
+                 * SMARTSCHOOL
+                 */
 		 
+                // create account
 		if($this->getRequest()->getPost('createSSAccount',false))
 		{
 			foreach($users as $user)
@@ -70,6 +102,11 @@ class UsertasksController extends Zend_Controller_Action
 			}
 		}
 		 
+                /**
+                 * GOOGLE APPS
+                 */
+                
+                // create account
 		if($this->getRequest()->getPost('createGappAccount',false))
 		{
 			foreach($users as $user)
@@ -78,6 +115,15 @@ class UsertasksController extends Zend_Controller_Action
 				solideagle\scripts\ga\usermanager::prepareAddUserToOu($user);
 			}
 		}
+                
+                // disable account?
+//                if($this->getRequest()->getPost('blnGappDisable',false))
+//		{
+//			foreach($users as $user)
+//			{
+//				solideagle\scripts\ad\usermanager::prepareUpdateUser($user, false);
+//			}
+//		}
 		 
 		if($this->getRequest()->getPost('createAdHomedir',false))
 		{

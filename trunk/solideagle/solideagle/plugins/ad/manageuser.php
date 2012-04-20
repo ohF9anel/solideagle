@@ -63,9 +63,6 @@ class ManageUser
         if ($connLdap->getConn() == null)
             return new StatusReport(false, "Connection to AD cannot be made.");
         
-        if ($connLdap->getConn() == null)
-            return false;
-        
         $r = true;
         
         // add user to correct group

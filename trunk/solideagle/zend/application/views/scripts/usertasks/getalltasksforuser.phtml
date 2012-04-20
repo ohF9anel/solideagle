@@ -96,6 +96,8 @@ use solideagle\utilities\SuperEntities;
 					<div class="row">
 						<div class="span12">
                                                             
+                                                    <?php if ($this->multipleAccountsSelected || !$this->hasAdAccount)
+                                                    {?>
                                                             <label class="checkbox">
                                                                     <input
                                                                             name="createAdAccount"
@@ -103,6 +105,9 @@ use solideagle\utilities\SuperEntities;
                                                                             value="true">
                                                                     Account maken
                                                             </label>
+                                                    <?php 
+                                                    }if ($this->multipleAccountsSelected || $this->hasAdAccount)
+                                                    {?>
                                                             <label class="checkbox">
                                                                 Account verwijderen
                                                                 <input name="deleteAdAccount" id="blnDeleteAd" type="checkbox" value="false">
@@ -113,16 +118,23 @@ use solideagle\utilities\SuperEntities;
                                                                         <input id="blndeleteadsure" name="deleteAdAccountSure" type="checkbox" value="false">
                                                                 </label>  
                                                             </div>
-
+                                                    <?php
+                                                    }if ($this->multipleAccountsSelected || $this->hasAdAccountEnabled)
+                                                    {?>
                                                             <label class="checkbox">
                                                                     Account deactiveren
                                                                     <input name="blnAdDisable" id="blnAdDisable" type="checkbox" >
                                                             </label>
+                                                    <?php
+                                                    }if($this->multipleAccountsSelected || !$this->hasAdAccountEnabled)
+                                                    {?>
                                                             <label class="checkbox">
                                                                     Account activeren
                                                                     <input name="blnAdEnable" id="blnAdEnable" type="checkbox" >
                                                             </label>
-
+                                                    <?php
+                                                    }?>
+                                                    
                                                         <label class="checkbox">
                                                                 <input
                                                                         name="createAdHomedir"
@@ -154,7 +166,6 @@ use solideagle\utilities\SuperEntities;
 												<i>server.domain.example</i>
 											</p>
 										</div>
-
 									</div>
 
 									<div class="control-group">
@@ -344,12 +355,21 @@ use solideagle\utilities\SuperEntities;
 
 					<div class="row">
                                             <div class="span12">
-                                                
-                                                <?php if($this->hasSsAccount)
+                                                <?php if ($this->multipleAccountsSelected || !$this->hasGappAccount)
+                                                {?>
+                                                    <label class="checkbox">
+                                                            <input
+                                                                    name="createGappAccount"
+                                                                    type="checkbox"
+                                                                    value="true">
+                                                            Account maken
+                                                    </label>
+                                                <?php 
+                                                }if ($this->multipleAccountsSelected || $this->hasGappAccount)
                                                 {?>
                                                     <label class="checkbox">
                                                         Account verwijderen
-                                                        <input name="deleteGappAccount" id="blnDeleteGapp" type="checkbox" value="false">
+                                                        <input name="deleteAdAccount" id="blnDeleteGapp" type="checkbox" value="false">
                                                     </label>
                                                     <div class="control-group error" id="deletegappsure">
                                                         <label class="checkbox error" id="lbldeletegappsure">
@@ -357,36 +377,24 @@ use solideagle\utilities\SuperEntities;
                                                                 <input id="blndeletegappsure" name="deleteGappAccountSure" type="checkbox" value="false">
                                                         </label>  
                                                     </div>
-                                                    <label class="checkbox">
-                                                        <?php if($this->hasGappAccountEnabled)
-                                                        {?>
-                                                            Account deactiveren
-                                                            <input name="blnGappDisable" id="blnGappDisable" type="checkbox" >
-                                                        <?php
-                                                        }
-                                                        else
-                                                        {?>
-                                                            Account activeren
-                                                            <input name="blnGappEnable" id="blnGappEnable" type="checkbox" >
-                                                        <?php
-                                                        }?>
-                                                    </label>
                                                 <?php
-                                                }
-                                                else
+                                                }if ($this->multipleAccountsSelected || $this->hasGappAccountEnabled)
                                                 {?>
                                                     <label class="checkbox">
-                                                        <input
-                                                            name="createGappAccount"
-                                                            type="checkbox"
-                                                            value="true">
-                                                        Account maken
+                                                            Account deactiveren
+                                                            <input name="blnAdDisable" id="blnGappDisable" type="checkbox" >
                                                     </label>
                                                 <?php
-                                                }
-                                                ?>
+                                                }if($this->multipleAccountsSelected || !$this->hasGappAccountEnabled)
+                                                {?>
+                                                    <label class="checkbox">
+                                                            Account activeren
+                                                            <input name="blnAdEnable" id="blnGappEnable" type="checkbox" >
+                                                    </label>
+                                                <?php
+                                                }?>
 
-						</div>
+                                            </div>
 					</div>
 				</section>
 
