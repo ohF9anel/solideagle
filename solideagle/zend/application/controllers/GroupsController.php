@@ -44,7 +44,7 @@ class GroupsController extends Zend_Controller_Action
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
 		
-		$arr = groupsToJson(Group::getTree());
+		$arr = $this->groupsToJson(Group::getTree());
 
 		echo json_encode($arr);
     }
@@ -267,35 +267,38 @@ class GroupsController extends Zend_Controller_Action
 		}
     }
 
+    private function groupsToJson($roots,$isfirst = true)
+    {
+    	if(count($roots) === 0)
+    		return false;
+    
+    	$thisrootarr = array();
+    
+    	foreach($roots as $group)
+    	{
+    		$arr = array("data" => array("title" =>  $group->getName() . " (" . $group->getTotalAmountOfMembers() . ")" . " (" . $group->getAmountOfMembers() . ")", 
+    				
+    				"attr" => array("href" => "javascript:void(0)")), "attr" => array("id" => "tree" . $group->getId(),"groupid" => $group->getId(),"groupname" =>  SuperEntities::encode($group->getName())));
+    
+    		if($isfirst)
+    		{
+    			$arr["state"] = "open";
+    			$isfirst = false;
+    		}
+    
+    		if(($children = $this->groupsToJson($group->getChildGroups(),$isfirst)) != false)
+    		{
+    			$arr["children"] = $children;
+    		}
+    
+    		$thisrootarr[] = $arr;
+    	}
+    
+    	return $thisrootarr;
+    
+    }
 
 }
 
-function groupsToJson($roots,$isfirst = true)
-{
-	if(count($roots) === 0)
-		return false;
 
-	$thisrootarr = array();
-
-	foreach($roots as $group)
-	{
-		$arr = array("data" => array("title" =>  $group->getName(), "attr" => array("href" => "javascript:void(0)")), "attr" => array("id" => "tree" . $group->getId(),"groupid" => $group->getId(),"groupname" =>  SuperEntities::encode($group->getName())));
-
-		if($isfirst)
-		{
-			$arr["state"] = "open";
-			$isfirst = false;
-		}
-
-		if(($children = groupsToJson($group->getChildGroups(),$isfirst)) != false)
-		{
-			$arr["children"] = $children;
-		}
-
-		$thisrootarr[] = $arr;
-	}
-
-	return $thisrootarr;
-
-}
 

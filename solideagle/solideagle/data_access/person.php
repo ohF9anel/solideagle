@@ -24,7 +24,7 @@ class Person
 	private $accountPassword;
 	private $accountActiveUntill;
 	private $accountActiveFrom;
-	private $startDate;
+	private $year;
 	private $firstName;
 	private $name;
 	private $gender;
@@ -54,9 +54,9 @@ class Person
 
 	public function __construct()
 	{
-		 
+			
 		//$this->
-		 
+			
 	}
 
 	// getters & setters
@@ -115,15 +115,7 @@ class Person
 		$this->accountActiveFrom = $accountActiveFrom;
 	}
 
-	public function getStartDate()
-	{
-		return $this->startDate;
-	}
 
-	public function setStartDate($startDate)
-	{
-		$this->startDate = $startDate;
-	}
 
 	public function getFirstName()
 	{
@@ -360,38 +352,43 @@ class Person
 	*/
 	public static function generateUsername($person,$isStudent=false)
 	{
-		 
+			
 		$counter = "";
-		 
+			
 		$saneName = iconv("UTF-8", "ASCII//TRANSLIT",$person->getName());
 		$saneFirstName = iconv("UTF-8", "ASCII//TRANSLIT",$person->getFirstName());
-		 
+			
 		$username =  $saneName . substr($saneFirstName,0,1);
-		 
+			
 		//strip all non letters
 		$username = preg_replace("/[^A-Za-z]/", "", $username);
-		 
+			
 		$username = strtolower($username);// mb_strtolower($username, 'UTF-8');
 
 		if($isStudent)
 		{
-			$username .= date("y");
+			if(isset($person->year))
+			{
+				$username .= $person->year;
+			}else{
+				$username .= date("y");
+			}
 		}
 
 		$sql = "select account_username from person where account_username = :accusername";
-		 
+			
 		$cmd = new DatabaseCommand();
-		 
+			
 		$cmd->BeginTransaction(); //should lock the table, even though we are only reading
-		 
+			
 		for(;;)
 		{
 			//echo "trying: " . $username . $counter . "\n";
 
 			$cmd->newQuery($sql);
-			 
+
 			$cmd->addParam(":accusername", $username . $counter);
-			 
+
 			if($cmd->executeReader()->read())
 			{
 				$counter += 1;
@@ -399,23 +396,23 @@ class Person
 				break;
 			}
 		}
-		 
+			
 		$cmd->CommitTransaction();
-		 
+			
 		return $username . $counter;
 	}
 
 	public static function generatePassword($length = 8)
 	{
-			$passchars = 'aeuybdghjmnpqrstvzBDGHJLMNPQRSTVWXZAEUY23456789';
+		$passchars = 'aeuybdghjmnpqrstvzBDGHJLMNPQRSTVWXZAEUY23456789';
 
-			$password = '';
+		$password = '';
 			
-			for ($i = 0; $i < $length; $i++) {		
-					$password .= $passchars[(rand() % strlen($passchars))];
-			}
-			return $password;
-			//return "P@ssw0rd"; //cool and 1337 password that is as good as any other password!
+		for ($i = 0; $i < $length; $i++) {
+			$password .= $passchars[(rand() % strlen($passchars))];
+		}
+		return $password;
+		//return "P@ssw0rd"; //cool and 1337 password that is as good as any other password!
 	}
 
 	/**
@@ -428,7 +425,7 @@ class Person
 		// $person->setAccountUsername(Person::tryCreateUsername($person));
 		// $person->setAccountPassword(Person::generatePassword());
 		$person->setMadeOn(DateConverter::timestampDateToDb(time()));
-		 
+			
 		$err = Person::validatePerson($person);
 		if (!empty($err))
 		{
@@ -447,7 +444,7 @@ class Person
 		(`id`,
 		`account_username`,
 		`account_password`,
-		
+
 		`account_active_untill`,
 		`account_active_from`,
 		`first_name`,
@@ -477,7 +474,7 @@ class Person
 		:id,
 		:account_username,
 		:account_password,
-		
+
 		:account_active_untill,
 		:account_active_from,
 		:first_name,
@@ -509,7 +506,7 @@ class Person
 		$cmd->addParam(":id", $person->getId());
 		$cmd->addParam(":account_username", $person->getAccountUsername());
 		$cmd->addParam(":account_password", $person->getAccountPassword());
-		
+
 		$cmd->addParam(":account_active_untill", $person->getAccountActiveUntill());
 		$cmd->addParam(":account_active_from", $person->getAccountActiveFrom());
 		$cmd->addParam(":first_name", $person->getFirstName());
@@ -590,7 +587,7 @@ class Person
 
 		$sql = "UPDATE  `person` SET
 
-		
+
 		`first_name` = :first_name,
 		`name` = :name,
 		`deleted` = :deleted,
@@ -620,7 +617,7 @@ class Person
 		$cmd->addParam(":id", $person->getId());
 		//$cmd->addParam(":account_username", $person->getAccountUsername());
 		$cmd->addParam(":account_password", $person->getAccountPassword());
-		
+
 		$cmd->addParam(":account_active_untill", $person->getAccountActiveUntill());
 		$cmd->addParam(":account_active_from", $person->getAccountActiveFrom());
 		$cmd->addParam(":first_name", $person->getFirstName());
@@ -692,7 +689,7 @@ class Person
 		$sql = "DELETE FROM  `person`
 		WHERE `id` = :id;";
 
-		 
+			
 		$cmd->newQuery($sql);
 		$cmd->addParam(":id", $personId);
 
@@ -710,13 +707,16 @@ class Person
 		$reader = $cmd->executeReader();
 
 		$retObj = $reader->read();
+		
+		if($retObj === false)
+			return NULL;
 
 		$person = new Person();
 
 		$person->setId($retObj->id);
 		$person->setAccountUsername($retObj->account_username);
 		$person->setAccountPassword($retObj->account_password);
-		
+
 		$person->setAccountActiveUntill($retObj->account_active_untill);
 		$person->setAccountActiveFrom($retObj->account_active_from);
 		$person->setFirstName($retObj->first_name);
@@ -743,7 +743,7 @@ class Person
 		$person->setGroupId($retObj->group_id);
 
 		$sql = "SELECT `type`.`id`, `type`.`type_name` FROM  `type_person`,
-		 `type`
+		`type`
 		WHERE `person_id` = :person_id
 		AND `type`.`id` = `type_person`.`type_id`
 		";
@@ -755,7 +755,7 @@ class Person
 			$type = new Type($row->id, $row->type_name);
 			$person->addType($type);
 		});
-		 
+			
 		return $person;
 	}
 
@@ -771,8 +771,8 @@ class Person
 		$sql = "SELECT
 		`person`.`id`, `person`.`account_username`
 		FROM  `person`,
-		 `type_person`,
-		 `type`
+		`type_person`,
+		`type`
 		WHERE `person`.`account_username` = :accountUsername
 		AND `person`.`account_password` = :accountPassword
 		AND `person`.`id` = `type_person`.`person_id`
@@ -795,7 +795,7 @@ class Person
 	public static function validatePerson($person)
 	{
 		$validationErrors = array();
-		 
+			
 		// account username
 		$valErrors = Validator::validateString($person->getAccountUsername(), 1, 45, false);
 		foreach ($valErrors as $valError)
@@ -840,7 +840,7 @@ class Person
 					case ValidationError::DATE_DOES_NOT_EXIST;
 					$validationErrors[] = "Account actief tot: deze datum bestaat niet.";
 					break;
-					 
+
 					default:
 						$validationErrors[] = "Account actief tot: fout."; break;
 				}
@@ -1137,7 +1137,7 @@ class Person
 		{
 			return false;
 		}
-		 
+			
 
 		return true;
 	}
@@ -1150,13 +1150,13 @@ class Person
 	 */
 	public static function getUsersForDisplayByGroup($groupid = -1)
 	{
-		 
+			
 		if($groupid !== -1)
 		{
 			$sql = "SELECT
 			`person`.`id`,
 			`person`.`account_username`,
-			
+				
 			`person`.`first_name`,
 			`person`.`name`,
 			`person`.`made_on`
@@ -1170,19 +1170,19 @@ class Person
 			$sql = "SELECT
 			`person`.`id`,
 			`person`.`account_username`,
-			
+				
 			`person`.`first_name`,
 			`person`.`name`,
 			`person`.`made_on`
 			FROM  `person` WHERE `person`.`deleted` = 0 ORDER BY `person`.`made_on` desc";
 		}
-		 
+			
 		$cmd = new DatabaseCommand($sql);
-		 
+			
 		$cmd->addParam(":groupid", $groupid);
-		 
+			
 		$retarr = array();
-		 
+			
 		$cmd->executeReader()->readAll(function($row) use (&$retarr){
 
 			$tempperson = new Person();
@@ -1190,14 +1190,14 @@ class Person
 			$tempperson->setName($row->name);
 			$tempperson->setFirstName($row->first_name);
 			$tempperson->setAccountUsername($row->account_username);
-			
+				
 			$tempperson->setMadeOn($row->made_on);
 
 			$retarr[] = $tempperson;
-			 
+
 		});
-		 
-		 
+			
+			
 		return $retarr;
 	}
 
@@ -1215,8 +1215,8 @@ class Person
 	public static function getTypesByPersonId($personId)
 	{
 		$sql = "SELECT `type`.`type_name` FROM  `person`,
-		 `type_person`,
-		 type
+		`type_person`,
+		type
 		WHERE `person`.`id` = :id
 		&& `type_person`.`person_id` = `person`.`id`
 		&& `type_person`.`type_id` = `type`.`id`";
@@ -1239,6 +1239,42 @@ class Person
 		return json_encode(get_object_vars($this));
 	}
 
+	public static function findPersonByName($naam,$voornaam)
+	{
+
+		$sql = "SELECT id FROM  `person`
+		WHERE
+		`person`.`first_name` = :firstname
+		AND `person`.`name` = :name";
+
+		$cmd = new DatabaseCommand($sql);
+		$cmd->addParam(":firstname", $voornaam);
+		$cmd->addParam(":name", $naam);
+
+		$reader = $cmd->executeReader();
+
+		$retObj = $reader->read();
+			
+		if($retObj === false)
+		{
+			return NULL;
+		}else{
+			return self::getPersonById($retObj->id);
+		}
+
+			
+	}
+
+
+	public function getYear()
+	{
+	    return $this->year;
+	}
+
+	public function setYear($year)
+	{
+	    $this->year = $year;
+	}
 }
 
 

@@ -29,7 +29,7 @@ class manageou
                 $cmd .= $parentOus[$i]->getName() . "/";
             }
         }
-        var_dump($cmd);
+       // var_dump($cmd);
         $proc_ls = proc_open($cmd, $descriptorspec, $pipes);
 
         while(true) 
@@ -43,9 +43,9 @@ class manageou
             if (isset($error) && $error != false)
                 $errorHandler->addGappsError($error);
             
-            echo $buffer;
-            ob_flush();
-            flush();
+           // echo $buffer;
+           // ob_flush();
+            //flush();
         }
 
         foreach ($pipes as $pipe)
@@ -53,7 +53,7 @@ class manageou
 
         proc_close($proc_ls);
 
-        var_dump($errorHandler->toString());
+        //var_dump($errorHandler->toString());
         
         return new StatusReport(!$errorHandler->hasErrors(), $errorHandler->toString());
     }
@@ -90,7 +90,7 @@ class manageou
             }
         }
         
-        var_dump($cmd);
+      //  var_dump($cmd);
 
         $proc_ls = proc_open($cmd, $descriptorspec, $pipes);
 
@@ -105,9 +105,9 @@ class manageou
             if (isset($error) && $error != false)
                 $errorHandler->addGappsError($error);
             
-            echo $buffer;
-            ob_flush();
-            flush();
+           // echo $buffer;
+           // ob_flush();
+           // flush();
         }
 
         foreach ($pipes as $pipe)
@@ -115,7 +115,7 @@ class manageou
 
         proc_close($proc_ls);
 
-        var_dump($errorHandler->toString());
+       // var_dump($errorHandler->toString());
         
         return new StatusReport(!$errorHandler->hasErrors(), $errorHandler->toString());
     }
@@ -148,7 +148,7 @@ class manageou
         // set new description?
         $cmd .= " description \"" . $newGroup->getDescription() . "\"";
         
-        var_dump($cmd);
+       // var_dump($cmd);
 
         $proc_ls = proc_open($cmd, $descriptorspec, $pipes);
 
@@ -173,7 +173,7 @@ class manageou
 
         proc_close($proc_ls);
 
-        var_dump($errorHandler->toString());
+       // var_dump($errorHandler->toString());
         
         return new StatusReport(!$errorHandler->hasErrors(), $errorHandler->toString());
     }
@@ -200,7 +200,7 @@ class manageou
         }
         $cmd .= $ou->getName();
         
-        var_dump($cmd);
+       // var_dump($cmd);
         $proc_ls = proc_open($cmd, $descriptorspec, $pipes);
 
         while(true) 
@@ -224,7 +224,7 @@ class manageou
 
         proc_close($proc_ls);
 
-        var_dump($errorHandler->toString());
+       // var_dump($errorHandler->toString());
         
         return new StatusReport(!$errorHandler->hasErrors(), $errorHandler->toString());
     }

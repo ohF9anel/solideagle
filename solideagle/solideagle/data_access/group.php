@@ -4,11 +4,11 @@
 
 namespace solideagle\data_access;
 
-	use solideagle\data_access\database\DatabaseCommand;
-	use solideagle\data_access\validation\Validator;
-	use solideagle\data_access\validation\ValidationError;
-	use solideagle\logging\Logger;
-	use solideagle\data_access\Type;
+use solideagle\data_access\database\DatabaseCommand;
+use solideagle\data_access\validation\Validator;
+use solideagle\data_access\validation\ValidationError;
+use solideagle\logging\Logger;
+use solideagle\data_access\Type;
 
 class Group
 {
@@ -20,6 +20,8 @@ class Group
 	private $childGroups = array();
 	private $parentId = NULL;
 	private $types = array();
+	private $amountOfmembers;
+	private $totalAmountOfMembers;
 
 	// getters, setters & functions
 
@@ -77,12 +79,12 @@ class Group
 	{
 		$this->parentId = $parentId;
 	}
-        
-        public function __construct($id="", $name="")
-        {
-                $this->id = $id;
-                $this->name = $name;
-        }
+
+	public function __construct($id="", $name="")
+	{
+		$this->id = $id;
+		$this->name = $name;
+	}
 
 	// manage groups
 
@@ -104,7 +106,7 @@ class Group
 		$id = Group::addGroupRecursive($group,$cmd);
 
 		$cmd->CommitTransaction();
-		
+
 		return $id;
 	}
 
@@ -131,14 +133,14 @@ class Group
 
 
 		$sql = "INSERT INTO  `group`
-        						(
-        						`name`,
-        						`description`)
-        						VALUES
-        						(
-        						:name,
-        						:desc
-        						);";
+		(
+		`name`,
+		`description`)
+		VALUES
+		(
+		:name,
+		:desc
+		);";
 			
 		$cmd->newQuery($sql);
 
@@ -152,11 +154,11 @@ class Group
 		$group->id =  $cmd->executeScalar();
 
 		$sql = "INSERT INTO group_closure (parent_id, child_id, length)
-        							SELECT t.parent_id, :groupid, t.length+1
-        							FROM group_closure AS t
-        							WHERE t.child_id = :parentid
-        							UNION ALL
-        							SELECT :groupid, :groupid, 0;";
+		SELECT t.parent_id, :groupid, t.length+1
+		FROM group_closure AS t
+		WHERE t.child_id = :parentid
+		UNION ALL
+		SELECT :groupid, :groupid, 0;";
 
 		$cmd->newQuery($sql);
 			
@@ -164,29 +166,29 @@ class Group
 		$cmd->addParam(":parentid", $group->getParentId());
 
 		$cmd->execute();
-		
-		
+
+
 		$sql = "INSERT INTO  `default_type_group`
-				(`type`,
-				`group`)
-				VALUES
-				(
-				:type,
-				:group
-				);";
-		
+		(`type`,
+		`group`)
+		VALUES
+		(
+		:type,
+		:group
+		);";
+
 		foreach($group->types as $type)
 		{
 			$cmd->newQuery($sql);
-			
+				
 			$cmd->addParam(":group", $group->getId());
 			$cmd->addParam(":type", $type->getId());
-			
+				
 			$cmd->execute();
 		}
-		
 
-	
+
+
 
 		foreach ($group->getChildGroups() as $childgrp)
 		{
@@ -195,7 +197,7 @@ class Group
 
 			Group::addGroupRecursive($childgrp,$cmd);
 		}
-		
+
 		return $group->id;
 	}
 
@@ -213,15 +215,15 @@ class Group
 			assert("false /* Group not validated before updating! See log for details*/");
 
 			Logger::getLogger()->log("Group not validated before updating! Validation errors:\n" . var_export($err,true) . "\nObject dump:\n" . var_export($group,true) . "\n",PEAR_LOG_ERR);
-				
+
 			return false;
 		}
 
 		$sql = "UPDATE  `group`
-				SET
-				`name` = :name,
-				`description` = :description
-				WHERE `id` = :id;";
+		SET
+		`name` = :name,
+		`description` = :description
+		WHERE `id` = :id;";
 
 		$cmd = new DatabaseCommand();
 		$cmd->newQuery($sql);
@@ -231,15 +233,15 @@ class Group
 		$cmd->addParam(":id", $group->getId());
 			
 		$cmd->execute();
-		
+
 		//remove types
 		$sql = "DELETE FROM  `default_type_group`
 		WHERE `group` = :groupid; ";
-		
+
 		$cmd->newQuery($sql);
 		$cmd->addParam(":groupid", $group->getId());
 		$cmd->execute();
-		
+
 		//reinsert types
 		$sql = "INSERT INTO  `default_type_group`
 		(`type`,
@@ -249,14 +251,14 @@ class Group
 		:type,
 		:group
 		);";
-		
+
 		foreach($group->types as $type)
 		{
 			$cmd->newQuery($sql);
-				
+
 			$cmd->addParam(":group", $group->getId());
 			$cmd->addParam(":type", $type->getId());
-				
+
 			$cmd->execute();
 		}
 	}
@@ -269,10 +271,10 @@ class Group
 	public static function moveGroup($group)
 	{
 		$sql = "DELETE a FROM group_closure AS a
-				JOIN group_closure AS d ON a.child_id = d.child_id
-				LEFT JOIN group_closure AS x
-				ON x.parent_id = d.parent_id AND x.child_id = a.parent_id
-				WHERE d.parent_id = :id AND x.parent_id IS NULL;";
+		JOIN group_closure AS d ON a.child_id = d.child_id
+		LEFT JOIN group_closure AS x
+		ON x.parent_id = d.parent_id AND x.child_id = a.parent_id
+		WHERE d.parent_id = :id AND x.parent_id IS NULL;";
 
 		$cmd = new DatabaseCommand($sql);
 		$cmd->BeginTransaction();
@@ -281,11 +283,11 @@ class Group
 
 
 		$sql = "INSERT INTO group_closure (parent_id, child_id, length)
-				(SELECT supertree.parent_id, subtree.child_id,
-				supertree.length+subtree.length+1
-				FROM group_closure AS supertree JOIN group_closure AS subtree
-				WHERE subtree.parent_id = :id 
-				AND supertree.child_id = :newparentid);";
+		(SELECT supertree.parent_id, subtree.child_id,
+		supertree.length+subtree.length+1
+		FROM group_closure AS supertree JOIN group_closure AS subtree
+		WHERE subtree.parent_id = :id
+		AND supertree.child_id = :newparentid);";
 
 		$cmd->newQuery($sql);
 		$cmd->addParam(":id", $group->getId());
@@ -298,13 +300,13 @@ class Group
 	public static function getRoots()
 	{
 		$sql = "SELECT
-				`group`.`id`,
-				`group`.`name`,
-				`group`.`description`
-				FROM  `group`, group_closure AS c 
-                LEFT OUTER JOIN group_closure AS anc
-				ON anc.child_id = c.child_id AND anc.parent_id <> c.parent_id
-				WHERE anc.parent_id IS NULL and  `group`.`id` = c.parent_id";
+		`group`.`id`,
+		`group`.`name`,
+		`group`.`description`
+		FROM  `group`, group_closure AS c
+		LEFT OUTER JOIN group_closure AS anc
+		ON anc.child_id = c.child_id AND anc.parent_id <> c.parent_id
+		WHERE anc.parent_id IS NULL and  `group`.`id` = c.parent_id";
 
 		$retArr = array();
 
@@ -324,7 +326,7 @@ class Group
 	}
 
 	/**
-	 * 
+	 *
 	 * Enter description here ...
 	 * @param Group $group
 	 * @return multitype:\DataAccess\Group
@@ -332,12 +334,12 @@ class Group
 	public static function getChilderen($group)
 	{
 		$sql = "select
-		    g.id, g.name, g.description
+		g.id, g.name, g.description
 		from
-		    `group` as g,
-		    group_closure as c
+		`group` as g,
+		group_closure as c
 		where
-		    c.child_id = g.id and g.deleted = 0 and c.parent_id = :parentid and length = 1";
+		c.child_id = g.id and g.deleted = 0 and c.parent_id = :parentid and length = 1";
 
 		$retArr = array();
 
@@ -362,79 +364,124 @@ class Group
 	{
 		return Group::getTreeRecursive(Group::getRoots());
 	}
-	
+
 	public static function getAllGroups()
 	{
 		$sql = "SELECT p.id,p.name,p.description,t.length,
 		(SELECT t1.parent_id FROM group_closure t1 WHERE t1.length=1 AND t1.child_id=t.child_id) AS parent
 		FROM `group` p JOIN group_closure t ON p.id=t.child_id  WHERE p.deleted = 0  order by t.length,parent";
-		
-		
+
+
 		$completeArr = array();
-		
+
 		$cmd = new DatabaseCommand($sql);
 		$cmd->executeReader()->readAll(function($row) use (&$completeArr) {
-				
+
 			$childGroup = new Group();
 			$childGroup->setId($row->id);
 			$childGroup->setName($row->name);
 			$childGroup->setDescription($row->description);
 			$childGroup->setParentId($row->parent);
-				
+
 			$completeArr[$row->id] = $childGroup;
-		
-			
+
+				
 		});
-		
-		
-		
+
+
+
 		return $completeArr;
-	
-		
+
+
 	}
-	
+
 	public static function getTree()
 	{
-		
-		
+
+
 		$cmd = new DatabaseCommand();
-		
-		
-		$sql = "SELECT p.id,p.name,p.description,t.length, 
-		(SELECT t1.parent_id FROM group_closure t1 WHERE t1.length=1 AND t1.child_id=t.child_id) AS parent
-		FROM `group` p JOIN group_closure t ON p.id=t.child_id  WHERE p.deleted = 0  order by p.name";/*,t.length,parent";*/
-		
+
+		//I hope you like sql.
+
+		//this query selects just the tree and not the amount of members in each group
+
+		/*$sql = "SELECT p.id,p.name,p.description,t.length,
+		 (SELECT t1.parent_id FROM group_closure t1 WHERE t1.length=1 AND t1.child_id=t.child_id) AS parent
+		FROM `group` p JOIN group_closure t ON p.id=t.child_id  WHERE p.deleted = 0 group by p.id order by p.name";/* you can also order by p.id*/
+
+
+		//this query selects the tree and the amount of members from each group
+
+		/*$sql ="SELECT groups.id,groups.name,groups.description,groups.length,groups.parent,count(pn.id) FROM
+		 (
+		 		SELECT p.id ,p.name,p.description,t.length,
+		 		(SELECT t1.parent_id FROM group_closure t1 WHERE t1.length=1 AND t1.child_id=t.child_id ) AS parent
+		 		FROM `group` p
+		 		JOIN group_closure t ON p.id=t.child_id
+		 		WHERE p.deleted = 0 group by p.id order by p.name) as groups
+
+		LEFT JOIN person as pn ON pn.group_id = groups.id group by groups.id";*/
+
+		//this query selects the tree and the amount of members from each group
+		//and is benchmarked to be a little faster
+
+		$sql ="SELECT p.id ,p.name,p.description,t.length,count(pn.id) as amountofmembers,
+		(SELECT t1.parent_id FROM group_closure t1 WHERE t1.length=1 AND t1.child_id=t.child_id ) AS parent
+		FROM `group` p
+		JOIN (SELECT child_id, length from group_closure group by child_id) t ON p.id=t.child_id
+		LEFT JOIN person as pn ON pn.group_id = p.id
+		WHERE p.deleted = 0 group by p.id order by p.name";
+
 		$rootArr = array();
 		$completeArr = array();
-		
+
 		$cmd->newQuery($sql);
 		$cmd->executeReader()->readAll(function($row) use (&$rootArr,&$completeArr) {
-			
+				
 			$childGroup = new Group();
 			$childGroup->setId($row->id);
 			$childGroup->setName($row->name);
 			$childGroup->setDescription($row->description);
 			$childGroup->setParentId($row->parent);
-			
+			$childGroup->setAmountOfmembers($row->amountofmembers);
+			$childGroup->setTotalAmountOfMembers($row->amountofmembers);
+				
 			$completeArr[$row->id] = $childGroup;
-	
+
 			if($row->parent == NULL)
 			{
-				$rootArr[] = $childGroup;	
+				$rootArr[] = $childGroup;
 			}
-				
+
 		});
-		
+
 		//order groups
 		foreach($completeArr as $tempgroup)
 		{
 			if(($parentId = $tempgroup->getParentId()) != NULL)
 			{
 				$completeArr[$parentId]->addChildGroup($tempgroup);
+
 			}
 		}
-		
+
+		foreach($rootArr as &$group)
+		{
+			self::sumAmountOfMembers($group);
+		}
+
 		return $rootArr;
+	}
+
+	private static function sumAmountOfMembers($group)
+	{
+		$ret = 0;
+		foreach($group->getChildGroups() as $childgroup)
+		{
+			self::sumAmountOfMembers($childgroup);
+			$ret += $childgroup->getTotalAmountOfmembers();
+		}
+		$group->addAmountOfMembers($ret);
 	}
 
 	private static function getTreeRecursive($groups)
@@ -445,17 +492,17 @@ class Group
 			$root->addChildGroups($childeren);
 			Group::getTreeRecursive($childeren);
 		}
-		
+
 		return $groups;
 	}
 
 	public static function delGroupById($groupId)
 	{
 		$sql = "UPDATE  `group`
-				SET 
-				`deleted` = 1
-				WHERE `id` = :groupid;";
-		
+		SET
+		`deleted` = 1
+		WHERE `id` = :groupid;";
+
 		$cmd = new DatabaseCommand($sql);
 		$cmd->addParam(":groupid", $groupId);
 		$cmd->BeginTransaction();
@@ -467,23 +514,23 @@ class Group
 	public static function reallyDelGroupById($groupId)
 	{
 		//do not delete if group has members or subgroups!!!??!
-		
+
 		$sql = "SET SQL_SAFE_UPDATES=0;";
-		
+
 		$cmd = new DatabaseCommand($sql);
 		$cmd->BeginTransaction();
 		$cmd->execute();
 
 		$sql = "DELETE gc FROM  `group_closure` as gc
-			WHERE (gc.parent_id = :groupid OR gc.child_id = :groupid);";
-		
+		WHERE (gc.parent_id = :groupid OR gc.child_id = :groupid);";
+
 		$cmd->newQuery($sql);
 		$cmd->addParam(":groupid", $groupId);
 		$cmd->execute();
-		
+
 		$sql = "DELETE g FROM   `group` as g
-			WHERE g.id = :groupid;";
-		
+		WHERE g.id = :groupid;";
+
 		$cmd->newQuery($sql);
 		$cmd->addParam(":groupid", $groupId);
 		$cmd->execute();
@@ -491,39 +538,39 @@ class Group
 		$cmd->CommitTransaction();
 
 	}
-	
+
 	/**
 	 * returns parents in array with (depth,group) ordered by depth
-	 * 
+	 *
 	 * @param Group $group
 	 */
 	public static function getParents($group)
 	{
 		$sql = "SELECT p.`id`,
-				p.`name`,
-				p.`description`, t.length FROM `group` p 
-				JOIN group_closure t ON p.id=t.parent_id 
-				WHERE t.child_id =  :groupid 
-				AND t.child_id <> t.parent_id
-				ORDER BY t.length;";
-		
+		p.`name`,
+		p.`description`, t.length FROM `group` p
+		JOIN group_closure t ON p.id=t.parent_id
+		WHERE t.child_id =  :groupid
+		AND t.child_id <> t.parent_id
+		ORDER BY t.length;";
+
 		$cmd = new DatabaseCommand($sql);
-		
+
 		$cmd->addParam(":groupid", $group->getId());
-		
+
 		$retArr = array();
-		
+
 		$cmd->executeReader()->readAll(function($row) use (&$retArr){
-				
+
 			$tmpgroup = new Group();
 			$tmpgroup->setId($row->id);
 			$tmpgroup->setName($row->name);
 			$tmpgroup->setDescription($row->description);
-				
+
 			$retArr[] = $tmpgroup;
-				
+
 		});
-		
+
 		return $retArr;
 	}
 
@@ -553,7 +600,7 @@ class Group
 				$validationErrors[] = "Groep naam mag geen speciale tekens bevatten";
 			}
 		}
-		
+
 		//parentId can be NULL
 		if($group->getParentId() !== NULL)
 			foreach(Validator::validateInt($group->getParentId()) as $valError)
@@ -565,24 +612,24 @@ class Group
 			}
 
 
-		return $validationErrors;
+			return $validationErrors;
 
 
 	}
 
-	
+
 	public static function getGroupById($groupid)
 	{
 		$sql = "SELECT p.`id`,
 		p.`name`,
 		p.`description`FROM `group` p WHERE  p.`id` = :groupid";
-		
+
 		$cmd = new DatabaseCommand($sql);
-		
+
 		$cmd->addParam(":groupid", $groupid);
-		
+
 		$tmpgroup = NULL;
-		
+
 		if($row = $cmd->executeReader()->read())
 		{
 			$tmpgroup = new Group();
@@ -590,25 +637,49 @@ class Group
 			$tmpgroup->setName($row->name);
 			$tmpgroup->setDescription($row->description);
 		}
-		
-		
+
+
 
 		return $tmpgroup;
-	
+
 	}
+
+	public static function getGroupByName($groupname)
+	{
+		$sql = "SELECT p.`id`,
+		p.`name`,
+		p.`description`FROM `group` p WHERE  p.`name` = :groupname";
+
+		$cmd = new DatabaseCommand($sql);
+
+		$cmd->addParam(":groupname", $groupname);
+
+		$tmpgroup = NULL;
+
+		if($row = $cmd->executeReader()->read())
+		{
+			$tmpgroup = new Group();
+			$tmpgroup->setId($row->id);
+			$tmpgroup->setName($row->name);
+			$tmpgroup->setDescription($row->description);
+		}
+
+		return $tmpgroup;
+	}
+
 
 	public function getTypes()
 	{
-	    $sql = "SELECT 		`type`.`id`, `type`.`type_name`
-				
-				FROM  `default_type_group`,  `type`
-				WHERE `default_type_group`.`type` = `type`.`id` AND `default_type_group`.`group` = :groupid;";
-		
+		$sql = "SELECT 		`type`.`id`, `type`.`type_name`
+
+		FROM  `default_type_group`,  `type`
+		WHERE `default_type_group`.`type` = `type`.`id` AND `default_type_group`.`group` = :groupid;";
+
 		$cmd = new DatabaseCommand($sql);
 		$cmd->addParam(":groupid", $this->getId());
-		
+
 		$types=array();
-		
+
 		$cmd->executeReader()->readAll(function($dataobj) use (&$types)
 		{
 			$types[] = new Type($dataobj->id,$dataobj->type_name);
@@ -619,7 +690,46 @@ class Group
 
 	public function addType($type)
 	{
-	    $this->types[] = $type;
+		$this->types[] = $type;
+	}
+
+	public static function doesGroupExistByName($groupName)
+	{
+		$sql = "SELECT count(*) as groupcount FROM `group` WHERE `name` = :groupName AND `deleted` = 0";
+
+		$cmd = new DatabaseCommand($sql);
+
+		$cmd->addParam(":groupName", $groupName);
+
+		if($row = $cmd->executeReader()->read())
+		{
+			return ($row->groupcount > 0);
+		}
+	}
+
+	public function getAmountOfmembers()
+	{
+		return $this->amountOfmembers;
+	}
+
+	public function setAmountOfmembers($amountOfmembers)
+	{
+		$this->amountOfmembers = $amountOfmembers;
+	}
+
+	public function addAmountOfMembers($amountOfmembers)
+	{
+		$this->totalAmountOfMembers += $amountOfmembers;
+	}
+
+	public function getTotalAmountOfMembers()
+	{
+	    return $this->totalAmountOfMembers;
+	}
+
+	public function setTotalAmountOfMembers($totalAmountOfMembers)
+	{
+	    $this->totalAmountOfMembers = $totalAmountOfMembers;
 	}
 }
 

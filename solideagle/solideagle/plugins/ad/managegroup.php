@@ -29,7 +29,7 @@ class managegroup
             if (!ldap_mod_add($connLdap->getConn(), $dn, $info))
             {
                 Logger::log("Group cannot be added to group \"" . $memberOfGroup->getName() . "\"");
-                return array($r,ldap_error($connLdap->getConn()));
+                return new StatusReport($r,ldap_error($connLdap->getConn()));
             }
         }
 
