@@ -36,6 +36,12 @@
 					<action>groupsandusers</action>
 				</groupsandusers>	
 				
+				<tasktemplates>
+					<label>Taak sjablonen</label>
+					<controller>usertasks</controller>
+					<action>index</action>
+				</tasktemplates>	
+				
 				<importExport>
 					<label>Import &amp; Export</label>
 					<controller>imports</controller>
@@ -47,6 +53,12 @@
 							<controller>imports</controller>
 							<action>importklassen</action>
 						</klassenImport>
+						
+						<studentImport>
+							<label>Import studenten</label>
+							<controller>imports</controller>
+							<action>importstudents</action>
+						</studentImport>
 					</pages>
 				
 				
