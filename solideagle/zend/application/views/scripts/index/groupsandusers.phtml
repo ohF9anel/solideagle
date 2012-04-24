@@ -34,7 +34,7 @@
 		});
                 
                 $("#MoveUserLink").click(function(){
-			$("#modalholder").load("<?php echo $this->SE_path . '/users/move?pid=' ?>" + clickedUserId);
+			$("#modalholder").load("<?php echo $this->SE_path . '/users/move?oldgid=' ?>" + selectedGroupId);
 		});
 
 		$("#RemoveUserLink").click(function(){
@@ -215,10 +215,11 @@
 				</a>
 					<ul class="dropdown-menu">
 						<li><a id="CreateUserLink" href="#"><i class="icon-user"></i> Gebruiker maken</a></li>
+                                                <li><a id="MoveUserLink" href="#"><i class="icon-move"></i> Gebruikers verplaatsen</a></li>
+                                                <li class="divider"></li>
 						<li><a id="CreateSubGroupLink" href="#"><i class="icon-plus"></i> Subgroep maken</a></li>
 						<li><a id="EditGroupLink" href="#"><i class="icon-pencil"></i> Groep bewerken</a></li>
-						<li><a id="RemoveGroupLink" href="#"> <i class="icon-remove"></i> Groep verwijderen
-						</a></li>
+						<li><a id="RemoveGroupLink" href="#"> <i class="icon-remove"></i> Groep verwijderen</a></li>
 						<li class="divider"></li>
 						<li><a id="MultiTaskLink" href="#"><i class="icon-list-alt"></i> Taken uitvoeren</a></li>
                                                 <li><a id="TaskTemplatesLink" href="#"><i class="icon-list-alt"></i> Taak templates beheren</a></li>
@@ -252,7 +253,6 @@
 			<ul class="dropdown-menu">
 				<li><a href="javascript:void(0)" id="ViewUserLink"><i class="icon-user"></i> Bekijken</a></li>
 				<li><a href="javascript:void(0)" id="EditUserLink"><i class="icon-pencil"></i> Bewerken</a></li>
-                                <li><a href="javascript:void(0)" id="MoveUserLink"><i class="icon-move"></i> Verplaatsen</a></li>
 				<li><a href="javascript:void(0)" id="RemoveUserLink"> <i class="icon-remove"></i> Verwijderen
 				</a></li>
 			</ul>
