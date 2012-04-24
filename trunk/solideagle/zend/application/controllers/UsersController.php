@@ -15,21 +15,21 @@ use solideagle\scripts\Usermanager;
 class UsersController extends Zend_Controller_Action
 {
 
-    public function init()
-    {
+	public function init()
+	{
 		/* Initialize action controller here */
-    }
+	}
 
-    public function indexAction()
-    {
-    }
+	public function indexAction()
+	{
+	}
 
-    public function userformAction()
-    {
+	public function userformAction()
+	{
 		$this->_helper->layout()->disableLayout();
-		 
+			
 		$data = $this->getRequest()->getParams();
-		 
+			
 		$this->view->stateNew = 0;
 		$this->view->stateEdit = 1;
 		$this->view->stateShow = 2;
@@ -40,10 +40,10 @@ class UsersController extends Zend_Controller_Action
 		}
 		$this->view->types = Type::getAll();
 			
-		
+
 		$state = $data["state"];
 
-		
+
 		if($state === "show" && isset($data["pid"]) && is_numeric($data["pid"]))
 		{
 			$this->view->state = $this->view->stateShow;
@@ -79,20 +79,20 @@ class UsersController extends Zend_Controller_Action
 				exit("invalid parameters");
 			}
 		}
-		
-    }
 
-    public function adduserpostAction()
-    {
+	}
+
+	public function adduserpostAction()
+	{
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
-				
+
 		$person = new Person();
-		
-		
+
+
 		$postmode = $this->getRequest()->getPost('submit');
-	
-		
+
+
 		if($postmode === "generateUsername")
 		{
 			$isStudent = true;
@@ -106,7 +106,7 @@ class UsersController extends Zend_Controller_Action
 			}
 			$person->setFirstName($this->getRequest()->getPost('FirstName'));
 			$person->setName($this->getRequest()->getPost('Name'));
-			
+				
 			echo "GeneratedUsername:" . Person::generateUsername($person,$isStudent);
 			return;
 		}
@@ -115,14 +115,14 @@ class UsersController extends Zend_Controller_Action
 			echo "GeneratedPassword:" . Person::generatePassword();
 			return;
 		}
-		
+
 		//it's a new user or edit
-		
+
 		foreach($this->getRequest()->getPost('ptype', array()) as $id)
 		{
 			$person->addType(new Type($id));
 		}
-		
+
 		$person->setFirstName($this->getRequest()->getPost('FirstName'));
 		$person->setName($this->getRequest()->getPost('Name'));
 		$person->setGroupId($this->getRequest()->getPost('GroupId'));
@@ -136,6 +136,7 @@ class UsersController extends Zend_Controller_Action
 		$person->setAccountActiveFrom(DateConverter::DisplayDateTodbDate($this->getRequest()->getPost('AccountActiveFrom')));
 		$person->setAccountActiveUntill(DateConverter::DisplayDateTodbDate($this->getRequest()->getPost('AccountActiveUntill')));
 		$person->setOtherInformation($this->getRequest()->getPost('OtherInformation'));
+		$person->setUniqueIdentifier($this->getRequest()->getPost('uniqueIdentifier'));
 			
 		if(count($errors = Person::validatePerson($person)) > 0)
 		{
@@ -143,51 +144,55 @@ class UsersController extends Zend_Controller_Action
 			return;
 		}
 			
-	
+
 		if($postmode === "edit")
 		{
 			$person->setId($this->getRequest()->getPost('Id'));
-                        $oldPerson = Person::getPersonById($person->getId());
+			$oldPerson = Person::getPersonById($person->getId());
 			Person::updatePerson($person);
-                        $person->setGroupId($oldPerson->getGroupId());
-                        if (platforms::getPlatformAdByPersonId($person->getId()) != null);
-                            solideagle\scripts\ad\usermanager::prepareUpdateUser($person);
-                        if (platforms::getPlatformGappByPersonId($person->getId()) != null)
-                            solideagle\scripts\ga\usermanager::prepareUpdateUser($person, $oldPerson->getAccountUsername());
-//                        if (platforms::getPlatformSmartschoolByPersonIdByPersonId($person->getId()) != null)
-//                            solideagle\scripts\smartschool\usermanager::prepareUpdateUser($person);
-                        
+			$person->setGroupId($oldPerson->getGroupId());
+			if (platforms::getPlatformAdByPersonId($person->getId()) != null)
+			{
+			solideagle\scripts\ad\usermanager::prepareUpdateUser($person);
+			}
+			if (platforms::getPlatformGappByPersonId($person->getId()) != null)
+			{
+				solideagle\scripts\ga\usermanager::prepareUpdateUser($person, $oldPerson->getAccountUsername());
+			}
+			/*                    if (platforms::getPlatformSmartschoolByPersonIdByPersonId($person->getId()) != null)
+			                          solideagle\scripts\smartschool\usermanager::prepareUpdateUser($person);*/
+
 		}else{
 			Person::addPerson($person);
 		}
-		
 
-    }
 
-    public function getusersAction()
-    {
+	}
+
+	public function getusersAction()
+	{
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
-		 
+			
 		$persons = array();
-		 
+			
 		$data = $this->_request->getParams();
-		 
-		 
+			
+			
 		$gid = -1;
-		 
+			
 		if(isset($data["gid"]))
 		{
 			$gid = $data["gid"];
 		}else{
 			return;
 		}
-		 
+			
 		/*
 		 * Fields for jquery datatable
 		*
 		*/
-		 
+			
 		foreach(Person::getUsersForDisplayByGroup($gid) as $gp)
 		{
 			$person[0] = $gp->getId();
@@ -196,18 +201,18 @@ class UsersController extends Zend_Controller_Action
 			$person[3] = SuperEntities::encode($gp->getName());
 			$person[4] = SuperEntities::encode($gp->getAccountUserName());
 			$person[5] = DateConverter::longDbDateToDisplayDate($gp->getMadeOn());
-			 
+
 			$persons[] = $person;
 		}
 		//must be called aaData, see datatables ajax docs
 		echo json_encode(array("aaData" => $persons));
-    }
+	}
 
-    public function showdetailsAction()
-    {
+	public function showdetailsAction()
+	{
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
-		 
+			
 
 		$data = $this->_request->getParams();
 
@@ -225,64 +230,64 @@ class UsersController extends Zend_Controller_Action
 			return;
 
 		echo $person->getJson();
-    }
+	}
 
-    public function showexterndetailsAction()
-    {
-        // action body
-    }
+	public function showexterndetailsAction()
+	{
+		// action body
+	}
 
-    public function moveAction()
-    {
-        $this->view->groups = Group::getAllGroups();
-        
-        //oldgid
-        //persid
-    }
-    
-    public function movepostAction()
-    {
-    	$this->_helper->layout()->disableLayout();
-    	$this->_helper->viewRenderer->setNoRender(true);
-    	
+	public function moveAction()
+	{
+		$this->view->groups = Group::getAllGroups();
 
-    	$oldgid =  $this->getRequest()->getParam("oldgid",false);
-    	$pid =  $this->getRequest()->getParam("personid",false);
-    	
-    	//params set, and not moving to group where person is already?
-    	if(($newgid = $this->getRequest()->getParam("newgroupid",false)) && $newgid != $oldgid && $oldgid !== false && $pid !== false)
-    	{
-    		moveAUser($pid,$newgid);
-    	}
-    	
-    	return;
-    }
-    
-    private function moveAUser($pid,$newgid)
-    {
-    	//all good, move
-    	
-    	$person = Person::getPersonById($pid);
-    	
-    	$person->setGroupId($newgid);
-    	
-    	Person::updatePerson($person);
-    	
-    	if(platforms::getPlatformAdByPersonId($person->getId()) !== NULL)
-    	{
-    		\solideagle\scripts\ad\usermanager::prepareUpdateUser($person);
-    	}
-    	
-    	if(platforms::getPlatformGappByPersonId($person->getId()) !== NULL)
-    	{
-    		\solideagle\scripts\ga\usermanager::prepareUpdateUser($person);
-    	}
-    	
-    	if(platforms::getPlatformSmartschoolByPersonId($person->getId()) !== NULL)
-    	{
-    		//\solideagle\scripts\smartschool\usermanager::
-    	}
-    }
+		//oldgid
+		//persid
+	}
+
+	public function movepostAction()
+	{
+		$this->_helper->layout()->disableLayout();
+		$this->_helper->viewRenderer->setNoRender(true);
+		 
+
+		$oldgid =  $this->getRequest()->getParam("oldgid",false);
+		$pid =  $this->getRequest()->getParam("personid",false);
+		 
+		//params set, and not moving to group where person is already?
+		if(($newgid = $this->getRequest()->getParam("newgroupid",false)) && $newgid != $oldgid && $oldgid !== false && $pid !== false)
+		{
+			moveAUser($pid,$newgid);
+		}
+		 
+		return;
+	}
+
+	private function moveAUser($pid,$newgid)
+	{
+		//all good, move
+		 
+		$person = Person::getPersonById($pid);
+		 
+		$person->setGroupId($newgid);
+		 
+		Person::updatePerson($person);
+		 
+		if(platforms::getPlatformAdByPersonId($person->getId()) !== NULL)
+		{
+			\solideagle\scripts\ad\usermanager::prepareUpdateUser($person);
+		}
+		 
+		if(platforms::getPlatformGappByPersonId($person->getId()) !== NULL)
+		{
+			\solideagle\scripts\ga\usermanager::prepareUpdateUser($person);
+		}
+		 
+		if(platforms::getPlatformSmartschoolByPersonId($person->getId()) !== NULL)
+		{
+			//\solideagle\scripts\smartschool\usermanager::
+		}
+	}
 
 
 }

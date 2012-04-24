@@ -12,7 +12,7 @@ class Type
 	const TYPE_LEERKRACHT = 2;
 	const TYPE_LEERLING =3;
 	const TYPE_STAGIAR =4;
-	const TYPE_OUDER =5;
+	//const TYPE_OUDER =5;
 	
 	// variables
 	private $id;
