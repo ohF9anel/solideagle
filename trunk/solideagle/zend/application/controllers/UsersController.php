@@ -237,47 +237,55 @@ class UsersController extends Zend_Controller_Action
 		// action body
 	}
 
-	public function moveAction()
+        public function moveAction()
 	{
+                $this->_helper->layout()->disableLayout();
 		$this->view->groups = Group::getAllGroups();
+                
+                $this->view->oldgid = $this->getRequest()->getParam("oldgid",false);
+	}
 
-    	$oldgid = $this->getRequest()->getParam("oldgid",false);
-    	$pid = $this->getRequest()->getParam("pid",false);
-    	
-    	//params set, and not moving to group where person is already?
-    	if(($newgid = $this->getRequest()->getParam("newgid",false)) && $newgid != $oldgid && $oldgid !== false && $pid !== false)
-    	{
-    		moveAUser($pid,$newgid);
-    	}
-    	
-    	return;
-    }
-    
-    private function moveAUser($pid,$newgid)
-    {
-    	//all good, move
-    	
-    	$person = Person::getPersonById($pid);
-    	
-    	$person->setGroupId($newgid);
-    	
-    	Person::updatePerson($person);
-    	
-    	if(platforms::getPlatformAdByPersonId($person->getId()) !== NULL)
-    	{
-    		\solideagle\scripts\ad\usermanager::prepareUpdateUser($person);
-    	}
-    	
-    	if(platforms::getPlatformGappByPersonId($person->getId()) !== NULL)
-    	{
-    		\solideagle\scripts\ga\usermanager::prepareUpdateUser($person);
-    	}
-    	
-    	if(platforms::getPlatformSmartschoolByPersonId($person->getId()) !== NULL)
-    	{
-    		//\solideagle\scripts\smartschool\usermanager::
-    	}
-    }
+	public function movepostAction()
+	{
+		$this->_helper->layout()->disableLayout();
+		$this->_helper->viewRenderer->setNoRender(true);
+   
+                $oldgid = $this->getRequest()->getPost("oldgid",false);
+                
+                if (($users = $this->getRequest()->getParam("users",false)))
+                {
+                    foreach($users as $uid)
+                    {
+                         if(($newgid = $this->getRequest()->getParam("newgid",false)) && $newgid != $oldgid)
+                            $this->moveAUser($uid, $newgid);
+                    }
+                }
+	}
+
+        private function moveAUser($pid, $newgid)
+        {
+            //all good, move
+            $person = Person::getPersonById($pid);
+
+            $person->setGroupId($newgid);
+
+            Person::updatePerson($person);  
+
+            if(platforms::getPlatformAdByPersonId($person->getId()) !== NULL)
+            {
+                    \solideagle\scripts\ad\usermanager::prepareUpdateUser($person);
+            }
+
+            if(platforms::getPlatformGappByPersonId($person->getId()) !== NULL)
+            {
+                    \solideagle\scripts\ga\usermanager::prepareUpdateUser($person);
+            }
+
+            if(platforms::getPlatformSmartschoolByPersonId($person->getId()) !== NULL)
+            {
+                    //\solideagle\scripts\smartschool\usermanager::
+            }
+        }
 
 
 }

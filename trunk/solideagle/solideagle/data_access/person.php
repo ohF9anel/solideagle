@@ -612,7 +612,8 @@ class Person
 		`other_information` = :other_information,
 		`student_previous_school` = :student_previous_school,
 		`student_stamnr` = :student_stamnr,
-		`parent_occupation` = :parent_occupation
+		`parent_occupation` = :parent_occupation,
+                `group_id` = :group_id
 		WHERE id = :id;";
 
 		$cmd->newQuery($sql);
@@ -642,6 +643,7 @@ class Person
 		$cmd->addParam(":student_previous_school", $person->getStudentPreviousSchool());
 		$cmd->addParam(":student_stamnr", $person->getStudentStamNr());
 		$cmd->addParam(":parent_occupation", $person->getParentOccupation());
+                $cmd->addParam(":group_id", $person->getGroupId());
 		$cmd->execute();
 
 		// updates person's type(s)

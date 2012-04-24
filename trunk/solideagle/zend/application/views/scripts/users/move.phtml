@@ -1,51 +1,72 @@
-<?php 
-use solideagle\utilities\SuperEntities;
-
-use solideagle\data_access\Person;
-use solideagle\data_access\helpers\DateConverter;
-
-//$ppp = new Person();
-$ppp = $this->person; ?>
-
 <script>
 	$(function(){
 
-                $('#myModal').modal('show');
+                var selectedArr = new Array();
                 
-                updateMiniTree();
+                $(".selectUser:checked").each( 
+                        function(k,v) { 
+                            selectedArr.push($(v).attr("value"));
+                        } 
+                );
                 
-                function updateMiniTree()
-                {
-                        $("#groupminitree").jstree({ 
-                                "ui" : {	
-                                        "initially_select" : [ "tree"+selectedGroupId ]
-                                },
-                                "json_data" : {
-                                        "ajax" : {
-                                                "url" : "<?php echo $this->SE_path . '/groups/getgroup' ?>",
-                                                "data" : function (n) { 
-                                                        return { id : n.attr ? n.attr("id") : 0 }; 
-                                                },
-                                                "progressive_render" : true,
-                                                "progressive_unload" : true
-                                        }
-                                },
-                                "plugins" : [ "themes", "json_data","ui" ]
-                        }).bind("select_node.jstree", function (event, data) { 
-                                selectedGroupId = data.rslt.obj.attr("groupid");
-                        });
-
+                if(selectedArr.length > 0)
+		{
+                    $('#moveModal').modal('show');
+                    updateMiniTree();
                 }
+                else
+                {
+                    alert("Geen gebruikers geselecteerd");
+                }   
+
+                $("#formMoveUser").ajaxForm({
+                        data:  {"users":selectedArr},
+                        success: function(responseText, statusText, xhr, $form) { 
+
+                                if(responseText.length > 0)
+                                {
+                                        alert(responseText);
+                                }else{
+                                        $('#moveModal').modal('hide');
+                                        updateTree();
+                                }
+
+                } });
+                
                 
                 
 		
 	});
+        
+        function updateMiniTree()
+        {
+                $("#groupminitree").jstree({ 
+                        "ui" : {	
+                                "initially_select" : [ "tree"+selectedGroupId ]
+                        },
+                        "json_data" : {
+                                "ajax" : {
+                                        "url" : "<?php echo $this->SE_path . '/groups/getgroup' ?>",
+                                        "data" : function (n) { 
+                                                return { id : n.attr ? n.attr("id") : 0 }; 
+                                        },
+                                        "progressive_render" : true,
+                                        "progressive_unload" : true
+                                }
+                        },
+                        "plugins" : [ "themes", "json_data","ui" ]
+                }).bind("select_node.jstree", function (event, data) { 
+                        selectedGroupId = data.rslt.obj.attr("groupid");
+                        $("#newgid").val(selectedGroupId);
+                });
+
+        }
 
 </script>
 
-<form class="form-horizontal" action="<?php echo $this->SE_path . "/users/adduserpost" ?>" method="post" id="formUser">
+<form class="form-horizontal" action="<?php echo $this->SE_path . "/users/movepost" ?>" method="post" id="formMoveUser">
 
-	<div class="hide SEsupermodal" id="myModal">
+	<div class="hide SEsupermodal" id="moveModal">
 		<div>
 			<div class="modal-header">
 				<a class="close" data-dismiss="modal">×</a>
@@ -54,9 +75,9 @@ $ppp = $this->person; ?>
 				</h3>
 			</div>
 			<div class="modal-body" style="width: 300px;">
-				<fieldset>
-                                    <input type="hidden" name="pid" value="<?php echo $this->pid; ?>">
-                                    <input type="hidden" name="oldgid" value="<?php echo $this->oldgid; ?>">
+                                <fieldset>
+                                    <input type="hidden" id="newgid" name="newgid">
+                                    <input type="hidden" id="oldgid" name="oldgid" value="<?php echo $this->oldgid; ?>">
                                     <div id="groupminitree">
                                             <!-- tree will be rendered here -->
                                     </div>
