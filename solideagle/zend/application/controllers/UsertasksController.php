@@ -44,7 +44,7 @@ class UsertasksController extends Zend_Controller_Action
 
 		if($this->getRequest()->getPost('submitBtn') == "addTasks")
 		{
-				
+
 			if(count($this->getRequest()->getPost('users',array())) <= 0)
 			{
 				echo "Geen gebruikers geselecteerd!";
@@ -256,7 +256,8 @@ class UsertasksController extends Zend_Controller_Action
 
 		$usersArr = $this->getRequest()->getPost('jspostArr',array());
 
-		$templatename = $this->getRequest()->getPost('jspost');
+		//check if we are called from template editor
+		$templatename = $this->getRequest()->getPost('templatename');
 		if ($templatename != null)
 		{
 			$template = TaskTemplate::getTemplateByName($templatename);
@@ -267,7 +268,6 @@ class UsertasksController extends Zend_Controller_Action
 
 			$this->view->manageTemplate = true;
 		}
-
 		else if($this->getRequest()->getParam('addtemplate') != null)
 		{
 			$this->view->addtemplate = true;

@@ -46,7 +46,42 @@ class TaskTemplateController extends Zend_Controller_Action
 
 		$this->view->defaults = new stdClass();
 
-                $this->view->taskTemplates = TaskTemplate::getAllTemplates();
+     //  $this->view->taskTemplates = $this->templatesToJson(TaskTemplate::getAllTemplates());
+	}
+	
+	public function removetasktemplateAction()
+	{
+		$this->_helper->layout()->disableLayout();
+		$this->_helper->viewRenderer->setNoRender(true);
+		
+		if(($taskname = $this->getRequest()->getPost("templatename",false)))
+		{
+			TaskTemplate::delTaskTemplateByName($taskname);
+		}
+	}
+	
+	public function gettemplatesAction()
+	{
+		$this->_helper->layout()->disableLayout();
+		$this->_helper->viewRenderer->setNoRender(true);
+		
+		echo $this->templatesToJson(TaskTemplate::getAllTemplates());
+		return;
+	}
+	
+	/**
+	 * 
+	 * @param array(TaskTemplate) $templates
+	 */
+	private function templatesToJson($templates)
+	{
+		$finalarr = array();
+		foreach($templates as $template)
+		{
+			$finalarr[] = $template->getTemplateName();
+		}
+		
+		return json_encode($finalarr);
 	}
 
 

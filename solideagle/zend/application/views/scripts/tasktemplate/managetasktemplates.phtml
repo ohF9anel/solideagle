@@ -2,36 +2,51 @@
 	$(function(){
             
             $('#taskTemplateModal').modal('show');
-            
-            <?php foreach($this->taskTemplates as $taskTemplate)
-            {?>
-                    $("#btnEditTemplate<?php echo $taskTemplate->getTemplateName(); ?>").click(function(){ 
-                        $('#taskTemplateModal').modal('hide');
-                        $("#modalholder").load("<?php echo $this->SE_path . '/usertasks/getalltasksforuser' ?>", new makePostArray('<?php echo $taskTemplate->getTemplateName(); ?>'));
-                    }); 
-                    
-                    $("#btnRemoveTemplate<?php echo $taskTemplate->getTemplateName(); ?>").click(function(){ 
-                       var r = confirm("Verwijder takentemplate \"<?php echo $taskTemplate->getTemplateName(); ?>\"");
-                       if (r==true)
-                       {
-                            
-                       }
-                    }); 
-            <?php
-            }?>
-                    
+
+         
             $("#btnNewTemplate").click(function(){ 
                 $('#taskTemplateModal').modal('hide');
                 $("#modalholder").load("<?php echo $this->SE_path . '/usertasks/getalltasksforuser?addtemplate=true' ?>");
-            });    
+            });
             
-            function makePostArray(jspost) {
-		  		 this.jspost = jspost;
-            }
-            
+            loadTable();
             
 
 	});
+
+	function loadTable()
+	{
+
+		$("#tasktable").html("");
+		
+		   $.getJSON("<?php echo $this->SE_path . '/tasktemplate/gettemplates' ?>", 
+
+                   function(data)  {
+                   	 $.each(data, function(key, val) {
+                   		 $("<tr>")
+                   		.append($("<td>").append($("<span>").html(val)))
+                   		.append($("<td>").append($("<a>").html("bewerken").click(function(){
+                   			 $('#taskTemplateModal').modal('hide');
+                                $("#modalholder").load("<?php echo $this->SE_path . '/usertasks/getalltasksforuser' ?>", new makePostArray(val));
+                       	})))
+                   		.append($("<td>").append($("<a>").html("verwijderen").click(function(){
+                   			 var r = confirm("Verwijder takentemplate: " + val);
+                                if (r==true)
+                                {
+                                    $.post("<?php echo $this->SE_path . '/tasktemplate/removetasktemplate' ?>", new makePostArray(val),function(){
+                                    	loadTable();
+                                    });
+                                }
+                   		})))
+                   		.appendTo($("#tasktable"));
+						
+                   	  });
+                   });
+	}
+
+	 function makePostArray(jspost) {
+	  	this.templatename = jspost;
+     }
 
 </script>
 
@@ -39,11 +54,11 @@
 	class="hide SEsupermodal"
 	id="taskTemplateModal">
 	<div>
-		<div class="modal-header">
+		<div class="modal-header" style="min-width:600px">
 			<a
 				class="close"
 				data-dismiss="modal">×</a>
-			<h3 id="modaltitle">Beheer taak templates</h3>
+			<h3 id="modaltitle">Taak templates beheren</h3>
 		</div>
 
 		<div class="modal-body">
@@ -52,29 +67,12 @@
 
 				<div class="control-group">
 
-					<h3>Bestaande takentemplates aanpassen</h3>
+					
+					<table class="table" id="tasktable">
 
-					<table>
-				
-					<?php if(isset($this->taskTemplates) )
-					{
-						foreach($this->taskTemplates as $taskTemplate)
-                        {?>
-					<tr><td><a
-						href="#"
-						id="btnEditTemplate<?php echo $taskTemplate->getTemplateName() ?>"
-						name="btnEditTemplate<?php echo $taskTemplate->getTemplateName() ?>"
-						class="btn btn-mini"><?php echo $taskTemplate->getTemplateName() ?> </a></td>
-						 <td><a
-						href="#"
-						id="btnRemoveTemplate<?php echo $taskTemplate->getTemplateName() ?>"
-						name="btnRemove<?php echo $taskTemplate->getTemplateName() ?>"
-						class="btn btn-mini"><i class="icon-remove"></i> </a></td></tr>
-					<?php
-                        }
-                        }?>
-                        
-                        	</table>
+
+
+					</table>
 
 				</div>
 
@@ -97,7 +95,7 @@
 			<a
 				href="#"
 				class="btn"
-				data-dismiss="modal">OK</a>
+				data-dismiss="modal">Sluiten</a>
 		</div>
 
 	</div>
