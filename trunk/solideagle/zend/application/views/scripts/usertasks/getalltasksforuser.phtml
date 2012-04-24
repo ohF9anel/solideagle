@@ -5,24 +5,26 @@ use solideagle\utilities\SuperEntities;
 
 <script>
 	$(function(){
-
-		var selectedArr = new Array();
-
-                $(".selectUser:checked").each( 
-                    function(k,v) { 
-                        selectedArr.push($(v).attr("value"));
-                    } 
-                );
+            
+                var selectedArr = new Array();
+              
+                <?php if(!$this->manageTemplate)
+                {?>
+                    $(".selectUser:checked").each( 
+                        function(k,v) { 
+                            selectedArr.push($(v).attr("value"));
+                        } 
+                    );
+                <?php
+                }?>
 
 		if(selectedArr.length > 0)
 		{
-			$('#myModal').modal('show');
-                        
+                        $('#myModal').modal('show');
+
                         $("#deleteadsure").hide();
                         $("#deletesssure").hide();
                         $("#deletegappsure").hide();
-                        $("#radioAdEnableAccounts").hide();
-                        $("#radioAdDisableAccounts").hide();
 
                         $("#blnDeleteAd").click(function(){
                                 $("#deleteadsure").toggle();
@@ -42,12 +44,26 @@ use solideagle\utilities\SuperEntities;
                                 $("#deletegappsure").toggle();
                                 $("#blnDeleteGappSure").removeAttr("checked");
                         });
-		}else{
-			alert("Geen gebruikers geselecteerd");
+		}
+                else
+                {
+                        // managing templates window
+                        
+                        <?php if($this->manageTemplate)
+                        {?>
+                                $('#myModal').modal('show');
+                                $("#deleteadsure").hide();
+                                $("#deletesssure").hide();
+                                $("#deletegappsure").hide();
+                        <?php
+                        }else
+                        {?>
+                            alert("Geen gebruikers geselecteerd");
+                        <?php
+                        }?>
 
 		}
-
-					
+	
 		$("#formTasks").ajaxForm({
 			data:  {"users":selectedArr},
 			success: function(responseText, statusText, xhr, $form) { 
@@ -81,11 +97,39 @@ use solideagle\utilities\SuperEntities;
 				<a
 					class="close"
 					data-dismiss="modal">×</a>
-				<h3 id="modaltitle">Taken uitvoeren</h3>
+                                <?php if($this->manageTemplate)
+                                {?>
+                                    <h3 id="modaltitle">Beheer taak templates</h3>
+                                <?php
+                                }else
+                                {?>
+                                    <h3 id="modaltitle">Taken uitvoeren</h3>
+                                <?php
+                                }?>
 			</div>
 			<div class="modal-body">
 
-
+                            <?php if($this->manageTemplate)
+                            {?>
+                                <section id="tasktemplate">
+                                    <div class="page-header">
+                                        <h1>
+                                            Taken templates
+                                        </h1>
+                                    </div>
+                                    
+                                    <div class="control-group">
+                                        <label class="control-label" for="txtName">Naam template</label>
+                                        <div class="controls">
+                                                <input id="txtName" name="txtName" class="input-xlarge" type="text" value="<?php echo $this->template != null ? $this->template->getTemplateName() : "" ?>">
+                                        </div>
+                                    </div>
+                                        
+                                    
+                                </section>
+                            <?php
+                            }?>
+                            
 				<section id="activedirectory">
 					<div class="page-header">
 						<h1>
@@ -95,22 +139,20 @@ use solideagle\utilities\SuperEntities;
 
 					<div class="row">
 						<div class="span12">
-                                                            
-                                                    <?php if ($this->multipleAccountsSelected || !$this->hasAdAccount)
+ 
+                                                    <?php if ($this->multipleAccountsSelected || !$this->hasAdAccount || $this->manageTemplate)
                                                     {?>
                                                             <label class="checkbox">
                                                                     <input
-                                                                            name="createAdAccount"
-                                                                            type="checkbox"
-                                                                            value="true">
+                                                                            name="createAdAccount" id="createAdAccount" type="checkbox" <?php echo $this->config['createAdAccount'] != null ? ("checked=" . $this->config['createAdAccount']) : "" ?>>
                                                                     Account maken
                                                             </label>
                                                     <?php 
-                                                    }if ($this->multipleAccountsSelected || $this->hasAdAccount)
+                                                    }if ($this->multipleAccountsSelected || $this->hasAdAccount || $this->manageTemplate)
                                                     {?>
                                                             <label class="checkbox">
                                                                 Account verwijderen
-                                                                <input name="deleteAdAccount" id="blnDeleteAd" type="checkbox" value="false">
+                                                                <input name="deleteAdAccount" id="blnDeleteAd" type="checkbox" value="false" <?php echo $this->config['deleteAdAccount'] != null ? ("checked=" . $this->config['deleteAdAccount']) : "" ?>>
                                                             </label>
                                                             <div class="control-group error" id="deleteadsure">
                                                                 <label class="checkbox error" id="lbldeleteadsure">
@@ -119,18 +161,18 @@ use solideagle\utilities\SuperEntities;
                                                                 </label>  
                                                             </div>
                                                     <?php
-                                                    }if ($this->multipleAccountsSelected || $this->hasAdAccountEnabled)
+                                                    }if ($this->multipleAccountsSelected || $this->hasAdAccountEnabled || $this->manageTemplate)
                                                     {?>
                                                             <label class="checkbox">
                                                                     Account deactiveren
-                                                                    <input name="blnAdDisable" id="blnAdDisable" type="checkbox" >
+                                                                    <input name="blnAdDisable" id="blnAdDisable" type="checkbox" <?php echo $this->config['blnAdDisable'] != null ? ("checked=" . $this->config['blnAdDisable']) : "" ?>>
                                                             </label>
                                                     <?php
-                                                    }if($this->multipleAccountsSelected || !$this->hasAdAccountEnabled)
+                                                    }if($this->multipleAccountsSelected || !$this->hasAdAccountEnabled || $this->manageTemplate)
                                                     {?>
                                                             <label class="checkbox">
                                                                     Account activeren
-                                                                    <input name="blnAdEnable" id="blnAdEnable" type="checkbox" >
+                                                                    <input name="blnAdEnable" id="blnAdEnable" type="checkbox" <?php echo $this->config['blnAdEnable'] != null ? ("checked=" . $this->config['blnAdEnable']) : "" ?>>
                                                             </label>
                                                     <?php
                                                     }?>
@@ -141,7 +183,8 @@ use solideagle\utilities\SuperEntities;
                                                                         type="checkbox"
                                                                         data-toggle="collapse"
                                                                         data-target="#adHomeDirParams"
-                                                                        value="true">
+                                                                        value="true"
+                                                                        <?php echo $this->config['createAdHomedir'] != null ? ("checked=" . $this->config['createAdHomedir']) : "" ?>>
                                                                 Homedir maken
                                                         </label>
 
@@ -161,7 +204,7 @@ use solideagle\utilities\SuperEntities;
 												name="HomefolderServer"
 												class="input-xlarge"
 												type="text"
-												value="<?php echo SuperEntities::encode($this->defaults->server); ?>">
+												value="<?php echo $this->config['HomefolderServer'] != null ? $this->config['HomefolderServer'] : SuperEntities::encode($this->defaults->server); ?>">
 											<p class="help-block ">
 												<i>server.domain.example</i>
 											</p>
@@ -179,7 +222,7 @@ use solideagle\utilities\SuperEntities;
 													name="HomefolderPath"
 													class="input-xlarge"
 													type="text"
-													value="<?php echo SuperEntities::encode($this->defaults->serverpath); ?>"
+													value="<?php echo $this->config['HomefolderPath'] != null ? $this->config['HomefolderPath'] : SuperEntities::encode($this->defaults->serverpath); ?>"
 													><span class="add-on">\janssensj</span>
 												<p class="help-block ">
 													<i>c:\pad\naar\homefolders</i>
@@ -198,7 +241,7 @@ use solideagle\utilities\SuperEntities;
 												name="ScanSharePath"
 												class="input-xlarge"
 												type="text"
-												value="<?php echo SuperEntities::encode($this->defaults->scanpath); ?>">
+												value="<?php echo $this->config['ScanSharePath'] != null ? $this->config['ScanSharePath'] : SuperEntities::encode($this->defaults->scanpath); ?>">
 											<p class="help-block ">
 												<i>c:\pad\naar\scanshare</i>
 											</p>
@@ -215,7 +258,7 @@ use solideagle\utilities\SuperEntities;
 												name="WWWSharePath"
 												class="input-xlarge"
 												type="text"
-												value="<?php echo SuperEntities::encode($this->defaults->wwwpath); ?>">
+												value="<?php echo $this->config['WWWSharePath'] != null ? $this->config['WWWSharePath'] : SuperEntities::encode($this->defaults->wwwpath); ?>">
 											<p class="help-block ">
 												<i>c:\pad\naar\wwwshare</i>
 											</p>
@@ -232,7 +275,8 @@ use solideagle\utilities\SuperEntities;
 									type="checkbox"
 									data-toggle="collapse"
 									data-target="#adUpDownParams"
-									value="true">
+									value="true"
+                                                                        <?php echo $this->config['createUpDownFolders'] != null ? ("checked=" . $this->config['createUpDownFolders']) : "" ?>>
 								Upload &amp; Downloadfolders maken
 							</label>
 
@@ -252,7 +296,7 @@ use solideagle\utilities\SuperEntities;
 												name="UploadSharePath"
 												class="input-xlarge"
 												type="text"
-												value="<?php echo SuperEntities::encode($this->defaults->uploadpath); ?>">
+												value="<?php echo $this->config['UploadSharePath'] != null ? $this->config['UploadSharePath'] : SuperEntities::encode($this->defaults->uploadpath); ?>">
 											<p class="help-block ">
 												<i>c:\pad\naar\upload</i>
 											</p>
@@ -267,7 +311,7 @@ use solideagle\utilities\SuperEntities;
 												name="DownloadSharePath"
 												class="input-xlarge"
 												type="text"
-												value="<?php echo SuperEntities::encode($this->defaults->downloadpath); ?>">
+												value="<?php echo $this->config['DownloadSharePath'] != null ? $this->config['DownloadSharePath'] : SuperEntities::encode($this->defaults->downloadpath); ?>">
 											<p class="help-block ">
 												<i>c:\pad\naar\download</i>
 											</p>
@@ -281,9 +325,10 @@ use solideagle\utilities\SuperEntities;
 
 							<label class="checkbox">
 								<input
-									name=""
+									name="blnMoveHomeDir"
 									type="checkbox"
-									value="">
+									value=""
+                                                                        <?php echo $this->config['createAdHomedir'] != null ? ("checked=" . $this->config['createAdHomedir']) : "" ?>>
 								Homedir verplaatsen
 							</label>
 
@@ -301,47 +346,49 @@ use solideagle\utilities\SuperEntities;
 					<div class="row">
 						<div class="span12">
                                                     
-                                                    <?php if($this->hasSsAccount)
+                                                    <?php if ($this->multipleAccountsSelected || !$this->hasSsAccount || $this->manageTemplate)
                                                     {?>
-                                                        <label class="checkbox">
-                                                            Account verwijderen
-                                                            <input name="deleteSSAccount" id="blnDeleteSs" type="checkbox" value="false">
-                                                        </label>
-                                                        <div class="control-group error" id="deletesssure">
-                                                            <label class="checkbox error" id="lbldeletesssure">
-                                                                    Ja, ik ben zeker
-                                                                    <input id="blndeletesssure" name="deleteSSAccountSure" type="checkbox" value="false">
-                                                            </label>  
-                                                        </div>
-                                                        <label class="checkbox">
-                                                            <?php if($this->hasSsAccountEnabled)
-                                                            {?>
-                                                                Account deactiveren
-                                                                <input name="blnSsDisable" id="blnSsDisable" type="checkbox" >
-                                                            <?php
-                                                            }
-                                                            else
-                                                            {?>
-                                                                Account activeren
-                                                                <input name="blnSsEnable" id="blnSsEnable" type="checkbox" >
-                                                            <?php
-                                                            }?>
-                                                        </label>
-                                                    <?php
-                                                    }
-                                                    else
+                                                            <label class="checkbox">
+                                                                    <input
+                                                                            name="createSsAccount"
+                                                                            type="checkbox"
+                                                                            value="true"
+                                                                            <?php echo $this->config['createSsAccount'] != null ? ("checked=" . $this->config['createSsAccount']) : "" ?>>
+                                                                    Account maken
+                                                            </label>
+                                                    <?php 
+                                                    }if ($this->multipleAccountsSelected || $this->hasSsAccount || $this->manageTemplate)
                                                     {?>
-                                                        <label class="checkbox">
-                                                            <input
-                                                                name="createSSAccount"
-                                                                type="checkbox"
-                                                                value="true">
-                                                            Account maken
-                                                        </label>
+                                                            <label class="checkbox">
+                                                                Account verwijderen
+                                                                <input name="deleteSsAccount" id="blnDeleteSs" type="checkbox" value="false"
+                                                                    <?php echo $this->config['deleteSsAccount'] != null ? ("checked=" . $this->config['deleteSsAccount']) : "" ?>>
+                                                            </label>
+                                                            <div class="control-group error" id="deletesssure">
+                                                                <label class="checkbox error" id="lbldeletesssure">
+                                                                        Ja, ik ben zeker
+                                                                        <input id="blndeletesssure" name="deleteSsAccountSure" type="checkbox" value="false">
+                                                                </label>  
+                                                            </div>
                                                     <?php
-                                                    }
-                                                    ?>
-
+                                                    }if ($this->multipleAccountsSelected || $this->hasSsAccountEnabled || $this->manageTemplate)
+                                                    {?>
+                                                            <label class="checkbox">
+                                                                    Account deactiveren
+                                                                    <input name="blnSsDisable" id="blnSsDisable" type="checkbox" 
+                                                                           <?php echo $this->config['blnSsDisable'] != null ? ("checked=" . $this->config['blnSsDisable']) : "" ?>>
+                                                            </label>
+                                                    <?php
+                                                    }if($this->multipleAccountsSelected || !$this->hasSsAccountEnabled || $this->manageTemplate)
+                                                    {?>
+                                                            <label class="checkbox">
+                                                                    Account activeren
+                                                                    <input name="blnSsEnable" id="blnSsEnable" type="checkbox" 
+                                                                           <?php echo $this->config['blnSsEnable'] != null ? ("checked=" . $this->config['blnSsEnable']) : "" ?>>
+                                                            </label>
+                                                    <?php
+                                                    }?>
+    
 						</div>
 					</div>
 				</section>
@@ -355,41 +402,45 @@ use solideagle\utilities\SuperEntities;
 
 					<div class="row">
                                             <div class="span12">
-                                                <?php if ($this->multipleAccountsSelected || !$this->hasGappAccount)
+                                                <?php if ($this->multipleAccountsSelected || !$this->hasGappAccount || $this->manageTemplate)
                                                 {?>
                                                     <label class="checkbox">
                                                             <input
                                                                     name="createGappAccount"
                                                                     type="checkbox"
-                                                                    value="true">
+                                                                    value="true" 
+                                                                    <?php echo $this->config['createGappAccount'] != null ? ("checked=" . $this->config['createGappAccount']) : "" ?>>
                                                             Account maken
                                                     </label>
                                                 <?php 
-                                                }if ($this->multipleAccountsSelected || $this->hasGappAccount)
+                                                }if ($this->multipleAccountsSelected || $this->hasGappAccount || $this->manageTemplate)
                                                 {?>
                                                     <label class="checkbox">
                                                         Account verwijderen
-                                                        <input name="deleteGappAccount" id="blnDeleteGapp" type="checkbox" value="false">
+                                                        <input name="deleteGappAccount" id="blnDeleteGapp" type="checkbox" value="false" 
+                                                               <?php echo $this->config['deleteGappAccount'] != null ? ("checked=" . $this->config['deleteGappAccount']) : "" ?>>
                                                     </label>
                                                     <div class="control-group error" id="deletegappsure">
                                                         <label class="checkbox error" id="lbldeletegappsure">
                                                                 Ja, ik ben zeker
-                                                                <input id="blndeletegappsure" name="deleteGappAccountSure" type="checkbox" value="false">
+                                                                <input id="blndeletegappsure" name="deleteGappAccountSure" type="checkbox" value="false" >
                                                         </label>  
                                                     </div>
                                                 <?php
-                                                }if ($this->multipleAccountsSelected || $this->hasGappAccountEnabled)
+                                                }if ($this->multipleAccountsSelected || $this->hasGappAccountEnabled || $this->manageTemplate)
                                                 {?>
                                                     <label class="checkbox">
                                                             Account deactiveren
-                                                            <input name="blnGappDisable" id="blnGappDisable" type="checkbox" >
+                                                            <input name="blnGappDisable" id="blnGappDisable" type="checkbox" 
+                                                                   <?php echo $this->config['blnGappDisable'] != null ? ("checked=" . $this->config['blnGappDisable']) : "" ?>>
                                                     </label>
                                                 <?php
-                                                }if($this->multipleAccountsSelected || !$this->hasGappAccountEnabled)
+                                                }if($this->multipleAccountsSelected || !$this->hasGappAccountEnabled || $this->manageTemplate)
                                                 {?>
                                                     <label class="checkbox">
                                                             Account activeren
-                                                            <input name="blnGappEnable" id="blnGappEnable" type="checkbox" >
+                                                            <input name="blnGappEnable" id="blnGappEnable" type="checkbox" 
+                                                                   <?php echo $this->config['blnGappEnable'] != null ? ("checked=" . $this->config['blnGappEnable']) : "" ?>>
                                                     </label>
                                                 <?php
                                                 }?>
@@ -404,12 +455,14 @@ use solideagle\utilities\SuperEntities;
 					href="#"
 					class="btn"
 					data-dismiss="modal">Annuleren</a>
-				<button
-					class="btn btn-primary"
-					type="submit">Uitvoeren</button>
+				<button class="btn btn-primary" id="submitBtn" name="submitBtn" type="submit" value="<?php 
+                                            if($this->manageTemplate)
+                                                echo ($this->addtemplate) ? "addTemplate" : "editTemplate";
+                                            else
+                                                echo "addTasks"
+                                        ?>">Uitvoeren</button>
 			</div>
 		</div>
 	</div>
-
-
-</form>
+    
+ </form>

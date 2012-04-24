@@ -50,8 +50,12 @@
                         
 			$("#modalholder").load("<?php echo $this->SE_path . '/usertasks/getalltasksforuser' ?>", new makePostArray(selectedArr));
 		});
-
-		
+                
+                $("#TaskTemplatesLink").click(function(){
+                    
+                        $("#modalholder").load("<?php echo $this->SE_path . '/tasktemplate/managetasktemplates' ?>");
+			
+		});	
 
 		$("#selectAllCheckbox").click(function(){
 
@@ -213,6 +217,7 @@
 						</a></li>
 						<li class="divider"></li>
 						<li><a id="MultiTaskLink" href="#"><i class="icon-list-alt"></i> Taken uitvoeren</a></li>
+                                                <li><a id="TaskTemplatesLink" href="#"><i class="icon-list-alt"></i> Taak templates beheren</a></li>
 					</ul>
 				</li>
 			</ul>
