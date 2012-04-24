@@ -1,4 +1,73 @@
-<br /><br />
-<div id="view-content">
-	<p>View script for controller <b>Users</b> and script/action name <b>move</b></p>
-</div>
+<?php 
+use solideagle\utilities\SuperEntities;
+
+use solideagle\data_access\Person;
+use solideagle\data_access\helpers\DateConverter;
+
+//$ppp = new Person();
+$ppp = $this->person; ?>
+
+<script>
+	$(function(){
+
+                $('#myModal').modal('show');
+                
+                updateMiniTree();
+                
+                function updateMiniTree()
+                {
+                        $("#groupminitree").jstree({ 
+                                "ui" : {	
+                                        "initially_select" : [ "tree"+selectedGroupId ]
+                                },
+                                "json_data" : {
+                                        "ajax" : {
+                                                "url" : "<?php echo $this->SE_path . '/groups/getgroup' ?>",
+                                                "data" : function (n) { 
+                                                        return { id : n.attr ? n.attr("id") : 0 }; 
+                                                },
+                                                "progressive_render" : true,
+                                                "progressive_unload" : true
+                                        }
+                                },
+                                "plugins" : [ "themes", "json_data","ui" ]
+                        }).bind("select_node.jstree", function (event, data) { 
+                                selectedGroupId = data.rslt.obj.attr("groupid");
+                        });
+
+                }
+                
+                
+		
+	});
+
+</script>
+
+<form class="form-horizontal" action="<?php echo $this->SE_path . "/users/adduserpost" ?>" method="post" id="formUser">
+
+	<div class="hide SEsupermodal" id="myModal">
+		<div>
+			<div class="modal-header">
+				<a class="close" data-dismiss="modal">×</a>
+				<h3 id="modaltitle">
+                                    Verplaats <?php echo $this->displayName; ?> naar 
+				</h3>
+			</div>
+			<div class="modal-body" style="width: 300px;">
+				<fieldset>
+                                    <input type="hidden" name="pid" value="<?php echo $this->pid; ?>">
+                                    <input type="hidden" name="oldgid" value="<?php echo $this->oldgid; ?>">
+                                    <div id="groupminitree">
+                                            <!-- tree will be rendered here -->
+                                    </div>
+					
+				</fieldset>
+			</div>
+			<div class="modal-footer">
+                            <a href="#" class="btn" data-dismiss="modal">Annuleren</a>
+                            <button class="btn btn-primary" name="submit" value="move" type="submit">Verplaatsen</button>
+			</div>
+		</div>
+	</div>
+
+</form>

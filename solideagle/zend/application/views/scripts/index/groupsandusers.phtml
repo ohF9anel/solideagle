@@ -32,6 +32,10 @@
 		$("#EditUserLink").click(function(){
 			$("#modalholder").load("<?php echo $this->SE_path . '/users/userform?state=edit&pid=' ?>" + clickedUserId);
 		});
+                
+                $("#MoveUserLink").click(function(){
+			$("#modalholder").load("<?php echo $this->SE_path . '/users/move?pid=' ?>" + clickedUserId);
+		});
 
 		$("#RemoveUserLink").click(function(){
 			alert("Not Yet Implemented");
@@ -248,6 +252,7 @@
 			<ul class="dropdown-menu">
 				<li><a href="javascript:void(0)" id="ViewUserLink"><i class="icon-user"></i> Bekijken</a></li>
 				<li><a href="javascript:void(0)" id="EditUserLink"><i class="icon-pencil"></i> Bewerken</a></li>
+                                <li><a href="javascript:void(0)" id="MoveUserLink"><i class="icon-move"></i> Verplaatsen</a></li>
 				<li><a href="javascript:void(0)" id="RemoveUserLink"> <i class="icon-remove"></i> Verwijderen
 				</a></li>
 			</ul>

@@ -241,53 +241,43 @@ class UsersController extends Zend_Controller_Action
 	{
 		$this->view->groups = Group::getAllGroups();
 
-		//oldgid
-		//persid
-	}
-
-	public function movepostAction()
-	{
-		$this->_helper->layout()->disableLayout();
-		$this->_helper->viewRenderer->setNoRender(true);
-		 
-
-		$oldgid =  $this->getRequest()->getParam("oldgid",false);
-		$pid =  $this->getRequest()->getParam("personid",false);
-		 
-		//params set, and not moving to group where person is already?
-		if(($newgid = $this->getRequest()->getParam("newgroupid",false)) && $newgid != $oldgid && $oldgid !== false && $pid !== false)
-		{
-			moveAUser($pid,$newgid);
-		}
-		 
-		return;
-	}
-
-	private function moveAUser($pid,$newgid)
-	{
-		//all good, move
-		 
-		$person = Person::getPersonById($pid);
-		 
-		$person->setGroupId($newgid);
-		 
-		Person::updatePerson($person);
-		 
-		if(platforms::getPlatformAdByPersonId($person->getId()) !== NULL)
-		{
-			\solideagle\scripts\ad\usermanager::prepareUpdateUser($person);
-		}
-		 
-		if(platforms::getPlatformGappByPersonId($person->getId()) !== NULL)
-		{
-			\solideagle\scripts\ga\usermanager::prepareUpdateUser($person);
-		}
-		 
-		if(platforms::getPlatformSmartschoolByPersonId($person->getId()) !== NULL)
-		{
-			//\solideagle\scripts\smartschool\usermanager::
-		}
-	}
+    	$oldgid = $this->getRequest()->getParam("oldgid",false);
+    	$pid = $this->getRequest()->getParam("pid",false);
+    	
+    	//params set, and not moving to group where person is already?
+    	if(($newgid = $this->getRequest()->getParam("newgid",false)) && $newgid != $oldgid && $oldgid !== false && $pid !== false)
+    	{
+    		moveAUser($pid,$newgid);
+    	}
+    	
+    	return;
+    }
+    
+    private function moveAUser($pid,$newgid)
+    {
+    	//all good, move
+    	
+    	$person = Person::getPersonById($pid);
+    	
+    	$person->setGroupId($newgid);
+    	
+    	Person::updatePerson($person);
+    	
+    	if(platforms::getPlatformAdByPersonId($person->getId()) !== NULL)
+    	{
+    		\solideagle\scripts\ad\usermanager::prepareUpdateUser($person);
+    	}
+    	
+    	if(platforms::getPlatformGappByPersonId($person->getId()) !== NULL)
+    	{
+    		\solideagle\scripts\ga\usermanager::prepareUpdateUser($person);
+    	}
+    	
+    	if(platforms::getPlatformSmartschoolByPersonId($person->getId()) !== NULL)
+    	{
+    		//\solideagle\scripts\smartschool\usermanager::
+    	}
+    }
 
 
 }
