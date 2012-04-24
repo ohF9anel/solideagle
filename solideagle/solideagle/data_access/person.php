@@ -24,7 +24,7 @@ class Person
 	private $accountPassword;
 	private $accountActiveUntill;
 	private $accountActiveFrom;
-	private $year;
+	private $uniqueIdentifier = NULL;
 	private $firstName;
 	private $name;
 	private $gender;
@@ -51,6 +51,9 @@ class Person
 	private $types = array();
 
 	private $valErrors = array();
+	
+	//not stored in db
+	private $year;
 
 	public function __construct()
 	{
@@ -417,7 +420,7 @@ class Person
 
 	/**
 	 *
-	 * @param Person $this
+	 * @param Person $person
 	 * @return int id
 	 */
 	public static function addPerson($person)
@@ -444,7 +447,7 @@ class Person
 		(`id`,
 		`account_username`,
 		`account_password`,
-
+		`uniqueIdentifier`,
 		`account_active_untill`,
 		`account_active_from`,
 		`first_name`,
@@ -474,7 +477,7 @@ class Person
 		:id,
 		:account_username,
 		:account_password,
-
+		:uniqueIdentifier,
 		:account_active_untill,
 		:account_active_from,
 		:first_name,
@@ -506,7 +509,7 @@ class Person
 		$cmd->addParam(":id", $person->getId());
 		$cmd->addParam(":account_username", $person->getAccountUsername());
 		$cmd->addParam(":account_password", $person->getAccountPassword());
-
+		$cmd->addParam(":uniqueIdentifier",$person->getUniqueIdentifier());
 		$cmd->addParam(":account_active_untill", $person->getAccountActiveUntill());
 		$cmd->addParam(":account_active_from", $person->getAccountActiveFrom());
 		$cmd->addParam(":first_name", $person->getFirstName());
@@ -586,14 +589,13 @@ class Person
 		// update new person's data
 
 		$sql = "UPDATE  `person` SET
-
-
 		`first_name` = :first_name,
 		`name` = :name,
 		`deleted` = :deleted,
 		`account_password` = :account_password,
 		`account_active_untill` = :account_active_untill,
 		`account_active_from` = :account_active_from,
+		`uniqueIdentifier` = :uniqueIdentifier,
 		`gender` = :gender,
 		`birth_date` = :birth_date,
 		`birth_place` = :birth_place,
@@ -617,7 +619,7 @@ class Person
 		$cmd->addParam(":id", $person->getId());
 		//$cmd->addParam(":account_username", $person->getAccountUsername());
 		$cmd->addParam(":account_password", $person->getAccountPassword());
-
+		$cmd->addParam(":uniqueIdentifier", $person->getUniqueIdentifier());
 		$cmd->addParam(":account_active_untill", $person->getAccountActiveUntill());
 		$cmd->addParam(":account_active_from", $person->getAccountActiveFrom());
 		$cmd->addParam(":first_name", $person->getFirstName());
@@ -695,6 +697,7 @@ class Person
 
 		$cmd->execute();
 	}
+	
 
 	public static function getPersonById($id)
 	{
@@ -716,7 +719,7 @@ class Person
 		$person->setId($retObj->id);
 		$person->setAccountUsername($retObj->account_username);
 		$person->setAccountPassword($retObj->account_password);
-
+		$person->setUniqueIdentifier($retObj->uniqueIdentifier);
 		$person->setAccountActiveUntill($retObj->account_active_untill);
 		$person->setAccountActiveFrom($retObj->account_active_from);
 		$person->setFirstName($retObj->first_name);
@@ -792,6 +795,8 @@ class Person
 		return $personIdName;
 	}
 
+	
+	//TODO check if uniqueident is unqiue, and username does not yet exist
 	public static function validatePerson($person)
 	{
 		$validationErrors = array();
@@ -1261,10 +1266,30 @@ class Person
 		}else{
 			return self::getPersonById($retObj->id);
 		}
-
-			
 	}
-
+	
+	
+	
+	public static function getPersonByUniqueIdentifier($uniqueIdentifier)
+	{
+		$sql = "SELECT id FROM  `person`
+		WHERE
+		`person`.`uniqueIdentifier` = :uniqueidentifier";
+		
+		$cmd = new DatabaseCommand($sql);
+		$cmd->addParam(":uniqueidentifier", $uniqueIdentifier);
+		
+		$reader = $cmd->executeReader();
+		
+		$retObj = $reader->read();
+			
+		if($retObj === false)
+		{
+			return NULL;
+		}else{
+			return self::getPersonById($retObj->id);
+		}
+	}
 
 	public function getYear()
 	{
@@ -1274,6 +1299,16 @@ class Person
 	public function setYear($year)
 	{
 	    $this->year = $year;
+	}
+
+	public function getUniqueIdentifier()
+	{
+	    return $this->uniqueIdentifier;
+	}
+
+	public function setUniqueIdentifier($uniqueIdentifier)
+	{
+	    $this->uniqueIdentifier = $uniqueIdentifier;
 	}
 }
 
