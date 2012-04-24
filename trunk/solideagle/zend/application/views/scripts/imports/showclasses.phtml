@@ -1,3 +1,5 @@
+<?php use solideagle\utilities\SuperEntities;
+?>
 
 
 <div>
@@ -12,9 +14,33 @@
 		method="post">
 		<fieldset>
 			<legend>Stap 2: Kies klassen om aan te maken</legend>
+			
+				<div class="control-group">
+						<label class="control-label" for="txtDescription">Klassen plaatsen onder:</label>
+						<div class="controls">
+							<select name="selectGroup">
+							
+								<?php foreach($this->groups as $group)
+								{
+								?>
+
+								<option value="<?php echo $group->getId(); ?>">
+									<?php echo SuperEntities::encode($group->getName()); ?>
+								</option>
+
+								<?php } ?>
+
+							</select>
+						</div>
+					</div>
+			
 			<div class="clearfix">
 			<?php
 
+			if(count($this->klassen) == 0)
+			{
+				echo "Er zijn geen nieuwe klassen gevonden, u kan nu de studenten importeren";
+			}
 
 			foreach($this->klassen as $klas)
 			{

@@ -1,6 +1,8 @@
 <?php
 namespace solideagle\scripts;
 
+use solideagle\logging\Logger;
+
 use solideagle\data_access\TaskQueue;
 
 set_include_path(get_include_path().PATH_SEPARATOR."../../");
@@ -16,7 +18,10 @@ class daemon
 		{
 			$this->startDaemon();
 		}else{
-			set_time_limit(60);
+			
+			exec(sprintf("%s > %s 2>&1 & echo $! >> %s", "php daemon.php", "daemon.out", "daemon.pid"));
+			
+			/*set_time_limit(60);
 			echo "Running from command line! Output will stop after 60 seconds or when all tasks have been run";
 				
 			exec(sprintf("%s > %s 2>&1 & echo $! >> %s", "php daemon.php", "daemon.out", "daemon.pid"));
@@ -68,7 +73,7 @@ class daemon
 			echo "</pre>";
 				
 			ob_flush();
-			flush();
+			flush();*/
 				
 		}
 	}
@@ -88,11 +93,11 @@ class daemon
 		echo shell_exec("rm daemon.lock 2>&1");
 
 
+		/*echo "SEENDBUFFER\n";
 		echo "SEENDBUFFER\n";
 		echo "SEENDBUFFER\n";
 		echo "SEENDBUFFER\n";
-		echo "SEENDBUFFER\n";
-		echo "SEENDBUFFER\n";
+		echo "SEENDBUFFER\n";*/
 	}
 
 
@@ -118,16 +123,15 @@ class daemon
 		foreach(TaskQueue::getAllPlatforms() as $platform)
 		{
 			$tasksss = TaskQueue::getTasksToRunForPlatform($platform);
-			echo("running " . count($tasksss) . " tasks for platform " . $platform . "...\n");
+			Logger::log("running " . count($tasksss) . " tasks for platform " . $platform . "...",PEAR_LOG_INFO);
 			
 			foreach($tasksss as $taskqueue)
 			{
 				 
 				$class = $taskqueue->getTask_class();
 					
-				echo "Running task: " . $class . "\n";
-				var_dump($taskqueue);
-				flush();
+				Logger::log("Running task: " . $class ,PEAR_LOG_INFO);
+				
 					
 				if(class_exists($class))
 				{
@@ -146,14 +150,15 @@ class daemon
 					{
 						TaskQueue::addToRollback($taskqueue);
 							
-						echo("Task ran succesfully!\n");
-							
+						Logger::log("Task: " . $class . " ran succesfully!",PEAR_LOG_ALERT);
+					
 					}else{
 							
 						TaskQueue::increaseErrorCount($taskqueue);
 							
-						echo("Task failed\n");
-							
+						Logger::log("Task: " . $class . " failed with error:\n". $taskqueue->getErrormessages() . 
+								"Dump:\n" . var_export($taskqueue,true) ,PEAR_LOG_ALERT);
+						
 						break;
 					}
 				}else{

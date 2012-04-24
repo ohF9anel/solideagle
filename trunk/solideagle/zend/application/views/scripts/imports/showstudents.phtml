@@ -1,0 +1,125 @@
+<?php use solideagle\utilities\SuperEntities;
+?>
+
+
+<div>
+
+	<div class="page-header">
+		<h1>Klassen importeren en aanmaken</h1>
+	</div>
+
+	<form
+		class="form-horizontal"
+		enctype="multipart/form-data"
+		method="post">
+		<fieldset>
+			<legend>Stap 2: Bekijk veranderingen</legend>
+
+			<div class="clearfix">
+				<?php
+
+				if((count($this->llnToAdd) == 0) &&  (count($this->llnToMove) == 0))
+				{
+					echo "Er zijn geen veranderingen gevonden";
+				}
+				
+				if(count($this->llnFail))
+				{
+					?>
+					
+					 <div class="alert alert-error">
+  
+    				<strong>Opgelet!</strong> Volgende lln konden niet geparsed worden!
+  
+					
+					<?php
+					foreach($this->llnFail as $failedline)
+					{
+						echo "<p>" . $failedline . "</p>";
+					}?>
+					
+					  </div>
+					  
+					<?php
+				}
+					
+				?>
+				<h2>Leerlingen die toegevoegd worden</h2>
+				<table class="table">
+					<thead>
+						<tr>
+							<td>Check om toe te voegen</td>
+							<td>Info</td>
+						</tr>
+					</thead>
+
+					<?php
+
+					foreach($this->llnToAdd as $key => $lln)
+					{
+						?>
+
+					<tr>
+						<td><input
+								type="checkbox"
+								checked="checked"
+								name="llnAddKeys[]"
+								value="<?php echo $key; ?>">
+						</td>
+						<td><pre>
+								<?php var_export($lln) ?>
+							</pre></td>
+					</tr>
+
+
+
+
+					<?php
+					}
+					?>
+				</table>
+
+				<h2>Leerlingen die verplaatst worden</h2>
+				<table class="table">
+					<thead>
+						<tr>
+							<td>Check om te verplaatsen</td>
+							<td>Info</td>
+						</tr>
+					</thead>
+					<?php
+					foreach($this->llnToMove as $key => $lln)
+					{
+					?>
+
+					<tr>
+						<td><input
+								type="checkbox"
+								checked="checked"
+								name="llnAddKeys[]"
+								value="<?php echo $key; ?>">
+						</td>
+						<td><pre>
+								<?php var_export($lln) ?>
+							</pre></td>
+					</tr>
+					
+					<?php
+					}
+					?>
+				</table>
+			</div>
+			<div class="form-actions ">
+				<button
+					class="btn btn-primary"
+					type="submit"
+					name="submit"
+					value="true">Uitvoeren</button>
+			</div>
+		</fieldset>
+	</form>
+
+</div>
+
+
+
