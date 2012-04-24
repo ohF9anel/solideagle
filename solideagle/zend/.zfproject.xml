@@ -24,8 +24,6 @@
           <actionMethod actionName="adduserpost"/>
           <actionMethod actionName="getusers"/>
           <actionMethod actionName="showdetails"/>
-          <actionMethod actionName="showexterndetails"/>
-          <actionMethod actionName="move"/>
         </controllerFile>
         <controllerFile controllerName="Groups">
           <actionMethod actionName="index"/>
@@ -42,15 +40,16 @@
           <actionMethod actionName="index"/>
           <actionMethod actionName="getalltasksforuser"/>
           <actionMethod actionName="posttasks"/>
-          <actionMethod actionName="posttasksstatus"/>
         </controllerFile>
         <controllerFile controllerName="Imports">
           <actionMethod actionName="index"/>
           <actionMethod actionName="importklassen"/>
           <actionMethod actionName="showClasses"/>
           <actionMethod actionName="importfinished"/>
-          <actionMethod actionName="importstudents"/>
-          <actionMethod actionName="showstudents"/>
+        </controllerFile>
+        <controllerFile controllerName="TaskTemplate">
+          <actionMethod actionName="index"/>
+          <actionMethod actionName="managetasktemplates"/>
         </controllerFile>
       </controllersDirectory>
       <formsDirectory enabled="false"/>
@@ -132,17 +131,14 @@
           <viewControllerScriptsDirectory forControllerName="Imports">
             <viewScriptFile forActionName="importfinished"/>
           </viewControllerScriptsDirectory>
-          <viewControllerScriptsDirectory forControllerName="Imports">
-            <viewScriptFile forActionName="importstudents"/>
+          <viewControllerScriptsDirectory forControllerName="TaskTemplate">
+            <viewScriptFile forActionName="index"/>
           </viewControllerScriptsDirectory>
-          <viewControllerScriptsDirectory forControllerName="Imports">
-            <viewScriptFile forActionName="showstudents"/>
+          <viewControllerScriptsDirectory forControllerName="TaskTemplate">
+            <viewScriptFile forActionName="edit"/>
           </viewControllerScriptsDirectory>
-          <viewControllerScriptsDirectory forControllerName="Users">
-            <viewScriptFile forActionName="showexterndetails"/>
-          </viewControllerScriptsDirectory>
-          <viewControllerScriptsDirectory forControllerName="Users">
-            <viewScriptFile forActionName="move"/>
+          <viewControllerScriptsDirectory forControllerName="TaskTemplate">
+            <viewScriptFile forActionName="managetasktemplates"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>
