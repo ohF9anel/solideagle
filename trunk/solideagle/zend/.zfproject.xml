@@ -52,7 +52,7 @@
           <actionMethod actionName="importstudents"/>
           <actionMethod actionName="showstudents"/>
         </controllerFile>
-          <controllerFile controllerName="TaskTemplate">
+        <controllerFile controllerName="Tasktemplate">
           <actionMethod actionName="index"/>
           <actionMethod actionName="managetasktemplates"/>
         </controllerFile>

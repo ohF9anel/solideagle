@@ -1,8 +1,3 @@
-<?php 
-
-
-?>
-
 <script>
 	$(function(){
             
@@ -31,7 +26,7 @@
             });    
             
             function makePostArray(jspost) {
-		   this.jspost = jspost;
+		  		 this.jspost = jspost;
             }
             
             
@@ -40,54 +35,70 @@
 
 </script>
 
-<div class="hide SEsupermodal" id="taskTemplateModal">
-    <div>
-        <div class="modal-header">
-                <a
-                        class="close"
-                        data-dismiss="modal">×</a>
-                    <h3 id="modaltitle">Beheer taak templates</h3>
-        </div>
+<div
+	class="hide SEsupermodal"
+	id="taskTemplateModal">
+	<div>
+		<div class="modal-header">
+			<a
+				class="close"
+				data-dismiss="modal">×</a>
+			<h3 id="modaltitle">Beheer taak templates</h3>
+		</div>
 
-        <div class="modal-body">
+		<div class="modal-body">
 
-                <section id="tasktemplate">
+			<section id="tasktemplate">
 
-                    <div class="control-group">
+				<div class="control-group">
 
-                        <h3>
-                            Bestaande takentemplates aanpassen
-                        </h3>
+					<h3>Bestaande takentemplates aanpassen</h3>
 
-                        <?php if(isset($this->taskTemplates) )
-                        {foreach($this->taskTemplates as $taskTemplate)
+					<table>
+				
+					<?php if(isset($this->taskTemplates) )
+					{
+						foreach($this->taskTemplates as $taskTemplate)
                         {?>
-                            <a href="#" id="btnEditTemplate<?php echo $taskTemplate->getTemplateName() ?>" name="btnEditTemplate<?php echo $taskTemplate->getTemplateName() ?>" class="btn btn-mini"><?php echo $taskTemplate->getTemplateName() ?></a>
-                            <a href="#" id="btnRemoveTemplate<?php echo $taskTemplate->getTemplateName() ?>" name="btnRemove<?php echo $taskTemplate->getTemplateName() ?>" class="btn btn-mini"><i class="icon-remove"></i></a>
-                        <?php
+					<tr><td><a
+						href="#"
+						id="btnEditTemplate<?php echo $taskTemplate->getTemplateName() ?>"
+						name="btnEditTemplate<?php echo $taskTemplate->getTemplateName() ?>"
+						class="btn btn-mini"><?php echo $taskTemplate->getTemplateName() ?> </a></td>
+						 <td><a
+						href="#"
+						id="btnRemoveTemplate<?php echo $taskTemplate->getTemplateName() ?>"
+						name="btnRemove<?php echo $taskTemplate->getTemplateName() ?>"
+						class="btn btn-mini"><i class="icon-remove"></i> </a></td></tr>
+					<?php
                         }
                         }?>
+                        
+                        	</table>
 
-                    </div>
+				</div>
 
-                <div class="control-group">
+				<div class="control-group">
 
-                    <a href="#" id="btnNewTemplate" name="btnNewTemplate" class="btn btn-primary">Maak nieuwe template</a>
+					<a
+						href="#"
+						id="btnNewTemplate"
+						name="btnNewTemplate"
+						class="btn btn-primary">Maak nieuwe template</a>
 
-                </div>
+				</div>
 
-            </section>
+			</section>
 
-    </div>
+		</div>
 
 
-    <div class="modal-footer">
-            <a
-                    href="#"
-                    class="btn"
-                    data-dismiss="modal">OK</a>
-    </div>
-        
+		<div class="modal-footer">
+			<a
+				href="#"
+				class="btn"
+				data-dismiss="modal">OK</a>
+		</div>
+
+	</div>
 </div>
-
-<div id="modalholder"></div>
