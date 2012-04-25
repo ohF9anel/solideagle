@@ -56,7 +56,7 @@ class TaskTemplate
 
 		$cmd = new DatabaseCommand($sql);
 		$cmd->addParam(":template_name", $taskTemplate->getTemplateName());
-		$cmd->addParam(":template_config", $taskTemplate->getTemplateConfig());
+		$cmd->addParam(":template_config", serialize($taskTemplate->getTemplateConfig()));
 
 		$cmd->BeginTransaction();
 
@@ -99,12 +99,9 @@ class TaskTemplate
 
 		$template = new TaskTemplate();
 		$template->setTemplateName($obj->template_name);
-		$template->setTemplateConfig($obj->template_config);
-
-		
+		$template->setTemplateConfig(unserialize($obj->template_config));
 
 		return $template;
-
 	}
 
 
@@ -122,7 +119,7 @@ class TaskTemplate
 		$cmd ->executeReader()->readAll(function($rowdata) use (&$retarr){
 			$template = new TaskTemplate();
 			$template->setTemplateName($rowdata->template_name);
-			$template->setTemplateConfig($rowdata->template_config);
+			$template->setTemplateConfig(unserialize($rowdata->template_config));
 
 			$retarr[] = $template;
 		});
@@ -130,6 +127,10 @@ class TaskTemplate
 		return $retarr;
 	}
 
+	public function getJson()
+	{
+		return json_encode(get_object_vars($this));
+	}
 
 
 }

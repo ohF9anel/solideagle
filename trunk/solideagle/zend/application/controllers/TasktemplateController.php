@@ -69,6 +69,20 @@ class TaskTemplateController extends Zend_Controller_Action
 		return;
 	}
 	
+	public function gettemplateAction()
+	{
+		$this->_helper->layout()->disableLayout();
+		$this->_helper->viewRenderer->setNoRender(true);
+		
+		
+		
+		if(($taskttname = $this->getRequest()->getParam("templatename",false)))
+		{
+			echo TaskTemplate::getTemplateByName($taskttname)->getJson();
+			return;
+		}
+	}
+	
 	/**
 	 * 
 	 * @param array(TaskTemplate) $templates

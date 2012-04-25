@@ -57,6 +57,7 @@
           <actionMethod actionName="managetasktemplates"/>
           <actionMethod actionName="gettemplates"/>
           <actionMethod actionName="removetasktemplate"/>
+          <actionMethod actionName="gettemplate"/>
         </controllerFile>
         <controllerFile controllerName="Databasetasks">
           <actionMethod actionName="index"/>

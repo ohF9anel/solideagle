@@ -74,6 +74,10 @@ class Database
 		Return Database::$_connections[$connstring];
 	}
 
+	/**
+	 * 
+	 * @param DatabaseCommand $databaseCmd
+	 */
 	public static function getStatement($databaseCmd)
 	{
 		$conn = Database::getConnection($databaseCmd->getConnectionParams());
@@ -87,9 +91,12 @@ class Database
 		return $conn->connection->prepare($databaseCmd->getSQL());
 	}
 
+	/**
+	 * 
+	 * @param DatabaseCommand $databaseCmd
+	 */
 	Public static Function executeReader($databaseCmd)
 	{
-
 		try{
 			$stmt = Database::getStatement($databaseCmd);
 			$stmt->execute($databaseCmd->getParams());
