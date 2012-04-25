@@ -47,6 +47,8 @@ class PlatformAD
 		
 		$cmd = new DatabaseCommand($sql);
 		
+		$cmd->addParam(":personid",$personid);
+		
 		if(($obj = $cmd->executeReader()->read()) === false)
 		{
 			return NULL;
