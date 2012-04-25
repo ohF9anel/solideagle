@@ -15,7 +15,7 @@ class ConnectionLDAP
 
     private function __construct()
     {
-        $this->conn = ldap_connect('ldaps://10.3.7.111');
+        $this->conn = ldap_connect('ldaps://' . Config::singleton()->ad_dc_host);
         
         // try anonymous login to test connection
         $anon = @ldap_bind($this->conn);

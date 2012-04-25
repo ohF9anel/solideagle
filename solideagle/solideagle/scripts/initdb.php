@@ -31,10 +31,7 @@ class initdb
 		$cmd->newQuery($sql);
 		$cmd->execute();
 		
-		$sql = "truncate person_configuration";
-		
-		$cmd->newQuery($sql);
-		$cmd->execute();
+
 		
 		$sql = "truncate platform_ad";
 		

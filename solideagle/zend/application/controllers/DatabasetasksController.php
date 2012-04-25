@@ -1,5 +1,7 @@
 <?php
 
+use solideagle\scripts\InitialAdImport;
+
 use solideagle\scripts\initdb;
 
 class DatabasetasksController extends Zend_Controller_Action
@@ -20,8 +22,15 @@ class DatabasetasksController extends Zend_Controller_Action
         initdb::startclean();
     }
 
+    public function initialAdImportAction()
+    {
+      	InitialAdImport::doImport();
+    }
+
 
 }
+
+
 
 
 

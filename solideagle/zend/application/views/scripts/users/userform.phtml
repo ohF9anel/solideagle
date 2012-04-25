@@ -301,6 +301,16 @@ $ppp = $this->person; ?>
 								</div>
 							</div>
 							
+							<div class="control-group">
+								<label class="control-label" for="txtInformatid">Informat ID</label>
+								<div class="controls">
+									<input id="txtInformatid" name="informatId" class="input-xlarge" type="text"
+										value="<?php echo SuperEntities::encode($ppp->getInformatId()) ?>">
+								</div>
+							</div>
+							
+						
+							
 							
 
 							<div class="control-group">
@@ -420,8 +430,6 @@ $ppp = $this->person; ?>
 						</div>
 					</div>
 
-
-				
 					<?php if($this->state === $this->stateNew)
 					{?>
 						<input type="hidden" name="GroupId" value="<?php echo $this->group->getId(); ?>">
@@ -429,6 +437,7 @@ $ppp = $this->person; ?>
 					
 					<?php if($this->state === $this->stateEdit)
 					{?>
+						<input type="hidden" name="groupId" value="<?php echo $ppp->getGroupId() ?>">
 						<input type="hidden" name="Id" value="<?php echo $ppp->getId(); ?>">
 					<?php } ?>
 					
