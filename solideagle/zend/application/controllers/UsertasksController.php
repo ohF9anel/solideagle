@@ -204,7 +204,7 @@ class UsertasksController extends Zend_Controller_Action
 			$templateConfigArr['blnGappDisable'] = $this->getRequest()->getPost('blnGappDisable');
 			$templateConfigArr['blnGappEnable'] = $this->getRequest()->getPost('blnGappEnable');
 
-			$taskTemplate->setTemplateConfig(serialize($templateConfigArr));
+			$taskTemplate->setTemplateConfig($templateConfigArr);
 			TaskTemplate::addTaskTemplate($taskTemplate);
 		}
 		else if($this->getRequest()->getPost('submitBtn') == "editTemplate")
@@ -234,7 +234,7 @@ class UsertasksController extends Zend_Controller_Action
 			$templateConfigArr['blnGappDisable'] = $this->getRequest()->getPost('blnGappDisable');
 			$templateConfigArr['blnGappEnable'] = $this->getRequest()->getPost('blnGappEnable');
 
-			$taskTemplate->setTemplateConfig(serialize($templateConfigArr));
+			$taskTemplate->setTemplateConfig($templateConfigArr);
 			TaskTemplate::delTaskTemplateByName($this->getRequest()->getPost('txtName'));
 			TaskTemplate::addTaskTemplate($taskTemplate);
 		}
@@ -261,12 +261,13 @@ class UsertasksController extends Zend_Controller_Action
 		$templatename = $this->getRequest()->getPost('templatename',NULL);
 		if ($templatename != null)
 		{
-			$template = TaskTemplate::getTemplateByName($templatename);
+			/*$template = TaskTemplate::getTemplateByName($templatename);
 			$this->view->template = $template;
 
-			$config = \unserialize($template->getTemplateConfig());
-			$this->view->config = $config;
-
+			$config = $template->getTemplateConfig();
+			$this->view->config = $config;*/
+			
+			$this->view->templatename = $templatename;
 			$this->view->manageTemplate = true;
 		}
 		else if($this->getRequest()->getParam('addtemplate') != null)
@@ -274,7 +275,6 @@ class UsertasksController extends Zend_Controller_Action
 			$this->view->addtemplate = true;
 			$this->view->manageTemplate = true;
 		}
-
 		// single user selected
 		else if(count($usersArr) < 2 && count($usersArr) > 0)
 		{
