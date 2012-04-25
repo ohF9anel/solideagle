@@ -7,37 +7,37 @@ use solideagle\data_access\database\DatabaseCommand;
 
 class TaskTemplate
 {
-	
+
 	// variables
 	private $templateName;
 	private $templateConfig;
 
 	// getters & setters
-        
-        public function getArrayOfObject()
-        {
-            return get_object_vars($this);
-        }
+
+	public function getArrayOfObject()
+	{
+		return get_object_vars($this);
+	}
 
 	public function getTemplateName()
-        {
-            return $this->templateName;
-        }
+	{
+		return $this->templateName;
+	}
 
-        public function setTemplateName($templateName)
-        {
-            $this->templateName = $templateName;
-        }
+	public function setTemplateName($templateName)
+	{
+		$this->templateName = $templateName;
+	}
 
-        public function getTemplateConfig()
-        {
-                return $this->templateConfig;
-        }
+	public function getTemplateConfig()
+	{
+		return $this->templateConfig;
+	}
 
-        public function setTemplateConfig($templateConfig)
-        {
-            $this->templateConfig = $templateConfig;
-        }
+	public function setTemplateConfig($templateConfig)
+	{
+		$this->templateConfig = $templateConfig;
+	}
 
 	// manage types
 
@@ -80,34 +80,30 @@ class TaskTemplate
 
 		$cmd->execute();
 	}
-        
-        public static function getTemplateByName($name)
+
+	public static function getTemplateByName($name)
 	{
 		$sql = "SELECT
 		`task_template`.`template_name`,
 		`task_template`.`template_config`
 		FROM  `task_template`
-                WHERE `task_template`.`template_name` = :name;";
-		 
+		WHERE `task_template`.`template_name` = :name;";
+			
 		$cmd = new DatabaseCommand($sql);
-                $cmd->addParam(":name", $name);
-		 
-		$retarr = array();
-		 
-		$cmd ->executeReader()->readAll(function($rowdata) use (&$retarr){
-                    $template = new TaskTemplate();
-                    $template->setTemplateName($rowdata->template_name);
-                    $template->setTemplateConfig($rowdata->template_config);
-                    
-                    $retarr[] = $template;
-		});
-                
-                if ($retarr[0] != null)
-                {
-                    return $retarr[0];
-                }
-                
-		return null;
+		$cmd->addParam(":name", $name);
+
+		if(($obj = $cmd->executeReader()->read()) === false)
+		{
+			return NULL;
+		}
+
+		$template = new TaskTemplate();
+		$template->setTemplateName($rowdata->template_name);
+		$template->setTemplateConfig($rowdata->template_config);
+
+
+		return $retarr;
+
 	}
 
 
@@ -117,23 +113,23 @@ class TaskTemplate
 		`task_template`.`template_name`,
 		`task_template`.`template_config`
 		FROM  `task_template`;";
-		 
+			
 		$cmd = new DatabaseCommand($sql);
-		 
+			
 		$retarr = array();
-		 
+			
 		$cmd ->executeReader()->readAll(function($rowdata) use (&$retarr){
-                    $template = new TaskTemplate();
-                    $template->setTemplateName($rowdata->template_name);
-                    $template->setTemplateConfig($rowdata->template_config);
-                    
-                    $retarr[] = $template;
+			$template = new TaskTemplate();
+			$template->setTemplateName($rowdata->template_name);
+			$template->setTemplateConfig($rowdata->template_config);
+
+			$retarr[] = $template;
 		});
-                
+
 		return $retarr;
 	}
-	
-	
+
+
 
 }
 

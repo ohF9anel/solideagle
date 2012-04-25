@@ -1,10 +1,11 @@
 <?php
 
+use solideagle\data_access\PlatformAD;
+
 use solideagle\scripts\smartschool\usermanager;
 
 use solideagle\Config;
 
-use solideagle\data_access\platforms;
 
 use solideagle\data_access\Type;
 use solideagle\data_access\TaskTemplate;
@@ -257,7 +258,7 @@ class UsertasksController extends Zend_Controller_Action
 		$usersArr = $this->getRequest()->getPost('jspostArr',array());
 
 		//check if we are called from template editor
-		$templatename = $this->getRequest()->getPost('templatename');
+		$templatename = $this->getRequest()->getPost('templatename',NULL);
 		if ($templatename != null)
 		{
 			$template = TaskTemplate::getTemplateByName($templatename);
@@ -280,9 +281,9 @@ class UsertasksController extends Zend_Controller_Action
 			$this->view->singleAccountSelected = true;
 
 			$userId = $usersArr[0];
-			$platformAd = platforms::getPlatformAdByPersonId($userId);
-			$platformSs = platforms::getPlatformSmartschoolByPersonId($userId);
-			$platformGa = platforms::getPlatformGappByPersonId($userId);
+			$platformAd = PlatformAD::getPlatformConfigByPerson($userId);
+			$platformSs = NULL; //TODO!
+			$platformGa = NULL; //TODO!
 
 			// ad?
 			if ($platformAd != null)

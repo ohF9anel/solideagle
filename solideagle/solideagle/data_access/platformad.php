@@ -31,8 +31,34 @@ class PlatformAD
 		$cmd->addParam(":personid", $platformAD->getPersonId());
 		$cmd->addParam(":enabled", $platformAD->getEnabled());
 		$cmd->addParam(":homefolder_path", $platformAD->getHomedir());
-		
+		$cmd->BeginTransaction();
 		$cmd->execute();
+		$cmd->CommitTransaction();
+	}
+	
+	public static function getPlatformConfigByPerson($personid)
+	{
+		$sql = "SELECT
+					`platform_ad`.`person_id`,
+					`platform_ad`.`enabled`,
+					`platform_ad`.`homefolder_path`
+					FROM `CentralAccountDB`.`platform_ad`
+					WHERE `platform_ad`.`person_id` = :personid";
+		
+		$cmd = new DatabaseCommand($sql);
+		
+		if(($obj = $cmd->executeReader()->read()) === false)
+		{
+			return NULL;
+		}				
+
+		$ret = new PlatformAD();
+		
+		$ret->setEnabled($obj->enabled);
+		$ret->setPersonId($obj->person_id);
+		$ret->setHomedir($obj->homefolder_path);
+		
+		return $ret;
 	}
 
 	public function getHomedir()
