@@ -29,6 +29,7 @@ class Logger
 			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 			  	Logger::$logger  = &Log::singleton('file', 'c:\out.log', 'ident', Logger::$conf,$loglevel);
 			} else {
+				mkdir("/var/log/solideagle/");
 			   	Logger::$logger  = &Log::singleton('file', '/var/log/solideagle/out.log', 'ident', Logger::$conf,$loglevel);
 			}
 

@@ -64,7 +64,7 @@ class UsersController extends Zend_Controller_Action
 			}
 			$this->view->group = Group::getGroupById($this->view->person->getGroupId());
 		}
-		else
+		else //new user
 		{
 			$this->view->state = $this->view->stateNew;
 			$this->view->person = new Person(); //We don't want errors when rendering the form
@@ -137,6 +137,8 @@ class UsersController extends Zend_Controller_Action
 		$person->setAccountActiveUntill(DateConverter::DisplayDateTodbDate($this->getRequest()->getPost('AccountActiveUntill')));
 		$person->setOtherInformation($this->getRequest()->getPost('OtherInformation'));
 		$person->setUniqueIdentifier($this->getRequest()->getPost('uniqueIdentifier'));
+		$person->setGroupId($this->getRequest()->getPost('groupId'));
+		$person->setInformatId($this->getRequest()->getPost('informatId'));
 			
 		if(count($errors = Person::validatePerson($person)) > 0)
 		{

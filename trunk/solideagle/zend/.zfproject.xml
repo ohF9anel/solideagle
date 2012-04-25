@@ -61,6 +61,7 @@
         <controllerFile controllerName="Databasetasks">
           <actionMethod actionName="index"/>
           <actionMethod actionName="startclean"/>
+          <actionMethod actionName="initialAdImport"/>
         </controllerFile>
       </controllersDirectory>
       <formsDirectory enabled="false"/>
@@ -159,6 +160,9 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Databasetasks">
             <viewScriptFile forActionName="startclean"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Databasetasks">
+            <viewScriptFile forActionName="initialAdImport"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>

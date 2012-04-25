@@ -24,7 +24,8 @@ class Person
 	private $accountPassword;
 	private $accountActiveUntill;
 	private $accountActiveFrom;
-	private $uniqueIdentifier = NULL;
+	private $uniqueIdentifier;
+	private $informatId;
 	private $firstName;
 	private $name;
 	private $gender;
@@ -448,6 +449,7 @@ class Person
 		`account_username`,
 		`account_password`,
 		`uniqueIdentifier`,
+		`informatId`,
 		`account_active_untill`,
 		`account_active_from`,
 		`first_name`,
@@ -478,6 +480,7 @@ class Person
 		:account_username,
 		:account_password,
 		:uniqueIdentifier,
+		:informatId,
 		:account_active_untill,
 		:account_active_from,
 		:first_name,
@@ -510,6 +513,7 @@ class Person
 		$cmd->addParam(":account_username", $person->getAccountUsername());
 		$cmd->addParam(":account_password", $person->getAccountPassword());
 		$cmd->addParam(":uniqueIdentifier",$person->getUniqueIdentifier());
+		$cmd->addParam(":informatId",$person->getInformatId());
 		$cmd->addParam(":account_active_untill", $person->getAccountActiveUntill());
 		$cmd->addParam(":account_active_from", $person->getAccountActiveFrom());
 		$cmd->addParam(":first_name", $person->getFirstName());
@@ -596,6 +600,7 @@ class Person
 		`account_active_untill` = :account_active_untill,
 		`account_active_from` = :account_active_from,
 		`uniqueIdentifier` = :uniqueIdentifier,
+		`informatId` = :informatId,
 		`gender` = :gender,
 		`birth_date` = :birth_date,
 		`birth_place` = :birth_place,
@@ -621,6 +626,7 @@ class Person
 		//$cmd->addParam(":account_username", $person->getAccountUsername());
 		$cmd->addParam(":account_password", $person->getAccountPassword());
 		$cmd->addParam(":uniqueIdentifier", $person->getUniqueIdentifier());
+		$cmd->addParam(":informatId",$person->getInformatId());
 		$cmd->addParam(":account_active_untill", $person->getAccountActiveUntill());
 		$cmd->addParam(":account_active_from", $person->getAccountActiveFrom());
 		$cmd->addParam(":first_name", $person->getFirstName());
@@ -722,6 +728,7 @@ class Person
 		$person->setAccountUsername($retObj->account_username);
 		$person->setAccountPassword($retObj->account_password);
 		$person->setUniqueIdentifier($retObj->uniqueIdentifier);
+		$person->setInformatId($retObj->informatId);
 		$person->setAccountActiveUntill($retObj->account_active_untill);
 		$person->setAccountActiveFrom($retObj->account_active_from);
 		$person->setFirstName($retObj->first_name);
@@ -745,6 +752,7 @@ class Person
 		$person->setStudentPreviousSchool($retObj->student_previous_school);
 		$person->setStudentStamnr($retObj->student_stamnr);
 		$person->setParentOccupation($retObj->parent_occupation);
+		
 		$person->setGroupId($retObj->group_id);
 
 		$sql = "SELECT `type`.`id`, `type`.`type_name` FROM  `type_person`,
@@ -1311,6 +1319,16 @@ class Person
 	public function setUniqueIdentifier($uniqueIdentifier)
 	{
 	    $this->uniqueIdentifier = $uniqueIdentifier;
+	}
+
+	public function getInformatId()
+	{
+	    return $this->informatId;
+	}
+
+	public function setInformatId($informatId)
+	{
+	    $this->informatId = $informatId;
 	}
 }
 
