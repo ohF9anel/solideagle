@@ -51,9 +51,7 @@
                             } 
                         );
 
-            var tmpObj=new Object();
-            tmpObj.jspostArr= selectedArr;
-			$("#modalholder").load("<?php echo $this->SE_path . '/usertasks/getalltasksforuser' ?>", tmpObj);
+			$("#modalholder").load("<?php echo $this->SE_path . '/usertasks/getalltasksforuser' ?>", {jspostArr:selectedArr});
 		});
                 
         $("#TaskTemplatesLink").click(function(){

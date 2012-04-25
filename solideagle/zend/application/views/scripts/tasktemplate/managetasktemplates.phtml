@@ -2,8 +2,7 @@
 	$(function(){
             
             $('#taskTemplateModal').modal('show');
-
-         
+            
             $("#btnNewTemplate").click(function(){ 
                 $('#taskTemplateModal').modal('hide');
                 $("#modalholder").load("<?php echo $this->SE_path . '/usertasks/getalltasksforuser?addtemplate=true' ?>");
@@ -27,17 +26,14 @@
                    		.append($("<td>").append($("<span>").html(val)))
                    		.append($("<td>").append($("<a>").html("bewerken").click(function(){
                    			 $('#taskTemplateModal').modal('hide');
-                   		   var tmpObj=new Object();
-                           tmpObj.templatename= val;
-                                $("#modalholder").load("<?php echo $this->SE_path . '/usertasks/getalltasksforuser' ?>", tmpObj);
+                             $("#modalholder").load("<?php echo $this->SE_path . '/usertasks/getalltasksforuser' ?>",  {templatename:val});
                        	})))
                    		.append($("<td>").append($("<a>").html("verwijderen").click(function(){
                    			 var r = confirm("Verwijder takentemplate: " + val);
                                 if (r==true)
                                 {
-                                	 var tmpObj=new Object();
-                                     tmpObj.templatename= val;
-                                    $.post("<?php echo $this->SE_path . '/tasktemplate/removetasktemplate' ?>", tmpObj,function(){
+                                	
+                                    $.post("<?php echo $this->SE_path . '/tasktemplate/removetasktemplate' ?>", {templatename:val},function(){
                                     	loadTable();
                                     });
                                 }

@@ -98,11 +98,12 @@ class TaskTemplate
 		}
 
 		$template = new TaskTemplate();
-		$template->setTemplateName($rowdata->template_name);
-		$template->setTemplateConfig($rowdata->template_config);
+		$template->setTemplateName($obj->template_name);
+		$template->setTemplateConfig($obj->template_config);
 
+		
 
-		return $retarr;
+		return $template;
 
 	}
 
