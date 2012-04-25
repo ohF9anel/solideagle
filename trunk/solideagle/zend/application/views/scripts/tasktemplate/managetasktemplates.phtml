@@ -27,13 +27,17 @@
                    		.append($("<td>").append($("<span>").html(val)))
                    		.append($("<td>").append($("<a>").html("bewerken").click(function(){
                    			 $('#taskTemplateModal').modal('hide');
-                                $("#modalholder").load("<?php echo $this->SE_path . '/usertasks/getalltasksforuser' ?>", new makePostArray(val));
+                   		   var tmpObj=new Object();
+                           tmpObj.templatename= val;
+                                $("#modalholder").load("<?php echo $this->SE_path . '/usertasks/getalltasksforuser' ?>", tmpObj);
                        	})))
                    		.append($("<td>").append($("<a>").html("verwijderen").click(function(){
                    			 var r = confirm("Verwijder takentemplate: " + val);
                                 if (r==true)
                                 {
-                                    $.post("<?php echo $this->SE_path . '/tasktemplate/removetasktemplate' ?>", new makePostArray(val),function(){
+                                	 var tmpObj=new Object();
+                                     tmpObj.templatename= val;
+                                    $.post("<?php echo $this->SE_path . '/tasktemplate/removetasktemplate' ?>", tmpObj,function(){
                                     	loadTable();
                                     });
                                 }
@@ -44,9 +48,7 @@
                    });
 	}
 
-	 function makePostArray(jspost) {
-	  	this.templatename = jspost;
-     }
+	
 
 </script>
 

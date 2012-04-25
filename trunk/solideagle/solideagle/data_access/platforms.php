@@ -7,12 +7,14 @@ use solideagle\logging\Logger;
 
 
 //WTF!!!!!!!
+//zie: platformad.php voor correcte implementatie
 class platforms
 {
 	const PLATFORM_AD = "active directory";
 	const PLATFORM_SMARTSCHOOL = "smartschool";
 	const PLATFORM_GAPP = "google apps";
 
+	/*
 	// variables
 	private $platformType;
 	private $personId;
@@ -179,7 +181,7 @@ class platforms
 
 		return null;
 	}
-
+*/
 }
 
 ?>
