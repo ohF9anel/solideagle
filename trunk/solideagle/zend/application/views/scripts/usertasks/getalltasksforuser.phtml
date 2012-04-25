@@ -10,7 +10,7 @@ use solideagle\utilities\SuperEntities;
 
    		var manageTemplate = <?php echo $this->manageTemplate ?>;
               
-		if(manageTemplate)
+		if(!manageTemplate)
 		{
 			$(".selectUser:checked").each( 
 				function(k,v) { 
@@ -86,7 +86,8 @@ use solideagle\utilities\SuperEntities;
                 		 if(key=="templateConfig")
                 		 {
                 			 $.each(val, function(param, value) {
-                				$("#"+ param).attr("value",value);
+                				//$("#"+ param).attr("value",value);
+                 				
                 			 });
                 		 }
                     });

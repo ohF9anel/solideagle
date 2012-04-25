@@ -168,8 +168,6 @@ class UsertasksController extends Zend_Controller_Action
 					$uploadSharePath = $this->getRequest()->getPost("UploadSharePath",NULL);
 				}
 
-
-
 				foreach($users as $user)
 				{
 					solideagle\scripts\ad\homefoldermanager::prepareAddHomefolder($server, $homeFolderPath, $scanSharePath,
@@ -259,6 +257,11 @@ class UsertasksController extends Zend_Controller_Action
 
 		//check if we are called from template editor
 		$templatename = $this->getRequest()->getPost('templatename',NULL);
+		
+		$this->view->manageTemplate = 0;
+		$this->view->addtemplate = 0;
+		$this->view->templatename = null;
+		
 		if ($templatename != null)
 		{
 			/*$template = TaskTemplate::getTemplateByName($templatename);
