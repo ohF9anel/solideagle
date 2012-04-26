@@ -124,7 +124,7 @@ use solideagle\utilities\SuperEntities;
 
 <form
 	class="form-horizontal"
-	action="<?php echo $this->SE_path . "/usertasks/posttasks" ?>"
+	action="<?php echo $this->SE_path . "/usertasks/posttask" ?>"
 	method="post"
 	id="formTasks">
 
@@ -147,7 +147,7 @@ use solideagle\utilities\SuperEntities;
 
 			<div class="modal-body">
 
-				<?php if($this->manageTemplate)
+				<?php if($this->templatename != NULL || $this->manageTemplate)
                 {?>
 				<section id="tasktemplate">
 					<div class="page-header">
@@ -165,6 +165,7 @@ use solideagle\utilities\SuperEntities;
 								name="txtName"
 								class="input-xlarge"
 								type="text"
+								<?php echo $this->manageTemplate ? "" : "readonly = 'readonly'" ?>"
 								value="<?php  echo $this->templatename  ?>">
 						</div>
 					</div>
@@ -181,6 +182,9 @@ use solideagle\utilities\SuperEntities;
 					<div class="row">
 						<div class="span12">
 
+						
+				
+						
 							<?php if ($this->multipleAccountsSelected || !$this->hasAdAccount || $this->manageTemplate)
                             {?>
 							<label class="checkbox">

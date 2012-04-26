@@ -20,26 +20,19 @@ use solideagle\logging\Logger;
 class UsertasksController extends Zend_Controller_Action
 {
 
-	public function init()
-	{
+    public function init()
+    {
 	
-	}
+    }
 
-	public function indexAction()
-	{
+    public function indexAction()
+    {
 			
 
-	}
+    }
 
-	public function managetasktemplatesAction()
-	{
-			
-
-	}
-
-
-	public function posttasksAction()
-	{
+    public function posttaskAction()
+    {
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
 
@@ -217,10 +210,10 @@ class UsertasksController extends Zend_Controller_Action
 		}
 
 		return;
-	}
+    }
 
-	public function getalltasksforuserAction()
-	{
+    public function showtaskAction()
+    {
 		$this->_helper->layout()->disableLayout();
 
 		$this->view->defaults = new stdClass();
@@ -283,10 +276,17 @@ class UsertasksController extends Zend_Controller_Action
 			$this->view->addtemplate = true;
 			$this->view->manageTemplate = true;
 		}
+		else if((count($usersArr) > 1) || $tasksFromTemplate)
+		{
+			$this->view->multipleAccountsSelected = true;
+			$this->view->hasAdAccount = true;
+			$this->view->hasSsAccount = true;
+			$this->view->hasGappAccount = true;
+		}
 		// single user selected
 		else if(count($usersArr) < 2 && count($usersArr) > 0)
 		{
-			$this->view->singleAccountSelected = true;
+			$this->view->multipleAccountsSelected = false;
 
 			$userId = $usersArr[0];
 			$platformAd = PlatformAD::getPlatformConfigByPerson($userId);
@@ -320,22 +320,54 @@ class UsertasksController extends Zend_Controller_Action
 			else
 				$this->view->hasSSAccount = false;
 			// multiple accounts selected
-		}else if(count($usersArr > 1))
-		{
-			$this->view->multipleAccountsSelected = true;
-			$this->view->hasAdAccount = true;
-			$this->view->hasSsAccount = true;
-			$this->view->hasGappAccount = true;
 		}
 		else// geen
 		{
 			exit();
 		}
 
-	}
+    }
+
+    public function managetasktemplatesAction()
+    {
+      $this->_helper->layout()->disableLayout();
+    }
+    
+    public function removetasktemplateAction()
+    {
+    	$this->_helper->layout()->disableLayout();
+    	$this->_helper->viewRenderer->setNoRender(true);
+    
+    	if(($taskname = $this->getRequest()->getPost("templatename",false)))
+    	{
+    		TaskTemplate::delTaskTemplateByName($taskname);
+    	}
+    }
+    
+    public function gettemplatesAction()
+    {
+    	$this->_helper->layout()->disableLayout();
+    	$this->_helper->viewRenderer->setNoRender(true);
+    
+    	echo $this->templatesToJson(TaskTemplate::getAllTemplates());
+    	return;
+    }
+    
+    private function templatesToJson($templates)
+    {
+    	$finalarr = array();
+    	foreach($templates as $template)
+    	{
+    		$finalarr[] = $template->getTemplateName();
+    	}
+    
+    	return json_encode($finalarr);
+    }
 
 
 }
+
+
 
 
 
