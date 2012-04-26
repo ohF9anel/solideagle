@@ -42,7 +42,7 @@ use solideagle\utilities\SuperEntities;
 		}
 	
 		$("#formTasks").ajaxForm({
-			data:  {"users":users},
+			data:  {"users[]":users},
 			success: function(responseText, statusText, xhr, $form) { 
 				if(responseText.length > 0)
 				{

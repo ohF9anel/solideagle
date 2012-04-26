@@ -4,9 +4,8 @@ namespace solideagle\data_access;
 
 use solideagle\data_access\database\DatabaseCommand;
 
-class PlatformAD
+class PlatformSS
 {
-	private $homedir;
 	private $enabled = true;
 	private $personId;
 	
@@ -14,36 +13,34 @@ class PlatformAD
 	 * 
 	 * @param PlatformAD $platformAD
 	 */
-	public static function addToPlatform($platformAD)
+	public static function addToPlatform($platform)
 	{
-		$sql = "INSERT INTO `platform_ad`
+		$sql = "INSERT INTO `platform_ss`
 				(`person_id`,
-				`enabled`,
-				`homefolder_path`)
+				`enabled`)
 				VALUES
 				(
 				:personid,
-				:enabled,
-				:homefolder_path
+				:enabled
 				)";
 		
 		$cmd = new DatabaseCommand($sql);
-		$cmd->addParam(":personid", $platformAD->getPersonId());
-		$cmd->addParam(":enabled", $platformAD->getEnabled());
-		$cmd->addParam(":homefolder_path", $platformAD->getHomedir());
+		$cmd->addParam(":personid", $platform->getPersonId());
+		$cmd->addParam(":enabled", $platform->getEnabled());
+
 		$cmd->BeginTransaction();
 		$cmd->execute();
 		$cmd->CommitTransaction();
 	}
 	
+	
 	public static function getPlatformConfigByPersonId($personid)
 	{
 		$sql = "SELECT
-					`platform_ad`.`person_id`,
-					`platform_ad`.`enabled`,
-					`platform_ad`.`homefolder_path`
-					FROM `platform_ad`
-					WHERE `platform_ad`.`person_id` = :personid";
+					`platform_ss`.`person_id`,
+					`platform_ss`.`enabled`
+					FROM `platform_ss`
+					WHERE `platform_ss`.`person_id` = :personid";
 		
 		$cmd = new DatabaseCommand($sql);
 		
@@ -54,24 +51,16 @@ class PlatformAD
 			return NULL;
 		}				
 
-		$ret = new PlatformAD();
+		$ret = new PlatformSS();
 		
 		$ret->setEnabled($obj->enabled);
 		$ret->setPersonId($obj->person_id);
-		$ret->setHomedir($obj->homefolder_path);
+	
 		
 		return $ret;
 	}
 
-	public function getHomedir()
-	{
-	    return $this->homedir;
-	}
-
-	public function setHomedir($homedir)
-	{
-	    $this->homedir = $homedir;
-	}
+	
 
 	public function getEnabled()
 	{

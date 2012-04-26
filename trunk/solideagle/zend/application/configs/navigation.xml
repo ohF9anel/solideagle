@@ -36,11 +36,7 @@
 					<action>groupsandusers</action>
 				</groupsandusers>	
 				
-				<tasktemplates>
-					<label>Taak sjablonen</label>
-					<controller>usertasks</controller>
-					<action>index</action>
-				</tasktemplates>	
+				
 				
 				<importExport>
 					<label>Import &amp; Export</label>

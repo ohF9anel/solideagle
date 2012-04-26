@@ -102,14 +102,30 @@ class Type
 		$cmd ->executeReader()->readAll(function($rowdata) use (&$retarr){
 
 			$retarr[] = new Type($rowdata->id, $rowdata->type_name);
-
-
 		});
 		 
-		 
-		 
-		 
 		return $retarr;
+	}
+	
+	
+	public static function getTypesByPersonid($personid)
+	{
+		$sql = "SELECT `type`.`id`, `type`.`type_name` FROM  `type_person`,
+		`type`
+		WHERE `person_id` = :person_id
+		AND `type`.`id` = `type_person`.`type_id`
+		";
+		
+		$cmd = new DatabaseCommand($sql);
+		$cmd->addParam(":person_id", $personid);
+		
+		$retArr = array();
+		
+		$cmd->executeReader()->readAll(function($row) use (&$retArr) {
+			$retArr[] = new Type($row->id, $row->type_name);
+		});
+		
+		return $retArr;
 	}
 
 }

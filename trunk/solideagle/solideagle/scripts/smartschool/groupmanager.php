@@ -1,40 +1,35 @@
 <?php
-namespace smartschoolplugin;
+namespace solideagle\scripts\smartschool;
 
-require_once 'data_access/BaseTask.php';
-require_once 'data_access/TaskQueue.php';
 
-use DataAccess\BaseTask;
-use DataAccess\TaskQueue;
+use solideagle\data_access\TaskInterface;
 
 class groupmanager implements TaskInterface
 {
 	
-	public function __construct($taskid = NULL,$groupid= NULL)
-	{
-		parent::__construct($taskid, $groupid, parent::TypeGroup);
-	}
+
 	
-	public function getParams()
+	public static function prepareAddGroup($parents,$newgroup)
 	{
 		
 	}
 	
-	public function runTask($taskqueue)
-	{
-		$taskqueue->setErrormessages("smartschool not implemented yet");
-		return false;
-	}
-	
-	public function createTaskFromParams($params)
+	public static function prepareModifyGroup($parents,$oldgroup,$newgroup)
 	{
 	
 	}
 	
-	public function prepareAddGroup()
+	public static function prepareRemoveGroup($parents,$newgroup)
 	{
-		$this->addToQueue(array());
+	
 	}
+	
+	public static function prepareMoveGroup($oldparents,$newparents,$group)
+	{
+		
+	}
+	
+	
 	
 	
 	

@@ -1,5 +1,7 @@
 <?php
 
+use solideagle\data_access\PlatformSS;
+
 use solideagle\data_access\Group;
 
 use solideagle\data_access\PlatformAD;
@@ -32,7 +34,25 @@ class UsertasksController extends Zend_Controller_Action
 			
 
     }
-
+    
+    /**
+     * 
+     * @param Person $user
+     */
+    private function doTasksForUser($user)
+    {
+    	if($this->getRequest()->getPost('createSsAccount',false))
+    	{
+    		//does user have account?
+    		if(PlatformSS::getPlatformConfigByPersonId($user->getId())===NULL)
+    		{
+    			//he does not, make one
+    			solideagle\scripts\smartschool\usermanager::prepareAddUser($user);
+    		}
+    		
+    	}
+    }
+   
     public function posttaskAction()
     {
 		$this->_helper->layout()->disableLayout();
@@ -46,129 +66,22 @@ class UsertasksController extends Zend_Controller_Action
 				echo "Geen gebruikers geselecteerd!";
 				return;
 			}
-
-			$users = array();
-
-			foreach($this->getRequest()->getPost('users') as $userid)
+			
+			foreach(Person::getPersonsByIds($this->getRequest()->getPost('users')) as $user)
 			{
-				$users[] = Person::getPersonById($userid);
+			
+				$this->doTasksForUser($user);
 			}
+			
+			
 
-			/**
-			 * ACTIVE DIRECTORY
-			 */
-
-			if($this->getRequest()->getPost('createAdAccount',false))
+			/*foreach($this->getRequest()->getPost('users') as $userid)
 			{
-				foreach($users as $user)
-				{
-					solideagle\scripts\ad\usermanager::prepareAddUser($user);
-				}
-			}
-
-			if($this->getRequest()->getPost('deleteAdAccountSure',false))
-			{
-				foreach($users as $user)
-				{
-					solideagle\scripts\ad\usermanager::prepareDelUser($user);
-				}
-			}
-
-			// disable account?
-			if($this->getRequest()->getPost('blnAdDisable',false))
-			{
-				foreach($users as $user)
-				{
-					solideagle\scripts\ad\usermanager::prepareUpdateUser($user, false);
-				}
-			}
-
-			// enabled account?
-			if($this->getRequest()->getPost('blnAdEnable',false))
-			{
-				foreach($users as $user)
-				{
-					solideagle\scripts\ad\usermanager::prepareUpdateUser($user, true);
-				}
-			}
-
-			/**
-			 * SMARTSCHOOL
-			 */
-
-			// create account
-			if($this->getRequest()->getPost('createSSAccount',false))
-			{
-				foreach($users as $user)
-				{
-					solideagle\scripts\smartschool\usermanager::prepareAddUser($user);
-				}
-			}
-
-			/**
-			 * GOOGLE APPS
-			 */
-
-			// create account
-			if($this->getRequest()->getPost('createGappAccount',false))
-			{
-				foreach($users as $user)
-				{
-					solideagle\scripts\ga\usermanager::prepareAddUser($user);
-					solideagle\scripts\ga\usermanager::prepareAddUserToOu($user);
-				}
-			}
-
-			// remove account?
-			if($this->getRequest()->getPost('deleteGappAccountSure',false))
-			{
-				foreach($users as $user)
-				{
-					solideagle\scripts\ga\usermanager::prepareDelUser($user);
-				}
-			}
-
-			// disable account?
-			if($this->getRequest()->getPost('blnGappDisable',false))
-			{
-				foreach($users as $user)
-				{
-					solideagle\scripts\ga\usermanager::prepareUpdateUser($user, $user->getAccountUsername(), false);
-				}
-			}
-
-			// enable account?
-			if($this->getRequest()->getPost('blnGappEnable',false))
-			{
-				foreach($users as $user)
-				{
-					solideagle\scripts\ga\usermanager::prepareUpdateUser($user, $user->getAccountUsername(), true);
-				}
-			}
-
-			if($this->getRequest()->getPost('createAdHomedir',false))
-			{
-
-				$server = $this->getRequest()->getPost("HomefolderServer",NULL);
-				$homeFolderPath = $this->getRequest()->getPost("HomefolderPath",NULL);
-				$scanSharePath  = $this->getRequest()->getPost("ScanSharePath",NULL);
-				$wwwSharePath = $this->getRequest()->getPost("WWWSharePath",NULL);
-
-				//up & down folders
-				$downloadSharePath = NULL;
-				$uploadSharePath = NULL;
-				if($this->getRequest()->getPost('createUpDownFolders',false))
-				{
-					$downloadSharePath = $this->getRequest()->getPost("DownloadSharePath",NULL);
-					$uploadSharePath = $this->getRequest()->getPost("UploadSharePath",NULL);
-				}
-
-				foreach($users as $user)
-				{
-					solideagle\scripts\ad\homefoldermanager::prepareAddHomefolder($server, $homeFolderPath, $scanSharePath,
-							$wwwSharePath, $user,$uploadSharePath,$downloadSharePath);
-				}
-			}
+				$user = Person::getPersonById($userid);
+				
+				
+			}*/
+			
 		}
 		else if($this->getRequest()->getPost('submitBtn') == "addTemplate" || $this->getRequest()->getPost('submitBtn') == "editTemplate")
 		{
@@ -208,7 +121,6 @@ class UsertasksController extends Zend_Controller_Action
 			}
 			
 			TaskTemplate::addTaskTemplate($taskTemplate);
-				
 		}
 
 		return;
@@ -300,8 +212,8 @@ class UsertasksController extends Zend_Controller_Action
 			$this->view->multipleAccountsSelected = false;
 
 			$userId = $usersArr[0];
-			$platformAd = PlatformAD::getPlatformConfigByPerson($userId);
-			$platformSs = NULL; //TODO!
+			$platformAd = PlatformAD::getPlatformConfigByPersonId($userId);
+			$platformSs = PlatformSS::getPlatformConfigByPersonId($userId); 
 			$platformGa = NULL; //TODO!
 
 			// ad?
@@ -403,6 +315,126 @@ class UsertasksController extends Zend_Controller_Action
     	return $usersArr;
     }
 
+    //placeholder, do not use!
+    private function doUserThings()
+    {
+    	/**
+    	 * ACTIVE DIRECTORY
+    	 */
+    	 
+    	if($this->getRequest()->getPost('createAdAccount',false))
+    	{
+    		foreach($users as $user)
+    		{
+    			solideagle\scripts\ad\usermanager::prepareAddUser($user);
+    		}
+    	}
+    	 
+    	if($this->getRequest()->getPost('deleteAdAccountSure',false))
+    	{
+    		foreach($users as $user)
+    		{
+    			solideagle\scripts\ad\usermanager::prepareDelUser($user);
+    		}
+    	}
+    	 
+    	// disable account?
+    	if($this->getRequest()->getPost('blnAdDisable',false))
+    	{
+    		foreach($users as $user)
+    		{
+    			solideagle\scripts\ad\usermanager::prepareUpdateUser($user, false);
+    		}
+    	}
+    	 
+    	// enabled account?
+    	if($this->getRequest()->getPost('blnAdEnable',false))
+    	{
+    		foreach($users as $user)
+    		{
+    			solideagle\scripts\ad\usermanager::prepareUpdateUser($user, true);
+    		}
+    	}
+    	 
+    	/**
+    	 * SMARTSCHOOL
+    	 */
+    	 
+    	// create account
+    	if($this->getRequest()->getPost('createSSAccount',false))
+    	{
+    		foreach($users as $user)
+    		{
+    			solideagle\scripts\smartschool\usermanager::prepareAddUser($user);
+    		}
+    	}
+    	 
+    	/**
+    	 * GOOGLE APPS
+    	 */
+    	 
+    	// create account
+    	if($this->getRequest()->getPost('createGappAccount',false))
+    	{
+    		foreach($users as $user)
+    		{
+    			solideagle\scripts\ga\usermanager::prepareAddUser($user);
+    			solideagle\scripts\ga\usermanager::prepareAddUserToOu($user);
+    		}
+    	}
+    	 
+    	// remove account?
+    	if($this->getRequest()->getPost('deleteGappAccountSure',false))
+    	{
+    		foreach($users as $user)
+    		{
+    			solideagle\scripts\ga\usermanager::prepareDelUser($user);
+    		}
+    	}
+    	 
+    	// disable account?
+    	if($this->getRequest()->getPost('blnGappDisable',false))
+    	{
+    		foreach($users as $user)
+    		{
+    			solideagle\scripts\ga\usermanager::prepareUpdateUser($user, $user->getAccountUsername(), false);
+    		}
+    	}
+    	 
+    	// enable account?
+    	if($this->getRequest()->getPost('blnGappEnable',false))
+    	{
+    		foreach($users as $user)
+    		{
+    			solideagle\scripts\ga\usermanager::prepareUpdateUser($user, $user->getAccountUsername(), true);
+    		}
+    	}
+    	 
+    	if($this->getRequest()->getPost('createAdHomedir',false))
+    	{
+    		 
+    		$server = $this->getRequest()->getPost("HomefolderServer",NULL);
+    		$homeFolderPath = $this->getRequest()->getPost("HomefolderPath",NULL);
+    		$scanSharePath  = $this->getRequest()->getPost("ScanSharePath",NULL);
+    		$wwwSharePath = $this->getRequest()->getPost("WWWSharePath",NULL);
+    		 
+    		//up & down folders
+    		$downloadSharePath = NULL;
+    		$uploadSharePath = NULL;
+    		if($this->getRequest()->getPost('createUpDownFolders',false))
+    		{
+    			$downloadSharePath = $this->getRequest()->getPost("DownloadSharePath",NULL);
+    			$uploadSharePath = $this->getRequest()->getPost("UploadSharePath",NULL);
+    		}
+    		 
+    		foreach($users as $user)
+    		{
+    			solideagle\scripts\ad\homefoldermanager::prepareAddHomefolder($server, $homeFolderPath, $scanSharePath,
+    					$wwwSharePath, $user,$uploadSharePath,$downloadSharePath);
+    		}
+    	}
+    }
+    
 
 }
 

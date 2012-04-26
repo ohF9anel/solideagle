@@ -43,11 +43,15 @@
 		});
 
 		$("#TaskForUser").click(function(){
-           loadIntoModalholder("<?php echo $this->SE_path . '/usertasks/showtask' ?>", {selectedUsers:getSelectedUsers});
+			var selectedArr = getSelectedUsers();
+
+           loadIntoModalholder("<?php echo $this->SE_path . '/usertasks/showtask' ?>", {selectedUsers:selectedArr});
 		});
                 
         $("#TemplateTaskForUser").click(function(){
-            loadIntoModalholder("<?php echo $this->SE_path . '/Usertasks/managetasktemplates' ?>", {selectedUsers:getSelectedUsers});
+        	var selectedArr = getSelectedUsers();
+        	
+            loadIntoModalholder("<?php echo $this->SE_path . '/Usertasks/managetasktemplates' ?>", {selectedUsers:selectedArr});
 		});	
 
         $("#TaskForGroup").click(function(){
@@ -74,6 +78,7 @@
 	function getSelectedUsers()
 	{
 		var selectedArr = new Array();
+		
         $(".selectUser:checked").each( 
             function(k,v) { 
                 selectedArr.push($(v).attr("value"));

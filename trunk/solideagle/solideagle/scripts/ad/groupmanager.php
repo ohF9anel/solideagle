@@ -91,11 +91,11 @@ class groupmanager implements TaskInterface
         
     }
 
-    public static function prepareAddGroup($group)
+    public static function prepareAddGroup($parents,$group)
     {
         $config["action"] = self::ActionAdd;
         $config["group"] = $group;
-        $memberof = Group::getParents($group);
+        $memberof = $parents;
         if ($memberof != null)
         {
             $memberof = is_array($memberof) ? $memberof[0] : $memberof;

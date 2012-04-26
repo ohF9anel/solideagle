@@ -426,8 +426,6 @@ class Person
 	 */
 	public static function addPerson($person)
 	{
-		// $person->setAccountUsername(Person::tryCreateUsername($person));
-		// $person->setAccountPassword(Person::generatePassword());
 		$person->setMadeOn(DateConverter::timestampDateToDb(time()));
 			
 		$err = Person::validatePerson($person);
@@ -436,13 +434,6 @@ class Person
 			Logger::log("Person not validated before saving! Validation errors:\n" . var_export($err,true) . "\nPerson object dump:\n" . var_export($person,true) . "\n",PEAR_LOG_ERR);
 			return false;
 		}
-
-		/* if (sizeof($person->getTypes()) < 1)
-		 {
-		Logger::log("Person does not have any type(s)! \nPerson object dump:\n" . var_export($person,true) . "\n",PEAR_LOG_ERR);
-		return false;
-		}
-		*/
 
 		$sql = "INSERT INTO  `person`
 		(`id`,
@@ -649,7 +640,7 @@ class Person
 		$cmd->addParam(":student_previous_school", $person->getStudentPreviousSchool());
 		$cmd->addParam(":student_stamnr", $person->getStudentStamNr());
 		$cmd->addParam(":parent_occupation", $person->getParentOccupation());
-                $cmd->addParam(":group_id", $person->getGroupId());
+        $cmd->addParam(":group_id", $person->getGroupId());
 		$cmd->execute();
 
 		// updates person's type(s)
@@ -706,24 +697,14 @@ class Person
 		$cmd->execute();
 	}
 	
-
-	public static function getPersonById($id)
+	public static function createPersonByDbRow($retObj)
 	{
-		$sql = "SELECT * FROM  `person`
-		WHERE `id` = :id;";
-
-		$cmd = new DatabaseCommand($sql);
-		$cmd->addParam(":id", $id);
-
-		$reader = $cmd->executeReader();
-
-		$retObj = $reader->read();
 		
 		if($retObj === false)
 			return NULL;
-
+		
 		$person = new Person();
-
+		
 		$person->setId($retObj->id);
 		$person->setAccountUsername($retObj->account_username);
 		$person->setAccountPassword($retObj->account_password);
@@ -752,23 +733,59 @@ class Person
 		$person->setStudentPreviousSchool($retObj->student_previous_school);
 		$person->setStudentStamnr($retObj->student_stamnr);
 		$person->setParentOccupation($retObj->parent_occupation);
-		
 		$person->setGroupId($retObj->group_id);
-
-		$sql = "SELECT `type`.`id`, `type`.`type_name` FROM  `type_person`,
-		`type`
-		WHERE `person_id` = :person_id
-		AND `type`.`id` = `type_person`.`type_id`
-		";
-
-		$cmd->newQuery($sql);
-		$cmd->addParam(":person_id", $person->getId());
-
-		$cmd->executeReader()->readAll(function($row) use (&$person) {
-			$type = new Type($row->id, $row->type_name);
-			$person->addType($type);
+		
+		foreach(Type::getTypesByPersonid($person->getId()) as $ptype)
+		{
+			$person->addType($ptype);
+		}
+		
+		return $person;
+	}
+	
+	public static function getPersonsByIds($ids)
+	{
+		$params = "";
+		for($i=0;$i<count($ids);$i++)
+		{
+			$params.= ",:param" . $i;
+		}
+		
+		//cut off first semicol
+		$params = substr($params, 1);
+		
+		$sql = "SELECT * FROM  `person`
+		WHERE `id` IN (" .$params. ")";
+		
+		$cmd = new DatabaseCommand($sql);
+		for($i=0;$i<count($ids);$i++)
+		{
+			$cmd->addParam(":param".$i, $ids[$i]);
+		}
+		
+		$retarr = array();
+		
+		$cmd->executeReader()->readAll(function($row) use (&$retarr){
+			$retarr[] = Person::createPersonByDbRow($row);
 		});
-			
+		
+		return $retarr;
+	}
+
+	public static function getPersonById($id)
+	{
+		$sql = "SELECT * FROM  `person`
+		WHERE `id` = :id;";
+
+		$cmd = new DatabaseCommand($sql);
+		$cmd->addParam(":id", $id);
+
+		$reader = $cmd->executeReader();
+
+		$retObj = $reader->read();
+		
+		$person = self::createPersonByDbRow($retObj);
+
 		return $person;
 	}
 
@@ -807,6 +824,10 @@ class Person
 
 	
 	//TODO check if uniqueident is unqiue, and username does not yet exist
+	/**
+	 * 
+	 * @param Person $person
+	 */
 	public static function validatePerson($person)
 	{
 		$validationErrors = array();
@@ -1140,6 +1161,11 @@ class Person
 					$validationErrors[] = "Stamnummer student: fout."; break;
 			}
 		}
+		
+		if($person->getGroupId()===NULL)
+		{
+			$validationErrors[] = "Gebruiker heeft geen groep!";
+		}
 
 		return $validationErrors;
 	}
@@ -1335,7 +1361,7 @@ class Person
 	{
 		$sql = "SELECT
 				`person`.`id`
-				FROM `CentralAccountDB`.`person`;
+				FROM `person`;
 				WHERE `person`.`group_id` = :groupId";
 		
 		$cmd = new DatabaseCommand($sql);
