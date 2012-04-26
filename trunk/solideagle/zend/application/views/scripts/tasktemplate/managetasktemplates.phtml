@@ -24,9 +24,13 @@
                    	 $.each(data, function(key, val) {
                    		 $("<tr>")
                    		.append($("<td>").append($("<span>").html(val)))
+                   		.append($("<td>").append($("<a>").html("uitvoeren").click(function(){
+                   			 $('#taskTemplateModal').modal('hide');
+                             $("#modalholder").load("<?php echo $this->SE_path . '/usertasks/getalltasksforuser' ?>",  {templatename:val,fromTemplate:true});
+                       	})))
                    		.append($("<td>").append($("<a>").html("bewerken").click(function(){
                    			 $('#taskTemplateModal').modal('hide');
-                             $("#modalholder").load("<?php echo $this->SE_path . '/usertasks/getalltasksforuser' ?>",  {templatename:val});
+                             $("#modalholder").load("<?php echo $this->SE_path . '/usertasks/getalltasksforuser' ?>",  {templatename:val,editTemplate:true});
                        	})))
                    		.append($("<td>").append($("<a>").html("verwijderen").click(function(){
                    			 var r = confirm("Verwijder takentemplate: " + val);
@@ -67,7 +71,7 @@
 
 					
 					<table class="table" id="tasktable">
-
+					
 
 
 					</table>

@@ -22,7 +22,7 @@ class UsertasksController extends Zend_Controller_Action
 
 	public function init()
 	{
-		/* Initialize action controller here */
+	
 	}
 
 	public function indexAction()
@@ -175,66 +175,45 @@ class UsertasksController extends Zend_Controller_Action
 				}
 			}
 		}
-		else if($this->getRequest()->getPost('submitBtn') == "addTemplate")
+		else if($this->getRequest()->getPost('submitBtn') == "addTemplate" || $this->getRequest()->getPost('submitBtn') == "editTemplate")
 		{
 			$taskTemplate = new TaskTemplate();
 			$taskTemplate->setTemplateName($this->getRequest()->getPost('txtName'));
+			
+			$configstdclass = new stdClass();
 
-			$templateConfigArr['createAdAccount'] = $this->getRequest()->getPost('createAdAccount');
-			$templateConfigArr['deleteAdAccount'] = $this->getRequest()->getPost('deleteAdAccount');
-			$templateConfigArr['blnAdDisable'] = $this->getRequest()->getPost('blnAdDisable');
-			$templateConfigArr['blnAdEnable'] = $this->getRequest()->getPost('blnAdEnable');
-			$templateConfigArr['createAdHomedir'] = $this->getRequest()->getPost('createAdHomedir');
-			$templateConfigArr['HomefolderServer'] = $this->getRequest()->getPost('HomefolderServer');
-			$templateConfigArr['HomefolderPath'] = $this->getRequest()->getPost('HomefolderPath');
-			$templateConfigArr['ScanSharePath'] = $this->getRequest()->getPost('ScanSharePath');
-			$templateConfigArr['WWWSharePath'] = $this->getRequest()->getPost('WWWSharePath');
-			$templateConfigArr['createUpDownFolders'] = $this->getRequest()->getPost('createUpDownFolders');
-			$templateConfigArr['UploadSharePath'] = $this->getRequest()->getPost('UploadSharePath');
-			$templateConfigArr['DownloadSharePath'] = $this->getRequest()->getPost('DownloadSharePath');
-			$templateConfigArr['blnMoveHomeDir'] = $this->getRequest()->getPost('blnMoveHomeDir');
-			$templateConfigArr['createSsAccount'] = $this->getRequest()->getPost('createSsAccount');
-			$templateConfigArr['deleteSsAccount'] = $this->getRequest()->getPost('deleteSsAccount');
-			$templateConfigArr['blnSsDisable'] = $this->getRequest()->getPost('blnSsDisable');
-			$templateConfigArr['blnSsEnable'] = $this->getRequest()->getPost('blnSsEnable');
-			$templateConfigArr['createGappAccount'] = $this->getRequest()->getPost('createGappAccount');
-			$templateConfigArr['deleteGappAccount'] = $this->getRequest()->getPost('deleteGappAccount');
-			$templateConfigArr['blnGappDisable'] = $this->getRequest()->getPost('blnGappDisable');
-			$templateConfigArr['blnGappEnable'] = $this->getRequest()->getPost('blnGappEnable');
-
-			$taskTemplate->setTemplateConfig($templateConfigArr);
+			$configstdclass->createAdAccount = $this->getRequest()->getPost('createAdAccount');
+			$configstdclass->deleteAdAccount = $this->getRequest()->getPost('deleteAdAccount');
+			$configstdclass->disableAdAccount = $this->getRequest()->getPost('disableAdAccount');
+			$configstdclass->enableAdAccount = $this->getRequest()->getPost('enableAdAccount');
+			$configstdclass->createAdHomedir = $this->getRequest()->getPost('createAdHomedir');
+			$configstdclass->homefolderServer = $this->getRequest()->getPost('homefolderServer');
+			$configstdclass->homefolderPath = $this->getRequest()->getPost('homefolderPath');
+			$configstdclass->scanSharePath = $this->getRequest()->getPost('scanSharePath');
+			$configstdclass->wwwSharePath = $this->getRequest()->getPost('wwwSharePath');
+			$configstdclass->createUpDownFolders = $this->getRequest()->getPost('createUpDownFolders');
+			$configstdclass->uploadSharePath = $this->getRequest()->getPost('uploadSharePath');
+			$configstdclass->downloadSharePath = $this->getRequest()->getPost('downloadSharePath');
+			$configstdclass->moveAdHomedir = $this->getRequest()->getPost('moveAdHomedir');
+			$configstdclass->createSsAccount = $this->getRequest()->getPost('createSsAccount');
+			$configstdclass->deleteSsAccount = $this->getRequest()->getPost('deleteSsAccount');
+			$configstdclass->disableSsAccount = $this->getRequest()->getPost('disableSsAccount');
+			$configstdclass->enableSsAccount = $this->getRequest()->getPost('enableSsAccount');
+			$configstdclass->createGappAccount = $this->getRequest()->getPost('createGappAccount');
+			$configstdclass->deleteGappAccount = $this->getRequest()->getPost('deleteGappAccount');
+			$configstdclass->disableGappAccount = $this->getRequest()->getPost('disableGappAccount');
+			$configstdclass->enableGappAccount = $this->getRequest()->getPost('enableGappAccount');
+			
+			$taskTemplate->setTemplateConfig($configstdclass);
+			
+			if($this->getRequest()->getPost('submitBtn') == "editTemplate")
+			{
+				//bit unorthodox but will have to do for now
+				TaskTemplate::delTaskTemplateByName($this->getRequest()->getPost('txtName'));
+			}
+			
 			TaskTemplate::addTaskTemplate($taskTemplate);
-		}
-		else if($this->getRequest()->getPost('submitBtn') == "editTemplate")
-		{
-			$taskTemplate = new TaskTemplate();
-			$taskTemplate->setTemplateName($this->getRequest()->getPost('txtName'));
-
-			$templateConfigArr['createAdAccount'] = $this->getRequest()->getPost('createAdAccount');
-			$templateConfigArr['deleteAdAccount'] = $this->getRequest()->getPost('deleteAdAccount');
-			$templateConfigArr['blnAdDisable'] = $this->getRequest()->getPost('blnAdDisable');
-			$templateConfigArr['blnAdEnable'] = $this->getRequest()->getPost('blnAdEnable');
-			$templateConfigArr['createAdHomedir'] = $this->getRequest()->getPost('createAdHomedir');
-			$templateConfigArr['HomefolderServer'] = $this->getRequest()->getPost('HomefolderServer');
-			$templateConfigArr['HomefolderPath'] = $this->getRequest()->getPost('HomefolderPath');
-			$templateConfigArr['ScanSharePath'] = $this->getRequest()->getPost('ScanSharePath');
-			$templateConfigArr['WWWSharePath'] = $this->getRequest()->getPost('WWWSharePath');
-			$templateConfigArr['createUpDownFolders'] = $this->getRequest()->getPost('createUpDownFolders');
-			$templateConfigArr['UploadSharePath'] = $this->getRequest()->getPost('UploadSharePath');
-			$templateConfigArr['DownloadSharePath'] = $this->getRequest()->getPost('DownloadSharePath');
-			$templateConfigArr['blnMoveHomeDir'] = $this->getRequest()->getPost('blnMoveHomeDir');
-			$templateConfigArr['createSsAccount'] = $this->getRequest()->getPost('createSsAccount');
-			$templateConfigArr['deleteSsAccount'] = $this->getRequest()->getPost('deleteSsAccount');
-			$templateConfigArr['blnSsDisable'] = $this->getRequest()->getPost('blnSsDisable');
-			$templateConfigArr['blnSsEnable'] = $this->getRequest()->getPost('blnSsEnable');
-			$templateConfigArr['createGappAccount'] = $this->getRequest()->getPost('createGappAccount');
-			$templateConfigArr['deleteGappAccount'] = $this->getRequest()->getPost('deleteGappAccount');
-			$templateConfigArr['blnGappDisable'] = $this->getRequest()->getPost('blnGappDisable');
-			$templateConfigArr['blnGappEnable'] = $this->getRequest()->getPost('blnGappEnable');
-
-			$taskTemplate->setTemplateConfig($templateConfigArr);
-			TaskTemplate::delTaskTemplateByName($this->getRequest()->getPost('txtName'));
-			TaskTemplate::addTaskTemplate($taskTemplate);
+				
 		}
 
 		return;
@@ -246,34 +225,60 @@ class UsertasksController extends Zend_Controller_Action
 
 		$this->view->defaults = new stdClass();
 
-		$this->view->defaults->server = Config::singleton()->ssh_server;
-		$this->view->defaults->serverpath = Config::singleton()->path_homefolders;
-		$this->view->defaults->scanpath = Config::singleton()->path_share_scans;
-		$this->view->defaults->wwwpath = Config::singleton()->path_share_www;
-		$this->view->defaults->downloadpath =   Config::singleton()->path_share_downloads;
-		$this->view->defaults->uploadpath =  Config::singleton()->path_share_uploads;
-
-		$usersArr = $this->getRequest()->getPost('jspostArr',array());
-
-		//check if we are called from template editor
-		$templatename = $this->getRequest()->getPost('templatename',NULL);
+		$this->view->defaults->homefolderServer = Config::singleton()->ssh_server;
+		$this->view->defaults->homefolderPath = Config::singleton()->path_homefolders;
+		$this->view->defaults->scanSharePath = Config::singleton()->path_share_scans;
+		$this->view->defaults->wwwSharePath = Config::singleton()->path_share_www;
+		$this->view->defaults->downloadSharePath =   Config::singleton()->path_share_downloads;
+		$this->view->defaults->uploadSharePath =  Config::singleton()->path_share_uploads;
+		$this->view->defaults->createAdAccount = false;
+		$this->view->defaults->deleteAdAccount = false;
+		$this->view->defaults->disableAdAccount = false;
+		$this->view->defaults->enableAdAccount = false;
+		$this->view->defaults->createAdHomedir = false;
+		$this->view->defaults->createUpDownFolders = false;
+		$this->view->defaults->moveAdHomedir = false;
+		$this->view->defaults->createSsAccount = false;
+		$this->view->defaults->deleteSsAccount = false;
+		$this->view->defaults->disableSsAccount = false;
+		$this->view->defaults->enableSsAccount = false;
+		$this->view->defaults->createGappAccount = false;
+		$this->view->defaults->deleteGappAccount = false;
+		$this->view->defaults->disableGappAccount = false;
+		$this->view->defaults->enableGappAccount = false;
 		
+		//get users
+		$usersArr = $this->getRequest()->getPost('selectedUsers',array());
+
+		//get template name
+		$templatename = $this->getRequest()->getPost('templatename',NULL);
+		$this->view->templatename = $templatename;
+		
+		//create task from template
+		$tasksFromTemplate =  $this->getRequest()->getPost('fromTemplate',false);
+		
+		//are we called from template edit link?
+		$edittemplate = $this->getRequest()->getPost('editTemplate',false);
+		
+		$addtemplate = $this->getRequest()->getParam('addtemplate',false);
+
+		//init
 		$this->view->manageTemplate = 0;
 		$this->view->addtemplate = 0;
-		$this->view->templatename = null;
-		
-		if ($templatename != null)
-		{
-			/*$template = TaskTemplate::getTemplateByName($templatename);
-			$this->view->template = $template;
+		$this->view->hasAdAccount = 0;
+		$this->view->hasSsAccount = 0;
+		$this->view->hasGappAccount = 0;
 
-			$config = $template->getTemplateConfig();
-			$this->view->config = $config;*/
-			
-			$this->view->templatename = $templatename;
+		if($templatename != null)
+		{
+			$this->view->defaults = TaskTemplate::getTemplateByName($templatename)->getTemplateConfig();
+		}
+		
+		if ($edittemplate)
+		{
 			$this->view->manageTemplate = true;
 		}
-		else if($this->getRequest()->getParam('addtemplate') != null)
+		else if($addtemplate)
 		{
 			$this->view->addtemplate = true;
 			$this->view->manageTemplate = true;
@@ -318,16 +323,14 @@ class UsertasksController extends Zend_Controller_Action
 		}else if(count($usersArr > 1))
 		{
 			$this->view->multipleAccountsSelected = true;
-
 			$this->view->hasAdAccount = true;
-
 			$this->view->hasSsAccount = true;
-
 			$this->view->hasGappAccount = true;
 		}
-		// geen
-		else
+		else// geen
+		{
 			exit();
+		}
 
 	}
 

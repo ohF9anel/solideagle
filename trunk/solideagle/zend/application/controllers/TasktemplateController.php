@@ -33,20 +33,14 @@ class TaskTemplateController extends Zend_Controller_Action
 
 	}
         
-        public function managetemplatesAction()
+    public function managetemplatesAction()
 	{
-		 
 
 	}
-
-
+	
 	public function managetasktemplatesAction()
 	{
 		$this->_helper->layout()->disableLayout();
-
-		$this->view->defaults = new stdClass();
-
-     //  $this->view->taskTemplates = $this->templatesToJson(TaskTemplate::getAllTemplates());
 	}
 	
 	public function removetasktemplateAction()
@@ -73,9 +67,7 @@ class TaskTemplateController extends Zend_Controller_Action
 	{
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
-		
-		
-		
+
 		if(($taskttname = $this->getRequest()->getParam("templatename",false)))
 		{
 			echo TaskTemplate::getTemplateByName($taskttname)->getJson();
