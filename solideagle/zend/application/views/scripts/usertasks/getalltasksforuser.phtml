@@ -5,6 +5,15 @@ use solideagle\utilities\SuperEntities;
 
 <script>
 	$(function(){
+
+
+		/*var total = "";
+		$("input").each(function(k,v){
+
+			total += $(this).attr("name") + "\n";
+		});
+
+		alert(total);*/
             
    		var selectedArr = new Array();
 
@@ -51,7 +60,7 @@ use solideagle\utilities\SuperEntities;
             // manage templates
                        
                                 $('#myModal').modal('show');
-                                loadTemplate('<?php echo $this->templatename ?>');
+                             
                                 $("#deleteadsure").hide();
                                 $("#deletesssure").hide();
                                 $("#deletegappsure").hide();
@@ -77,7 +86,7 @@ use solideagle\utilities\SuperEntities;
 		
 	});
 
-	function loadTemplate(templatename)
+	<?php /*function loadTemplate(templatename)
 	{
 		$.getJSON("<?php echo $this->SE_path . '/tasktemplate/gettemplate' ?>",{'templatename':templatename} ,
 
@@ -86,14 +95,31 @@ use solideagle\utilities\SuperEntities;
                 		 if(key=="templateConfig")
                 		 {
                 			 $.each(val, function(param, value) {
-                				//$("#"+ param).attr("value",value);
+
+                    			var elem = $("#"+ param);
+                    			
+                    			if(elem.attr("type") == "text")
+                    			{
+                        			alert("TEXT: " + elem + " " + value)
+                    				elem.attr("value",value);
+                    			}else if(elem.attr("type") == "checkbox")
+                    			{                			
+                        			if(value)
+                        			{
+                        				elem.attr("checked","checked");
+                        			}
+                    				
+                    			}else{
+                    				alert("UNK: " + elem.attr("type")  + " " + value)
+                    			}
+                				
                  				
                 			 });
                 		 }
                     });
                 }
         );
-	}
+	}*/ ?>
 </script>
 
 <form
@@ -111,19 +137,18 @@ use solideagle\utilities\SuperEntities;
 					class="close"
 					data-dismiss="modal">×</a>
 				<?php if($this->manageTemplate)
-                                {?>
+                {?>
 				<h3 id="modaltitle">Beheer taak templates</h3>
 				<?php
-                                }else
-                                {?>
+                }else{?>
 				<h3 id="modaltitle">Taken uitvoeren</h3>
-				<?php
-                                }?>
+				<?php }?>
 			</div>
+
 			<div class="modal-body">
 
 				<?php if($this->manageTemplate)
-                            {?>
+                {?>
 				<section id="tasktemplate">
 					<div class="page-header">
 						<h1>Taken templates</h1>
@@ -140,14 +165,11 @@ use solideagle\utilities\SuperEntities;
 								name="txtName"
 								class="input-xlarge"
 								type="text"
-								value="<?php echo $this->template != null ? $this->template->getTemplateName() : "" ?>">
+								value="<?php  echo $this->templatename  ?>">
 						</div>
 					</div>
-
-
 				</section>
-				<?php
-                            }?>
+				<?php }?>
 
 				<section id="activedirectory">
 					<div class="page-header">
@@ -160,18 +182,21 @@ use solideagle\utilities\SuperEntities;
 						<div class="span12">
 
 							<?php if ($this->multipleAccountsSelected || !$this->hasAdAccount || $this->manageTemplate)
-                                                    {?>
+                            {?>
 							<label class="checkbox">
 								<input
 									name="createAdAccount"
 									id="createAdAccount"
 									type="checkbox"
-									<?php echo $this->config['createAdAccount'] != null ? ("checked=" . $this->config['createAdAccount']) : "" ?>>
+									<?php echo $this->defaults->createAdAccount ? "checked='checked'" : "" ?>>
 								Account maken
 							</label>
+
 							<?php 
-                                                    }if ($this->multipleAccountsSelected || $this->hasAdAccount || $this->manageTemplate)
-                                                    {?>
+                            }
+
+                            if ($this->multipleAccountsSelected || $this->hasAdAccount || $this->manageTemplate)
+                            {?>
 							<label class="checkbox">
 								Account verwijderen
 								<input
@@ -179,7 +204,7 @@ use solideagle\utilities\SuperEntities;
 									id="blnDeleteAd"
 									type="checkbox"
 									value="false"
-									<?php echo $this->config['deleteAdAccount'] != null ? ("checked=" . $this->config['deleteAdAccount']) : "" ?>>
+									<?php echo $this->defaults->deleteAdAccount ? "checked='checked'" : "" ?>>
 							</label>
 							<div
 								class="control-group error"
@@ -196,29 +221,31 @@ use solideagle\utilities\SuperEntities;
 								</label>
 							</div>
 							<?php
-                                                    }if ($this->multipleAccountsSelected || $this->hasAdAccountEnabled || $this->manageTemplate)
-                                                    {?>
+                            }
+                            if ($this->multipleAccountsSelected || $this->hasAdAccountEnabled || $this->manageTemplate)
+                           	{?>
 							<label class="checkbox">
 								Account deactiveren
 								<input
-									name="blnAdDisable"
+									name="disableAdAccount"
 									id="blnAdDisable"
 									type="checkbox"
-									<?php echo $this->config['blnAdDisable'] != null ? ("checked=" . $this->config['blnAdDisable']) : "" ?>>
+									<?php echo $this->defaults->disableAdAccount ? "checked='checked'" : "" ?>>
 							</label>
 							<?php
-                                                    }if($this->multipleAccountsSelected || !$this->hasAdAccountEnabled || $this->manageTemplate)
-                                                    {?>
+                           	}
+                           	if($this->multipleAccountsSelected || !$this->hasAdAccountEnabled || $this->manageTemplate)
+                            {?>
 							<label class="checkbox">
 								Account activeren
 								<input
-									name="blnAdEnable"
+									name="enableAdAccount"
 									id="blnAdEnable"
 									type="checkbox"
-									<?php echo $this->config['blnAdEnable'] != null ? ("checked=" . $this->config['blnAdEnable']) : "" ?>>
+									<?php echo $this->defaults->enableAdAccount ? "checked='checked'" : "" ?>>
 							</label>
 							<?php
-                                                    }?>
+                            }?>
 
 							<label class="checkbox">
 								<input
@@ -227,7 +254,7 @@ use solideagle\utilities\SuperEntities;
 									data-toggle="collapse"
 									data-target="#adHomeDirParams"
 									value="true"
-									<?php echo $this->config['createAdHomedir'] != null ? ("checked=" . $this->config['createAdHomedir']) : "" ?>>
+									<?php echo $this->defaults->createAdHomedir ? "checked='checked'" : "" ?>>
 								Homedir maken
 							</label>
 
@@ -244,10 +271,10 @@ use solideagle\utilities\SuperEntities;
 										<div class="controls">
 											<input
 												id="server"
-												name="HomefolderServer"
+												name="homefolderServer"
 												class="input-xlarge"
 												type="text"
-												value="<?php echo $this->config['HomefolderServer'] != null ? $this->config['HomefolderServer'] : SuperEntities::encode($this->defaults->server); ?>">
+												value="<?php echo SuperEntities::encode($this->defaults->homefolderServer); ?>">
 											<p class="help-block ">
 												<i>server.domain.example</i>
 											</p>
@@ -262,10 +289,10 @@ use solideagle\utilities\SuperEntities;
 											<div class="input-append">
 												<input
 													id="serverpath"
-													name="HomefolderPath"
+													name="homefolderPath"
 													class="input-xlarge"
 													type="text"
-													value="<?php echo $this->config['HomefolderPath'] != null ? $this->config['HomefolderPath'] : SuperEntities::encode($this->defaults->serverpath); ?>">
+													value="<?php SuperEntities::encode($this->defaults->homefolderPath); ?>">
 												<span class="add-on">\janssensj</span>
 												<p class="help-block ">
 													<i>c:\pad\naar\homefolders</i>
@@ -281,10 +308,10 @@ use solideagle\utilities\SuperEntities;
 										<div class="controls">
 											<input
 												id="scanpath"
-												name="ScanSharePath"
+												name="scanSharePath"
 												class="input-xlarge"
 												type="text"
-												value="<?php echo $this->config['ScanSharePath'] != null ? $this->config['ScanSharePath'] : SuperEntities::encode($this->defaults->scanpath); ?>">
+												value="<?php SuperEntities::encode($this->defaults->scanSharePath); ?>">
 											<p class="help-block ">
 												<i>c:\pad\naar\scanshare</i>
 											</p>
@@ -298,10 +325,10 @@ use solideagle\utilities\SuperEntities;
 										<div class="controls">
 											<input
 												id="wwwpath"
-												name="WWWSharePath"
+												name="wwwSharePath"
 												class="input-xlarge"
 												type="text"
-												value="<?php echo $this->config['WWWSharePath'] != null ? $this->config['WWWSharePath'] : SuperEntities::encode($this->defaults->wwwpath); ?>">
+												value="<?php SuperEntities::encode($this->defaults->wwwSharePath); ?>">
 											<p class="help-block ">
 												<i>c:\pad\naar\wwwshare</i>
 											</p>
@@ -319,7 +346,7 @@ use solideagle\utilities\SuperEntities;
 									data-toggle="collapse"
 									data-target="#adUpDownParams"
 									value="true"
-									<?php echo $this->config['createUpDownFolders'] != null ? ("checked=" . $this->config['createUpDownFolders']) : "" ?>>
+									<?php echo $this->defaults->createUpDownFolders ? "checked='checked'" : "" ?>>
 								Upload &amp; Downloadfolders maken
 							</label>
 
@@ -336,10 +363,10 @@ use solideagle\utilities\SuperEntities;
 										<div class="controls">
 											<input
 												id="server"
-												name="UploadSharePath"
+												name="uploadSharePath"
 												class="input-xlarge"
 												type="text"
-												value="<?php echo $this->config['UploadSharePath'] != null ? $this->config['UploadSharePath'] : SuperEntities::encode($this->defaults->uploadpath); ?>">
+												value="<?php echo SuperEntities::encode($this->defaults->uploadSharePath); ?>">
 											<p class="help-block ">
 												<i>c:\pad\naar\upload</i>
 											</p>
@@ -351,10 +378,10 @@ use solideagle\utilities\SuperEntities;
 										<div class="controls">
 											<input
 												id="server"
-												name="DownloadSharePath"
+												name="downloadSharePath"
 												class="input-xlarge"
 												type="text"
-												value="<?php echo $this->config['DownloadSharePath'] != null ? $this->config['DownloadSharePath'] : SuperEntities::encode($this->defaults->downloadpath); ?>">
+												value="<?php echo SuperEntities::encode($this->defaults->downloadSharePath); ?>">
 											<p class="help-block ">
 												<i>c:\pad\naar\download</i>
 											</p>
@@ -368,10 +395,10 @@ use solideagle\utilities\SuperEntities;
 
 							<label class="checkbox">
 								<input
-									name="blnMoveHomeDir"
+									name="moveAdHomedir"
 									type="checkbox"
-									value=""
-									<?php echo $this->config['createAdHomedir'] != null ? ("checked=" . $this->config['createAdHomedir']) : "" ?>>
+									value="true"
+									<?php echo $this->defaults->moveAdHomedir ? "checked='checked'" : "" ?>>
 								Homedir verplaatsen
 							</label>
 
@@ -390,18 +417,19 @@ use solideagle\utilities\SuperEntities;
 						<div class="span12">
 
 							<?php if ($this->multipleAccountsSelected || !$this->hasSsAccount || $this->manageTemplate)
-                                                    {?>
+                            {?>
 							<label class="checkbox">
 								<input
 									name="createSsAccount"
 									type="checkbox"
 									value="true"
-									<?php echo $this->config['createSsAccount'] != null ? ("checked=" . $this->config['createSsAccount']) : "" ?>>
+									<?php echo $this->defaults->createSsAccount ? "checked='checked'" : "" ?>>
 								Account maken
 							</label>
 							<?php 
-                                                    }if ($this->multipleAccountsSelected || $this->hasSsAccount || $this->manageTemplate)
-                                                    {?>
+                            }
+                            if ($this->multipleAccountsSelected || $this->hasSsAccount || $this->manageTemplate)
+                            {?>
 							<label class="checkbox">
 								Account verwijderen
 								<input
@@ -409,7 +437,7 @@ use solideagle\utilities\SuperEntities;
 									id="blnDeleteSs"
 									type="checkbox"
 									value="false"
-									<?php echo $this->config['deleteSsAccount'] != null ? ("checked=" . $this->config['deleteSsAccount']) : "" ?>>
+									<?php echo $this->defaults->deleteSsAccount ? "checked='checked'" : "" ?>>
 							</label>
 							<div
 								class="control-group error"
@@ -431,24 +459,25 @@ use solideagle\utilities\SuperEntities;
 							<label class="checkbox">
 								Account deactiveren
 								<input
-									name="blnSsDisable"
+									name="disableSsAccount"
 									id="blnSsDisable"
 									type="checkbox"
-									<?php echo $this->config['blnSsDisable'] != null ? ("checked=" . $this->config['blnSsDisable']) : "" ?>>
+									<?php echo $this->defaults->disableSsAccount ? "checked='checked'" : "" ?>>
 							</label>
 							<?php
-                                                    }if($this->multipleAccountsSelected || !$this->hasSsAccountEnabled || $this->manageTemplate)
-                                                    {?>
+                            }
+                            if($this->multipleAccountsSelected || !$this->hasSsAccountEnabled || $this->manageTemplate)
+                            {?>
 							<label class="checkbox">
 								Account activeren
 								<input
-									name="blnSsEnable"
+									name="enableSsAccount"
 									id="blnSsEnable"
 									type="checkbox"
-									<?php echo $this->config['blnSsEnable'] != null ? ("checked=" . $this->config['blnSsEnable']) : "" ?>>
+									<?php echo $this->defaults->enableSsAccount ? "checked='checked'" : "" ?>>
 							</label>
 							<?php
-                                                    }?>
+                            }?>
 
 						</div>
 					</div>
@@ -470,12 +499,13 @@ use solideagle\utilities\SuperEntities;
 									name="createGappAccount"
 									type="checkbox"
 									value="true"
-									<?php echo $this->config['createGappAccount'] != null ? ("checked=" . $this->config['createGappAccount']) : "" ?>>
+									<?php echo $this->defaults->createGappAccount ? "checked='checked'" : "" ?>>
 								Account maken
 							</label>
 							<?php 
-                                                }if ($this->multipleAccountsSelected || $this->hasGappAccount || $this->manageTemplate)
-                                                {?>
+                            }
+                            if ($this->multipleAccountsSelected || $this->hasGappAccount || $this->manageTemplate)
+                            {?>
 							<label class="checkbox">
 								Account verwijderen
 								<input
@@ -483,7 +513,7 @@ use solideagle\utilities\SuperEntities;
 									id="blnDeleteGapp"
 									type="checkbox"
 									value="false"
-									<?php echo $this->config['deleteGappAccount'] != null ? ("checked=" . $this->config['deleteGappAccount']) : "" ?>>
+									<?php echo $this->defaults->deleteGappAccount ? "checked='checked'" : "" ?>>
 							</label>
 							<div
 								class="control-group error"
@@ -500,34 +530,33 @@ use solideagle\utilities\SuperEntities;
 								</label>
 							</div>
 							<?php
-                                                }if ($this->multipleAccountsSelected || $this->hasGappAccountEnabled || $this->manageTemplate)
-                                                {?>
+                            }
+                            if ($this->multipleAccountsSelected || $this->hasGappAccountEnabled || $this->manageTemplate)
+                           {?>
 							<label class="checkbox">
 								Account deactiveren
 								<input
-									name="blnGappDisable"
+									name="disableGappAccount"
 									id="blnGappDisable"
 									type="checkbox"
-									<?php echo $this->config['blnGappDisable'] != null ? ("checked=" . $this->config['blnGappDisable']) : "" ?>>
+									<?php echo $this->defaults->disableGappAccount ? "checked='checked'" : "" ?>>
 							</label>
 							<?php
-                                                }if($this->multipleAccountsSelected || !$this->hasGappAccountEnabled || $this->manageTemplate)
-                                                {?>
+                            }
+                            if($this->multipleAccountsSelected || !$this->hasGappAccountEnabled || $this->manageTemplate)
+                           {?>
 							<label class="checkbox">
 								Account activeren
 								<input
-									name="blnGappEnable"
+									name="enableGappAccount"
 									id="blnGappEnable"
 									type="checkbox"
-									<?php echo $this->config['blnGappEnable'] != null ? ("checked=" . $this->config['blnGappEnable']) : "" ?>>
+									<?php echo $this->defaults->enableGappAccount ? "checked='checked'" : "" ?>>
 							</label>
-							<?php
-                                                }?>
-
+							<?php }?>
 						</div>
 					</div>
 				</section>
-
 			</div>
 			<div class="modal-footer">
 				<a

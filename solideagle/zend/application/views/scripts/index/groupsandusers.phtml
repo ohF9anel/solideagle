@@ -51,7 +51,7 @@
                             } 
                         );
 
-			$("#modalholder").load("<?php echo $this->SE_path . '/usertasks/getalltasksforuser' ?>", {jspostArr:selectedArr});
+			$("#modalholder").load("<?php echo $this->SE_path . '/usertasks/getalltasksforuser' ?>", {selectedUsers:selectedArr});
 		});
                 
         $("#TaskTemplatesLink").click(function(){

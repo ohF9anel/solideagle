@@ -8,14 +8,13 @@ class DBconnection
 {
 	/**
 	 *
-	 * Enter description here ...
+	 * 
 	 * @var PDO
 	 */
 	public $connection;
 
 	/**
 	 *
-	 * Enter description here ...
 	 * @var boolean
 	 */
 	public $isTransactionInProgress;
@@ -23,7 +22,7 @@ class DBconnection
 
 	/**
 	 *
-	 * Enter description here ...
+	 * 
 	 * @param PDO $connection
 	 */
 	public function __construct($connection)
@@ -43,11 +42,8 @@ class Database
 
 
 	/**
-	 * Executes SQL and returns first value in first row
+	 * 
 	 *
-	 *$connectionParams[0] = DSN
-	 *$connectionParams[1] = username
-	 *$connectionParams[2] = password
 	 *
 	 * @param array $connectionParams
 	 * @return DBconnection
@@ -82,11 +78,9 @@ class Database
 	{
 		$conn = Database::getConnection($databaseCmd->getConnectionParams());
 
-		if ($conn->isTransactionInProgress) {
-			//!DatabaseCommand::$_isTransaction()
-			//Debug.Assert(_isTransactionInProgress, "Transaction not in Progress while attempting to get a command for it.")
-			//Return New SqlCommand(command.Sql, conn, _transaction)
-		}
+	/*	if ($conn->isTransactionInProgress) {
+		
+		}*/
 
 		return $conn->connection->prepare($databaseCmd->getSQL());
 	}
@@ -97,21 +91,16 @@ class Database
 	 */
 	Public static Function executeReader($databaseCmd)
 	{
-		try{
+		
 			$stmt = Database::getStatement($databaseCmd);
 			$stmt->execute($databaseCmd->getParams());
 				
 			return new CustomDataReader($stmt);
-				
-		}catch (PDOException $err) {
-				
-			var_dump($err);
-		}
 	}
 
 
 	/**
-	 * Executes SQL and returns first value in first row
+	 * Executes SQL and returns first number in first row
 	 *
 	 * @param DatabaseCommand $databaseCmd
 	 * @return var
@@ -153,7 +142,7 @@ class Database
 		$conn = Database::getConnection($connParams);
 
 		if($conn->isTransactionInProgress)
-		die("TODO: NO DOUBLE TRANSACTIONS!");
+		die("ERROR: NO DOUBLE TRANSACTIONS!");
 
 		$conn->connection->beginTransaction();
 		$conn->isTransactionInProgress = true;
@@ -165,7 +154,7 @@ class Database
 		$conn = Database::getConnection($connParams);
 
 		if(!$conn->isTransactionInProgress)
-		die("TODO: TRANS NOT IN PROGRESS!");
+		die("ERROR: TRANS NOT IN PROGRESS!");
 
 		$conn->connection->commit();
 		$conn->isTransactionInProgress = false;
@@ -177,7 +166,7 @@ class Database
 		$conn = Database::getConnection($connParams);
 
 		if(!$conn->isTransactionInProgress)
-		die("TODO: TRANS NOT IN PROGRESS!");
+		die("ERROR: TRANS NOT IN PROGRESS!");
 
 		$conn->connection->rollBack();
 		$conn->isTransactionInProgress = false;
