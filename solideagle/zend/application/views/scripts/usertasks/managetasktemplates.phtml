@@ -9,12 +9,13 @@
             });
             
             loadTable();
-            
-
 	});
 
 	function loadTable()
 	{
+
+		var users = $.parseJSON(<?php echo "'" . $this->users . "'" ?>);
+		
 
 		$("#tasktable").html("");
 		
@@ -26,11 +27,11 @@
                    		.append($("<td>").append($("<span>").html(val)))
                    		.append($("<td>").append($("<a>").html("uitvoeren").click(function(){
                    			 $('#taskTemplateModal').modal('hide');
-                             $("#modalholder").load("<?php echo $this->SE_path . '/usertasks/showtask' ?>",  {templatename:val,fromTemplate:true});
+                   			 loadIntoModalholder("<?php echo $this->SE_path . '/usertasks/showtask' ?>",  {selectedUsers:users,templatename:val,fromTemplate:true});
                        	})))
                    		.append($("<td>").append($("<a>").html("bewerken").click(function(){
                    			 $('#taskTemplateModal').modal('hide');
-                             $("#modalholder").load("<?php echo $this->SE_path . '/usertasks/showtask' ?>",  {templatename:val,editTemplate:true});
+                   			 loadIntoModalholder("<?php echo $this->SE_path . '/usertasks/showtask' ?>",  {templatename:val,editTemplate:true});
                        	})))
                    		.append($("<td>").append($("<a>").html("verwijderen").click(function(){
                    			 var r = confirm("Verwijder takentemplate: " + val);

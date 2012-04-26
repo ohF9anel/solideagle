@@ -1,5 +1,7 @@
 <?php
 
+use solideagle\data_access\Group;
+
 use solideagle\data_access\PlatformAD;
 
 use solideagle\scripts\smartschool\usermanager;
@@ -240,8 +242,17 @@ class UsertasksController extends Zend_Controller_Action
 		$this->view->defaults->disableGappAccount = false;
 		$this->view->defaults->enableGappAccount = false;
 		
-		//get users
+		//get users from post
 		$usersArr = $this->getRequest()->getPost('selectedUsers',array());
+		
+		//no users given in post, try other options
+		if(count($usersArr) < 1)
+		{
+			$usersArr = $this->getUserIds($this->getRequest()->getPost('selectedGroup'));
+		}
+		
+		
+		$this->view->users = json_encode($usersArr);
 
 		//get template name
 		$templatename = $this->getRequest()->getPost('templatename',NULL);
@@ -321,16 +332,23 @@ class UsertasksController extends Zend_Controller_Action
 				$this->view->hasSSAccount = false;
 			// multiple accounts selected
 		}
-		else// geen
-		{
-			exit();
-		}
+		
 
     }
 
     public function managetasktemplatesAction()
     {
       $this->_helper->layout()->disableLayout();
+      $users = $this->getRequest()->getParam('selectedUsers',array());
+      
+      //no users given try to get the from the group
+      if(count($users) < 1)
+      {
+      	$users = $this->getUserIds($this->getRequest()->getParam('selectedGroup'));
+      }
+      
+      $this->view->users = json_encode($users);
+
     }
     
     public function removetasktemplateAction()
@@ -348,7 +366,7 @@ class UsertasksController extends Zend_Controller_Action
     {
     	$this->_helper->layout()->disableLayout();
     	$this->_helper->viewRenderer->setNoRender(true);
-    
+    	
     	echo $this->templatesToJson(TaskTemplate::getAllTemplates());
     	return;
     }
@@ -362,6 +380,27 @@ class UsertasksController extends Zend_Controller_Action
     	}
     
     	return json_encode($finalarr);
+    }
+    
+    private function getUserIds($groupid)
+    {
+    	$usersArr = array();
+    	if($groupid !== NULL)
+    	{
+    		
+    	
+    		//get users in group and subgroups
+    		$group = Group::getGroupById($groupid);
+    	
+    		$usersArr = array_merge($usersArr,Person::getPersonIdsByGroup($groupid));
+    	
+    		foreach (Group::getAllChilderen($group) as $chldgroup)
+    		{
+    			$usersArr = array_merge($usersArr,Person::getPersonIdsByGroup($chldgroup->getId()));
+    		}
+    	}
+    	
+    	return $usersArr;
     }
 
 

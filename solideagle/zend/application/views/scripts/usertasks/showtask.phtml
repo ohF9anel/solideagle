@@ -1,89 +1,56 @@
 <?php 
 use solideagle\utilities\SuperEntities;
-
 ?>
-
 <script>
+
 	$(function(){
 
+		var users = $.parseJSON(<?php echo "'" . $this->users . "'" ?>);
+		var manageTemplate = <?php echo $this->manageTemplate ?>;
+		
+		if(users.length == 0 && !manageTemplate)
+		{
+			alert("Geen gebruikers geselecteerd");
+			return;
+		}
 
-		/*var total = "";
-		$("input").each(function(k,v){
-
-			total += $(this).attr("name") + "\n";
-		});
-
-		alert(total);*/
-            
-   		var selectedArr = new Array();
-
-   		var manageTemplate = <?php echo $this->manageTemplate ?>;
-              
+   		$('#myModal').modal('show');
+   		$("#deleteadsure").hide();
+        $("#deletesssure").hide();
+        $("#deletegappsure").hide();     
+        
 		if(!manageTemplate)
 		{
-			$(".selectUser:checked").each( 
-				function(k,v) { 
-					selectedArr.push($(v).attr("value"));
-				} 
-			);
-		}
-
-		if(selectedArr.length > 0)
-		{
-                        $('#myModal').modal('show');
-
-                        $("#deleteadsure").hide();
-                        $("#deletesssure").hide();
-                        $("#deletegappsure").hide();
-
-                        $("#blnDeleteAd").click(function(){
-                                $("#deleteadsure").toggle();
-                                $("#blnDeleteAdSure").removeAttr("checked");
-                        });
-                        $("#blnAdMultipleEnableDisable").click(function(){
-                                $("#radioAdEnableAccounts").toggle();
-                                $("#radioAdDisableAccounts").toggle();
-                                $("#optionAdMultipleEnable").removeAttr("checked");
-                                $("#optionAdMultipleDisable").removeAttr("checked");
-                        });
-                        $("#blnDeleteSs").click(function(){
-                                $("#deletesssure").toggle();
-                                $("#blnDeleteSsSure").removeAttr("checked");
-                        });
-                        $("#blnDeleteGapp").click(function(){
-                                $("#deletegappsure").toggle();
-                                $("#blnDeleteGappSure").removeAttr("checked");
-                        });
-		}
-		else if(manageTemplate)
-		{
-            // manage templates
-                       
-                                $('#myModal').modal('show');
-                             
-                                $("#deleteadsure").hide();
-                                $("#deletesssure").hide();
-                                $("#deletegappsure").hide();
-                       
-		}else{      
-			alert("Geen gebruikers geselecteerd");
+            $("#blnDeleteAd").click(function(){
+                    $("#deleteadsure").toggle();
+                    $("#blnDeleteAdSure").removeAttr("checked");
+            });
+            $("#blnAdMultipleEnableDisable").click(function(){
+                    $("#radioAdEnableAccounts").toggle();
+                    $("#radioAdDisableAccounts").toggle();
+                    $("#optionAdMultipleEnable").removeAttr("checked");
+                    $("#optionAdMultipleDisable").removeAttr("checked");
+            });
+            $("#blnDeleteSs").click(function(){
+                    $("#deletesssure").toggle();
+                    $("#blnDeleteSsSure").removeAttr("checked");
+            });
+            $("#blnDeleteGapp").click(function(){
+                    $("#deletegappsure").toggle();
+                    $("#blnDeleteGappSure").removeAttr("checked");
+            });
 		}
 	
 		$("#formTasks").ajaxForm({
-			data:  {"users":selectedArr},
+			data:  {"users":users},
 			success: function(responseText, statusText, xhr, $form) { 
-
 				if(responseText.length > 0)
 				{
 					alert(responseText);
 				}else{
 					$('#myModal').modal('hide');
-					updateTree();
 				}
-				
 	    } });
-
-		
 	});
 
 	<?php /*function loadTemplate(templatename)
@@ -160,15 +127,26 @@ use solideagle\utilities\SuperEntities;
 							for="txtName">Naam template</label>
 						<div class="controls">
 
+
+
 							<input
 								id="txtName"
 								name="txtName"
 								class="input-xlarge"
 								type="text"
-								<?php echo $this->manageTemplate ? "" : "readonly = 'readonly'" ?>"
+								<?php echo $this->manageTemplate ? "" : "readonly = 'readonly'" ?>
 								value="<?php  echo $this->templatename  ?>">
 						</div>
 					</div>
+					<?php if($this->manageTemplate && !$this->addtemplate)
+							{ ?>
+
+					<div class="alert">
+
+						<strong>Opgelet!</strong> Een template hernoemen maakt een kloon aan
+					</div>
+
+					<?php }?>
 				</section>
 				<?php }?>
 
@@ -182,9 +160,9 @@ use solideagle\utilities\SuperEntities;
 					<div class="row">
 						<div class="span12">
 
-						
-				
-						
+
+
+
 							<?php if ($this->multipleAccountsSelected || !$this->hasAdAccount || $this->manageTemplate)
                             {?>
 							<label class="checkbox">
@@ -358,7 +336,7 @@ use solideagle\utilities\SuperEntities;
 								id="adUpDownParams"
 								class="collapse out">
 								<fieldset>
-									<legend>Upload & Downloadfolders</legend>
+									<legend>Upload &amp; Downloadfolders</legend>
 
 									<div class="control-group">
 										<label
@@ -458,7 +436,7 @@ use solideagle\utilities\SuperEntities;
 								</label>
 							</div>
 							<?php
-                                                    }if ($this->multipleAccountsSelected || $this->hasSsAccountEnabled || $this->manageTemplate)
+                            }if ($this->multipleAccountsSelected || $this->hasSsAccountEnabled || $this->manageTemplate)
                                                     {?>
 							<label class="checkbox">
 								Account deactiveren
@@ -469,8 +447,8 @@ use solideagle\utilities\SuperEntities;
 									<?php echo $this->defaults->disableSsAccount ? "checked='checked'" : "" ?>>
 							</label>
 							<?php
-                            }
-                            if($this->multipleAccountsSelected || !$this->hasSsAccountEnabled || $this->manageTemplate)
+                                                    }
+                                                    if($this->multipleAccountsSelected || !$this->hasSsAccountEnabled || $this->manageTemplate)
                             {?>
 							<label class="checkbox">
 								Account activeren
@@ -507,8 +485,8 @@ use solideagle\utilities\SuperEntities;
 								Account maken
 							</label>
 							<?php 
-                            }
-                            if ($this->multipleAccountsSelected || $this->hasGappAccount || $this->manageTemplate)
+                                                }
+                                                if ($this->multipleAccountsSelected || $this->hasGappAccount || $this->manageTemplate)
                             {?>
 							<label class="checkbox">
 								Account verwijderen
@@ -546,8 +524,8 @@ use solideagle\utilities\SuperEntities;
 									<?php echo $this->defaults->disableGappAccount ? "checked='checked'" : "" ?>>
 							</label>
 							<?php
-                            }
-                            if($this->multipleAccountsSelected || !$this->hasGappAccountEnabled || $this->manageTemplate)
+                           }
+                           if($this->multipleAccountsSelected || !$this->hasGappAccountEnabled || $this->manageTemplate)
                            {?>
 							<label class="checkbox">
 								Account activeren
@@ -581,5 +559,7 @@ use solideagle\utilities\SuperEntities;
 			</div>
 		</div>
 	</div>
+	
+	
 
 </form>

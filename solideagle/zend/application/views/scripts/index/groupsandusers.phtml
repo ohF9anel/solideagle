@@ -10,31 +10,31 @@
 		showUsers();
 
 		$("#EditGroupLink").click(function(){
-			$("#modalholder").load("<?php echo $this->SE_path . '/groups/editgroup?gid=' ?>" + selectedGroupId);
+			loadIntoModalholder("<?php echo $this->SE_path . '/groups/editgroup?gid=' ?>" + selectedGroupId);
 		});
 
 		$("#CreateSubGroupLink").click(function(){
-			$("#modalholder").load("<?php echo $this->SE_path . '/groups/addsubgroup?gid=' ?>" + selectedGroupId);
+			loadIntoModalholder("<?php echo $this->SE_path . '/groups/addsubgroup?gid=' ?>" + selectedGroupId);
 		});
 	
 		$("#CreateUserLink").click(function(){
-			$("#modalholder").load("<?php echo $this->SE_path . '/users/userform?state=new&gid=' ?>" + selectedGroupId);
+			loadIntoModalholder("<?php echo $this->SE_path . '/users/userform?state=new&gid=' ?>" + selectedGroupId);
 		});
 
 		$("#RemoveGroupLink").click(function(){
-			$("#modalholder").load("<?php echo $this->SE_path . '/groups/deletegroup?gid=' ?>" + selectedGroupId);
+			loadIntoModalholder("<?php echo $this->SE_path . '/groups/deletegroup?gid=' ?>" + selectedGroupId);
 		});
 
 		$("#ViewUserLink").click(function(){
-			$("#modalholder").load("<?php echo $this->SE_path . '/users/userform?state=show&pid=' ?>" + clickedUserId);
+			loadIntoModalholder("<?php echo $this->SE_path . '/users/userform?state=show&pid=' ?>" + clickedUserId);
 		});
 
 		$("#EditUserLink").click(function(){
-			$("#modalholder").load("<?php echo $this->SE_path . '/users/userform?state=edit&pid=' ?>" + clickedUserId);
+			loadIntoModalholder("<?php echo $this->SE_path . '/users/userform?state=edit&pid=' ?>" + clickedUserId);
 		});
                 
-                $("#MoveUserLink").click(function(){
-			$("#modalholder").load("<?php echo $this->SE_path . '/users/move?oldgid=' ?>" + selectedGroupId);
+		$("#MoveUserLink").click(function(){
+			loadIntoModalholder("<?php echo $this->SE_path . '/users/move?oldgid=' ?>" + selectedGroupId);
 		});
 
 		$("#RemoveUserLink").click(function(){
@@ -42,23 +42,22 @@
 			//$("#modalholder").load("<?php echo $this->SE_path . '/users/userform?state=edit&pid=' ?>" + clickedUserId);
 		});
 
-		$("#MultiTaskLink").click(function(){
-
-			var selectedArr = new Array();
-                        $(".selectUser:checked").each( 
-                            function(k,v) { 
-                                selectedArr.push($(v).attr("value"));
-                            } 
-                        );
-
-			$("#modalholder").load("<?php echo $this->SE_path . '/usertasks/showtask' ?>", {selectedUsers:selectedArr});
+		$("#TaskForUser").click(function(){
+           loadIntoModalholder("<?php echo $this->SE_path . '/usertasks/showtask' ?>", {selectedUsers:getSelectedUsers});
 		});
                 
-        $("#TaskTemplatesLink").click(function(){
-                    
-            $("#modalholder").load("<?php echo $this->SE_path . '/Usertasks/managetasktemplates' ?>");
-			
+        $("#TemplateTaskForUser").click(function(){
+            loadIntoModalholder("<?php echo $this->SE_path . '/Usertasks/managetasktemplates' ?>", {selectedUsers:getSelectedUsers});
 		});	
+
+        $("#TaskForGroup").click(function(){
+        	loadIntoModalholder("<?php echo $this->SE_path . '/usertasks/showtask' ?>", {selectedGroup:selectedGroupId});
+		});
+
+        $("#TemplateTaskForGroup").click(function(){
+        	loadIntoModalholder("<?php echo $this->SE_path . '/usertasks/managetasktemplates' ?>", {selectedGroup:selectedGroupId});
+		});
+        
 
 		$("#selectAllCheckbox").click(function(){
 
@@ -71,6 +70,24 @@
 			
 		});
 	});
+
+	function getSelectedUsers()
+	{
+		var selectedArr = new Array();
+        $(".selectUser:checked").each( 
+            function(k,v) { 
+                selectedArr.push($(v).attr("value"));
+            } 
+        );
+
+        return selectedArr;
+	}
+
+	function loadIntoModalholder(path,extradata)
+	{
+		$("#modalholder").html($("#loadingHolder").html());
+		$("#modalholder").load(path, extradata);
+	}
 
 	function updateTree()
 	{
@@ -231,13 +248,33 @@
 							id="RemoveGroupLink"
 							href="#"> <i class="icon-remove"></i> Groep verwijderen
 						</a></li>
-						<li class="divider"></li>
+
+					</ul>
+				</li>
+				<li
+					class="dropdown"
+					id="menu2"><a
+					class="dropdown-toggle"
+					data-toggle="dropdown"
+					href="#menu2"> Taken uitvoeren<b class="caret"></b>
+				</a>
+					<ul class="dropdown-menu">
+
+						<li class="nav-header"><span style="white-space: nowrap">Geselecteerde gebruikers</span></li>
 						<li><a
-							id="MultiTaskLink"
-							href="#"><i class="icon-list-alt"></i> Taak uitvoeren</a></li>
+							id="TaskForUser"
+							href="#"><i class="icon-list-alt"></i> Custom taak</a></li>
 						<li><a
-							id="TaskTemplatesLink"
-							href="#"><i class="icon-list-alt"></i> Taak templates</a></li>
+							id="TemplateTaskForUser"
+							href="#"><i class="icon-list-alt"></i> Template taak</a></li>
+
+						<li class="nav-header"><span style="white-space: nowrap">Deze groep en subgroepen</span></li>
+						<li><a
+							id="TaskForGroup"
+							href="#"><i class="icon-list-alt"></i> Custom taak</a></li>
+						<li><a
+							id="TemplateTaskForGroup"
+							href="#"><i class="icon-list-alt"></i> Template taak</a></li>
 					</ul>
 				</li>
 			</ul>
@@ -288,4 +325,14 @@
 			</ul>
 		</li>
 	</ul>
+</div>
+
+<div id="loadingHolder" style="display:none">
+	<div class="SEsupermodal ">
+		<div style="min-width: 500px;">
+			<h2 style="padding: 20px"><img  style="height:25px;"
+				src="<?php echo $this->SE_path; ?>/images/loading.gif" height="25px"/>Loading... </h2>
+		</div>
+	</div>
+	<div class="modal-backdrop in"></div>
 </div>

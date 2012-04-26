@@ -35,6 +35,7 @@ class Group
 		$this->childGroups = array_merge($this->childGroups,$arrChildGroup);
 	}
 
+	//not always populated!
 	public function getChildGroups()
 	{
 		return $this->childGroups;
@@ -327,7 +328,7 @@ class Group
 
 	/**
 	 *
-	 * Enter description here ...
+	 * gets childeren just below this group
 	 * @param Group $group
 	 * @return multitype:\DataAccess\Group
 	 */
@@ -360,6 +361,40 @@ class Group
 		return $retArr;
 	}
 
+	/**
+	 *
+	 * gets all childeren
+	 * @param Group $group
+	 * @return multitype:\DataAccess\Group
+	 */
+	public static function getAllChilderen($group)
+	{
+		$sql = "select
+		g.id, g.name, g.description
+		from
+		`group` as g,
+		group_closure as c
+		where
+		c.child_id = g.id and g.deleted = 0 and c.parent_id = :parentid";
+	
+		$retArr = array();
+	
+		$cmd = new DatabaseCommand($sql);
+		$cmd->addParam(":parentid", $group->getId());
+		$cmd->executeReader()->readAll(function($row) use (&$retArr,$group) {
+	
+			$tempGroup = new Group();
+			$tempGroup->setParentId($group->getParentId());
+			$tempGroup->setId($row->id);
+			$tempGroup->setName($row->name);
+			$tempGroup->setDescription($row->description);
+	
+			$retArr[] = $tempGroup;
+	
+		});
+			
+		return $retArr;
+	}
 	public static function getTreeSLOW()
 	{
 		return Group::getTreeRecursive(Group::getRoots());
