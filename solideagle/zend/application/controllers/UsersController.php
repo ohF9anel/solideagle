@@ -153,7 +153,7 @@ class UsersController extends Zend_Controller_Action
 			$oldPerson = Person::getPersonById($person->getId());
 			Person::updatePerson($person);
 			$person->setGroupId($oldPerson->getGroupId());
-			if (platforms::getPlatformAdByPersonId($person->getId()) != null)
+			/*if (platforms::getPlatformAdByPersonId($person->getId()) != null)
 			{
 			solideagle\scripts\ad\usermanager::prepareUpdateUser($person);
 			}
@@ -161,7 +161,7 @@ class UsersController extends Zend_Controller_Action
 			{
 				solideagle\scripts\ga\usermanager::prepareUpdateUser($person, $oldPerson->getAccountUsername());
 			}
-			/*                    if (platforms::getPlatformSmartschoolByPersonIdByPersonId($person->getId()) != null)
+			                    if (platforms::getPlatformSmartschoolByPersonIdByPersonId($person->getId()) != null)
 			                          solideagle\scripts\smartschool\usermanager::prepareUpdateUser($person);*/
 
 		}else{

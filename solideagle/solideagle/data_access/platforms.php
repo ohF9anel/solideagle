@@ -56,7 +56,7 @@ class platforms
 
 	public static function addPlatform($platform)
 	{
-		$sql = "INSERT INTO `CentralAccountDB`.`" . self::getPlatformTable($platform->getPlatformType()) . "`
+		$sql = "INSERT INTO `" . self::getPlatformTable($platform->getPlatformType()) . "`
 		(
 		`person_id`,
 		`enabled`
@@ -80,7 +80,7 @@ class platforms
 
 	public static function updatePlatform($platform)
 	{
-		$sql = "UPDATE `CentralAccountDB`.`" . self::getPlatformTable($platform->getPlatformType()) . "`
+		$sql = "UPDATE `" . self::getPlatformTable($platform->getPlatformType()) . "`
 		SET
 		`enabled` = :enabled
 		WHERE `person_id` = :person_id
@@ -99,7 +99,7 @@ class platforms
 
 	public static function removePlatform($platform)
 	{
-		$sql = "DELETE FROM `CentralAccountDB`.`" . self::getPlatformTable($platform->getPlatformType()) . "`
+		$sql = "DELETE FROM `" . self::getPlatformTable($platform->getPlatformType()) . "`
 		WHERE `person_id` = :person_id;";
 
 		$cmd = new DatabaseCommand($sql);
@@ -110,7 +110,7 @@ class platforms
 
 	public static function getPlatformAdByPersonId($personId)
 	{
-		$sql = "SELECT * FROM `CentralAccountDB`.`" . self::getPlatformTable(self::PLATFORM_AD) . "`
+		$sql = "SELECT * FROM `" . self::getPlatformTable(self::PLATFORM_AD) . "`
 		WHERE `person_id` = :person_id;";
 		$cmd = new DatabaseCommand($sql);
 		$cmd->addParam(":person_id", $personId);
@@ -130,7 +130,7 @@ class platforms
 	 
 	public static function getPlatformGappByPersonId($personId)
 	{
-		$sql = "SELECT * FROM `CentralAccountDB`.`" . self::getPlatformTable(self::PLATFORM_GAPP) . "`
+		$sql = "SELECT * FROM `" . self::getPlatformTable(self::PLATFORM_GAPP) . "`
 		WHERE `person_id` = :person_id;";
 		$cmd = new DatabaseCommand($sql);
 		$cmd->addParam(":person_id", $personId);
@@ -150,7 +150,7 @@ class platforms
 
 	public static function getPlatformSmartschoolByPersonId($personId)
 	{
-		$sql = "SELECT * FROM `CentralAccountDB`.`" . self::getPlatformTable(self::PLATFORM_SMARTSCHOOL) . "`
+		$sql = "SELECT * FROM `" . self::getPlatformTable(self::PLATFORM_SMARTSCHOOL) . "`
 		WHERE `person_id` = :person_id;";
 		$cmd = new DatabaseCommand($sql);
 		$cmd->addParam(":person_id", $personId);
