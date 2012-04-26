@@ -1330,6 +1330,26 @@ class Person
 	{
 	    $this->informatId = $informatId;
 	}
+	
+	public static function getPersonIdsByGroup($groupid)
+	{
+		$sql = "SELECT
+				`person`.`id`
+				FROM `CentralAccountDB`.`person`;
+				WHERE `person`.`group_id` = :groupId";
+		
+		$cmd = new DatabaseCommand($sql);
+		$cmd->addParam(":groupId", $groupid);
+		
+		$personidarr = array();
+		
+		$cmd->executeReader()->readAll(function($row) use (&$personidarr){
+		
+			$personidarr[] = $row->id;
+		});
+		
+		return $personidarr;
+	}
 }
 
 
