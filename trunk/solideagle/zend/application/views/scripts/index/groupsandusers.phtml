@@ -51,12 +51,12 @@
                             } 
                         );
 
-			$("#modalholder").load("<?php echo $this->SE_path . '/usertasks/getalltasksforuser' ?>", {selectedUsers:selectedArr});
+			$("#modalholder").load("<?php echo $this->SE_path . '/usertasks/showtask' ?>", {selectedUsers:selectedArr});
 		});
                 
         $("#TaskTemplatesLink").click(function(){
                     
-            $("#modalholder").load("<?php echo $this->SE_path . '/tasktemplate/managetasktemplates' ?>");
+            $("#modalholder").load("<?php echo $this->SE_path . '/Usertasks/managetasktemplates' ?>");
 			
 		});	
 
@@ -234,10 +234,10 @@
 						<li class="divider"></li>
 						<li><a
 							id="MultiTaskLink"
-							href="#"><i class="icon-list-alt"></i> Taken uitvoeren</a></li>
+							href="#"><i class="icon-list-alt"></i> Taak uitvoeren</a></li>
 						<li><a
 							id="TaskTemplatesLink"
-							href="#"><i class="icon-list-alt"></i> Taak templates beheren</a></li>
+							href="#"><i class="icon-list-alt"></i> Taak templates</a></li>
 					</ul>
 				</li>
 			</ul>

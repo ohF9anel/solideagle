@@ -5,7 +5,7 @@
             
             $("#btnNewTemplate").click(function(){ 
                 $('#taskTemplateModal').modal('hide');
-                $("#modalholder").load("<?php echo $this->SE_path . '/usertasks/getalltasksforuser?addtemplate=true' ?>");
+                $("#modalholder").load("<?php echo $this->SE_path . '/usertasks/showtask?addtemplate=true' ?>");
             });
             
             loadTable();
@@ -18,7 +18,7 @@
 
 		$("#tasktable").html("");
 		
-		   $.getJSON("<?php echo $this->SE_path . '/tasktemplate/gettemplates' ?>", 
+		   $.getJSON("<?php echo $this->SE_path . '/usertasks/gettemplates' ?>", 
 
                    function(data)  {
                    	 $.each(data, function(key, val) {
@@ -26,18 +26,18 @@
                    		.append($("<td>").append($("<span>").html(val)))
                    		.append($("<td>").append($("<a>").html("uitvoeren").click(function(){
                    			 $('#taskTemplateModal').modal('hide');
-                             $("#modalholder").load("<?php echo $this->SE_path . '/usertasks/getalltasksforuser' ?>",  {templatename:val,fromTemplate:true});
+                             $("#modalholder").load("<?php echo $this->SE_path . '/usertasks/showtask' ?>",  {templatename:val,fromTemplate:true});
                        	})))
                    		.append($("<td>").append($("<a>").html("bewerken").click(function(){
                    			 $('#taskTemplateModal').modal('hide');
-                             $("#modalholder").load("<?php echo $this->SE_path . '/usertasks/getalltasksforuser' ?>",  {templatename:val,editTemplate:true});
+                             $("#modalholder").load("<?php echo $this->SE_path . '/usertasks/showtask' ?>",  {templatename:val,editTemplate:true});
                        	})))
                    		.append($("<td>").append($("<a>").html("verwijderen").click(function(){
                    			 var r = confirm("Verwijder takentemplate: " + val);
                                 if (r==true)
                                 {
                                 	
-                                    $.post("<?php echo $this->SE_path . '/tasktemplate/removetasktemplate' ?>", {templatename:val},function(){
+                                    $.post("<?php echo $this->SE_path . '/usertasks/removetasktemplate' ?>", {templatename:val},function(){
                                     	loadTable();
                                     });
                                 }
