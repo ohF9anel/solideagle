@@ -89,7 +89,7 @@ class GlobalUserManager
 			\solideagle\scripts\ad\usermanager::prepareAddUser($person);
 		}
 
-		if(!$person->getHasGaccount() && $configstdclass->createGappAccount)
+		if(!$person->getHasGaAccount() && $configstdclass->createGappAccount)
 		{
 
 			\solideagle\scripts\ga\usermanager::prepareAddUser($person);
