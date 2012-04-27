@@ -3,19 +3,23 @@ namespace solideagle\scripts\ad;
 
 use solideagle\logging\Logger;
 
-use solideagle\plugins\ad\SSHManager;
+
 
 use solideagle\data_access\Type;
-
 use solideagle\data_access\person;
+use solideagle\data_access\PlatformAD;
+use solideagle\data_access\TaskQueue;
+use solideagle\data_access\TaskInterface;
+
 use solideagle\plugins\ad\ManageUser;
 use solideagle\plugins\ad\HomeFolder;
 use solideagle\plugins\ad\ScanFolder;
 use solideagle\plugins\ad\WwwFolder;
 use solideagle\plugins\ad\DownloadFolder;
 use solideagle\plugins\ad\UploadFolder;
-use solideagle\data_access\TaskQueue;
-use solideagle\data_access\TaskInterface;
+use solideagle\plugins\ad\SSHManager;
+
+
 
 
 class homefoldermanager implements TaskInterface
@@ -67,7 +71,13 @@ class homefoldermanager implements TaskInterface
 			$ret = ManageUser::setHomeFolder($config["username"], "\\\\" . $config["server"]);
 			if($ret->isSucces())
 			{
-				return true;
+				$platformad = PlatformAD::getPlatformConfigByPersonId($config["person"]->getId());
+
+                                $homedir = "\\\\" . $config["server"] . "\\" . $config["username"] . "$";
+                                
+                                $platformad->setHomedir($homedir);
+
+                                PlatformAD::updatePlatform($platformad);
 			}else{
 				$taskqueue->setErrorMessages($ret->getError());
 				return false;

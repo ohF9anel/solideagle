@@ -19,54 +19,47 @@ class ValidationError {
     const DATE_DOES_NOT_EXIST = 12;
     const TIME_DOES_NOT_EXIST = 13;
     const NO_NUMBER = 14;
+    const EMAIL_ADDRESS_INVALID = 15;
     
 }
 
 class Validator
 {
 
-	public static function validateString($string, $minlength, $maxlength, $allowSpecialChars = true)
+	public static function validateString($string, $minlength, $maxlength)
 	{
 		$valErrors = array();
 		if(empty($string) && $minlength > 0){
 			$valErrors[] = ValidationError::IS_NULL;
-		}elseif(strlen($string) < $minlength)
+		}elseif(strlen(utf8_decode($string)) < $minlength)
 		{
 			$valErrors[] = ValidationError::STRING_TOO_SHORT;
 		}
-		if(strlen($string) > $maxlength)
+		if(strlen(utf8_decode($string)) > $maxlength)
 		{
 			$valErrors[] = ValidationError::STRING_TOO_LONG;
 		}
- 		if (!$allowSpecialChars)
- 		{
-                        // allow a-z A-Z 0-9 '.' '-' '_' ' '
- 			if(!preg_match('/^[A-Za-z0-9_-\s\.]*$/', $string)) 
- 			{
- 				//$valErrors[] = ValidationError::STRING_HAS_SPECIAL_CHARS;
- 			}
- 		}
 		return $valErrors;
 	}
         
-        public static function validatePassword($psw, $minLength, $maxLength)
-        {
-                $valErrors = Validator::validateString($psw, $minLength, $maxLength, true);
-
-                //TODO tempfix
-                return $valErrors;
-                
-                if( !preg_match("#[0-9]+#", $psw) )
-                        $valErrors[] = ValidationError::PSW_NO_NUMBER;
-                
-                if( !preg_match("#[a-z]+#", $psw) )
-                        $valErrors[] = ValidationError::PSW_NO_LOWER_CASE;
-
-                if( !preg_match("#[A-Z]+#", $psw) )
-                        $valErrors[] = ValidationError::PSW_NO_UPPER_CASE;
-
-                return $valErrors;
-        }
+//        public static function validatePassword($psw, $minLength, $maxLength)
+//        {
+//                $valErrors = Validator::validateString($psw, $minLength, $maxLength, true);
+//
+//                //TODO tempfix
+//                return $valErrors;
+//                
+//                if( !preg_match("#[0-9]+#", $psw) )
+//                        $valErrors[] = ValidationError::PSW_NO_NUMBER;
+//                
+//                if( !preg_match("#[a-z]+#", $psw) )
+//                        $valErrors[] = ValidationError::PSW_NO_LOWER_CASE;
+//
+//                if( !preg_match("#[A-Z]+#", $psw) )
+//                        $valErrors[] = ValidationError::PSW_NO_UPPER_CASE;
+//
+//                return $valErrors;
+//        }
 
 	public static function validateInt($val, $minval = 0, $maxval = NULL)
 	{
@@ -118,7 +111,7 @@ class Validator
             
             if ($valErrors == null)
             {
-                if (strlen($dateTime) != 14)
+                if (strlen($dateTime) != 14 || !is_numeric($dateTime))
                 {
                     $valErrors[] = ValidationError::DATE_BAD_SYNTAX;
                 }

@@ -30,6 +30,7 @@ class SSHManager
 		Logger::log("Opening new SSH connection to: " . $servername . " with user: " . Config::singleton()->ad_administrator,PEAR_LOG_INFO);
 
 		$conn = new sshconn($servername);
+                
 		if (!$conn->login(Config::singleton()->ad_administrator, Config::singleton()->ad_password))
 		{
 			Logger::log("Login to SSH failed on " . $servername);
@@ -162,7 +163,6 @@ class sshconn
 		while (true)	
 		{
 			$buffer = fgets($this->pipes[1]);
-			
 			if(strpos($buffer, "SYS_Solideagle@S1") !== false) //waittill shell is loaded
 				break;
 		}
@@ -176,7 +176,6 @@ class sshconn
 		while (true)
 		{
 			$buffer = fgets($this->pipes[1]);
-
 			if(strpos($buffer, ">") !== false) //waittill cmd is loaded
 				break;
 		}
@@ -198,7 +197,6 @@ class sshconn
 
 	private function endConn()
 	{
-		
 		
 		foreach ($this->pipes as $pipe)
 			fclose($pipe);

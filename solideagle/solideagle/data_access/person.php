@@ -47,6 +47,7 @@ class Person
 	private $studentPreviousSchool;
 	private $studentStamnr;
 	private $parentOccupation;
+        private $pictureUrl;
 	private $groupId;
 
 	private $types = array();
@@ -99,10 +100,6 @@ class Person
 	{
 		$this->accountPassword = $accountPassword;
 	}
-
-
-
-
 
 	public function getAccountActiveUntill()
 	{
@@ -335,7 +332,17 @@ class Person
 	{
 		$this->parentOccupation = $parentOccupation;
 	}
+        
+        public function getPictureUrl()
+        {
+            return $this->pictureUrl;
+        }
 
+        public function setPictureUrl($pictureUrl)
+        {
+            $this->pictureUrl = $pictureUrl;
+        }
+   
 	public function getGroupId()
 	{
 		return $this->groupId;
@@ -469,6 +476,7 @@ class Person
 		`student_previous_school`,
 		`student_stamnr`,
 		`parent_occupation`,
+                `picture_url`,
 		`group_id`)
 		VALUES
 		(
@@ -500,6 +508,7 @@ class Person
 		:student_previous_school,
 		:student_stamnr,
 		:parent_occupation,
+                :picture_url,
 		:group_id
 		);
 		";
@@ -533,6 +542,7 @@ class Person
 		$cmd->addParam(":student_previous_school", $person->getStudentPreviousSchool());
 		$cmd->addParam(":student_stamnr", $person->getStudentStamNr());
 		$cmd->addParam(":parent_occupation", $person->getParentOccupation());
+                $cmd->addParam(":picture_url", $person->getPictureUrl());
 		$cmd->addParam(":group_id", $person->getGroupId());
 
 		$cmd->BeginTransaction();
@@ -614,6 +624,7 @@ class Person
 		`student_previous_school` = :student_previous_school,
 		`student_stamnr` = :student_stamnr,
 		`parent_occupation` = :parent_occupation,
+                `picture_url` = :picture_url,
                 `group_id` = :group_id
 		WHERE id = :id;";
 
@@ -645,7 +656,8 @@ class Person
 		$cmd->addParam(":student_previous_school", $person->getStudentPreviousSchool());
 		$cmd->addParam(":student_stamnr", $person->getStudentStamNr());
 		$cmd->addParam(":parent_occupation", $person->getParentOccupation());
-        $cmd->addParam(":group_id", $person->getGroupId());
+                $cmd->addParam(":picture_url", $person->getPictureUrl());
+                $cmd->addParam(":group_id", $person->getGroupId());
 		$cmd->execute();
 
 		// updates person's type(s)
@@ -738,6 +750,7 @@ class Person
 		$person->setStudentPreviousSchool($retObj->student_previous_school);
 		$person->setStudentStamnr($retObj->student_stamnr);
 		$person->setParentOccupation($retObj->parent_occupation);
+                $person->setPictureUrl($retObj->picture_url);
 		$person->setGroupId($retObj->group_id);
 		$person->hasAdAccount = $retObj->platformad;
 		$person->hasGaccount = $retObj->platformga;
@@ -1074,7 +1087,7 @@ class Person
 		{
 			switch($valError)
 			{
-				case ValidationError::INVALID_EMAIL_ADDRESS:
+				case ValidationError::EMAIL_ADDRESS_INVALID:
 					$validationErrors[] = "E-mailadres: geef een geldig e-mailadres in."; break;
 				default:
 					$validationErrors[] = "E-mailadres: fout."; break;

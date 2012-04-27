@@ -39,7 +39,6 @@ class manageuser
                 $errorHandler->addGappsError($buffer);
             
             echo $buffer;
-            ob_flush();
             flush();
         }
         
@@ -89,7 +88,6 @@ class manageuser
                 $errorHandler->addGappsError($buffer);
             
             echo $buffer;
-            ob_flush();
             flush();
         }
         
@@ -134,7 +132,6 @@ class manageuser
                 $errorHandler->addGappsError($buffer);
             
             echo $buffer;
-            ob_flush();
             flush();
         }
 
@@ -171,7 +168,6 @@ class manageuser
                 $errorHandler->addGappsError($buffer);
             
             echo $buffer;
-            ob_flush();
             flush();
         }
 
@@ -208,7 +204,6 @@ class manageuser
                 $errorHandler->addGappsError($buffer);
             
             echo $buffer;
-            ob_flush();
             flush();
         }
 

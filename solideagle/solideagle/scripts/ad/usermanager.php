@@ -4,7 +4,7 @@ namespace solideagle\scripts\ad;
 use solideagle\plugins\ad\ManageUser;
 
 use solideagle\data_access\Group;
-use solideagle\data_access\platforms;
+use solideagle\data_access\PlatformAD;
 
 use solideagle\plugins\ad\User;
 use solideagle\plugins\ad\ManageHomeFolder;
@@ -36,66 +36,59 @@ class usermanager implements TaskInterface
 			$userInfo = User::convertPersonToAdUser($config["person"], $config["enabled"])->getUserInfo();
 			$ret = ManageUser::addUser($userInfo, $config["arrParentsGroups"]);
 
-			if($ret->isSucces())
-			{
-				$platform = new platforms();
-				$platform->setPlatformType(platforms::PLATFORM_AD);
-				$platform->setPersonId($config["person"]->getId());
+                if($ret->isSucces())
+                {
+                    $platformad = new PlatformAD();
+                    $platformad->setPersonId($config["person"]->getId());
+                    $platformad->setEnabled($config["enabled"]);
 
-				$platform->setEnabled($config["enabled"]);
+                    PlatformAD::addToPlatform($platformad);
+                    return true;	
+                }
+                else{
+                    $taskqueue->setErrorMessages($ret->getError());
+                    return false;
+                }
+            }
+            // update user in ad
+            else if($config["action"] == self::ActionUpdateUser && isset($config["person"]) && isset($config["arrParentsGroups"]) && isset($config["enabled"]))
+            {
+                $userInfo = User::convertPersonToAdUser($config["person"], $config["enabled"])->getUserInfo();
+                $ret = ManageUser::updateUser($userInfo, $config["arrParentsGroups"]);
 
-				platforms::addPlatform($platform);
-				return true;
-			}
-			else{
-				$taskqueue->setErrorMessages($ret->getError());
-				return false;
-			}
-		}
-		// update user in ad
-		else if($config["action"] == self::ActionUpdateUser && isset($config["person"]) && isset($config["arrParentsGroups"]) && isset($config["enabled"]))
-		{
-			$userInfo = User::convertPersonToAdUser($config["person"], $config["enabled"])->getUserInfo();
-			$ret = ManageUser::updateUser($userInfo, $config["arrParentsGroups"]);
+                if($ret->isSucces())
+                {
+                    $platformad = new PlatformAD();
+                    $platformad->setPersonId($config["person"]->getId());
+                    $platformad->setEnabled($config["enabled"]);
+                    PlatformAD::updatePlatform($platformad);
+                    return true;	
+                }
+                else{
+                    $taskqueue->setErrorMessages($ret->getError());
+                    return false;
+                }
+            }
+            // delete user in ad
+            else if($config["action"] == self::ActionDelUser && isset($config["person"]))
+            {
+                $ret = ManageUser::delUser($config["person"]->getAccountUsername());
 
-			if($ret->isSucces())
-			{
-				$platform = new platforms();
-				$platform->setPlatformType(platforms::PLATFORM_AD);
-				$platform->setPersonId($config["person"]->getId());
-				$platform->setEnabled($config["enabled"]);
-				platforms::updatePlatform($platform);
-				return true;
-			}
-			else{
-				$taskqueue->setErrorMessages($ret->getError());
-				return false;
-			}
-		}
-		// delete user in ad
-		else if($config["action"] == self::ActionDelUser && isset($config["person"]))
-		{
-			$ret = ManageUser::delUser($config["person"]->getAccountUsername());
-
-			if($ret->isSucces())
-			{
-				$platform = new platforms();
-				$platform->setPlatformType(platforms::PLATFORM_AD);
-				$platform->setPersonId($config["person"]->getId());
-				platforms::removePlatform($platform);
-				return true;
-			}
-			else{
-				$taskqueue->setErrorMessages($ret->getError());
-				return false;
-			}
-		}
-		// problem!
-		else
-		{
-			$taskqueue->setErrorMessages("Probleem met configuratie");
-			return false; //it failed for some reason
-		}
+                if($ret->isSucces())
+                {
+                    return true;
+                }
+                else{
+                    $taskqueue->setErrorMessages($ret->getError());
+                    return false;
+                }
+            }
+            // problem!
+            else
+            {
+                    $taskqueue->setErrorMessages("Probleem met configuratie");
+                    return false; //it failed for some reason
+            }
 	}
 
 
