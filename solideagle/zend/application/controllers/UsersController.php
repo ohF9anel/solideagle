@@ -142,7 +142,7 @@ class UsersController extends Zend_Controller_Action
 		$person->setUniqueIdentifier($this->getRequest()->getPost('uniqueIdentifier'));
 		$person->setGroupId($this->getRequest()->getPost('groupId'));
 		$person->setInformatId($this->getRequest()->getPost('informatId'));
-                $person->setPictureUrl($this->getRequest()->getPost('PictureUrl'));
+		$person->setPictureUrl($this->getRequest()->getPost('PictureUrl'));
 			
 		if(count($errors = Person::validatePerson($person)) > 0)
 		{
@@ -152,7 +152,7 @@ class UsersController extends Zend_Controller_Action
 			
 		if($postmode === "edit")
 		{
-			$person->setId($this->getRequest()->getPost('Id'));		
+			$person->setId($this->getRequest()->getPost('Id'));
 			GlobalUserManager::updateUser($person);
 		}else{
 			Person::addPerson($person);
@@ -241,7 +241,7 @@ class UsersController extends Zend_Controller_Action
 	{
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
-		 
+			
 		$oldgid = $this->getRequest()->getPost("oldgid",false);
 		$newgid = $this->getRequest()->getParam("newgid",false);
 
@@ -266,41 +266,39 @@ class UsersController extends Zend_Controller_Action
 
 	}
 
-	 
-        
-        public function removeAction()
-        {
-            $this->_helper->layout()->disableLayout();
-            $this->_helper->viewRenderer->setNoRender(true);
-            
-            $pid = $this->getRequest()->getPost('jspostArr');
-            
-            $person = Person::getPersonById($pid);
-            
-            if ($person != null)
-            {
-                if(PlatformAD::getPlatformConfigByPersonId($pid) !== NULL)
-                {
-                        \solideagle\scripts\ad\usermanager::prepareDelUser($person);
-                        PlatformAD::removePlatformByPersonId($pid);
-                }
 
-                if(PlatformSS::getPlatformConfigByPersonId($pid) !== NULL)
-                {
-//                        \solideagle\scripts\smartschool\usermanager::prepareDelUser($person);
-//                        PlatformSS::removePlatformByPersonId($pid);
-                }
+	public function removeAction()
+	{
+		$this->_helper->layout()->disableLayout();
+		$this->_helper->viewRenderer->setNoRender(true);
 
-                if(PlatformGA::getPlatformConfigByPersonId($pid) !== NULL)
-                {
-                        \solideagle\scripts\ga\usermanager::prepareDelUser($person);
-                        PlatformGA::removePlatformByPersonId($pid);
-                }
+		$pid = $this->getRequest()->getPost('jspostArr');
 
-                Person::delPersonById($pid);
-            }
-            
-        }
+		$person = Person::getPersonById($pid);
 
+		if ($person != null)
+		{
+			if(PlatformAD::getPlatformConfigByPersonId($pid) !== NULL)
+			{
+				\solideagle\scripts\ad\usermanager::prepareDelUser($person);
+				PlatformAD::removePlatformByPersonId($pid);
+			}
+
+			if(PlatformSS::getPlatformConfigByPersonId($pid) !== NULL)
+			{
+				//                        \solideagle\scripts\smartschool\usermanager::prepareDelUser($person);
+				//                        PlatformSS::removePlatformByPersonId($pid);
+			}
+
+			if(PlatformGA::getPlatformConfigByPersonId($pid) !== NULL)
+			{
+				\solideagle\scripts\ga\usermanager::prepareDelUser($person);
+				PlatformGA::removePlatformByPersonId($pid);
+			}
+
+			Person::delPersonById($pid);
+		}
+
+	}
 
 }
