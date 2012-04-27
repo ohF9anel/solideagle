@@ -239,9 +239,6 @@
 						<li><a
 							id="CreateUserLink"
 							href="#"><i class="icon-user"></i> Gebruiker maken</a></li>
-						<li><a
-							id="MoveUserLink"
-							href="#"><i class="icon-move"></i> Gebruikers verplaatsen</a></li>
 						<li class="divider"></li>
 						<li><a
 							id="CreateSubGroupLink"
@@ -267,6 +264,15 @@
 
 						<li class="nav-header"><span style="white-space: nowrap">Geselecteerde gebruikers</span></li>
 						<li><a
+							href="javascript:void(0)"
+							id="RemoveUserLink"> <i class="icon-remove"></i> Gebruikers Verwijderen
+						</a></li>
+						<li><a
+							id="MoveUserLink"
+							href="#"><i class="icon-move"></i> Gebruikers verplaatsen</a></li>
+						
+
+						<li><a
 							id="TaskForUser"
 							href="#"><i class="icon-list-alt"></i> Custom taak</a></li>
 						<li><a
@@ -274,6 +280,14 @@
 							href="#"><i class="icon-list-alt"></i> Template taak</a></li>
 
 						<li class="nav-header"><span style="white-space: nowrap">Deze groep en subgroepen</span></li>
+						<li><a
+							href="javascript:void(0)"
+							id="RemoveUsersInGroupLink"> <i class="icon-remove"></i> Gebruikers Verwijderen
+						</a></li>
+						<li><a
+							id="MoveUsersInGroupLink"
+							href="#"><i class="icon-move"></i> Gebruikers verplaatsen</a></li>
+						
 						<li><a
 							id="TaskForGroup"
 							href="#"><i class="icon-list-alt"></i> Custom taak</a></li>
@@ -323,20 +337,22 @@
 				<li><a
 					href="javascript:void(0)"
 					id="EditUserLink"><i class="icon-pencil"></i> Bewerken</a></li>
-				<li><a
-					href="javascript:void(0)"
-					id="RemoveUserLink"> <i class="icon-remove"></i> Verwijderen
-				</a></li>
 			</ul>
 		</li>
 	</ul>
 </div>
 
-<div id="loadingHolder" style="display:none">
+<div
+	id="loadingHolder"
+	style="display: none">
 	<div class="SEsupermodal ">
 		<div style="min-width: 500px;">
-			<h2 style="padding: 20px"><img  style="height:25px;"
-				src="<?php echo $this->SE_path; ?>/images/loading.gif" height="25px"/>Loading... </h2>
+			<h2 style="padding: 20px">
+				<img
+					style="height: 25px;"
+					src="<?php echo $this->SE_path; ?>/images/loading.gif"
+					height="25px" />Loading...
+			</h2>
 		</div>
 	</div>
 	<div class="modal-backdrop in"></div>

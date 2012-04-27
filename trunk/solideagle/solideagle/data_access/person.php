@@ -55,6 +55,11 @@ class Person
 	
 	//not stored in db
 	private $year;
+	
+	//readonly
+	private $hasAdAccount;
+	private $hasSSAccount;
+	private $hasGaccount;
 
 	public function __construct()
 	{
@@ -734,6 +739,9 @@ class Person
 		$person->setStudentStamnr($retObj->student_stamnr);
 		$person->setParentOccupation($retObj->parent_occupation);
 		$person->setGroupId($retObj->group_id);
+		$person->hasAdAccount = $retObj->platformad;
+		$person->hasGaccount = $retObj->platformga;
+		$person->hasSSAccount = $retObj->platformss;
 		
 		foreach(Type::getTypesByPersonid($person->getId()) as $ptype)
 		{
@@ -754,7 +762,7 @@ class Person
 		//cut off first semicol
 		$params = substr($params, 1);
 		
-		$sql = "SELECT * FROM  `person`
+		$sql = "SELECT * FROM  `allPersons`
 		WHERE `id` IN (" .$params. ")";
 		
 		$cmd = new DatabaseCommand($sql);
@@ -774,7 +782,7 @@ class Person
 
 	public static function getPersonById($id)
 	{
-		$sql = "SELECT * FROM  `person`
+		$sql = "SELECT * FROM  `allPersons`
 		WHERE `id` = :id;";
 
 		$cmd = new DatabaseCommand($sql);
@@ -1393,6 +1401,26 @@ class Person
 		$cmd->addParam(":id", $person->getId());
 		$cmd->addParam(":group_id", $person->getGroupId());
 		$cmd->execute();
+	}
+
+	public function getValErrors()
+	{
+	    return $this->valErrors;
+	}
+
+	public function getHasAdAccount()
+	{
+	    return $this->hasAdAccount;
+	}
+
+	public function getHasSSAccount()
+	{
+	    return $this->hasSSAccount;
+	}
+
+	public function getHasGaccount()
+	{
+	    return $this->hasGaccount;
 	}
 }
 
