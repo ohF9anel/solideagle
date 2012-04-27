@@ -8,7 +8,9 @@ use solideagle\utilities\SuperEntities;
 use solideagle\data_access\helpers\DateConverter;
 
 use solideagle\data_access\Person;
-use solideagle\data_access\platforms;
+use solideagle\data_access\PlatformAD;
+use solideagle\data_access\PlatformGA;
+use solideagle\data_access\PlatformSS;
 use solideagle\data_access\Type;
 use solideagle\data_access\Group;
 use solideagle\scripts\Usermanager;
@@ -127,7 +129,6 @@ class UsersController extends Zend_Controller_Action
 
 		$person->setFirstName($this->getRequest()->getPost('FirstName'));
 		$person->setName($this->getRequest()->getPost('Name'));
-		$person->setGroupId($this->getRequest()->getPost('GroupId'));
 		$person->setGender($this->getRequest()->getPost('Gender'));
 		$person->setBirthDate(DateConverter::DisplayDateTodbDate($this->getRequest()->getPost('BirthDate')));
 		$person->setEmail($this->getRequest()->getPost('Email'));
@@ -141,6 +142,7 @@ class UsersController extends Zend_Controller_Action
 		$person->setUniqueIdentifier($this->getRequest()->getPost('uniqueIdentifier'));
 		$person->setGroupId($this->getRequest()->getPost('groupId'));
 		$person->setInformatId($this->getRequest()->getPost('informatId'));
+                $person->setPictureUrl($this->getRequest()->getPost('PictureUrl'));
 			
 		if(count($errors = Person::validatePerson($person)) > 0)
 		{
@@ -265,17 +267,40 @@ class UsersController extends Zend_Controller_Action
 	}
 
 	 
+        
+        public function removeAction()
+        {
+            $this->_helper->layout()->disableLayout();
+            $this->_helper->viewRenderer->setNoRender(true);
+            
+            $pid = $this->getRequest()->getPost('jspostArr');
+            
+            $person = Person::getPersonById($pid);
+            
+            if ($person != null)
+            {
+                if(PlatformAD::getPlatformConfigByPersonId($pid) !== NULL)
+                {
+                        \solideagle\scripts\ad\usermanager::prepareDelUser($person);
+                        PlatformAD::removePlatformByPersonId($pid);
+                }
+
+                if(PlatformSS::getPlatformConfigByPersonId($pid) !== NULL)
+                {
+//                        \solideagle\scripts\smartschool\usermanager::prepareDelUser($person);
+//                        PlatformSS::removePlatformByPersonId($pid);
+                }
+
+                if(PlatformGA::getPlatformConfigByPersonId($pid) !== NULL)
+                {
+                        \solideagle\scripts\ga\usermanager::prepareDelUser($person);
+                        PlatformGA::removePlatformByPersonId($pid);
+                }
+
+                Person::delPersonById($pid);
+            }
+            
+        }
 
 
 }
-
-
-
-
-
-
-
-
-
-
-

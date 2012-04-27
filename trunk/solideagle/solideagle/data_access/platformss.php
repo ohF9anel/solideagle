@@ -9,37 +9,46 @@ class PlatformSS
 	private $enabled = true;
 	private $personId;
 	
-	/**
-	 * 
-	 * @param PlatformAD $platformAD
-	 */
-	public static function addToPlatform($platform)
+	public static function addToPlatform($platformss)
 	{
-		$sql = "INSERT INTO `platform_ss`
+		$sql = "INSERT INTO `CentralAccountDB`.`platform_ss`
 				(`person_id`,
 				`enabled`)
 				VALUES
 				(
-				:personid,
+				:person_id,
 				:enabled
 				)";
 		
 		$cmd = new DatabaseCommand($sql);
-		$cmd->addParam(":personid", $platform->getPersonId());
-		$cmd->addParam(":enabled", $platform->getEnabled());
-
+		$cmd->addParam(":person_id", $platformss->getPersonId());
+		$cmd->addParam(":enabled", $platformss->getEnabled());
 		$cmd->BeginTransaction();
 		$cmd->execute();
 		$cmd->CommitTransaction();
 	}
-	
+        
+        public static function updatePlatform($platformss)
+	{
+		$sql = "UPDATE `CentralAccountDB`.`platform_ss`
+                        SET `enabled` = :enabled
+			WHERE `person_id` = :person_id
+                        ";
+		
+		$cmd = new DatabaseCommand($sql);
+		$cmd->addParam(":person_id", $platformss->getPersonId());
+		$cmd->addParam(":enabled", $platformss->getEnabled());
+		$cmd->BeginTransaction();
+		$cmd->execute();
+		$cmd->CommitTransaction();
+	}
 	
 	public static function getPlatformConfigByPersonId($personid)
 	{
 		$sql = "SELECT
 					`platform_ss`.`person_id`,
 					`platform_ss`.`enabled`
-					FROM `platform_ss`
+					FROM `CentralAccountDB`.`platform_ss`
 					WHERE `platform_ss`.`person_id` = :personid";
 		
 		$cmd = new DatabaseCommand($sql);
@@ -55,12 +64,21 @@ class PlatformSS
 		
 		$ret->setEnabled($obj->enabled);
 		$ret->setPersonId($obj->person_id);
-	
 		
 		return $ret;
 	}
+        
+        public static function removePlatformByPersonId($personid)
+	{
+		$sql = "DELETE FROM `CentralAccountDB`.`platform_ss`
+                        WHERE `platform_ss`.`person_id` = :personid";
 
-	
+		$cmd = new DatabaseCommand($sql);
+		
+		$cmd->addParam(":personid",$personid);
+		
+		$cmd->execute();
+        }
 
 	public function getEnabled()
 	{

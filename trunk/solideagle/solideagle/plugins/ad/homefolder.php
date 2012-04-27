@@ -16,7 +16,7 @@ class HomeFolder
      * @param group[] $arrReadRightsGroups 
      * @return boolean 
      */
-    public static function createHomeFolder($conn,$server, $path, $username, $arrReadRightsGroups = null)
+    public static function createHomeFolder($conn, $server, $path, $username, $arrReadRightsGroups = null)
     {
 
         // make folder & subfolders
@@ -57,11 +57,11 @@ class HomeFolder
         
         $conn->write("echo ENDOFCODE\n");
         $conn->read("ENDOFCODE");
-//        
-//        while($data = $conn->_get_channel_packet(NET_SSH2_CHANNEL_SHELL))
-//{
-//	echo $data;
-//}
+        
+        while($data = $conn->_get_channel_packet(NET_SSH2_CHANNEL_SHELL))
+{
+	echo $data;
+}
         
         return true;
     }
