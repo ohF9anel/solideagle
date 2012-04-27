@@ -13,10 +13,7 @@ class Logger
 	private static $conf = array('mode' => 0600, 'timeFormat' => '%X %x');
 	private	static $logger = NULL;
 
-
 	/**
-	 * 
-	 * 
 	 * 
 	 * @return Log
 	 */
@@ -26,12 +23,7 @@ class Logger
 		
 		if(Logger::$logger == NULL)
 		{
-			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-			  	Logger::$logger  = &Log::singleton('file', 'c:\out.log', 'ident', Logger::$conf,$loglevel);
-			} else {
-			   	Logger::$logger  = &Log::singleton('file', '/var/log/solideagle/out.log', 'ident', Logger::$conf,$loglevel);
-			}
-
+			   	Logger::$logger = &Log::singleton('file', '/var/log/solideagle/out.log', 'ident', Logger::$conf,$loglevel);
 		}
 	
 		return Logger::$logger;
@@ -39,9 +31,6 @@ class Logger
 	
 	public static function log($errormessage,$messagetype = PEAR_LOG_ERR)
 	{
-		
-		
-		
 		$traces = debug_backtrace();
 		
 		$logplace = "";

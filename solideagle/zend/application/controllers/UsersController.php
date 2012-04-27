@@ -1,6 +1,8 @@
 <?php
 
 
+use solideagle\scripts\GlobalUserManager;
+
 use solideagle\utilities\SuperEntities;
 
 use solideagle\data_access\helpers\DateConverter;
@@ -106,7 +108,7 @@ class UsersController extends Zend_Controller_Action
 			}
 			$person->setFirstName($this->getRequest()->getPost('FirstName'));
 			$person->setName($this->getRequest()->getPost('Name'));
-				
+
 			echo "GeneratedUsername:" . Person::generateUsername($person,$isStudent);
 			return;
 		}
@@ -149,21 +151,8 @@ class UsersController extends Zend_Controller_Action
 
 		if($postmode === "edit")
 		{
-			$person->setId($this->getRequest()->getPost('Id'));
-			$oldPerson = Person::getPersonById($person->getId());
-			Person::updatePerson($person);
-			$person->setGroupId($oldPerson->getGroupId());
-			/*if (platforms::getPlatformAdByPersonId($person->getId()) != null)
-			{
-			solideagle\scripts\ad\usermanager::prepareUpdateUser($person);
-			}
-			if (platforms::getPlatformGappByPersonId($person->getId()) != null)
-			{
-				solideagle\scripts\ga\usermanager::prepareUpdateUser($person, $oldPerson->getAccountUsername());
-			}
-			                    if (platforms::getPlatformSmartschoolByPersonIdByPersonId($person->getId()) != null)
-			                          solideagle\scripts\smartschool\usermanager::prepareUpdateUser($person);*/
-
+			$person->setId($this->getRequest()->getPost('Id'));l		
+			GlobalUserManager::updateUser($person);
 		}else{
 			Person::addPerson($person);
 		}
@@ -239,55 +228,44 @@ class UsersController extends Zend_Controller_Action
 		// action body
 	}
 
-        public function moveAction()
+	public function moveAction()
 	{
-                $this->_helper->layout()->disableLayout();
+		$this->_helper->layout()->disableLayout();
 		$this->view->groups = Group::getAllGroups();
-                
-                $this->view->oldgid = $this->getRequest()->getParam("oldgid",false);
+
+		$this->view->oldgid = $this->getRequest()->getParam("oldgid",false);
 	}
 
 	public function movepostAction()
 	{
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
-   
-                $oldgid = $this->getRequest()->getPost("oldgid",false);
-                
-                if (($users = $this->getRequest()->getParam("users",false)))
-                {
-                    foreach($users as $uid)
-                    {
-                         if(($newgid = $this->getRequest()->getParam("newgid",false)) && $newgid != $oldgid)
-                            $this->moveAUser($uid, $newgid);
-                    }
-                }
+		 
+		$oldgid = $this->getRequest()->getPost("oldgid",false);
+		$newgid = $this->getRequest()->getParam("newgid",false);
+
+		if($oldgid ===false || $newgid ===false)
+		{
+			echo "oldgid or newgid not set!";
+			return;
+		}
+
+		if($oldgid == $newgid)
+		{
+			echo "moving to same group, aborting";
+			return;
+		}
+
+		$users = Person::getPersonsByIds($this->getRequest()->getParam("users",array()));
+
+		foreach($users as $user)
+		{
+			GlobalUserManager::moveUser($user, $newgid, $oldgid);
+		}
+
 	}
 
-        private function moveAUser($pid, $newgid)
-        {
-            //all good, move
-            $person = Person::getPersonById($pid);
-
-            $person->setGroupId($newgid);
-
-            Person::updatePerson($person);  
-
-            if(platforms::getPlatformAdByPersonId($person->getId()) !== NULL)
-            {
-                    \solideagle\scripts\ad\usermanager::prepareUpdateUser($person);
-            }
-
-            if(platforms::getPlatformGappByPersonId($person->getId()) !== NULL)
-            {
-                    \solideagle\scripts\ga\usermanager::prepareUpdateUser($person);
-            }
-
-            if(platforms::getPlatformSmartschoolByPersonId($person->getId()) !== NULL)
-            {
-                    //\solideagle\scripts\smartschool\usermanager::
-            }
-        }
+	 
 
 
 }
