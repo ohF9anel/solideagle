@@ -61,6 +61,8 @@ class ClassGroup{
 		assert('isset($classGroup->desc) /* desc required!*/');
 		assert('isset($classGroup->code) /* code required!*/');
 		
+		echo $classGroup->parentCode;
+		
 		$api = Api::singleton();
 		$retval += $api->saveClass($classGroup->name, $classGroup->desc, $classGroup->code,$classGroup->parentCode,		
 									$classGroup->untis, $classGroup->instituteNumber, $classGroup->adminNumber);
@@ -89,7 +91,16 @@ class ClassGroup{
 		}
 	}
 
+	public static function updateClassGroup()
+	{
+		//not supported by smartschool!
+	}
 	
+	
+	public static function moveClassGroup($newparentgroupcode,$classgroup)
+	{
+		//not supported by smartschool!
+	}
 
 	
 }

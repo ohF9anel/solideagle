@@ -1376,6 +1376,24 @@ class Person
 		
 		return $personidarr;
 	}
+	
+	/**
+	 * seperate statement for performance
+	 * call $person->setgroupid and then this
+	 * moves person to new group id
+	 * @param Person $person
+	 */
+	public static function moveUser($person)
+	{
+		$sql = "UPDATE  `person` SET
+		`group_id` = :group_id
+		WHERE id = :id;";
+		
+		$cmd->newQuery($sql);
+		$cmd->addParam(":id", $person->getId());
+		$cmd->addParam(":group_id", $person->getGroupId());
+		$cmd->execute();
+	}
 }
 
 

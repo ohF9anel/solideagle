@@ -141,6 +141,21 @@ class usermanager implements TaskInterface
 		$config["person"] = $person;
 		TaskQueue::insertNewTask($config, $person->getId());
 	}
+	
+	/**
+	 * 
+	 * @param Person $person
+	 * @param Group $newgroup
+	 * @param Group $oldgroup
+	 */
+	public static function prepareMoveUser($person,$newgroup,$oldgroup)
+	{
+		$config["action"] = self::ActionMoveUser;
+		$config["person"] = $person;
+		$config["newgroup"] = $newgroup;
+		
+		TaskQueue::insertNewTask($config, $person->getId());
+	}
 
 
 }

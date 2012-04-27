@@ -2,6 +2,8 @@
 namespace solideagle\scripts\smartschool;
 
 
+use solideagle\plugins\StatusReport;
+
 use solideagle\plugins\smartschool\data_access\ClassGroup;
 
 use solideagle\data_access\TaskQueue;
@@ -26,7 +28,7 @@ class groupmanager implements TaskInterface
 		if($config->action == self::ActionAdd)
 		{
 			$classGroup = new ClassGroup();
-			$classGroup->setName("</script><h1>HI</h1>" . $config->newgroup->getName());
+			$classGroup->setName($config->newgroup->getName());
 			//The field code is used as the unique identifier for groups on smartschool, we use the name of our group
 			$classGroup->setCode($config->newgroup->getName());
 			//do not put ANY weird characters in desc, because smartschool does not handle it properly and smartschool WILL break
@@ -36,10 +38,9 @@ class groupmanager implements TaskInterface
 			
 			if(isset($config->parents) && count($config->parents) > 0)
 			{
-				$classGroup->setParentCode($config->parents[count($config->parents)-1]->getName());
+				$classGroup->setParentCode($config->parents[0]->getName());
 			}
-			
-			
+
 			$ret = ClassGroup::saveClassGroup($classGroup);
 			
 			if($ret->isSucces())
@@ -52,11 +53,30 @@ class groupmanager implements TaskInterface
 			
 		}else if($config->action == self::ActionMove)
 		{
-				
-		}else if($config->action == self::ActionModify)
+			$ret = new StatusReport(false,"Deze actie wordt niet ondersteund door smartschool. Voer de verplaatsing manueel uit");
+			
+			if($ret->isSucces())
+			{
+				return true;
+			}else{
+				$taskqueue->setErrorMessages($ret->getError());
+				return false;
+			}
+		}
+		else if($config->action == self::ActionModify)
 		{
-				
-		}else if($config->action == self::ActionRemove)
+			$ret = new StatusReport(false,"Deze actie wordt niet ondersteund door smartschool. Voer de hernoeming manueel uit\n Hernoeming van " 
+					. $config->oldgroup->getName() . " naar " . $config->newgroup->getName());
+			
+			if($ret->isSucces())
+			{
+				return true;
+			}else{
+				$taskqueue->setErrorMessages($ret->getError());
+				return false;
+			}
+		}
+		else if($config->action == self::ActionRemove)
 		{
 			$ret = ClassGroup::deleteClassGroupByCode($config->group->getName());
 			if($ret->isSucces())
@@ -115,15 +135,10 @@ class groupmanager implements TaskInterface
 		$stdConfig = new \stdClass();
 		$stdConfig->action = self::ActionMove;
 
-		$stdConfig->oldparents = $oldparents;
+		//$stdConfig->oldparents = $oldparents;
 		$stdConfig->newparents = $newparents;
 		$stdConfig->group = $group;
 
 		TaskQueue::insertNewTask($stdConfig, $group->getId(),TaskQueue::TypeGroup);
 	}
-
-
-
-
-
 }
