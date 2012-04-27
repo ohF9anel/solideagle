@@ -1,5 +1,7 @@
 <?php
 
+use solideagle\scripts\GlobalUserManager;
+
 use solideagle\data_access\PlatformSS;
 
 use solideagle\data_access\Group;
@@ -31,7 +33,6 @@ class UsertasksController extends Zend_Controller_Action
 
     public function indexAction()
     {
-			
 
     }
     
@@ -39,17 +40,16 @@ class UsertasksController extends Zend_Controller_Action
      * 
      * @param Person $user
      */
-    private function doTasksForUser($user)
+    private function doTasksForUser($user,$configstdclass)
     {
-    	if($this->getRequest()->getPost('createSsAccount',false))
+    	if($configstdclass->createAdAccount || $configstdclass->createSsAccount || $configstdclass->createGappAccount)
     	{
-    		//does user have account?
-    		if(PlatformSS::getPlatformConfigByPersonId($user->getId())===NULL)
-    		{
-    			//he does not, make one
-    			solideagle\scripts\smartschool\usermanager::prepareAddUser($user);
-    		}
-    		
+    		GlobalUserManager::createAccounts($person, $configstdclass);
+    	}
+    	
+    	if($configstdclass->deleteAdAccount || $configstdclass->deleteSsAccount || $configstdclass->deleteGappAccount)
+    	{
+    		GlobalUserManager::deleteAccounts($person,$configstdclass);
     	}
     }
    
@@ -58,9 +58,32 @@ class UsertasksController extends Zend_Controller_Action
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
 
+		$configstdclass = new stdClass();
+		
+		$configstdclass->createAdAccount = $this->getRequest()->getPost('createAdAccount',false);
+		$configstdclass->deleteAdAccount = $this->getRequest()->getPost('deleteAdAccount',false);
+		$configstdclass->disableAdAccount = $this->getRequest()->getPost('disableAdAccount',false);
+		$configstdclass->enableAdAccount = $this->getRequest()->getPost('enableAdAccount',false);
+		$configstdclass->createAdHomedir = $this->getRequest()->getPost('createAdHomedir',false);
+		$configstdclass->homefolderServer = $this->getRequest()->getPost('homefolderServer');
+		$configstdclass->homefolderPath = $this->getRequest()->getPost('homefolderPath');
+		$configstdclass->scanSharePath = $this->getRequest()->getPost('scanSharePath');
+		$configstdclass->wwwSharePath = $this->getRequest()->getPost('wwwSharePath');
+		$configstdclass->createUpDownFolders = $this->getRequest()->getPost('createUpDownFolders',false);
+		$configstdclass->uploadSharePath = $this->getRequest()->getPost('uploadSharePath');
+		$configstdclass->downloadSharePath = $this->getRequest()->getPost('downloadSharePath');
+		$configstdclass->moveAdHomedir = $this->getRequest()->getPost('moveAdHomedir',false);
+		$configstdclass->createSsAccount = $this->getRequest()->getPost('createSsAccount',false);
+		$configstdclass->deleteSsAccount = $this->getRequest()->getPost('deleteSsAccount',false);
+		$configstdclass->disableSsAccount = $this->getRequest()->getPost('disableSsAccount',false);
+		$configstdclass->enableSsAccount = $this->getRequest()->getPost('enableSsAccount',false);
+		$configstdclass->createGappAccount = $this->getRequest()->getPost('createGappAccount',false);
+		$configstdclass->deleteGappAccount = $this->getRequest()->getPost('deleteGappAccount',false);
+		$configstdclass->disableGappAccount = $this->getRequest()->getPost('disableGappAccount',false);
+		$configstdclass->enableGappAccount = $this->getRequest()->getPost('enableGappAccount',false);
+		
 		if($this->getRequest()->getPost('submitBtn') == "addTasks")
 		{
-
 			if(count($this->getRequest()->getPost('users',array())) <= 0)
 			{
 				echo "Geen gebruikers geselecteerd!";
@@ -69,48 +92,13 @@ class UsertasksController extends Zend_Controller_Action
 			
 			foreach(Person::getPersonsByIds($this->getRequest()->getPost('users')) as $user)
 			{
-			
-				$this->doTasksForUser($user);
+				$this->doTasksForUser($user,$configstdclass);
 			}
-			
-			
-
-			/*foreach($this->getRequest()->getPost('users') as $userid)
-			{
-				$user = Person::getPersonById($userid);
-				
-				
-			}*/
-			
 		}
 		else if($this->getRequest()->getPost('submitBtn') == "addTemplate" || $this->getRequest()->getPost('submitBtn') == "editTemplate")
 		{
 			$taskTemplate = new TaskTemplate();
 			$taskTemplate->setTemplateName($this->getRequest()->getPost('txtName'));
-			
-			$configstdclass = new stdClass();
-
-			$configstdclass->createAdAccount = $this->getRequest()->getPost('createAdAccount');
-			$configstdclass->deleteAdAccount = $this->getRequest()->getPost('deleteAdAccount');
-			$configstdclass->disableAdAccount = $this->getRequest()->getPost('disableAdAccount');
-			$configstdclass->enableAdAccount = $this->getRequest()->getPost('enableAdAccount');
-			$configstdclass->createAdHomedir = $this->getRequest()->getPost('createAdHomedir');
-			$configstdclass->homefolderServer = $this->getRequest()->getPost('homefolderServer');
-			$configstdclass->homefolderPath = $this->getRequest()->getPost('homefolderPath');
-			$configstdclass->scanSharePath = $this->getRequest()->getPost('scanSharePath');
-			$configstdclass->wwwSharePath = $this->getRequest()->getPost('wwwSharePath');
-			$configstdclass->createUpDownFolders = $this->getRequest()->getPost('createUpDownFolders');
-			$configstdclass->uploadSharePath = $this->getRequest()->getPost('uploadSharePath');
-			$configstdclass->downloadSharePath = $this->getRequest()->getPost('downloadSharePath');
-			$configstdclass->moveAdHomedir = $this->getRequest()->getPost('moveAdHomedir');
-			$configstdclass->createSsAccount = $this->getRequest()->getPost('createSsAccount');
-			$configstdclass->deleteSsAccount = $this->getRequest()->getPost('deleteSsAccount');
-			$configstdclass->disableSsAccount = $this->getRequest()->getPost('disableSsAccount');
-			$configstdclass->enableSsAccount = $this->getRequest()->getPost('enableSsAccount');
-			$configstdclass->createGappAccount = $this->getRequest()->getPost('createGappAccount');
-			$configstdclass->deleteGappAccount = $this->getRequest()->getPost('deleteGappAccount');
-			$configstdclass->disableGappAccount = $this->getRequest()->getPost('disableGappAccount');
-			$configstdclass->enableGappAccount = $this->getRequest()->getPost('enableGappAccount');
 			
 			$taskTemplate->setTemplateConfig($configstdclass);
 			
