@@ -109,7 +109,7 @@ class usermanager implements TaskInterface
 		TaskQueue::insertNewTask($config, $person->getId());
 	}
 
-	public static function prepareUpdateUser($person, $enabled = true)
+	public static function prepareUpdateUser($person, $enabled)
 	{
 		$config["action"] = self::ActionUpdateUser;
 		$config["person"] = $person;

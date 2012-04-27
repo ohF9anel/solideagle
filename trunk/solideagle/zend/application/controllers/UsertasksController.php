@@ -51,6 +51,18 @@ class UsertasksController extends Zend_Controller_Action
     	{
     		GlobalUserManager::deleteAccounts($user,$configstdclass);
     	}
+    	
+    	if($configstdclass->enableAdAccount || $configstdclass->enableSsAccount || $configstdclass->enableGappAccount)
+    	{
+    		GlobalUserManager::enableDisableAccounts($user,$configstdclass);
+    	}
+    	
+    	if($configstdclass->disableAdAccount || $configstdclass->disableSsAccount || $configstdclass->disableGappAccount)
+    	{
+    		GlobalUserManager::enableDisableAccounts($user,$configstdclass);
+    	}
+    	
+    	
     }
    
     public function posttaskAction()

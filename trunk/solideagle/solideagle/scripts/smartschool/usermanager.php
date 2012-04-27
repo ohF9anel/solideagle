@@ -120,7 +120,7 @@ class usermanager implements TaskInterface
 		}
 	}
 	
-	public static function prepareUpdateUser($person,$accountenabled=true)
+	public static function prepareUpdateUser($person,$accountenabled)
 	{
 		$config["action"] = self::ActionUpdateUser;
 		$config["person"] = $person;
