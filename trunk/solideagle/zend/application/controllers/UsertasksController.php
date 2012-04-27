@@ -44,12 +44,12 @@ class UsertasksController extends Zend_Controller_Action
     {
     	if($configstdclass->createAdAccount || $configstdclass->createSsAccount || $configstdclass->createGappAccount)
     	{
-    		GlobalUserManager::createAccounts($person, $configstdclass);
+    		GlobalUserManager::createAccounts($user, $configstdclass);
     	}
     	
     	if($configstdclass->deleteAdAccount || $configstdclass->deleteSsAccount || $configstdclass->deleteGappAccount)
     	{
-    		GlobalUserManager::deleteAccounts($person,$configstdclass);
+    		GlobalUserManager::deleteAccounts($user,$configstdclass);
     	}
     }
    
