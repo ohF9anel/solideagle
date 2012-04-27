@@ -151,7 +151,7 @@ class UsersController extends Zend_Controller_Action
 
 		if($postmode === "edit")
 		{
-			$person->setId($this->getRequest()->getPost('Id'));l		
+			$person->setId($this->getRequest()->getPost('Id'));		
 			GlobalUserManager::updateUser($person);
 		}else{
 			Person::addPerson($person);
