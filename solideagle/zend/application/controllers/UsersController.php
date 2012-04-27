@@ -148,7 +148,6 @@ class UsersController extends Zend_Controller_Action
 			return;
 		}
 			
-
 		if($postmode === "edit")
 		{
 			$person->setId($this->getRequest()->getPost('Id'));		

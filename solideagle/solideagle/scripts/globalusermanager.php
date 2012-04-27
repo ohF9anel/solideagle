@@ -22,19 +22,19 @@ class GlobalUserManager
 		$newgroup = Group::getGroupById($newgid);
 		$oldgroup = Group::getGroupById($oldgid);
 	
-		if(platforms::getPlatformAdByPersonId($person->getId()) !== NULL)
+		if($person->getHasAdAccount())
 		{
 			//TODO
 			//\solideagle\scripts\ad\usermanager::prepareMoveUser($person,$newgroup,$oldgroup);
 		}
 	
-		if(platforms::getPlatformGappByPersonId($person->getId()) !== NULL)
+		if($person->getHasGaccount())
 		{
 			//TODO
 			//\solideagle\scripts\ga\usermanager::prepareMoveUser($person,$newgroup,$oldgroup);
 		}
 	
-		if(platforms::getPlatformSmartschoolByPersonId($person->getId()) !== NULL)
+		if($person->getHasSSAccount())
 		{
 			\solideagle\scripts\smartschool\usermanager::prepareMoveUser($person,$newgroup,$oldgroup);
 		}
@@ -44,15 +44,21 @@ class GlobalUserManager
 	{
 		Person::updatePerson($person);
 		
-		/*if (platforms::getPlatformAdByPersonId($person->getId()) != null)
-		 {
-		solideagle\scripts\ad\usermanager::prepareUpdateUser($person);
-		}
-		if (platforms::getPlatformGappByPersonId($person->getId()) != null)
+		if($person->getHasAdAccount())
 		{
-		solideagle\scripts\ga\usermanager::prepareUpdateUser($person, $oldPerson->getAccountUsername());
+			//TODO
+			//\solideagle\scripts\ad\usermanager::prepareMoveUser($person,$newgroup,$oldgroup);
 		}
-		if (platforms::getPlatformSmartschoolByPersonIdByPersonId($person->getId()) != null)
-			solideagle\scripts\smartschool\usermanager::prepareUpdateUser($person);*/
+	
+		if($person->getHasGaccount())
+		{
+			//TODO
+			//\solideagle\scripts\ga\usermanager::prepareMoveUser($person,$newgroup,$oldgroup);
+		}
+	
+		if($person->getHasSSAccount())
+		{
+			\solideagle\scripts\smartschool\usermanager::prepareUpdateUser($person);
+		}
 	}
 }
