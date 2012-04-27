@@ -59,7 +59,7 @@ class Person
 	//readonly
 	private $hasAdAccount;
 	private $hasSSAccount;
-	private $hasGaccount;
+	private $hasGaAccount;
 
 	public function __construct()
 	{
@@ -1397,6 +1397,8 @@ class Person
 		`group_id` = :group_id
 		WHERE id = :id;";
 		
+		$cmd = new DatabaseCommand($sql);
+		
 		$cmd->newQuery($sql);
 		$cmd->addParam(":id", $person->getId());
 		$cmd->addParam(":group_id", $person->getGroupId());
@@ -1418,9 +1420,9 @@ class Person
 	    return $this->hasSSAccount;
 	}
 
-	public function getHasGaccount()
+	public function getHasGaAccount()
 	{
-	    return $this->hasGaccount;
+	    return $this->hasGaAccount;
 	}
 }
 

@@ -103,7 +103,7 @@ class manageuser
         return new StatusReport(!$errorHandler->hasErrors(), $errorHandler->toString());
     }
     
-    public static function updateUser($person, $oldUsername, $enabled = true)
+    public static function updateUser($person, $enabled)
     {
         $errorHandler = new errorhandler();
         
@@ -112,7 +112,7 @@ class manageuser
                         1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
                         2 => array("pipe", "a")   // stderr is a file to write to
         );
-        $cmd = "gam update user " . $oldUsername . " ";
+        $cmd = "gam update user " . $person->getAccountUsername() . " ";
         $cmd .= "username " . $person->getAccountUsername() . " ";
         $cmd .= "firstname " . $person->getFirstName() . " ";
         $cmd .= "lastname " . $person->getName() . " ";

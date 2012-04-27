@@ -40,7 +40,7 @@ class usermanager implements TaskInterface
 		}
 		else if($config["action"] == self::ActionUpdateUser && isset($config["user"]) && isset($config["oldUsername"]) && isset($config["enabled"]))
 		{
-			$ret = manageuser::updateUser($config["user"], $config["oldUsername"], $config["enabled"]);
+			$ret = manageuser::updateUser($config["user"], $config["enabled"]);
 
 			if($ret->isSucces())
 			{
@@ -110,21 +110,15 @@ class usermanager implements TaskInterface
 	
 	/**
 	*
-	* Ik heb geen idee wat oldusername hier doet :)
 	*
 	* @param Person $person
-	* @param string $oldUsername
 	* @param bool $enabled
 	*/
-	public static function prepareUpdateUser($person, $oldUsername = false, $enabled = true)
+	public static function prepareUpdateUser($person, $enabled)
 	{
 		$config["action"] = self::ActionUpdateUser;
 		$config["user"] = $person;
-		if($oldUsername === false)
-		{
-			$oldUsername = $person->getAccountUsername();
-		}
-		$config["oldUsername"] = $oldUsername;
+		
 		$config["enabled"] = $enabled;
 
 		TaskQueue::insertNewTask($config, $person->getId());
