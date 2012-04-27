@@ -3,7 +3,6 @@
 namespace solideagle\plugins\ad;
 use solideagle\Config;
 
-require_once('Net/SSH2.php');
 use solideagle\logging\Logger;
 
 class SSHManager

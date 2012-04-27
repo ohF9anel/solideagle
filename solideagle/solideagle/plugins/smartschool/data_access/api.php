@@ -20,6 +20,7 @@ class Api
 		$this->apiKey = Config::singleton()->ss_ws_psw;
 	}
 
+	
 	public static function singleton()
 	{
 		if (!isset(self::$instance)) {
