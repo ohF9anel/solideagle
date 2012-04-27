@@ -78,10 +78,7 @@ class oumanager implements TaskInterface
 		}
 	}
 
-	public function createTaskFromParams($params)
-	{
 
-	}
 
 	public static function prepareAddOu($parents,$ou)
 	{
@@ -121,10 +118,7 @@ class oumanager implements TaskInterface
 		TaskQueue::insertNewTask($config, $ou->getId(), TaskQueue::TypeGroup);
 	}
 
-	public function getParams()
-	{
 
-	}
 
 }
 

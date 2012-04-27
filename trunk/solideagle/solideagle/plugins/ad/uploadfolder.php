@@ -5,7 +5,7 @@ namespace solideagle\plugins\ad;
 use solideagle\logging\Logger;
 use solideagle\Config;
 
-require_once('Net/SSH2.php');
+
 
 class UploadFolder
 {

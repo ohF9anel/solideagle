@@ -1,13 +1,15 @@
 <?php
-namespace solideagle\plugins\smartschool;
-require_once 'Api.php';
+namespace solideagle\plugins\smartschool\data_access;
+
+
+use solideagle\plugins\StatusReport;
 
 class ClassGroup{
 
 	private $name;
 	private $desc;
 	private $code;
-	private $parent; //ClassGroup
+	private $parentCode; //ClassGroup
 	private $untis;
 	private $instituteNumber;
 	private $adminNumber;
@@ -22,14 +24,18 @@ class ClassGroup{
 	    $this->desc = $desc;
 	}
 
+	/**
+	 * This field is used as the unique identifier for groups on smartschool, we use the name of our group
+	 * @param string $code
+	 */
 	public function setCode($code)
 	{
 	    $this->code = $code;
 	}
 
-	public function setParent($parent) //ClassGroup
+	public function setParentCode($parentCode) 
 	{
-	    $this->parent = $parent;
+	    $this->parentCode = $parentCode;
 	}
 
 	public function setUntis($untis)
@@ -56,23 +62,31 @@ class ClassGroup{
 		assert('isset($classGroup->code) /* code required!*/');
 		
 		$api = Api::singleton();
-		$retval += $api->saveClass($classGroup->name, $classGroup->desc, $classGroup->code,
-									isset($classGroup->parent)?$classGroup->parent->code:NULL,		
+		$retval += $api->saveClass($classGroup->name, $classGroup->desc, $classGroup->code,$classGroup->parentCode,		
 									$classGroup->untis, $classGroup->instituteNumber, $classGroup->adminNumber);
+		
+		if($retval == 0)
+		{
+			return new StatusReport();
+		}else{
+			return new StatusReport(false,Api::getErrorFromCode($retval));
+		}
 
-		return $retval;
 	}
 	
-	public static function deleteClassGroup($classGroup)
+	public static function deleteClassGroupByCode($classGroupCode)
 	{
 		$retval = 0;
 				
-		assert('isset($classGroup->code) /* code required!*/');
-		
 		$api = Api::singleton();
-		$retval += $api->delClass($classGroup->code);
+		$retval += $api->delClass($classGroupCode);
 		
-		return $retval;
+		if($retval == 0)
+		{
+			return new StatusReport();
+		}else{
+			return new StatusReport(false,Api::getErrorFromCode($retval));
+		}
 	}
 
 	

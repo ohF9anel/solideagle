@@ -1,12 +1,7 @@
 <?php
 namespace solideagle\scripts;
-//general OU manager for all platforms
+//general OU / group manager for all platforms
 
-
-
-
-
-use solideagle\scripts\smartschool\groupmanager;
 
 use solideagle\data_access\Group;
 
@@ -34,7 +29,7 @@ class groupmanager {
 		ad\oumanager::prepareDeleteOu($parents, $group);
 		ad\groupmanager::prepareRemoveGroup($group);
 		ga\oumanager::prepareRemoveOu($parents,$group);
-		Smartschool\prepareRemoveGroup($parents,$group);
+		Smartschool\groupmanager::prepareRemoveGroup($parents,$group);
 	}
 
 	//wtf?
@@ -44,7 +39,7 @@ class groupmanager {
 		//wtf?
 		ad\groupmanager::prepareMoveGroup($group, $newparents[0], $newchildren, $oldparents[0], $oldchildren);
 		ga\oumanager::prepareMoveOu($newparents,$group, $oldparents);
-		martschool\prepareMoveGroup($oldparents,$newparents,$group);
+		Smartschool\groupmanager::prepareMoveGroup($oldparents,$newparents,$group);
 	}
 
 

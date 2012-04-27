@@ -7,10 +7,6 @@ use solideagle\data_access\Person;
 use solideagle\data_access\Group;
 use solideagle\Config;
 
-require_once('Zend/Loader.php');
-\Zend_Loader::loadClass('Zend_Gdata_ClientLogin');
-\Zend_Loader::loadClass('Zend_Gdata_Gapps');
-
 class manageuser
 {
     public static function addUser($person, $enabled = true)
