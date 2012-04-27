@@ -67,8 +67,6 @@ class UsertasksController extends Zend_Controller_Action
     	{
     		GlobalUserManager::enableDisableAccounts($user,$configstdclass);
     	}
-    	
-    	
     }
    
     public function posttaskAction()
@@ -324,6 +322,12 @@ class UsertasksController extends Zend_Controller_Action
     //placeholder, do not use!
     private function doUserThings()
     {
+    	die("placeholder, do not use!");
+    	//placeholder, do not use!
+    	return;
+    	return; //placeholder, do not use!
+    	return; //placeholder, do not use!
+    	//placeholder, do not use!
     	/**
     	 * ACTIVE DIRECTORY
     	 */
