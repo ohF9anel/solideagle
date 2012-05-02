@@ -467,7 +467,7 @@ class Group
 		(SELECT t1.parent_id FROM group_closure t1 WHERE t1.length=1 AND t1.child_id=t.child_id ) AS parent
 		FROM `group` p
 		JOIN (SELECT child_id, length from group_closure group by child_id) t ON p.id=t.child_id
-		LEFT JOIN person as pn ON pn.group_id = p.id
+		LEFT JOIN allPersons as pn ON pn.group_id = p.id
 		WHERE p.deleted = 0 group by p.id order by p.name";
 
 		$rootArr = array();
