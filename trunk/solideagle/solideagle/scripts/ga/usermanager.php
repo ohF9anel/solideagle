@@ -15,6 +15,7 @@ class usermanager implements TaskInterface
 	const ActionUpdateUser = 1;
 	const ActionDelUser = 2;
 	const ActionAddUserToOu = 3;
+        const ActionSetPhoto = 4;
 
 	public function runTask($taskqueue)
 	{
@@ -80,6 +81,22 @@ class usermanager implements TaskInterface
 				return false;
 			}
 		}
+                else if($config["action"] == self::ActionSetPhoto && isset($config["username"]) && isset($config["pictureurl"]))
+		{
+                        $picturepath = manageuser::downloadTempFile($config["pictureurl"], "/var/www/tmp/", "png.png");
+			$ret = manageuser::setPhoto($config["username"], $picturepath);
+                        
+                        
+
+			if($ret->isSucces())
+			{
+				return true;
+			}
+			else{
+				$taskqueue->setErrorMessages($ret->getError());
+				return false;
+			}
+		}
 		else
 		{
 			$taskqueue->setErrorMessages("Probleem met configuratie");
@@ -124,6 +141,14 @@ class usermanager implements TaskInterface
 	{
 		$config["action"] = self::ActionAddUserToOu;
 		$config["user"] = $person;
+		TaskQueue::insertNewTask($config, $person->getId());
+	}
+        
+        public static function prepareSetPhoto($person)
+	{
+		$config["action"] = self::ActionSetPhoto;
+		$config["username"] = $person->getAccountUsername();
+                $config["pictureurl"] = $person->getPictureUrl();
 		TaskQueue::insertNewTask($config, $person->getId());
 	}
 }
