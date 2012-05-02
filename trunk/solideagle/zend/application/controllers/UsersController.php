@@ -38,7 +38,7 @@ class UsersController extends Zend_Controller_Action
 		$this->view->stateEdit = 1;
 		$this->view->stateShow = 2;
 
-		if(($state = $this->getRequest()->getParam("state")) !== NULL)
+		if(($state = $this->getRequest()->getParam("state")) === NULL)
 		{
 			exit("no state requested");
 		}
@@ -257,31 +257,12 @@ class UsersController extends Zend_Controller_Action
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
 
-		$pid = $this->getRequest()->getPost('jspostArr');
+		$users = $this->getRequest()->getPost('selectedUsers',array());
 
-		$person = Person::getPersonById($pid);
-
-		if ($person != null)
+		foreach($users as $userid)
 		{
-			if(PlatformAD::getPlatformConfigByPersonId($pid) !== NULL)
-			{
-				\solideagle\scripts\ad\usermanager::prepareDelUser($person);
-				PlatformAD::removePlatformByPersonId($pid);
-			}
-
-			if(PlatformSS::getPlatformConfigByPersonId($pid) !== NULL)
-			{
-				//                        \solideagle\scripts\smartschool\usermanager::prepareDelUser($person);
-				//                        PlatformSS::removePlatformByPersonId($pid);
-			}
-
-			if(PlatformGA::getPlatformConfigByPersonId($pid) !== NULL)
-			{
-				\solideagle\scripts\ga\usermanager::prepareDelUser($person);
-				PlatformGA::removePlatformByPersonId($pid);
-			}
-
-			Person::delPersonById($pid);
+			$person = Person::getPersonById($userid);
+			GlobalUserManager::deleteUser($person);
 		}
 
 	}

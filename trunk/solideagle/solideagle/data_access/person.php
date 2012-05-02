@@ -47,16 +47,16 @@ class Person
 	private $studentPreviousSchool;
 	private $studentStamnr;
 	private $parentOccupation;
-        private $pictureUrl;
+	private $pictureUrl;
 	private $groupId;
 
 	private $types = array();
 
 	private $valErrors = array();
-	
+
 	//not stored in db
 	private $year;
-	
+
 	//readonly
 	private $hasAdAccount;
 	private $hasSSAccount;
@@ -332,17 +332,17 @@ class Person
 	{
 		$this->parentOccupation = $parentOccupation;
 	}
-        
-        public function getPictureUrl()
-        {
-            return $this->pictureUrl;
-        }
 
-        public function setPictureUrl($pictureUrl)
-        {
-            $this->pictureUrl = $pictureUrl;
-        }
-   
+	public function getPictureUrl()
+	{
+		return $this->pictureUrl;
+	}
+
+	public function setPictureUrl($pictureUrl)
+	{
+		$this->pictureUrl = $pictureUrl;
+	}
+	 
 	public function getGroupId()
 	{
 		return $this->groupId;
@@ -357,7 +357,7 @@ class Person
 	{
 		$this->types[] = $type;
 	}
-	
+
 	public function resetTypes()
 	{
 		$this->types = array();
@@ -481,7 +481,7 @@ class Person
 		`student_previous_school`,
 		`student_stamnr`,
 		`parent_occupation`,
-                `picture_url`,
+		`picture_url`,
 		`group_id`)
 		VALUES
 		(
@@ -513,7 +513,7 @@ class Person
 		:student_previous_school,
 		:student_stamnr,
 		:parent_occupation,
-                :picture_url,
+		:picture_url,
 		:group_id
 		);
 		";
@@ -547,7 +547,7 @@ class Person
 		$cmd->addParam(":student_previous_school", $person->getStudentPreviousSchool());
 		$cmd->addParam(":student_stamnr", $person->getStudentStamNr());
 		$cmd->addParam(":parent_occupation", $person->getParentOccupation());
-                $cmd->addParam(":picture_url", $person->getPictureUrl());
+		$cmd->addParam(":picture_url", $person->getPictureUrl());
 		$cmd->addParam(":group_id", $person->getGroupId());
 
 		$cmd->BeginTransaction();
@@ -629,8 +629,8 @@ class Person
 		`student_previous_school` = :student_previous_school,
 		`student_stamnr` = :student_stamnr,
 		`parent_occupation` = :parent_occupation,
-                `picture_url` = :picture_url,
-                `group_id` = :group_id
+		`picture_url` = :picture_url,
+		`group_id` = :group_id
 		WHERE id = :id;";
 
 		$cmd->newQuery($sql);
@@ -661,8 +661,8 @@ class Person
 		$cmd->addParam(":student_previous_school", $person->getStudentPreviousSchool());
 		$cmd->addParam(":student_stamnr", $person->getStudentStamNr());
 		$cmd->addParam(":parent_occupation", $person->getParentOccupation());
-                $cmd->addParam(":picture_url", $person->getPictureUrl());
-                $cmd->addParam(":group_id", $person->getGroupId());
+		$cmd->addParam(":picture_url", $person->getPictureUrl());
+		$cmd->addParam(":group_id", $person->getGroupId());
 		$cmd->execute();
 
 		// updates person's type(s)
@@ -699,34 +699,25 @@ class Person
 
 	public static function delPersonById($personId)
 	{
-		$sql = "DELETE FROM  `type_person`
-		WHERE `person_id` = :personId;";
+
+		$sql = "UPDATE `person` p set p.deleted = 1
+		WHERE `id` = :id;";
 
 		$cmd = new DatabaseCommand($sql);
 
-
-		$cmd->addParam(":personId", $personId);
-
-		$cmd->execute();
-
-		$sql = "DELETE FROM  `person`
-		WHERE `id` = :id;";
-
-			
-		$cmd->newQuery($sql);
 		$cmd->addParam(":id", $personId);
 
 		$cmd->execute();
 	}
-	
+
 	public static function createPersonByDbRow($retObj)
 	{
-		
+
 		if($retObj === false)
 			return NULL;
-		
+
 		$person = new Person();
-		
+
 		$person->setId($retObj->id);
 		$person->setAccountUsername($retObj->account_username);
 		$person->setAccountPassword($retObj->account_password);
@@ -755,20 +746,20 @@ class Person
 		$person->setStudentPreviousSchool($retObj->student_previous_school);
 		$person->setStudentStamnr($retObj->student_stamnr);
 		$person->setParentOccupation($retObj->parent_occupation);
-                $person->setPictureUrl($retObj->picture_url);
+		$person->setPictureUrl($retObj->picture_url);
 		$person->setGroupId($retObj->group_id);
 		$person->hasAdAccount = $retObj->platformad;
 		$person->hasGaccount = $retObj->platformga;
 		$person->hasSSAccount = $retObj->platformss;
-		
+
 		foreach(Type::getTypesByPersonid($person->getId()) as $ptype)
 		{
 			$person->addType($ptype);
 		}
-		
+
 		return $person;
 	}
-	
+
 	public static function getPersonsByIds($ids)
 	{
 		$params = "";
@@ -776,25 +767,25 @@ class Person
 		{
 			$params.= ",:param" . $i;
 		}
-		
+
 		//cut off first semicol
 		$params = substr($params, 1);
-		
+
 		$sql = "SELECT * FROM  `allPersons`
 		WHERE `id` IN (" .$params. ")";
-		
+
 		$cmd = new DatabaseCommand($sql);
 		for($i=0;$i<count($ids);$i++)
 		{
 			$cmd->addParam(":param".$i, $ids[$i]);
 		}
-		
+
 		$retarr = array();
-		
+
 		$cmd->executeReader()->readAll(function($row) use (&$retarr){
 			$retarr[] = Person::createPersonByDbRow($row);
 		});
-		
+
 		return $retarr;
 	}
 
@@ -809,49 +800,15 @@ class Person
 		$reader = $cmd->executeReader();
 
 		$retObj = $reader->read();
-		
+
 		$person = self::createPersonByDbRow($retObj);
 
 		return $person;
 	}
 
-	/**
-	 * Returns user id and username if valid user
-	 * @param string $username
-	 * @param string $password
-	 * @param string $typeName
-	 * @return var $personIdName    id and username
-	 */
-	public static function checkValidPersonByCredentials($username, $password, $typeName)
-	{
-		$sql = "SELECT
-		`person`.`id`, `person`.`account_username`
-		FROM  `person`,
-		`type_person`,
-		`type`
-		WHERE `person`.`account_username` = :accountUsername
-		AND `person`.`account_password` = :accountPassword
-		AND `person`.`id` = `type_person`.`person_id`
-		AND `type`.`id` = `type_person`.`type_id`
-		AND `type`.`type_name` = :typeName
-		;";
-
-		$cmd = new DatabaseCommand($sql);
-		$cmd->addParam(":accountUsername", $username);
-		$cmd->addParam(":accountPassword", $password);
-		$cmd->addParam(":typeName", $typeName);
-
-		$reader = $cmd->executeReader();
-
-		$personIdName = $reader->read();
-
-		return $personIdName;
-	}
-
-	
 	//TODO check if uniqueident is unqiue, and username does not yet exist
 	/**
-	 * 
+	 *
 	 * @param Person $person
 	 */
 	public static function validatePerson($person)
@@ -1187,7 +1144,7 @@ class Person
 					$validationErrors[] = "Stamnummer student: fout."; break;
 			}
 		}
-		
+
 		if($person->getGroupId()===NULL)
 		{
 			$validationErrors[] = "Gebruiker heeft geen groep!";
@@ -1215,34 +1172,23 @@ class Person
 	 * Will only partially fill the user object!
 	 * @param int $groupid
 	 */
-	public static function getUsersForDisplayByGroup($groupid = -1)
+	public static function getUsersForDisplayByGroup($groupid)
 	{
 			
-		if($groupid !== -1)
-		{
-			$sql = "SELECT
-			`person`.`id`,
-			`person`.`account_username`,
-				
-			`person`.`first_name`,
-			`person`.`name`,
-			`person`.`made_on`
-			FROM  `person`
-			WHERE
-			`person`.`group_id` = :groupid
-			AND
-			`person`.`deleted` = 0
-			ORDER BY `person`.`made_on` desc";
-		}else{
-			$sql = "SELECT
-			`person`.`id`,
-			`person`.`account_username`,
-				
-			`person`.`first_name`,
-			`person`.`name`,
-			`person`.`made_on`
-			FROM  `person` WHERE `person`.`deleted` = 0 ORDER BY `person`.`made_on` desc";
-		}
+
+		$sql = "SELECT
+		p.`id`,
+		p.`account_username`,
+		p.`first_name`,
+		p.`name`,
+		p.`made_on`
+		FROM  `allPersons` p
+		WHERE
+		p.`group_id` = :groupid
+		AND
+		p.`deleted` = 0
+		ORDER BY p.`made_on` desc";
+
 			
 		$cmd = new DatabaseCommand($sql);
 			
@@ -1257,7 +1203,7 @@ class Person
 			$tempperson->setName($row->name);
 			$tempperson->setFirstName($row->first_name);
 			$tempperson->setAccountUsername($row->account_username);
-				
+
 			$tempperson->setMadeOn($row->made_on);
 
 			$retarr[] = $tempperson;
@@ -1329,20 +1275,20 @@ class Person
 			return self::getPersonById($retObj->id);
 		}
 	}
-	
-	
-	
+
+
+
 	public static function getPersonByUniqueIdentifier($uniqueIdentifier)
 	{
 		$sql = "SELECT id FROM  `person`
 		WHERE
 		`person`.`uniqueIdentifier` = :uniqueidentifier";
-		
+
 		$cmd = new DatabaseCommand($sql);
 		$cmd->addParam(":uniqueidentifier", $uniqueIdentifier);
-		
+
 		$reader = $cmd->executeReader();
-		
+
 		$retObj = $reader->read();
 			
 		if($retObj === false)
@@ -1355,54 +1301,54 @@ class Person
 
 	public function getYear()
 	{
-	    return $this->year;
+		return $this->year;
 	}
 
 	public function setYear($year)
 	{
-	    $this->year = $year;
+		$this->year = $year;
 	}
 
 	public function getUniqueIdentifier()
 	{
-	    return $this->uniqueIdentifier;
+		return $this->uniqueIdentifier;
 	}
 
 	public function setUniqueIdentifier($uniqueIdentifier)
 	{
-	    $this->uniqueIdentifier = $uniqueIdentifier;
+		$this->uniqueIdentifier = $uniqueIdentifier;
 	}
 
 	public function getInformatId()
 	{
-	    return $this->informatId;
+		return $this->informatId;
 	}
 
 	public function setInformatId($informatId)
 	{
-	    $this->informatId = $informatId;
+		$this->informatId = $informatId;
 	}
-	
+
 	public static function getPersonIdsByGroup($groupid)
 	{
 		$sql = "SELECT
-				p.`id`
-				FROM `person` p
-				WHERE p.`group_id` = :groupId";
-		
+		p.`id`
+		FROM `person` p
+		WHERE p.`group_id` = :groupId";
+
 		$cmd = new DatabaseCommand($sql);
 		$cmd->addParam(":groupId", $groupid);
-		
+
 		$personidarr = array();
-		
+
 		$cmd->executeReader()->readAll(function($row) use (&$personidarr){
-		
+
 			$personidarr[] = $row->id;
 		});
-		
+
 		return $personidarr;
 	}
-	
+
 	/**
 	 * seperate statement for performance
 	 * call $person->setgroupid and then this
@@ -1414,9 +1360,9 @@ class Person
 		$sql = "UPDATE  `person` SET
 		`group_id` = :group_id
 		WHERE id = :id;";
-		
+
 		$cmd = new DatabaseCommand($sql);
-		
+
 		$cmd->newQuery($sql);
 		$cmd->addParam(":id", $person->getId());
 		$cmd->addParam(":group_id", $person->getGroupId());
@@ -1425,22 +1371,22 @@ class Person
 
 	public function getValErrors()
 	{
-	    return $this->valErrors;
+		return $this->valErrors;
 	}
 
 	public function getHasAdAccount()
 	{
-	    return $this->hasAdAccount;
+		return $this->hasAdAccount;
 	}
 
 	public function getHasSSAccount()
 	{
-	    return $this->hasSSAccount;
+		return $this->hasSSAccount;
 	}
 
 	public function getHasGaAccount()
 	{
-	    return $this->hasGaAccount;
+		return $this->hasGaAccount;
 	}
 }
 
