@@ -21,40 +21,44 @@ class GlobalUserManager
 
 		$newgroup = Group::getGroupById($newgid);
 		$oldgroup = Group::getGroupById($oldgid);
+		
+		$accountenabled = true; //TODO, moving makes disabled accounts enabled...
 
 		if($person->getHasAdAccount())
 		{
 			\solideagle\scripts\ad\usermanager::prepareMoveUser($person,$newgroup,$oldgroup);
 		}
 
-		if($person->getHasGaccount())
+		if($person->getHasGaAccount())
 		{
 			\solideagle\scripts\ga\usermanager::prepareMoveUser($person,$newgroup,$oldgroup);
 		}
 
 		if($person->getHasSSAccount())
 		{
-			\solideagle\scripts\smartschool\usermanager::prepareMoveUser($person,$newgroup,$oldgroup);
+			\solideagle\scripts\smartschool\usermanager::prepareMoveUser($person,$newgroup,$oldgroup,$accountenabled);
 		}
 	}
 
 	public static function updateUser($person)
 	{
 		Person::updatePerson($person);
+		
+		$enabled = true; //TODO: fix
 
 		if($person->getHasAdAccount())
 		{
-			\solideagle\scripts\ad\usermanager::prepareUpdateUser($person);
+			\solideagle\scripts\ad\usermanager::prepareUpdateUser($person,$enabled);
 		}
 
-		if($person->getHasGaccount())
+		if($person->getHasGaAccount())
 		{
-			\solideagle\scripts\ga\usermanager::prepareUpdateUser($person);
+			\solideagle\scripts\ga\usermanager::prepareUpdateUser($person,$enabled);
 		}
 
 		if($person->getHasSSAccount())
 		{
-			\solideagle\scripts\smartschool\usermanager::prepareUpdateUser($person);
+			\solideagle\scripts\smartschool\usermanager::prepareUpdateUser($person,$enabled);
 		}
 	}
 
@@ -67,7 +71,7 @@ class GlobalUserManager
 			\solideagle\scripts\ad\usermanager::prepareDelUser($person);
 		}
 
-		if($person->getHasGaccount())
+		if($person->getHasGaAccount())
 		{
 			\solideagle\scripts\ga\usermanager::prepareDelUser($person);
 		}
@@ -108,7 +112,7 @@ class GlobalUserManager
 			\solideagle\scripts\ad\usermanager::prepareDelUser($person);
 		}
 
-		if($person->getHasGaccount() && $configstdclass->deleteGappAccount)
+		if($person->getHasGaAccount() && $configstdclass->deleteGappAccount)
 		{
 
 			\solideagle\scripts\ga\usermanager::prepareDelUser($person);
@@ -135,7 +139,7 @@ class GlobalUserManager
 			
 		}
 
-		if($person->getHasGaccount())
+		if($person->getHasGaAccount())
 		{
 			if($configstdclass->enableGappAccount)
 			{

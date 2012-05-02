@@ -92,11 +92,6 @@ class homefoldermanager implements TaskInterface
 		return false;
 	}
 
-	public function createTaskFromParams($params)
-	{
-
-	}
-
 	public static function prepareAddHomefolder($server, $homefolderpath, $scansharepath, $wwwsharepath, $user, $uploadsharepath=NULL,$downloadsharepath=NULL)
 	{
 		$config["action"] = self::ActionAddHomefolder;
@@ -118,13 +113,4 @@ class homefoldermanager implements TaskInterface
 		
 		TaskQueue::insertNewTask($config, $user->getId(), TaskQueue::TypePerson);
 	}
-
-
-
-	public function getParams()
-	{
-
-	}
-
-
 }

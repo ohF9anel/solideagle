@@ -2,7 +2,7 @@
 
 namespace solideagle\plugins;
 
-
+//class to report error and succes messages from tasks
 class StatusReport
 {
 	

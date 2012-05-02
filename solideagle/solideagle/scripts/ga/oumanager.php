@@ -118,8 +118,6 @@ class oumanager implements TaskInterface
 		TaskQueue::insertNewTask($config, $ou->getId(), TaskQueue::TypeGroup);
 	}
 
-
-
 }
 
 ?>

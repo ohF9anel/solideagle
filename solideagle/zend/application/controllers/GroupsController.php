@@ -1,5 +1,7 @@
 <?php
 
+use solideagle\data_access\Person;
+
 use solideagle\data_access\Type;
 use solideagle\scripts\groupmanager;
 use solideagle\data_access\Group;
@@ -8,295 +10,245 @@ use solideagle\utilities\SuperEntities;
 class GroupsController extends Zend_Controller_Action
 {
 
-    public function init()
-    {
+	public function init()
+	{
 		/* Initialize action controller here */
-    }
+	}
 
-    public function indexAction()
-    {
+	public function indexAction()
+	{
 		// action body
-    }
+	}
 
-    public function editgroupAction()
-    {
+	public function editgroupAction()
+	{
 		$this->_helper->layout()->disableLayout();
 
-		$data = $this->_request->getParams();
-
-		if(isset($data["gid"]))
+		if(($this->view->group = Group::getGroupById($this->getRequest()->getParam("gid")))===null)
 		{
-			$groupid = $data["gid"];
-			$this->view->group = Group::getGroupById($groupid);
-		}else{
+			echo "Deze groep bestaat niet";
 			exit();
 		}
-		
-		
+
 		$this->view->groups = Group::getAllGroups();
 		$this->view->types = Type::getAll();
-	
+	}
 
-    }
-
-    public function getgroupAction()
-    {
+	public function getgroupAction()
+	{
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
-		
+
 		$arr = $this->groupsToJson(Group::getTree());
 
 		echo json_encode($arr);
-    }
+	}
 
-    public function getgroupbreadcrumbsAction()
-    {
+	public function getgroupbreadcrumbsAction()
+	{
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
-		
-		$data = $this->_request->getParams();
-		
-		if(!isset($data["groupid"]))
+
+		if(($group = Group::getGroupById($this->getRequest()->getParam("groupid")))===null)
 		{
-			return;
+			echo "Deze groep bestaat niet";
+			exit();
 		}
-			
-		$groupid = $data["groupid"];
-		
-		$group = Group::getGroupById($groupid);
-		
-		
-		
-		if($group === NULL)
-			return;
-		
+
 		$breadcrumbs= " ";
-		
+
 		foreach(array_reverse(Group::getParents($group)) as $parentgroup)
 		{
 			$breadcrumbs .= $parentgroup->getName() . " > ";
 		}
-		
-		$breadcrumbs  .= $group->getName();
-		
-		echo $breadcrumbs;
-		
-    }
 
-    public function updategrouppostAction()
-    {
+		$breadcrumbs  .= $group->getName();
+
+		echo $breadcrumbs;
+
+	}
+
+	public function updategrouppostAction()
+	{
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
-		 
-		$data = $this->getRequest()->getParams();
-		
-	
-		 
-		if(!isset($data["groupid"]))
+			
+		if(($oldgroup = Group::getGroupById($this->getRequest()->getParam("groupid")))===null)
 		{
-			echo "ID not set\n";
+			echo "Deze groep bestaat niet";
 			exit();
 		}
-		 
-		$groupid = $data["groupid"];
-		
-			$oldgroup = Group::getGroupById($groupid);
 			
+		$newGroup = new Group();
+		$newGroup->setId($oldgroup->getId());
+		$newGroup->setName($this->getRequest()->getParam("groupName"));
+		$newGroup->setDescription($this->getRequest()->getParam("groupDescription"));
 			
-			$newGroup = new Group();
-			$newGroup->setId($oldgroup->getId());
-			$newGroup->setName($data["groupName"]);
-			$newGroup->setDescription($data["groupDescription"]);
+		foreach($this->getRequest()->getPost('ptype', array()) as $id)
+		{
+			$newGroup->addType(new Type($id));
+		}
 			
-			foreach($this->getRequest()->getPost('ptype', array()) as $id)
-			{
-				$newGroup->addType(new Type($id));
-			}
+		Group::updateGroup($newGroup);
 			
-			Group::updateGroup($newGroup);
+		//only should update externally when name changes
+		if($newGroup->getName() !== $oldgroup->getName())
+			groupmanager::Modify(Group::getParents($newGroup),$oldgroup,$newGroup);
 			
-			//only should update externally when name changes
-			if($newGroup->getName() !== $oldgroup->getName())
-				groupmanager::Modify(Group::getParents($newGroup),$oldgroup,$newGroup);
-			
-			if($data["selectGroup"] !== "ignore")
-			{
-				$newparentid = $data["selectGroup"];
-				$newGroup->setParentId($newparentid);
-				
-				if(!(count(Group::getChilderen($newGroup)) > 0))
-				{
-				
-					$oldparents = Group::getParents($newGroup);
-                                        $oldchildren = Group::getChilderen($newGroup);
-					
-					Group::moveGroup($newGroup);
-					
-					$newparents = Group::getParents($newGroup);
-                                        $newchildren = Group::getChilderen($newGroup);
-					
-					groupmanager::Move($oldparents,$newparents,$newGroup,$oldchildren,$newchildren);
-				}else{
-					echo "Deze groep kan niet verplaatst worden omdat hij subgroepen bevat.";
-				}
-			}
+		if($this->getRequest()->getParam("selectGroup") !== "ignore")
+		{
+			$newparentid = $this->getRequest()->getParam("selectGroup");
+			$newGroup->setParentId($newparentid);
 
-    }
+			if(!(count(Group::getChilderen($newGroup)) > 0))
+			{
 
-    public function deletegrouppostAction()
-    {
+				$oldparents = Group::getParents($newGroup);
+				$oldchildren = Group::getChilderen($newGroup);
+					
+				Group::moveGroup($newGroup);
+					
+				$newparents = Group::getParents($newGroup);
+				$newchildren = Group::getChilderen($newGroup);
+					
+				groupmanager::Move($oldparents,$newparents,$newGroup,$oldchildren,$newchildren);
+			}else{
+				echo "Deze groep kan niet verplaatst worden omdat hij subgroepen bevat.";
+			}
+		}
+
+	}
+
+	public function deletegrouppostAction()
+	{
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
 			
 		$data = $this->getRequest()->getParams();
-		
-		if(!isset($data["groupid"]))
+
+		if(($groupToDelete = Group::getGroupById($this->getRequest()->getParam("groupid"))) === NULL)
 		{
-			
+			echo "Geen groep geselecteerd";
 			return;
 		}
-			
-		$groupid = $data["groupid"];
-		
-		if(isset($data["delete"]) && isset($data["deletesure"]))
+
+		if($this->getRequest()->getParam("delete") !==NULL && $this->getRequest()->getParam("deletesure") !== NULL)
 		{
-			$deletethisgroup = Group::getGroupById($groupid);
-			if(count(Group::getChilderen($deletethisgroup)) !== 0)
+
+			if(count(Group::getChilderen($groupToDelete)) !== 0)
 			{
 				echo "Deze groep kan niet verwijderd worden omdat hij subgroepen bevat.";
 				return;
 			}
-		
-			//TODO: check for users
-		
-			if(count(array()) !== 0)
+
+			if(count(Person::getPersonIdsByGroup($groupToDelete->getId())) !== 0)
 			{
 				echo "Deze groep kan niet verwijderd worden omdat hij gebruikers bevat.";
 				return;
 			}
-		
-			$grp = Group::getGroupById($groupid);
-		
-			groupmanager::Delete(Group::getParents($grp), $grp);
-		
-			Group::delGroupById($groupid);
+
+			groupmanager::Delete(Group::getParents($groupToDelete), $groupToDelete);
+
+			Group::delGroupById($groupToDelete->getId());
 		}else{
 			echo "U was niet zeker, groep niet verwijderd";
 		}
-		
-    }
 
-    public function addsubgroupAction()
-    {
+	}
+
+	public function addsubgroupAction()
+	{
 		$this->_helper->layout()->disableLayout();
-		 
+			
 		$data = $this->getRequest()->getParams();
-		
-		
-		 
-		if(isset($data["gid"]))
+
+		$groupid = $this->getRequest()->getParam("gid");
+		if(Group::getGroupById($groupid) !== NULL)
 		{
-			$groupid = $data["gid"];
-			if(Group::getGroupById($groupid) != NULL)
-			{
-				$this->view->groupid = $groupid;
-				$this->view->types = Type::getAll();
-				$this->view->parentTypes = Group::getGroupById($groupid)->getTypes();
-			}
-
+			$this->view->groupid = $groupid;
+			$this->view->types = Type::getAll();
+			$this->view->parentTypes = Group::getGroupById($groupid)->getTypes();
 		}
-		 
-    }
+	}
 
-    public function addsubgrouppostAction()
-    {
+	public function addsubgrouppostAction()
+	{
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
-		 
-		$data = $this->getRequest()->getParams();
-		
-	
-		 
-		if(isset($data["parentgroupid"]) && isset($data["groupDescription"]) && isset($data["groupName"]))
+			
+
+
+
+		$parentgroupid = $this->getRequest()->getParam("parentgroupid");
+		if(Group::getGroupById($parentgroupid) === NULL)
 		{
-			$parentgroupid = $data["parentgroupid"];
-			if(Group::getGroupById($parentgroupid) == NULL)
-			{
-				echo "Parent groep bestaat niet.";
-				return;
-			}
-			
-			$newSubGroup = new Group();
-			$newSubGroup->setParentId($parentgroupid);
-			$newSubGroup->setName($data["groupName"]);
-			$newSubGroup->setDescription($data["groupDescription"]);
-			
-			$newsubgroupid = Group::addGroup($newSubGroup);
-
-			$newSubGroup->setId($newsubgroupid);
-			
-			foreach($this->getRequest()->getPost('ptype', array()) as $id)
-			{
-				$newSubGroup->addType(new Type($id));
-			}
-			
-			
-			groupmanager::Add(Group::getParents($newSubGroup), $newSubGroup);
-			
-			
-
-		}else{
-			echo "Alle velden moetten ingevuld zijn";
+			echo "Parent groep bestaat niet.";
+			return;
 		}
-		 
-		 
-    }
+			
+		$newSubGroup = new Group();
+		$newSubGroup->setParentId($parentgroupid);
+		$newSubGroup->setName($this->getRequest()->getParam("groupName"));
+		$newSubGroup->setDescription($this->getRequest()->getParam("groupDescription"));
+			
+		$newsubgroupid = Group::addGroup($newSubGroup);
+			
+		if($newsubgroupid === NULL)
+			echo "Opslaan mislukt";
 
-    public function deletegroupAction()
-    {
-    	$this->_helper->layout()->disableLayout();
-
-		$data = $this->_request->getParams();
-
-		if(isset($data["gid"]))
+		$newSubGroup->setId($newsubgroupid);
+			
+		foreach($this->getRequest()->getPost('ptype', array()) as $id)
 		{
-			$groupid = $data["gid"];
-			$this->view->group = Group::getGroupById($groupid);
-		}else{
+			$newSubGroup->addType(new Type($id));
+		}
+			
+			
+		groupmanager::Add(Group::getParents($newSubGroup), $newSubGroup);
+
+	}
+
+	public function deletegroupAction()
+	{
+		$this->_helper->layout()->disableLayout();
+		
+		if(($this->view->group = Group::getGroupById($this->getRequest()->getParam("gid"))) === NULL)
+		{
+			echo "Deze groep bestaat niet";
 			exit();
 		}
-    }
+	}
 
-    private function groupsToJson($roots,$isfirst = true)
-    {
-    	if(count($roots) === 0)
-    		return false;
-    
-    	$thisrootarr = array();
-    
-    	foreach($roots as $group)
-    	{
-    		$arr = array("data" => array("title" =>  $group->getName() . " (" . $group->getTotalAmountOfMembers() . ")" . " (" . $group->getAmountOfMembers() . ")", 
-    				
-    				"attr" => array("href" => "javascript:void(0)")), "attr" => array("id" => "tree" . $group->getId(),"groupid" => $group->getId(),"groupname" =>  SuperEntities::encode($group->getName())));
-    
-    		if($isfirst)
-    		{
-    			$arr["state"] = "open";
-    			$isfirst = false;
-    		}
-    
-    		if(($children = $this->groupsToJson($group->getChildGroups(),$isfirst)) != false)
-    		{
-    			$arr["children"] = $children;
-    		}
-    
-    		$thisrootarr[] = $arr;
-    	}
-    
-    	return $thisrootarr;
-    
-    }
+	private function groupsToJson($roots,$isfirst = true)
+	{
+		if(count($roots) === 0)
+			return false;
+
+		$thisrootarr = array();
+
+		foreach($roots as $group)
+		{
+			$arr = array("data" => array("title" =>  $group->getName() . " (" . $group->getTotalAmountOfMembers() . ")" . " (" . $group->getAmountOfMembers() . ")",
+
+					"attr" => array("href" => "javascript:void(0)")), "attr" => array("id" => "tree" . $group->getId(),"groupid" => $group->getId(),"groupname" =>  SuperEntities::encode($group->getName())));
+
+			if($isfirst)
+			{
+				$arr["state"] = "open";
+				$isfirst = false;
+			}
+
+			if(($children = $this->groupsToJson($group->getChildGroups(),$isfirst)) != false)
+			{
+				$arr["children"] = $children;
+			}
+
+			$thisrootarr[] = $arr;
+		}
+
+		return $thisrootarr;
+
+	}
 
 }
 

@@ -87,11 +87,6 @@ class usermanager implements TaskInterface
 		}
 	}
 
-	public function createTaskFromParams($params)
-	{
-
-	}
-
 	public static function prepareAddUser($person, $enabled = true)
 	{
 		$config["action"] = self::ActionAddUser;
@@ -131,12 +126,6 @@ class usermanager implements TaskInterface
 		$config["user"] = $person;
 		TaskQueue::insertNewTask($config, $person->getId());
 	}
-
-	public function getParams()
-	{
-
-	}
-
 }
 
 ?>

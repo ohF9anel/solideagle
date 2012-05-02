@@ -86,11 +86,6 @@ class groupmanager implements TaskInterface
         return false;
     }
 
-    public function createTaskFromParams($params)
-    {
-        
-    }
-
     public static function prepareAddGroup($parents,$group)
     {
         $config["action"] = self::ActionAdd;
@@ -133,12 +128,6 @@ class groupmanager implements TaskInterface
         $config["oldChildren"] = $oldChildren;
 
         TaskQueue::insertNewTask($config, $group->getId(), TaskQueue::TypeGroup);
-    }
-    
-
-    public function getParams()
-    {
-        
     }
 
 }
