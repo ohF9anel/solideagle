@@ -749,7 +749,7 @@ class Person
 		$person->setPictureUrl($retObj->picture_url);
 		$person->setGroupId($retObj->group_id);
 		$person->hasAdAccount = $retObj->platformad;
-		$person->hasGaccount = $retObj->platformga;
+		$person->hasGaAccount = $retObj->platformga;
 		$person->hasSSAccount = $retObj->platformss;
 
 		foreach(Type::getTypesByPersonid($person->getId()) as $ptype)
