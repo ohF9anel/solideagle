@@ -64,12 +64,7 @@ class oumanager implements TaskInterface
 		$taskqueue->setErrorMessages("Probleem met configuratie");
 		return false;
 	}
-	
-	public function createTaskFromParams($params)
-	{
-	
-	}
-	
+
 	public static function prepareAddOu($parentgroups,$newgroup)
 	{
 		$config["action"] = self::ActionAdd;
@@ -109,11 +104,4 @@ class oumanager implements TaskInterface
 		
 		TaskQueue::insertNewTask($config,$group->getId(),TaskQueue::TypeGroup);
 	}
-	
-	public function getParams()
-	{
-                
-	}
-	
-	
 }

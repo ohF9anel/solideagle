@@ -38,30 +38,28 @@ class UsersController extends Zend_Controller_Action
 		$this->view->stateEdit = 1;
 		$this->view->stateShow = 2;
 
-		if(!isset($data["state"]))
+		if(($state = $this->getRequest()->getParam("state")) !== NULL)
 		{
 			exit("no state requested");
 		}
+
 		$this->view->types = Type::getAll();
 			
 
-		$state = $data["state"];
-
-
-		if($state === "show" && isset($data["pid"]) && is_numeric($data["pid"]))
+		if($state === "show")
 		{
 			$this->view->state = $this->view->stateShow;
-			$this->view->person = Person::getPersonById($data["pid"]);
+			$this->view->person = Person::getPersonById($this->getRequest()->getParam("pid"));
 			if($this->view->person === NULL)
 			{
 				exit("user does not exist");
 			}
 			$this->view->group = Group::getGroupById($this->view->person->getGroupId());
 		}
-		else if($state === "edit" && isset($data["pid"]) && is_numeric($data["pid"]))
+		else if($state === "edit")
 		{
 			$this->view->state = $this->view->stateEdit;
-			$this->view->person = Person::getPersonById($data["pid"]);
+			$this->view->person = Person::getPersonById($this->getRequest()->getParam("pid"));
 			if($this->view->person === NULL)
 			{
 				exit("user does not exist");
@@ -72,16 +70,13 @@ class UsersController extends Zend_Controller_Action
 		{
 			$this->view->state = $this->view->stateNew;
 			$this->view->person = new Person(); //We don't want errors when rendering the form
-			if(isset($data["gid"]) && is_numeric($data["gid"]))
+
+			$this->view->group = Group::getGroupById($this->getRequest()->getParam("gid"));
+			if($this->view->group === NULL)
 			{
-				$this->view->group = Group::getGroupById($data["gid"]);
-				if($this->view->group === NULL)
-				{
-					exit("group does not exist");
-				}
-			}else{
-				exit("invalid parameters");
+				exit("group does not exist");
 			}
+
 		}
 
 	}
@@ -89,25 +84,38 @@ class UsersController extends Zend_Controller_Action
 	public function adduserpostAction()
 	{
 		$this->_helper->layout()->disableLayout();
+
 		$this->_helper->viewRenderer->setNoRender(true);
 
-		$person = new Person();
-
+		$person = NULL;
 
 		$postmode = $this->getRequest()->getPost('submit');
+
+		if($postmode === "edit")
+		{
+			$person = Person::getPersonById($this->getRequest()->getPost('Id'));
+			$person->resetTypes(); //important for edit
+		}else{
+			$person = new Person();
+		}
+
+
+
+		foreach($this->getRequest()->getPost('ptype', array()) as $id)
+		{
+			$person->addType(new Type($id));
+		}
 
 
 		if($postmode === "generateUsername")
 		{
-			$isStudent = true;
-			foreach($this->getRequest()->getPost('ptype', array()) as $id)
+			$isStudent = false;
+
+			if($person->isTypeOf(Type::TYPE_LEERLING))
 			{
-				if($id == 2)
-				{
-					$isStudent = false;
-				}
-					
+				$isStudent = true;
 			}
+
 			$person->setFirstName($this->getRequest()->getPost('FirstName'));
 			$person->setName($this->getRequest()->getPost('Name'));
 
@@ -122,11 +130,6 @@ class UsersController extends Zend_Controller_Action
 
 		//it's a new user or edit
 
-		foreach($this->getRequest()->getPost('ptype', array()) as $id)
-		{
-			$person->addType(new Type($id));
-		}
-
 		$person->setFirstName($this->getRequest()->getPost('FirstName'));
 		$person->setName($this->getRequest()->getPost('Name'));
 		$person->setGender($this->getRequest()->getPost('Gender'));
@@ -135,7 +138,6 @@ class UsersController extends Zend_Controller_Action
 		$person->setPhone($this->getRequest()->getPost('Phone'));
 		$person->setAccountUsername($this->getRequest()->getPost('AccountUsername'));
 		$person->setAccountPassword($this->getRequest()->getPost('AccountPassword'));
-		//$person->setAccountActive($this->getRequest()->getPost('AccountActive'));
 		$person->setAccountActiveFrom(DateConverter::DisplayDateTodbDate($this->getRequest()->getPost('AccountActiveFrom')));
 		$person->setAccountActiveUntill(DateConverter::DisplayDateTodbDate($this->getRequest()->getPost('AccountActiveUntill')));
 		$person->setOtherInformation($this->getRequest()->getPost('OtherInformation'));
@@ -152,13 +154,10 @@ class UsersController extends Zend_Controller_Action
 			
 		if($postmode === "edit")
 		{
-			$person->setId($this->getRequest()->getPost('Id'));
 			GlobalUserManager::updateUser($person);
 		}else{
 			Person::addPerson($person);
 		}
-
-
 	}
 
 	public function getusersAction()
@@ -169,16 +168,9 @@ class UsersController extends Zend_Controller_Action
 		$persons = array();
 			
 		$data = $this->_request->getParams();
-			
-			
-		$gid = -1;
-			
-		if(isset($data["gid"]))
-		{
-			$gid = $data["gid"];
-		}else{
-			return;
-		}
+
+		$gid = $this->getRequest()->getParam("gid");
+
 			
 		/*
 		 * Fields for jquery datatable
@@ -205,16 +197,9 @@ class UsersController extends Zend_Controller_Action
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
 			
-
 		$data = $this->_request->getParams();
 
-		if(isset($data["pid"]))
-		{
-			$pid = $data["pid"];
-		}else{
-			return;
-		}
-
+		$pid = $this->getRequest()->getParam("pid");
 
 		$person	= Person::getPersonById($pid);
 

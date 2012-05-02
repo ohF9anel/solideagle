@@ -297,8 +297,6 @@ class UsertasksController extends Zend_Controller_Action
     	$usersArr = array();
     	if($groupid !== NULL)
     	{
-    		
-    	
     		//get users in group and subgroups
     		$group = Group::getGroupById($groupid);
     	

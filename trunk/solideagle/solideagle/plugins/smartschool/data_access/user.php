@@ -93,7 +93,7 @@ class User
 	//smartschool does not have any update functions so we use the saveuser function
 	public static function updateUser($user)
 	{
-		self::saveUser($user);
+		return self::saveUser($user);
 	}
 
 	public static function removeUser($user)

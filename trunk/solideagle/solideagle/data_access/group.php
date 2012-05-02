@@ -105,6 +105,11 @@ class Group
 		$cmd->BeginTransaction();
 
 		$id = Group::addGroupRecursive($group,$cmd);
+		
+		if($id === false)
+		{
+			return NULL;
+		}
 
 		$cmd->CommitTransaction();
 
@@ -122,10 +127,9 @@ class Group
 		$err = Group::validateGroup($group);
 		if(!empty($err))
 		{
-			assert("false /* Group not validated before saving! See log for details*/");
+			echo("Group not validated before saving! See log for details");
 
-			Logger::getLogger()->log("Group not validated before saving! Validation errors:\n" . var_export($err,true) . "\nObject dump:\n" . var_export($group,true) . "\n",PEAR_LOG_ERR);
-
+			Logger::log("Group not validated before saving! Validation errors:\n" . var_export($err,true) . "\nObject dump:\n" . var_export($group,true) . "\n",PEAR_LOG_ERR);
 
 			$cmd->RollbackTransaction();
 
@@ -188,15 +192,14 @@ class Group
 			$cmd->execute();
 		}
 
-
-
-
 		foreach ($group->getChildGroups() as $childgrp)
 		{
 			$childgrp->setParentId($group->getId());
 
-
-			Group::addGroupRecursive($childgrp,$cmd);
+			if(Group::addGroupRecursive($childgrp,$cmd) === false)
+			{
+				return false;
+			}
 		}
 
 		return $group->id;
@@ -215,7 +218,7 @@ class Group
 		{
 			assert("false /* Group not validated before updating! See log for details*/");
 
-			Logger::getLogger()->log("Group not validated before updating! Validation errors:\n" . var_export($err,true) . "\nObject dump:\n" . var_export($group,true) . "\n",PEAR_LOG_ERR);
+			Logger::log("Group not validated before updating! Validation errors:\n" . var_export($err,true) . "\nObject dump:\n" . var_export($group,true) . "\n",PEAR_LOG_ERR);
 
 			return false;
 		}

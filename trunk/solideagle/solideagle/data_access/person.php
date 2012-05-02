@@ -357,6 +357,11 @@ class Person
 	{
 		$this->types[] = $type;
 	}
+	
+	public function resetTypes()
+	{
+		$this->types = array();
+	}
 
 	public function getTypes()
 	{
@@ -1381,9 +1386,9 @@ class Person
 	public static function getPersonIdsByGroup($groupid)
 	{
 		$sql = "SELECT
-				`person`.`id`
-				FROM `person`;
-				WHERE `person`.`group_id` = :groupId";
+				p.`id`
+				FROM `person` p
+				WHERE p.`group_id` = :groupId";
 		
 		$cmd = new DatabaseCommand($sql);
 		$cmd->addParam(":groupId", $groupid);
