@@ -17,8 +17,7 @@ class usermanager implements TaskInterface
 	const ActionAddUser = 0;
 	const ActionUpdateUser = 1;
 	const ActionDelUser = 2;
-
-	 
+        const ActionUpdatePassword = 3;
 
 	public function runTask($taskqueue)
 	{
@@ -69,6 +68,20 @@ class usermanager implements TaskInterface
                     return false;
                 }
             }
+            // change password
+            else if($config["action"] == self::ActionUpdatePassword && isset($config["username"]) && isset($config["password"]))
+            {
+                $ret = ManageUser::changePassword($config["username"], $config["password"]);
+
+                if($ret->isSucces())
+                {
+                    return true;	
+                }
+                else{
+                    $taskqueue->setErrorMessages($ret->getError());
+                    return false;
+                }
+            }
             // delete user in ad
             else if($config["action"] == self::ActionDelUser && isset($config["person"]))
             {
@@ -110,6 +123,15 @@ class usermanager implements TaskInterface
 		$config["arrParentsGroups"] = Group::getParents(Group::getGroupById($person->getGroupId()));
 
 		TaskQueue::insertNewTask($config, $person->getId());
+	}
+        
+        public static function prepareChangePassword($person)
+	{
+		$config["action"] = self::ActionUpdatePassword;
+                $config["username"] = $person->getAccountUsername();
+                $config["password"] = $person->getAccountPassword();
+                
+                TaskQueue::insertNewTask($config, $person->getId());
 	}
 
 	public static function prepareDelUser($person)

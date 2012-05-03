@@ -138,6 +138,9 @@ class ManageUser
         unset($userInfo['enabled']);
         unset($userInfo['cn']);
         
+        // password updates not allowed here
+        unset($userInfo['unicodePwd']);
+        
         // unset empty values
         foreach($userInfo as $key => $attr)
         {
@@ -157,6 +160,30 @@ class ManageUser
             return new StatusReport($ret,ldap_error($connLdap->getConn()));
         }
         
+        return new StatusReport($ret, ldap_error($connLdap->getConn()));
+    }
+    
+    public static function changePassword($username, $password)
+    {
+        $connLdap = ConnectionLDAP::singleton();
+        if ($connLdap->getConn() == null)
+            return new StatusReport(false, "Connection to AD cannot be made.");
+
+        $sr = ldap_search($connLdap->getConn(), Config::singleton()->ad_dc, "(sAMAccountName=" . $username . ")");
+        $userInfo = ldap_get_entries($connLdap->getConn(), $sr);
+        
+        if (!isset($userInfo[0]))
+        {
+            Logger::log("User \"" . $username . "\" trying to change password attribute in AD not found in: \"" . Config::singleton()->ad_dc. "\".");
+            return new StatusReport(false, "User \"" . $username . "\" trying to change password attribute in AD not found in: \"" . Config::singleton()->ad_dc. "\".");
+        }
+        
+        $update["unicodePwd"] = \solideagle\plugins\ad\User::makeUnicodePsw($password);
+        
+        $ret = ldap_modify($connLdap->getConn(), $userInfo[0]["distinguishedname"][0], $update);
+        if (!$ret)
+            Logger::log(var_export($userInfo, true) . "\n: user password cannot be changed");
+
         return new StatusReport($ret, ldap_error($connLdap->getConn()));
     }
     

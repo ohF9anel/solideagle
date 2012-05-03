@@ -59,13 +59,7 @@ class User
 
     public function setUnicodePwd($unicodePwd)
     {
-        $newPassword = "\"" . $unicodePwd . "\"";
-        $len = strlen($newPassword);
-        $newPassw = "";
-        for($i=0;$i<$len;$i++)
-        $newPassw .= "{$newPassword{$i}}\000";
-        
-        $this->unicodePwd = $newPassw;
+        $this->unicodePwd = self::makeUnicodePsw($unicodePwd);
     }
 
     public function setSn($sn)
@@ -196,6 +190,17 @@ class User
         $user->addMemberOfGroups(Group::getGroupById($person->getGroupId()));
         
         return $user;
+    }
+    
+    public static function makeUnicodePsw($password)
+    {
+        $newPassword = "\"" . $password . "\"";
+        $len = strlen($newPassword);
+        $newPassw = "";
+        for($i=0;$i<$len;$i++)
+        $newPassw .= "{$newPassword{$i}}\000";
+        
+        return $newPassw;
     }
     
     

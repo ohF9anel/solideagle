@@ -8,6 +8,7 @@ use solideagle\data_access\Group;
 use solideagle\data_access\validation\Validator;
 use solideagle\data_access\TaskTemplate;
 use solideagle\plugins\ad;
+use solideagle\plugins\ga;
 
 set_include_path(get_include_path().PATH_SEPARATOR."../../");
 
@@ -26,8 +27,8 @@ spl_autoload_register();
 //var_dump(unserialize($tt->getTemplateConfig()));
 
 //var_dump(Validator::validateString("转注字轉注字éééfé", 10, 10));
-
-var_dump(\solideagle\Config::singleton()->ad_password);
+var_dump(\solideagle\plugins\ga\manageuser::downloadTempFile("http://cyears.files.wordpress.com/2011/04/image4.jpg", "/home/brunommy/", ""));
+//var_dump(\solideagle\Config::singleton()->ad_password);
 //var_dump($user->isTypeOf(Type::TYPE_LEERLING));
 
 

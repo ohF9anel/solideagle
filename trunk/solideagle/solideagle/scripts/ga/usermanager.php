@@ -16,6 +16,7 @@ class usermanager implements TaskInterface
 	const ActionDelUser = 2;
 	const ActionAddUserToOu = 3;
         const ActionSetPhoto = 4;
+        const ActionUpdatePassword = 5;
 
 	public function runTask($taskqueue)
 	{
@@ -38,7 +39,7 @@ class usermanager implements TaskInterface
 				return false;
 			}
 		}
-		else if($config["action"] == self::ActionUpdateUser && isset($config["user"]) && isset($config["oldUsername"]) && isset($config["enabled"]))
+		else if($config["action"] == self::ActionUpdateUser && isset($config["user"]) && isset($config["enabled"]))
 		{
 			$ret = manageuser::updateUser($config["user"], $config["enabled"]);
 
@@ -97,6 +98,19 @@ class usermanager implements TaskInterface
 				return false;
 			}
 		}
+                else if($config["action"] == self::ActionUpdatePassword && isset($config["username"]) && isset($config["password"]))
+		{
+			$ret = manageuser::updatePassword($config["username"], $config["password"]);
+
+			if($ret->isSucces())
+			{
+				return true;
+			}
+			else{
+				$taskqueue->setErrorMessages($ret->getError());
+				return false;
+			}
+		}
 		else
 		{
 			$taskqueue->setErrorMessages("Probleem met configuratie");
@@ -129,6 +143,15 @@ class usermanager implements TaskInterface
 
 		TaskQueue::insertNewTask($config, $person->getId());
 	}
+        
+        public static function prepareChangePassword($person)
+        {
+                $config["action"] = self::ActionUpdatePassword;
+                $config["username"] = $person->getAccountUsername();
+                $config["password"] = $person->getAccountPassword();
+                
+                TaskQueue::insertNewTask($config, $person->getId());
+        }
 
 	public static function prepareDelUser($person)
 	{
