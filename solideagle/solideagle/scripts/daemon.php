@@ -114,7 +114,7 @@ class daemon
 	{
 		foreach(TaskQueue::getAllPlatforms() as $platform)
 			
-		$platform = platforms::PLATFORM_SMARTSCHOOL;
+		//$platform = platforms::PLATFORM_GAPP;
 		{
 			$tasksss = TaskQueue::getTasksToRunForPlatform($platform);
 			Logger::log("running " . count($tasksss) . " tasks for platform " . $platform . "...",PEAR_LOG_INFO);

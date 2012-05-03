@@ -53,8 +53,8 @@ class GlobalUserManager
 		if($person->getHasGaAccount())
 		{
 			\solideagle\scripts\ga\usermanager::prepareUpdateUser($person,$enabled);
-                        if ($person->getPictureUrl() != null)
-                            \solideagle\scripts\ga\usermanager::prepareSetPhoto($person);
+//                        if ($person->getPictureUrl() != null)
+//                            \solideagle\scripts\ga\usermanager::prepareSetPhoto($person);
 		}
 
 		if($person->getHasSSAccount())
@@ -117,8 +117,9 @@ class GlobalUserManager
 		if(!$person->getHasGaAccount() && $configstdclass->createGappAccount)
 		{
 			\solideagle\scripts\ga\usermanager::prepareAddUser($person);
-                        if ($person->getPictureUrl() != null)
-                            \solideagle\scripts\ga\usermanager::prepareSetPhoto($person);
+//                        if ($person->getPictureUrl() != null)
+//                            \solideagle\scripts\ga\usermanager::prepareSetPhoto($person);
+                        \solideagle\scripts\ga\usermanager::prepareAddUserToOu($person);
 		}
 
 		if(!$person->getHasSSAccount() && $configstdclass->createSsAccount)
