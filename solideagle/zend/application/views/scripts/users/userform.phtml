@@ -73,7 +73,7 @@ $ppp = $this->person; ?>
                 }
 
 		$("#formUser").ajaxForm({
-			beforeSubmit:  preventDobuleSubmit,
+			beforeSubmit:  preventDoubleSubmit,
 			success: function(responseText, statusText, xhr, $form) { 
 
 				isSubmitting = false;
@@ -99,19 +99,6 @@ $ppp = $this->person; ?>
 				}
 	    } });
 
-		var isSubmitting = false;
-		
-		function preventDobuleSubmit(formData, jqForm, options) { 
-			
-		    if(isSubmitting)
-		    {
-			    return false;
-		    }else{
-		    	isSubmitting = true;
-		    	return true;
-		    }
-		} 
-		
 	});
 
 </script>
@@ -262,8 +249,8 @@ $ppp = $this->person; ?>
 								<label class="control-label" for="txtPassword">Wachtwoord</label>
 								<div class="controls">
 									<div class="input-append">
-										<input id="txtPassword" size="16" name="AccountPassword" class="span2" type="text"
-											value="<?php echo SuperEntities::encode($ppp->getAccountPassword()) ?>"><button type="submit" name="submit" value="generatePassword" id="btnGeneratePassword" class="btn">Genereer!</button>
+										<input id="txtPassword" size="16" name="AccountPassword" readonly="readonly" class="span2" type="text"
+											value="<?php /*echo SuperEntities::encode($ppp->getAccountPassword())*/ ?>">
 									</div>
 								</div>
 							</div>

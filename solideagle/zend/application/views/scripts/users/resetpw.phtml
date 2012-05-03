@@ -1,0 +1,57 @@
+<script>
+	$(function(){
+		
+            $('#resetPwModal').modal('show');
+
+    		$("#formResetPassword").ajaxForm({
+    			beforeSubmit:  preventDoubleSubmit,
+    			success: function(responseText, statusText, xhr, $form) { 
+
+    				isSubmitting = false;
+
+    				if(responseText.length > 0)
+    				{
+    						alert(responseText);
+    				}else{
+    					$('#resetPwModal').modal('hide');
+    				}
+    	    }});
+	});
+</script>
+
+<form
+	class="form-horizontal"
+	action="<?php echo $this->SE_path . "/users/resetpw" ?>"
+	method="post"
+	id="formResetPassword">
+
+	<div
+		class="hide SEsupermodal"
+		id="resetPwModal">
+		<div>
+			<div class="modal-header">
+				<a
+					class="close"
+					data-dismiss="modal">×</a>
+				<h3 id="modaltitle">
+					Wachtwoord reset
+				</h3>
+			</div>
+			<div
+				class="modal-body"
+				style="width: 300px;"></div>
+			<div class="modal-footer">
+				<a
+					href="#"
+					class="btn"
+					data-dismiss="modal">Annuleren</a>
+				<button
+					class="btn btn-primary"
+					name="submit"
+					value="reset"
+					type="submit">Reset</button>
+			</div>
+		</div>
+	</div>
+
+</form>

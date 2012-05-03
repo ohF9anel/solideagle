@@ -1,8 +1,6 @@
 <?php
 namespace solideagle\plugins\smartschool\data_access;
 
-
-
 use solideagle\data_access\Group;
 
 use solideagle\data_access\Type;
@@ -13,7 +11,6 @@ use solideagle\plugins\StatusReport;
 
 class User
 {
-
 	//saveUser properties
 	private $internnumber;
 	private $username;
@@ -61,28 +58,18 @@ class User
 	{
 		$returnvalue = 0; //the api returns 0 if it was succesfull
 
-
-		assert('isset($user->internnumber) /* internnumber required!*/');
-		assert('isset($user->username) /* username required!*/');
-		assert('isset($user->passwd1) /* passwd1 required!*/');
-		assert('isset($user->name) /* name required!*/');
-		assert('isset($user->surname) /* surname required!*/');
-		assert('isset($user->basisrol) /* basisrol required!*/');
-			
-
 		$api = Api::singleton();
-		$returnvalue += $api->saveUser($user->internnumber,$user->username,$user->passwd1,$user->passwd2,$user->passwd3,$user->name,$user->surname,$user->extranames,$user->initials,$user->sex,$user->birthday,$user->birthplace,$user->birthcountry,$user->address,$user->postalcode,$user->location,$user->country,$user->email,$user->mobilephone,$user->homephone,$user->fax,$user->prn,$user->stamboeknummer,$user->basisrol,$user->untis);
-
-
-		if($returnvalue != 0)
-			return new StatusReport(false,Api::singleton()->getErrorFromCode($returnvalue));
-
-		$returnvalue += $api->saveUserToClasses($user->internnumber,$user->classCodes);
+		$returnvalue = $api->saveUser($user->internnumber,$user->username,$user->passwd1,$user->passwd2,$user->passwd3,$user->name,$user->surname,$user->extranames,$user->initials,$user->sex,$user->birthday,$user->birthplace,$user->birthcountry,$user->address,$user->postalcode,$user->location,$user->country,$user->email,$user->mobilephone,$user->homephone,$user->fax,$user->prn,$user->stamboeknummer,$user->basisrol,$user->untis);
 
 		if($returnvalue != 0)
 			return new StatusReport(false,Api::singleton()->getErrorFromCode($returnvalue));
 
-		$returnvalue += $api->setAccountStatus($user->internnumber,$user->accountStatus);
+		$returnvalue = $api->saveUserToClasses($user->internnumber,$user->classCodes);
+
+		if($returnvalue != 0)
+			return new StatusReport(false,Api::singleton()->getErrorFromCode($returnvalue));
+
+		$returnvalue = $api->setAccountStatus($user->internnumber,$user->accountStatus);
 
 		if($returnvalue != 0)
 			return new StatusReport(false,Api::singleton()->getErrorFromCode($returnvalue));
@@ -90,27 +77,64 @@ class User
 		return new StatusReport();
 	}
 
-	//smartschool does not have any update functions so we use the saveuser function
 	public static function updateUser($user)
+	{	
+		$api = Api::singleton();
+		$returnvalue = $api->saveUser($user->internnumber,$user->username,
+		//undocumented feature: if you pass null to the password fields they will not update
+		NULL/*$user->passwd1*/,NULL/*$user->passwd2*/,NULL/*$user->passwd3*/,
+		$user->name,$user->surname,$user->extranames,$user->initials,$user->sex,$user->birthday,
+		$user->birthplace,$user->birthcountry,$user->address,$user->postalcode,$user->location,
+		$user->country,$user->email,$user->mobilephone,$user->homephone,$user->fax,
+		$user->prn,$user->stamboeknummer,$user->basisrol,$user->untis);
+		
+		if($returnvalue != 0)
+			return new StatusReport(false,Api::singleton()->getErrorFromCode($returnvalue));
+		
+		$returnvalue = $api->setAccountStatus($user->internnumber,$user->accountStatus);
+		
+		if($returnvalue != 0)
+			return new StatusReport(false,Api::singleton()->getErrorFromCode($returnvalue));
+		
+		return new StatusReport();
+	}
+	
+	public static function updatePassword($user)
 	{
-		return self::saveUser($user);
+		$api = Api::singleton();
+		
+		$returnvalue = $api->savePassword($user->internnumber,$user->passwd1,0);
+		
+		if($returnvalue != 0)
+			return new StatusReport(false,Api::singleton()->getErrorFromCode($returnvalue));
+		
+		return new StatusReport();
+	}
+	
+	public static function moveUser($user)
+	{
+		$api = Api::singleton();
+		
+		$returnvalue = $api->saveUserToClasses($user->internnumber,$user->classCodes);
+		
+		if($returnvalue != 0)
+			return new StatusReport(false,Api::singleton()->getErrorFromCode($returnvalue));
+		
+		return new StatusReport();
 	}
 
 	public static function removeUser($user)
 	{
-		$returnvalue = 0; //the api returns 0 if it was succesfull
 		$api = Api::singleton();
-
-		assert('isset($user->internnumber) /* internnumber required!*/');
 
 		$api = Api::singleton();
 		$returnvalue += $api->delUser($user->internnumber);
 
-		return $returnvalue;
+		if($returnvalue != 0)
+			return new StatusReport(false,Api::singleton()->getErrorFromCode($returnvalue));
+		
+		return new StatusReport();
 	}
-
-
-
 
 	public function setInternnumber($internnumber)
 	{
@@ -396,7 +420,6 @@ class User
 		$user->setName($person->getFirstName());
 		$user->setSurname($person->getName());
 		$user->setSex($person->getGender());
-
 		$birthDay = $person->getBirthDate();
 		$user->setBirthDay(substr($birthDay, 0, 4) . "-" . substr($birthDay, 4, 2) . "-" . substr($birthDay, 6, 2));
 		$user->setBirthplace($person->getBirthPlace());
@@ -423,14 +446,12 @@ class User
 			
 		$user->setUntis("");
 
-
-		
 		if($enabled)
 		{
 			if($person->isTypeOf(Type::TYPE_ADMIN))
 			{
 				//dont we love smartschool, they use this field for enable, disable AND admin account
-				$user->setAccountStatus("administratief"); 
+				$user->setAccountStatus("administratief");
 			}else
 			{
 				$user->setAccountStatus("actief");

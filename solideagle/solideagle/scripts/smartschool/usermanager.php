@@ -20,6 +20,7 @@ class usermanager implements TaskInterface
 	const ActionUpdateUser = 1;
 	const ActionRemoveUser = 2;
 	const ActionMoveUser = 3;
+	const ActionUpdatePassword = 4;
 
 	public function runTask($taskqueue)
 	{
@@ -53,7 +54,7 @@ class usermanager implements TaskInterface
 				return false;
 			}
 		}
-		else if($config["action"] == self::ActionUpdateUser || $config["action"] == self::ActionMoveUser)
+		else if($config["action"] == self::ActionUpdateUser)
 		{
 			if (!isset($config["person"]) || !isset($config["groupname"]) || !isset($config["enabled"]))
 			{
@@ -84,6 +85,24 @@ class usermanager implements TaskInterface
 			//we don't need the groupname for removing
 			$ret = User::removeUser(User::convertPersonToSsUser($config["person"],""));
 
+			if($ret->isSucces())
+			{
+				return true;
+			}
+			else{
+				$taskqueue->setErrorMessages($ret->getError());
+				return false;
+			}
+		}else if($config["action"] == self::ActionMoveUser)
+		{
+			if (!isset($config["person"]) || !isset($config["groupname"]) || !isset($config["enabled"]))
+			{
+				$taskqueue->setErrorMessages("Probleem met configuratie");
+				return false;
+			}
+			
+			$ret = User::moveUser(User::convertPersonToSsUser($config["person"],$config["groupname"],$config["enabled"]));
+			
 			if($ret->isSucces())
 			{
 				return true;

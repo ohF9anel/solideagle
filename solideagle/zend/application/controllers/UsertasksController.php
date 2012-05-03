@@ -1,5 +1,7 @@
 <?php
 
+use solideagle\data_access\PlatformGA;
+
 use solideagle\scripts\GlobalUserManager;
 
 use solideagle\data_access\PlatformSS;
@@ -158,7 +160,7 @@ class UsertasksController extends Zend_Controller_Action
 		//no users given in post, try other options
 		if(count($usersArr) < 1)
 		{
-			$usersArr = $this->getUserIds($this->getRequest()->getPost('selectedGroup'));
+			$usersArr = Person::getPersonIdsByGroupId($this->getRequest()->getPost('selectedGroup'));
 		}
 		
 		
@@ -212,7 +214,7 @@ class UsertasksController extends Zend_Controller_Action
 			$userId = $usersArr[0];
 			$platformAd = PlatformAD::getPlatformConfigByPersonId($userId);
 			$platformSs = PlatformSS::getPlatformConfigByPersonId($userId); 
-			$platformGa = NULL; //TODO!
+			$platformGa = PlatformGA::getPlatformConfigByPersonId($userId); 
 
 			// ad?
 			if ($platformAd != null)
@@ -292,27 +294,10 @@ class UsertasksController extends Zend_Controller_Action
     	return json_encode($finalarr);
     }
     
-    private function getUserIds($groupid)
-    {
-    	$usersArr = array();
-    	if($groupid !== NULL)
-    	{
-    		//get users in group and subgroups
-    		$group = Group::getGroupById($groupid);
-    	
-    		$usersArr = array_merge($usersArr,Person::getPersonIdsByGroup($groupid));
-    	
-    		foreach (Group::getAllChilderen($group) as $chldgroup)
-    		{
-    			$usersArr = array_merge($usersArr,Person::getPersonIdsByGroup($chldgroup->getId()));
-    		}
-    	}
-    	
-    	return $usersArr;
-    }
+   
 
     //placeholder, do not use!
-    private function doUserThings()
+    /*private function doUserThings()
     {
     	die("placeholder, do not use!");
     	//placeholder, do not use!
@@ -320,98 +305,7 @@ class UsertasksController extends Zend_Controller_Action
     	return; //placeholder, do not use!
     	return; //placeholder, do not use!
     	//placeholder, do not use!
-    	/**
-    	 * ACTIVE DIRECTORY
-    	 */
-    	 
-    	if($this->getRequest()->getPost('createAdAccount',false))
-    	{
-    		foreach($users as $user)
-    		{
-    			solideagle\scripts\ad\usermanager::prepareAddUser($user);
-    		}
-    	}
-    	 
-    	if($this->getRequest()->getPost('deleteAdAccountSure',false))
-    	{
-    		foreach($users as $user)
-    		{
-    			solideagle\scripts\ad\usermanager::prepareDelUser($user);
-    		}
-    	}
-    	 
-    	// disable account?
-    	if($this->getRequest()->getPost('blnAdDisable',false))
-    	{
-    		foreach($users as $user)
-    		{
-    			solideagle\scripts\ad\usermanager::prepareUpdateUser($user, false);
-    		}
-    	}
-    	 
-    	// enabled account?
-    	if($this->getRequest()->getPost('blnAdEnable',false))
-    	{
-    		foreach($users as $user)
-    		{
-    			solideagle\scripts\ad\usermanager::prepareUpdateUser($user, true);
-    		}
-    	}
-    	 
-    	/**
-    	 * SMARTSCHOOL
-    	 */
-    	 
-    	// create account
-    	if($this->getRequest()->getPost('createSSAccount',false))
-    	{
-    		foreach($users as $user)
-    		{
-    			solideagle\scripts\smartschool\usermanager::prepareAddUser($user);
-    		}
-    	}
-    	 
-    	/**
-    	 * GOOGLE APPS
-    	 */
-    	 
-    	// create account
-    	if($this->getRequest()->getPost('createGappAccount',false))
-    	{
-    		foreach($users as $user)
-    		{
-    			solideagle\scripts\ga\usermanager::prepareAddUser($user);
-    			solideagle\scripts\ga\usermanager::prepareAddUserToOu($user);
-    		}
-    	}
-    	 
-    	// remove account?
-    	if($this->getRequest()->getPost('deleteGappAccountSure',false))
-    	{
-    		foreach($users as $user)
-    		{
-    			solideagle\scripts\ga\usermanager::prepareDelUser($user);
-    		}
-    	}
-    	 
-    	// disable account?
-    	if($this->getRequest()->getPost('blnGappDisable',false))
-    	{
-    		foreach($users as $user)
-    		{
-    			solideagle\scripts\ga\usermanager::prepareUpdateUser($user, $user->getAccountUsername(), false);
-    		}
-    	}
-    	 
-    	// enable account?
-    	if($this->getRequest()->getPost('blnGappEnable',false))
-    	{
-    		foreach($users as $user)
-    		{
-    			solideagle\scripts\ga\usermanager::prepareUpdateUser($user, $user->getAccountUsername(), true);
-    		}
-    	}
-    	 
+    	
     	if($this->getRequest()->getPost('createAdHomedir',false))
     	{
     		 
@@ -435,7 +329,7 @@ class UsertasksController extends Zend_Controller_Action
     					$wwwSharePath, $user,$uploadSharePath,$downloadSharePath);
     		}
     	}
-    }
+    }*/
     
 
 }

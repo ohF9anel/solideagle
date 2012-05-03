@@ -32,6 +32,10 @@
 		$("#EditUserLink").click(function(){
 			loadIntoModalholder("<?php echo $this->SE_path . '/users/userform?state=edit' ?>",{pid:clickedUserId});
 		});
+
+		$("#ResetPwUserLink").click(function(){
+			loadIntoModalholder("<?php echo $this->SE_path . '/users/resetpw' ?>",{pid:clickedUserId});
+		});
                 
 		$("#MoveUserLink").click(function(){
 			loadIntoModalholder("<?php echo $this->SE_path . '/users/move' ?>",{oldgid:selectedGroupId});
@@ -100,7 +104,21 @@
 	{
 		$("#modalholder").html($("#loadingHolder").html());
 		$("#modalholder").load(path, extradata);
+		isSubmitting = false; //reset double submit var
 	}
+
+	var isSubmitting = false;
+	
+	function preventDoubleSubmit(formData, jqForm, options) { 
+		
+	    if(isSubmitting)
+	    {
+		    return false;
+	    }else{
+	    	isSubmitting = true;
+	    	return true;
+	    }
+	} 
 
 	function updateTree()
 	{
@@ -278,8 +296,6 @@
 						<li><a
 							id="MoveUserLink"
 							href="#"><i class="icon-move"></i> Gebruikers verplaatsen</a></li>
-						
-
 						<li><a
 							id="TaskForUser"
 							href="#"><i class="icon-list-alt"></i> Custom taak</a></li>
@@ -345,6 +361,9 @@
 				<li><a
 					href="javascript:void(0)"
 					id="EditUserLink"><i class="icon-pencil"></i> Bewerken</a></li>
+					<li><a
+					href="javascript:void(0)"
+					id="ResetPwUserLink"><i class="icon-share-alt"></i> Wachtwoord reset</a></li>
 			</ul>
 		</li>
 	</ul>
