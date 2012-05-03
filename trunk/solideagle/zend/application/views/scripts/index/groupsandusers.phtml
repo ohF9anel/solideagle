@@ -41,6 +41,8 @@
 		});
 
 		$("#ResetPwSelectedLink").click(function(){
+			var selectedArr = getSelectedUsers();
+			
 			loadIntoModalholder("<?php echo $this->SE_path . '/users/resetpw' ?>",{selectedUsers:selectedArr});
 		});
 		
@@ -309,7 +311,7 @@
 							href="#"><i class="icon-move"></i> Gebruikers verplaatsen</a></li>
 						<li><a
 							id="ResetPwSelectedLink"
-							href="#"><i class="icon-move"></i> Wachtwoord reset</a></li>
+							href="#"><i class="icon-share-alt"></i> Wachtwoord reset</a></li>
 						<li><a
 							id="TaskForUser"
 							href="#"><i class="icon-list-alt"></i> Custom taak</a></li>
@@ -325,13 +327,16 @@
 						<li><a
 							id="MoveUsersInGroupLink"
 							href="#"><i class="icon-move"></i> Gebruikers verplaatsen</a></li>
-						<li><li><a
-							id="ResetPwGroupLink"
-							href="#"><i class="icon-move"></i> Wachtwoord reset</a>
+						<li>
 						
-						</li><a
+						<li><a
+							id="ResetPwGroupLink"
+							href="#"><i class="icon-share-alt"></i> Wachtwoord reset</a>
+						</li>
+						<li><a
 							id="TaskForGroup"
-							href="#"><i class="icon-list-alt"></i> Custom taak</a></li>
+							href="#"><i class="icon-list-alt"></i> Custom taak</a>
+						</li>
 						<li><a
 							id="TemplateTaskForGroup"
 							href="#"><i class="icon-list-alt"></i> Template taak</a></li>
