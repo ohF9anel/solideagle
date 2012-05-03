@@ -271,11 +271,12 @@ class UsersController extends Zend_Controller_Action
 			$users = $this->getRequest()->getPost('selectedUsers',array());
 			
 			//no users given in post, try other options
-			if(count($usersArr) < 1)
+			if(count($users) < 1)
 			{
 				$users = Person::getPersonIdsByGroupId($this->getRequest()->getPost('selectedGroup'));
 			}
 			
+			$this->view->usersCount = count($users);
 			$this->view->users = json_encode($users);
 		}
     }

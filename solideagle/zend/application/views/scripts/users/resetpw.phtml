@@ -2,6 +2,12 @@
 	$(function(){
 
 			var users = $.parseJSON(<?php echo "'" . $this->users . "'" ?>);
+
+			if(users.length == 0)
+			{
+				alert("geen gebruikers geselecteerd");
+				return;
+			}
 		
             $('#resetPwModal').modal('show');
 
