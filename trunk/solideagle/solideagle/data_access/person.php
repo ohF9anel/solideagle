@@ -1348,6 +1348,25 @@ class Person
 
 		return $personidarr;
 	}
+	
+	public static function getPersonIdsByGroupId($groupid)
+	{
+		$usersArr = array();
+		if($groupid !== NULL)
+		{
+			//get users in group and subgroups
+			$group = Group::getGroupById($groupid);
+			 
+			$usersArr = array_merge($usersArr,Person::getPersonIdsByGroup($groupid));
+			 
+			foreach (Group::getAllChilderen($group) as $chldgroup)
+			{
+				$usersArr = array_merge($usersArr,Person::getPersonIdsByGroup($chldgroup->getId()));
+			}
+		}
+		 
+		return $usersArr;
+	}
 
 	/**
 	 * seperate statement for performance

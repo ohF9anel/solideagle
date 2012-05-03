@@ -1,0 +1,57 @@
+<script>
+	$(function(){
+		
+            $('#removeUsers').modal('show');
+
+    		$("#formRemoveUsers").ajaxForm({
+    			beforeSubmit:  preventDoubleSubmit,
+    			success: function(responseText, statusText, xhr, $form) { 
+
+    				isSubmitting = false;
+
+    				if(responseText.length > 0)
+    				{
+    						alert(responseText);
+    				}else{
+    					$('#removeUsers').modal('hide');
+    				}
+    	    }});
+	});
+</script>
+
+<form
+	class="form-horizontal"
+	action="<?php echo $this->SE_path . "/users/resetpw" ?>"
+	method="post"
+	id="formRemoveUsers">
+
+	<div
+		class="hide SEsupermodal"
+		id="removeUsers">
+		<div>
+			<div class="modal-header">
+				<a
+					class="close"
+					data-dismiss="modal">×</a>
+				<h3 id="modaltitle">
+					Verwijderen bevestigen
+				</h3>
+			</div>
+			<div
+				class="modal-body"
+				style="width: 300px;"></div>
+			<div class="modal-footer">
+				<a
+					href="#"
+					class="btn"
+					data-dismiss="modal">Annuleren</a>
+				<button
+					class="btn btn-primary"
+					name="submit"
+					value="remove"
+					type="submit">Verwijder</button>
+			</div>
+		</div>
+	</div>
+
+</form>

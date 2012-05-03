@@ -769,6 +769,8 @@ class Group
 	{
 	    $this->totalAmountOfMembers = $totalAmountOfMembers;
 	}
+	
+	
 }
 
 

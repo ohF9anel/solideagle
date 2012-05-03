@@ -163,7 +163,7 @@ class sshconn
 		while (true)	
 		{
 			$buffer = fgets($this->pipes[1]);
-			if(strpos($buffer, "SYS_Solideagle@S1") !== false) //waittill shell is loaded
+			if(strpos($buffer, "@") !== false) //waittill shell is loaded
 				break;
 		}
 		

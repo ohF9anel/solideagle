@@ -27,6 +27,7 @@
           <actionMethod actionName="showexterndetails"/>
           <actionMethod actionName="move"/>
           <actionMethod actionName="remove"/>
+          <actionMethod actionName="resetpw"/>
         </controllerFile>
         <controllerFile controllerName="Groups">
           <actionMethod actionName="index"/>
@@ -160,6 +161,12 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Databasetasks">
             <viewScriptFile forActionName="startclean"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Users">
+            <viewScriptFile forActionName="resetpw"/>
+          </viewControllerScriptsDirectory>
+             <viewControllerScriptsDirectory forControllerName="Users">
+            <viewScriptFile forActionName="remove"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>

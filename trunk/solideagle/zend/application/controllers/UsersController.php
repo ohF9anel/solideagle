@@ -19,17 +19,17 @@ use solideagle\scripts\Usermanager;
 class UsersController extends Zend_Controller_Action
 {
 
-	public function init()
-	{
+    public function init()
+    {
 		/* Initialize action controller here */
-	}
+    }
 
-	public function indexAction()
-	{
-	}
+    public function indexAction()
+    {
+    }
 
-	public function userformAction()
-	{
+    public function userformAction()
+    {
 		$this->_helper->layout()->disableLayout();
 			
 		$data = $this->getRequest()->getParams();
@@ -79,10 +79,10 @@ class UsersController extends Zend_Controller_Action
 
 		}
 
-	}
+    }
 
-	public function adduserpostAction()
-	{
+    public function adduserpostAction()
+    {
 		$this->_helper->layout()->disableLayout();
 
 		$this->_helper->viewRenderer->setNoRender(true);
@@ -158,10 +158,11 @@ class UsersController extends Zend_Controller_Action
 		}else{
 			Person::addPerson($person);
 		}
-	}
+		
+    }
 
-	public function getusersAction()
-	{
+    public function getusersAction()
+    {
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
 			
@@ -190,10 +191,10 @@ class UsersController extends Zend_Controller_Action
 		}
 		//must be called aaData, see datatables ajax docs
 		echo json_encode(array("aaData" => $persons));
-	}
+    }
 
-	public function showdetailsAction()
-	{
+    public function showdetailsAction()
+    {
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
 			
@@ -207,23 +208,23 @@ class UsersController extends Zend_Controller_Action
 			return;
 
 		echo $person->getJson();
-	}
+    }
 
-	public function showexterndetailsAction()
-	{
+    public function showexterndetailsAction()
+    {
 		// action body
-	}
+    }
 
-	public function moveAction()
-	{
+    public function moveAction()
+    {
 		$this->_helper->layout()->disableLayout();
 		$this->view->groups = Group::getAllGroups();
 
 		$this->view->oldgid = $this->getRequest()->getParam("oldgid",false);
-	}
+    }
 
-	public function movepostAction()
-	{
+    public function movepostAction()
+    {
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
 			
@@ -249,22 +250,37 @@ class UsersController extends Zend_Controller_Action
 			GlobalUserManager::moveUser($user, $newgid, $oldgid);
 		}
 
-	}
+    }
 
-
-	public function removeAction()
-	{
+    public function removeAction()
+    {
 		$this->_helper->layout()->disableLayout();
-		$this->_helper->viewRenderer->setNoRender(true);
+	
+		//get users from post
+		$usersArr = $this->getRequest()->getPost('selectedUsers',array());
+		
+		//no users given in post, try other options
+		if(count($usersArr) < 1)
+		{
+			$usersArr = Person::getPersonIdsByGroupId($this->getRequest()->getPost('selectedGroup'));
+		}
 
-		$users = $this->getRequest()->getPost('selectedUsers',array());
+		/*$users = $this->getRequest()->getPost('selectedUsers',array());
 
 		foreach($users as $userid)
 		{
 			$person = Person::getPersonById($userid);
 			GlobalUserManager::deleteUser($person);
-		}
+		}*/
 
-	}
+    }
+
+    public function resetpwAction()
+    {
+      $this->_helper->layout()->disableLayout();
+    }
+
 
 }
+
+
