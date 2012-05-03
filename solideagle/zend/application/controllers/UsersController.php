@@ -19,17 +19,17 @@ use solideagle\scripts\Usermanager;
 class UsersController extends Zend_Controller_Action
 {
 
-    public function init()
-    {
+	public function init()
+	{
 		/* Initialize action controller here */
-    }
+	}
 
-    public function indexAction()
-    {
-    }
+	public function indexAction()
+	{
+	}
 
-    public function userformAction()
-    {
+	public function userformAction()
+	{
 		$this->_helper->layout()->disableLayout();
 			
 		$data = $this->getRequest()->getParams();
@@ -79,10 +79,10 @@ class UsersController extends Zend_Controller_Action
 
 		}
 
-    }
+	}
 
-    public function adduserpostAction()
-    {
+	public function adduserpostAction()
+	{
 		$this->_helper->layout()->disableLayout();
 
 		$this->_helper->viewRenderer->setNoRender(true);
@@ -158,11 +158,11 @@ class UsersController extends Zend_Controller_Action
 		}else{
 			Person::addPerson($person);
 		}
-		
-    }
 
-    public function getusersAction()
-    {
+	}
+
+	public function getusersAction()
+	{
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
 			
@@ -191,10 +191,10 @@ class UsersController extends Zend_Controller_Action
 		}
 		//must be called aaData, see datatables ajax docs
 		echo json_encode(array("aaData" => $persons));
-    }
+	}
 
-    public function showdetailsAction()
-    {
+	public function showdetailsAction()
+	{
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
 			
@@ -208,38 +208,41 @@ class UsersController extends Zend_Controller_Action
 			return;
 
 		echo $person->getJson();
-    }
+	}
 
-    public function showexterndetailsAction()
-    {
+	public function showexterndetailsAction()
+	{
 		// action body
-    }
+	}
 
-    public function moveAction()
-    {
+	public function moveAction()
+	{
 		$this->_helper->layout()->disableLayout();
 		$this->view->groups = Group::getAllGroups();
 
-		$this->view->oldgid = $this->getRequest()->getParam("oldgid",false);
-    }
+		//get users from post
+		$users = $this->getRequest()->getPost('selectedUsers',array());
+			
+		//no users given in post, try other options
+		if(count($users) < 1)
+		{
+			$users = Person::getPersonIdsByGroupId($this->getRequest()->getPost('selectedGroup'));
+		}
+			
+		$this->view->usersCount = count($users);
+		$this->view->users = json_encode($users);
+	}
 
-    public function movepostAction()
-    {
+	public function movepostAction()
+	{
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
 			
-		$oldgid = $this->getRequest()->getPost("oldgid",false);
 		$newgid = $this->getRequest()->getParam("newgid",false);
 
-		if($oldgid ===false || $newgid ===false)
+		if( $newgid ===false)
 		{
-			echo "oldgid or newgid not set!";
-			return;
-		}
-
-		if($oldgid == $newgid)
-		{
-			echo "moving to same group, aborting";
+			echo "newgid not set!";
 			return;
 		}
 
@@ -247,83 +250,87 @@ class UsersController extends Zend_Controller_Action
 
 		foreach($users as $user)
 		{
+			$oldgid = $user->getGroupId();
+			
+			if($oldgid == $newgid) //do not move to same group
+			{
+				continue;
+			}
+			
 			GlobalUserManager::moveUser($user, $newgid, $oldgid);
 		}
 
-    }
+	}
 
-    public function removeAction()
-    {
+	public function removeAction()
+	{
 		$this->_helper->layout()->disableLayout();
-	
+
 		if($this->getRequest()->getPost("submit") === "remove")
 		{
-			$users = $this->getRequest()->getPost('users',array());
-			
-			foreach($users as $userid)
+			$users = Person::getPersonsByIds($this->getRequest()->getParam("users",array()));
+				
+			foreach($users as $user)
 			{
-				$person = Person::getPersonById($userid);
-				GlobalUserManager::deleteUser($person);
+				GlobalUserManager::deleteUser($users);
 			}
 		}
 		else{
 			//get users from post
 			$users = $this->getRequest()->getPost('selectedUsers',array());
-			
+				
 			//no users given in post, try other options
 			if(count($users) < 1)
 			{
 				$users = Person::getPersonIdsByGroupId($this->getRequest()->getPost('selectedGroup'));
 			}
-			
+				
 			$this->view->usersCount = count($users);
 			$this->view->users = json_encode($users);
 		}
-    }
+	}
 
-    public function resetpwAction()
-    {
-      $this->_helper->layout()->disableLayout();
-      
-      if($this->getRequest()->getPost("submit") === "reset")
-      {
-      	$users = $this->getRequest()->getPost('users',array());
-      	
-      	$randomPass = true;
-      		
-      	foreach($users as $userid)
-      	{
-      		$person = Person::getPersonById($userid);
-      		
-      		//predefined or random
-      		if($randomPass)
-      		{
-      			$person->setAccountPassword(Person::generatePassword());
-      		}else{
-      			$person->setAccountPassword("P@ssw0rd"); //TODO
-      		}
-      		
-      		GlobalUserManager::resetUserPassword($person);
-      	}
-      }
-      else{
-      	//get users from post
-      	$users = $this->getRequest()->getPost('selectedUsers',array());
-      	
-      	//or maybe only 1 user
-      	if($this->getRequest()->getPost("pid") !== NULL)
-      		$users[] = $this->getRequest()->getPost("pid");
-      		
-      	//no users yet, try other options
-      	if(count($users) < 1)
-      	{
-      		$users = Person::getPersonIdsByGroupId($this->getRequest()->getPost('selectedGroup'));
-      	}
-      	
-      	$this->view->usersCount = count($users);
-      	$this->view->users = json_encode($users);
-      }
-    }
+	public function resetpwAction()
+	{
+		$this->_helper->layout()->disableLayout();
+
+		if($this->getRequest()->getPost("submit") === "reset")
+		{
+			$users = Person::getPersonsByIds($this->getRequest()->getParam("users",array()));
+			 
+			$randomPass = true;
+
+			foreach($users as $person)
+			{
+				//predefined or random
+				if($randomPass)
+				{
+					$person->setAccountPassword(Person::generatePassword());
+				}else{
+					$person->setAccountPassword("P@ssw0rd"); //TODO
+				}
+
+				GlobalUserManager::resetUserPassword($person);
+			}
+		}
+		else{
+			//get users from post
+			$users = $this->getRequest()->getPost('selectedUsers',array());
+			 
+			//or maybe only 1 user
+			if($this->getRequest()->getPost("pid") !== NULL)
+				$users[] = $this->getRequest()->getPost("pid");
+
+			//no users yet, try other options
+			if(count($users) < 1)
+			{
+				$users = Person::getPersonIdsByGroupId($this->getRequest()->getPost('selectedGroup'));
+			}
+			 
+			$this->view->usersCount = count($users);
+			$this->view->users = json_encode($users);
+		}
+	}
 
 
 }

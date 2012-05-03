@@ -1378,7 +1378,7 @@ class Person
 	{
 		$sql = "UPDATE  `person` SET
 		`group_id` = :group_id
-		WHERE id = :id;";
+		WHERE id = :id";
 
 		$cmd = new DatabaseCommand($sql);
 
