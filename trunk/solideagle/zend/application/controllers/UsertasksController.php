@@ -256,7 +256,7 @@ class UsertasksController extends Zend_Controller_Action
       //no users given try to get the from the group
       if(count($users) < 1)
       {
-      	$users = $this->getUserIds($this->getRequest()->getParam('selectedGroup'));
+      	$users = Person::getPersonIdsByGroupId($this->getRequest()->getParam('selectedGroup'));
       }
       
       $this->view->users = json_encode($users);

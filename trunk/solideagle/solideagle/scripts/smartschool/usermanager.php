@@ -172,6 +172,14 @@ class usermanager implements TaskInterface
 
 		TaskQueue::insertNewTask($config, $person->getId());
 	}
+	
+	public static function prepareChangePassword($person)
+	{
+		$config["action"] = self::ActionUpdatePassword;
+		$config["person"] = $person;
+		TaskQueue::insertNewTask($config, $person->getId());
+	}
+	
 
 
 }
