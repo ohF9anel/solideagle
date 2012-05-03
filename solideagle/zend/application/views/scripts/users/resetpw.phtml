@@ -43,12 +43,69 @@
 					class="close"
 					data-dismiss="modal">×</a>
 				<h3 id="modaltitle">
-					Wachtwoord reset voor <?php echo $this->usersCount ?> gebruikers
+					Wachtwoord reset voor
+					<?php echo $this->usersCount ?>
+					gebruikers
 				</h3>
 			</div>
 			<div
 				class="modal-body"
-				style="width: 300px;"></div>
+				style="width: 300px;">
+
+				<div class="control-group">
+					<label
+						class="control-label"
+						for="txtPassword">Nieuw wachtwoord:</label>
+					<div class="controls">
+						<div class="input-append">
+							<input
+								id="txtPassword"
+								size="16"
+								name="AccountPassword"
+								class="span2"
+								type="text"
+								value="">
+						</div>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label
+						class="control-label"
+						for="txtPassword">Herhaal wachtwoord:</label>
+					<div class="controls">
+						<div class="input-append">
+							<input
+								id="txtPassword"
+								size="16"
+								name="AccountPasswordRepeat"
+								class="span2"
+								type="text"
+								value="">
+						</div>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label
+						class="control-label"
+						for="cbActive">Random wachtwoord</label>
+					<div class="controls">
+
+						<label class="checkbox">
+							<input
+								name="random"
+								value="true"
+								type="checkbox">
+
+						</label>
+
+					</div>
+				</div>
+
+
+
+			</div>
 			<div class="modal-footer">
 				<a
 					href="#"

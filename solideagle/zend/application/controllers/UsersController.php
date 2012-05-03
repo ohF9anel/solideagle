@@ -268,6 +268,8 @@ class UsersController extends Zend_Controller_Action
 
 		if($this->getRequest()->getPost("submit") === "remove")
 		{
+			$this->_helper->viewRenderer->setNoRender(true);
+			
 			$users = Person::getPersonsByIds($this->getRequest()->getParam("users",array()));
 				
 			foreach($users as $user)
@@ -296,9 +298,11 @@ class UsersController extends Zend_Controller_Action
 
 		if($this->getRequest()->getPost("submit") === "reset")
 		{
+			$this->_helper->viewRenderer->setNoRender(true);
+			
 			$users = Person::getPersonsByIds($this->getRequest()->getParam("users",array()));
 			 
-			$randomPass = true;
+			$randomPass = $this->getRequest()->getParam("random",false);
 
 			foreach($users as $person)
 			{
@@ -307,9 +311,17 @@ class UsersController extends Zend_Controller_Action
 				{
 					$person->setAccountPassword(Person::generatePassword());
 				}else{
-					$person->setAccountPassword("P@ssw0rd"); //TODO
+					$pass = $this->getRequest()->getParam("AccountPassword");
+					$passRepeat = $this->getRequest()->getParam("AccountPasswordRepeat");
+					
+					if($pass == $passRepeat)
+					{
+						$person->setAccountPassword($pass); 
+					}else{
+						echo "Wachtwoorden niet gelijk!";
+						return;
+					}
 				}
-
 				GlobalUserManager::resetUserPassword($person);
 			}
 		}
