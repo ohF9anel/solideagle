@@ -22,7 +22,7 @@ $domain = "solideagle";
 $suffix = "lok";
 $securityGroupsGroup = "groepen"; //waar security groepen komen
 
-$arr["ad_dc"] = "DC=" . $domain . ", DC=" . $suffix;
+$arr["ad_dc"] = "DC=" . $domain . ",DC=" . $suffix;
 $arr["ad_dns"] = $domain . "." . $suffix;
 $arr["ad_dc_host"] =  $domainController . '.' . $arr["ad_dns"]; //'S1.solideagle.lok';
 $arr["ad_groups_ou"] = $securityGroupsGroup; 

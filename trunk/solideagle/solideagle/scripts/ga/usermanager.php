@@ -1,6 +1,7 @@
 <?php
 namespace solideagle\scripts\ga;
 
+use solideagle\data_access\Group;
 use solideagle\data_access\Person;
 use solideagle\data_access\PlatformGA;
 
@@ -17,6 +18,7 @@ class usermanager implements TaskInterface
 	const ActionAddUserToOu = 3;
         const ActionSetPhoto = 4;
         const ActionUpdatePassword = 5;
+        const ActionAddUserToGroup = 6;
 
 	public function runTask($taskqueue)
 	{
@@ -111,6 +113,17 @@ class usermanager implements TaskInterface
 				return false;
 			}
 		}
+                else if($config["action"] == self::ActionAddUserToGroup && isset($config["groupname"]) && isset($config["username"]))
+		{
+			$ret = manageuser::addUserToGroup($config["groupname"], $config["username"]);
+
+			if($ret->isSucces())
+				return true;
+			else{
+				$taskqueue->setErrorMessages($ret->getError());
+				return false;
+			}
+		}
 		else
 		{
 			$taskqueue->setErrorMessages("Probleem met configuratie");
@@ -173,6 +186,20 @@ class usermanager implements TaskInterface
 		$config["username"] = $person->getAccountUsername();
                 $config["pictureurl"] = $person->getPictureUrl();
 		TaskQueue::insertNewTask($config, $person->getId());
+	}
+        
+        public static function prepareMoveUser($person, $newgroup, $oldgroup)
+        {
+                self::prepareAddUserToOu($person);
+        }
+        
+        public static function prepareAddUserToGroup($person)
+	{
+		$config["action"] = self::ActionAddUserToGroup;
+                $config["groupname"] = Group::getGroupById($person->getGroupId());
+		$config["username"] = $person->getAccountUsername();
+
+		TaskQueue::insertNewTask($config, $group->getId(), TaskQueue::TypePerson);
 	}
 }
 

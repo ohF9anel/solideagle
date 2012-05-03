@@ -78,8 +78,6 @@ class oumanager implements TaskInterface
 		}
 	}
 
-
-
 	public static function prepareAddOu($parents,$ou)
 	{
 		$config["action"] = self::ActionAddOu;

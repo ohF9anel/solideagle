@@ -71,7 +71,6 @@ class managegroup
             // remove member in parent
             if("CN=" . $oldParent->getName() . ",OU=" . Config::singleton()->ad_groups_ou . "," . Config::singleton()->ad_dc == $parentDn)
             {
-                var_dump("REMOVING PARENT" . $parentDn);
                 $info['member'] = "CN=" . $group->getName() . "," . $dn;
                 ldap_mod_del($connLdap->getConn(), $parentDn, $info);
             }
