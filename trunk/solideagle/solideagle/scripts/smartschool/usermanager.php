@@ -163,7 +163,7 @@ class usermanager implements TaskInterface
 	 * @param Group $newgroup
 	 * @param Group $oldgroup
 	 */
-	public static function prepareMoveUser($person,$newgroup,$oldgroup,$accountenabled)
+	public static function prepareMoveUser($person,$newgroup,$oldgroup)
 	{
 		$config["action"] = self::ActionMoveUser;
 		$config["person"] = $person;

@@ -1,26 +1,21 @@
 <script>
 	$(function(){
 
-                var selectedArr = new Array();
+				var users = $.parseJSON(<?php echo "'" . $this->users . "'" ?>);
+
                 
-                $(".selectUser:checked").each( 
-                        function(k,v) { 
-                            selectedArr.push($(v).attr("value"));
-                        } 
-                );
-                
-                if(selectedArr.length > 0)
-		{
-                    $('#moveModal').modal('show');
-                    updateMiniTree();
-                }
-                else
-                {
+                if(users.length == 0)
+				{
                     alert("Geen gebruikers geselecteerd");
+                    return;
                 }   
 
+                $('#moveModal').modal('show');
+
+                updateMiniTree();
+
                 $("#formMoveUser").ajaxForm({
-                        data:  {"users":selectedArr},
+                        data:  {"users[]":users},
                         success: function(responseText, statusText, xhr, $form) { 
 
                                 if(responseText.length > 0)
@@ -32,10 +27,6 @@
                                 }
 
                 } });
-                
-                
-                
-		
 	});
         
         function updateMiniTree()
@@ -64,29 +55,51 @@
 
 </script>
 
-<form class="form-horizontal" action="<?php echo $this->SE_path . "/users/movepost" ?>" method="post" id="formMoveUser">
+<form
+	class="form-horizontal"
+	action="<?php echo $this->SE_path . "/users/movepost" ?>"
+	method="post"
+	id="formMoveUser">
 
-	<div class="hide SEsupermodal" id="moveModal">
+	<div
+		class="hide SEsupermodal"
+		id="moveModal">
 		<div>
 			<div class="modal-header">
-				<a class="close" data-dismiss="modal">×</a>
+				<a
+					class="close"
+					data-dismiss="modal">×</a>
 				<h3 id="modaltitle">
-                                    Verplaats <?php echo $this->displayName; ?> naar 
+					Verplaats
+					<?php echo $this->usersCount ?> gebruikers
+					naar
 				</h3>
 			</div>
-			<div class="modal-body" style="width: 300px;">
-                                <fieldset>
-                                    <input type="hidden" id="newgid" name="newgid">
-                                    <input type="hidden" id="oldgid" name="oldgid" value="<?php echo $this->oldgid; ?>">
-                                    <div id="groupminitree">
-                                            <!-- tree will be rendered here -->
-                                    </div>
-					
+			<div
+				class="modal-body"
+				style="width: 300px;">
+				<fieldset>
+					<input
+						type="hidden"
+						id="newgid"
+						name="newgid">
+
+					<div id="groupminitree">
+						<!-- tree will be rendered here -->
+					</div>
+
 				</fieldset>
 			</div>
 			<div class="modal-footer">
-                            <a href="#" class="btn" data-dismiss="modal">Annuleren</a>
-                            <button class="btn btn-primary" name="submit" value="move" type="submit">Verplaatsen</button>
+				<a
+					href="#"
+					class="btn"
+					data-dismiss="modal">Annuleren</a>
+				<button
+					class="btn btn-primary"
+					name="submit"
+					value="move"
+					type="submit">Verplaatsen</button>
 			</div>
 		</div>
 	</div>

@@ -51,7 +51,9 @@
 		});
                 
 		$("#MoveUserLink").click(function(){
-			loadIntoModalholder("<?php echo $this->SE_path . '/users/move' ?>",{oldgid:selectedGroupId});
+			var selectedArr = getSelectedUsers();
+			
+			loadIntoModalholder("<?php echo $this->SE_path . '/users/move' ?>", {selectedUsers:selectedArr});
 		});
 
 		$("#RemoveUserLink").click(function(){
@@ -81,11 +83,11 @@
 		});
 
         $("#RemoveUsersInGroupLink").click(function(){
-        	alert("Not yet implemented");
+        	$("#modalholder").load("<?php echo $this->SE_path . '/users/remove' ?>",{selectedGroup:selectedGroupId});
 		});
 
         $("#MoveUsersInGroupLink").click(function(){
-        	alert("Not yet implemented");
+        	loadIntoModalholder("<?php echo $this->SE_path . '/users/move' ?>",{selectedGroup:selectedGroupId});
 		});
 
 		$("#selectAllCheckbox").click(function(){

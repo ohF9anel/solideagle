@@ -21,8 +21,6 @@ class GlobalUserManager
 		$newgroup = Group::getGroupById($newgid);
 		$oldgroup = Group::getGroupById($oldgid);
 		
-		$accountenabled = true; //TODO, moving makes disabled accounts enabled...
-
 		if($person->getHasAdAccount())
 		{
 			\solideagle\scripts\ad\usermanager::prepareMoveUser($person,$newgroup,$oldgroup);
@@ -35,7 +33,7 @@ class GlobalUserManager
 
 		if($person->getHasSSAccount())
 		{
-			\solideagle\scripts\smartschool\usermanager::prepareMoveUser($person,$newgroup,$oldgroup,$accountenabled);
+			\solideagle\scripts\smartschool\usermanager::prepareMoveUser($person,$newgroup,$oldgroup);
 		}
 	}
 
