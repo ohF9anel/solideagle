@@ -274,7 +274,7 @@ class UsersController extends Zend_Controller_Action
 				
 			foreach($users as $user)
 			{
-				GlobalUserManager::deleteUser($users);
+				GlobalUserManager::deleteUser($user);
 			}
 		}
 		else{
