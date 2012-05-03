@@ -62,6 +62,26 @@ class GlobalUserManager
 			\solideagle\scripts\smartschool\usermanager::prepareUpdateUser($person,$enabled);
 		}
 	}
+	
+	public static function resetUserPassword($person)
+	{
+		Person::updatePerson($person);
+		
+		if($person->getHasAdAccount())
+		{
+			\solideagle\scripts\ad\usermanager::prepareChangePassword($person);
+		}
+	
+		if($person->getHasGaAccount())
+		{
+			\solideagle\scripts\ga\usermanager::prepareChangePassword($person);
+		}
+	
+		if($person->getHasSSAccount())
+		{
+			\solideagle\scripts\smartschool\usermanager::prepareChangePassword($person);
+		}
+	}
 
 	public static function deleteUser($person)
 	{
@@ -165,6 +185,8 @@ class GlobalUserManager
 			}
 		}
 	}
+	
+
 	
 	
 }

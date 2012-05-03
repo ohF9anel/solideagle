@@ -33,6 +33,17 @@
 			loadIntoModalholder("<?php echo $this->SE_path . '/users/userform?state=edit' ?>",{pid:clickedUserId});
 		});
 
+
+
+
+		$("#ResetPwGroupLink").click(function(){
+			loadIntoModalholder("<?php echo $this->SE_path . '/users/resetpw' ?>",{selectedGroup:selectedGroupId});
+		});
+
+		$("#ResetPwSelectedLink").click(function(){
+			loadIntoModalholder("<?php echo $this->SE_path . '/users/resetpw' ?>",{selectedUsers:selectedArr});
+		});
+		
 		$("#ResetPwUserLink").click(function(){
 			loadIntoModalholder("<?php echo $this->SE_path . '/users/resetpw' ?>",{pid:clickedUserId});
 		});
@@ -297,6 +308,9 @@
 							id="MoveUserLink"
 							href="#"><i class="icon-move"></i> Gebruikers verplaatsen</a></li>
 						<li><a
+							id="ResetPwSelectedLink"
+							href="#"><i class="icon-move"></i> Wachtwoord reset</a></li>
+						<li><a
 							id="TaskForUser"
 							href="#"><i class="icon-list-alt"></i> Custom taak</a></li>
 						<li><a
@@ -311,8 +325,11 @@
 						<li><a
 							id="MoveUsersInGroupLink"
 							href="#"><i class="icon-move"></i> Gebruikers verplaatsen</a></li>
+						<li><li><a
+							id="ResetPwGroupLink"
+							href="#"><i class="icon-move"></i> Wachtwoord reset</a>
 						
-						<li><a
+						</li><a
 							id="TaskForGroup"
 							href="#"><i class="icon-list-alt"></i> Custom taak</a></li>
 						<li><a
@@ -361,7 +378,7 @@
 				<li><a
 					href="javascript:void(0)"
 					id="EditUserLink"><i class="icon-pencil"></i> Bewerken</a></li>
-					<li><a
+				<li><a
 					href="javascript:void(0)"
 					id="ResetPwUserLink"><i class="icon-share-alt"></i> Wachtwoord reset</a></li>
 			</ul>

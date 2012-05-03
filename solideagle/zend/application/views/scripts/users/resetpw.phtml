@@ -1,10 +1,13 @@
 <script>
 	$(function(){
+
+			var users = $.parseJSON(<?php echo "'" . $this->users . "'" ?>);
 		
             $('#resetPwModal').modal('show');
 
     		$("#formResetPassword").ajaxForm({
     			beforeSubmit:  preventDoubleSubmit,
+    			data:  {"users[]":users},
     			success: function(responseText, statusText, xhr, $form) { 
 
     				isSubmitting = false;
@@ -34,7 +37,7 @@
 					class="close"
 					data-dismiss="modal">×</a>
 				<h3 id="modaltitle">
-					Wachtwoord reset
+					Wachtwoord reset voor <?php echo $this->usersCount ?> gebruikers
 				</h3>
 			</div>
 			<div

@@ -1,10 +1,13 @@
 <script>
 	$(function(){
+
+			var users = $.parseJSON(<?php echo "'" . $this->users . "'" ?>);
 		
             $('#removeUsers').modal('show');
 
     		$("#formRemoveUsers").ajaxForm({
     			beforeSubmit:  preventDoubleSubmit,
+    			data:  {"users[]":users},
     			success: function(responseText, statusText, xhr, $form) { 
 
     				isSubmitting = false;
