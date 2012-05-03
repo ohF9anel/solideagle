@@ -2,6 +2,7 @@
 
 namespace solideagle\plugins\ga;
 
+use solideagle\plugins\ga\GamExecutor;
 use solideagle\plugins\StatusReport;
 use solideagle\data_access\Person;
 use solideagle\data_access\Group;
@@ -15,7 +16,17 @@ class manageuser
                  ' lastname ' . $person->getName() . ' password ' . $person->getAccountPassword();
         if (!$enabled)
             $gamcmd .= " suspended on ";
-        $report = self::executeGamCommand($gamcmd);
+        $report = GamExecutor::executeGamCommand($gamcmd);
+        
+        return $report;
+    }
+    
+    public static function addUserToGroup($groupname, $username)
+    {
+        $email = $username . "@" . Config::singleton()->googledomain;
+        $gamcmd = "update group \"" . $groupname . "\" add member " . $email;
+        
+        $report = GamExecutor::executeGamCommand($gamcmd);
         
         return $report;
     }
@@ -34,9 +45,9 @@ class manageuser
             }
         }
         $gamcmd .= $childou->getName();
-        $gamcmd .= " add " . $person->getAccountUsername();
+        $gamcmd .= " add " . $person->getAccountUsername(); 
         
-        $report = self::executeGamCommand($gamcmd);
+        $report = GamExecutor::executeGamCommand($gamcmd);
         
         return $report;
 //        $errorHandler = new errorhandler();
@@ -98,7 +109,7 @@ class manageuser
         else
             $gamcmd .= "suspended off";
         
-        $report = self::executeGamCommand($gamcmd);
+        $report = GamExecutor::executeGamCommand($gamcmd);
         
         return $report;
         
@@ -149,7 +160,7 @@ class manageuser
         $gamcmd = "update user " . $username . " ";
         $gamcmd .= "password " . $password . " ";
         
-        $report = self::executeGamCommand($gamcmd);
+        $report = GamExecutor::executeGamCommand($gamcmd);
         
         return $report;
     }
@@ -199,7 +210,7 @@ class manageuser
     {
         $gamcmd = "user " . $username . " update photo " . $filepath;
         
-        $report = self::executeGamCommand($gamcmd);
+        $report = GamExecutor::executeGamCommand($gamcmd);
         
         return $report;
 //        $errorHandler = new errorhandler();
@@ -247,27 +258,6 @@ class manageuser
         } else {
             return "no match";
         }
-    }
-    
-    private static function executeGamCommand($cmd)
-    {
-        $errorHandler = new errorhandler();
-        
-        ob_start();
-        $cmd = 'python ../../gam/gam.py ' . $cmd;
-        
-        passthru($cmd);
-        $out = ob_get_contents();
-        ob_end_clean();
-
-        foreach(preg_split("/(\r?\n)/", $out) as $key => $line)
-        {
-            //if ($key == 0) continue;
-            if (preg_match('/^ERROR/i', $line, $matches))
-                $errorHandler->addGappsError($line);   
-        }
-        
-        return new StatusReport(!$errorHandler->hasErrors(), $errorHandler->toString());
     }
             
 }

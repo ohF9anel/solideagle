@@ -843,7 +843,7 @@ class Person
 					$validationErrors[] = "Wachtwoord: te kort.";
 					break;
 				default:
-					$validationErrors[] = "Wachtwoord: fout."; break;
+					//todo $validationErrors[] = "Wachtwoord: fout."; break;
 			}
 		}
 		if(!IsNullOrEmptyString($person->getAccountActiveUntill()))

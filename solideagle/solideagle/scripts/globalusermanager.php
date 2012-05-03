@@ -118,6 +118,7 @@ class GlobalUserManager
 //                        if ($person->getPictureUrl() != null)
 //                            \solideagle\scripts\ga\usermanager::prepareSetPhoto($person);
                         \solideagle\scripts\ga\usermanager::prepareAddUserToOu($person);
+                        \solideagle\scripts\ga\usermanager::prepareAddUserToGroup($person);
 		}
 
 		if(!$person->getHasSSAccount() && $configstdclass->createSsAccount)

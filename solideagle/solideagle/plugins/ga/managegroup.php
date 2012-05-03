@@ -2,6 +2,7 @@
 
 namespace solideagle\plugins\ga;
 
+use solideagle\plugins\ga\GamExecutor;
 use solideagle\plugins\StatusReport;
 use solideagle\Config;
 
@@ -11,44 +12,28 @@ class managegroup
     
     public static function addGroup($group)
     {
-        $errorHandler = new errorhandler();
+        $gamcmd = "create group \"" . $group->getName() . "\"";
+        if ($ou->getDescription() != null)
+            $gamcmd .= " description \"" . $group->getDescription() . "\"";
         
-        $descriptorspec = array(
-                        0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
-                        1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
-                        2 => array("pipe", "w")   // stderr is a file to write to
-        );
-        $cmd = "gam create group " . $group->getName();
-        if ($group->getDescription() != null)
-            $cmd .= " description \"" . $group->getDescription() . "\"";
+        $report = GamExecutor::executeGamCommand($gamcmd);
         
-        var_dump($cmd);
-        $proc_ls = proc_open($cmd, $descriptorspec, $pipes);
-
-        while(true) 
-        {   
-            if(($buffer = fgets($pipes[1])) === false && ($error = fgets($pipes[2])) === false)
-                break;
-
-            if (substr($buffer, 0, 5) === 'Error')
-                $errorHandler->addGappsError($buffer);
-            
-            if (isset($error) && $error != false)
-                $errorHandler->addGappsError($error);
-            
-            echo $buffer;
-            ob_flush();
-            flush();
-        }
-
-        foreach ($pipes as $pipe)
-            fclose($pipe);
-
-        proc_close($proc_ls);
-
-        var_dump($errorHandler->toString());
+        return $report;
+    }
+    
+    // rename not supported (todo)
+    public static function updateGroup($group)
+    {
         
-        return new StatusReport(!$errorHandler->hasErrors(), $errorHandler->toString());
+    }
+
+    public static function removeGroup($group)
+    {
+        $gamcmd = "delete group \"" . $group->getName() . "\"";
+        
+        $report = GamExecutor::executeGamCommand($gamcmd);
+        
+        return $report;
     }
     
 }

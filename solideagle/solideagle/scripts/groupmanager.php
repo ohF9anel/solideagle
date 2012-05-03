@@ -13,6 +13,7 @@ class groupmanager {
 		ad\oumanager::prepareAddOu($parents, $newgroup);
 		ad\groupmanager::prepareAddGroup($parents,$newgroup);
 		ga\oumanager::prepareAddOu($parents,$newgroup);
+                ga\groupmanager::prepareAddGroup($newgroup);
 		smartschool\groupmanager::prepareAddGroup($parents,$newgroup);
 	}
 

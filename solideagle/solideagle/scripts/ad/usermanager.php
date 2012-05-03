@@ -18,6 +18,7 @@ class usermanager implements TaskInterface
 	const ActionUpdateUser = 1;
 	const ActionDelUser = 2;
         const ActionUpdatePassword = 3;
+        const ActionMoveUser = 4;
 
 	public function runTask($taskqueue)
 	{
@@ -89,6 +90,22 @@ class usermanager implements TaskInterface
 
                 if($ret->isSucces())
                 {
+                    PlatformAD::removePlatformByPersonId($config["person"]->getId());
+                    return true;
+                }
+                else{
+                    $taskqueue->setErrorMessages($ret->getError());
+                    return false;
+                }
+            }
+            // move user in ad
+            else if($config["action"] == self::ActionMoveUser && isset($config["person"]) && isset($config["newparents"]) && isset($config["oldparents"]))
+            {
+                $userinfo = User::convertPersonToAdUser($config["person"])->getUserInfo();
+                $ret = ManageUser::moveUser($userinfo, $config['newparents'], $config['oldparents']);
+
+                if($ret->isSucces())
+                {
                     return true;
                 }
                 else{
@@ -140,6 +157,22 @@ class usermanager implements TaskInterface
 		$config["person"] = $person;
 		TaskQueue::insertNewTask($config, $person->getId());
 	}
+        
+        public static function prepareMoveUser($person, $newgroup, $oldgroup)
+        {
+                $config["action"] = self::ActionMoveUser;
+		$config["person"] = $person;
+                
+                $newparents = Group::getParents($newgroup);
+                array_unshift($newparents, $newgroup);
+		$config["newparents"] = $newparents;
+                
+                $oldparents = Group::getParents($oldgroup);
+                array_unshift($oldparents, $oldgroup);
+                $config["oldparents"] = $oldparents;
+
+		TaskQueue::insertNewTask($config, $person->getId());
+        }
 
 
 }
