@@ -13,8 +13,8 @@ class UnicodeHelper
 	//cleans string for making mail groups
 	public static function cleanEmailString($email)
 	{
-		$email = cleanUTFChars($email);
-		return preg_replace("/[^A-Za-z]/", ".", $email);
+		$email = self::cleanUTFChars($email);
+		return preg_replace("/[^A-Za-z0-9]/", ".", $email);
 	}
 	
 	//removes all utf8 chars
