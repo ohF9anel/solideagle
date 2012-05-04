@@ -119,8 +119,6 @@ class homefoldermanager implements TaskInterface
 			}else{
 				$config["homefolderpath"] .= "\\" . substr($user->getAccountUsername(), -2);
 			}
-			
-			
 		}
 			
 		if((!$user->isTypeOf(Type::TYPE_LEERLING)) && $uploadsharepath!=NULL && $downloadsharepath!=NULL)
