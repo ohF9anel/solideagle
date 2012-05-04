@@ -19,17 +19,17 @@ use solideagle\scripts\Usermanager;
 class UsersController extends Zend_Controller_Action
 {
 
-	public function init()
-	{
+    public function init()
+    {
 		/* Initialize action controller here */
-	}
+    }
 
-	public function indexAction()
-	{
-	}
+    public function indexAction()
+    {
+    }
 
-	public function userformAction()
-	{
+    public function userformAction()
+    {
 		$this->_helper->layout()->disableLayout();
 			
 		$data = $this->getRequest()->getParams();
@@ -79,10 +79,10 @@ class UsersController extends Zend_Controller_Action
 
 		}
 
-	}
+    }
 
-	public function adduserpostAction()
-	{
+    public function adduserpostAction()
+    {
 		$this->_helper->layout()->disableLayout();
 
 		$this->_helper->viewRenderer->setNoRender(true);
@@ -159,10 +159,10 @@ class UsersController extends Zend_Controller_Action
 			Person::addPerson($person);
 		}
 
-	}
+    }
 
-	public function getusersAction()
-	{
+    public function getusersAction()
+    {
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
 			
@@ -191,10 +191,10 @@ class UsersController extends Zend_Controller_Action
 		}
 		//must be called aaData, see datatables ajax docs
 		echo json_encode(array("aaData" => $persons));
-	}
+    }
 
-	public function showdetailsAction()
-	{
+    public function showdetailsAction()
+    {
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
 			
@@ -208,15 +208,15 @@ class UsersController extends Zend_Controller_Action
 			return;
 
 		echo $person->getJson();
-	}
+    }
 
-	public function showexterndetailsAction()
-	{
+    public function showexterndetailsAction()
+    {
 		// action body
-	}
+    }
 
-	public function moveAction()
-	{
+    public function moveAction()
+    {
 		$this->_helper->layout()->disableLayout();
 		$this->view->groups = Group::getAllGroups();
 
@@ -231,10 +231,10 @@ class UsersController extends Zend_Controller_Action
 			
 		$this->view->usersCount = count($users);
 		$this->view->users = json_encode($users);
-	}
+    }
 
-	public function movepostAction()
-	{
+    public function movepostAction()
+    {
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
 			
@@ -260,10 +260,10 @@ class UsersController extends Zend_Controller_Action
 			GlobalUserManager::moveUser($user, $newgid, $oldgid);
 		}
 
-	}
+    }
 
-	public function removeAction()
-	{
+    public function removeAction()
+    {
 		$this->_helper->layout()->disableLayout();
 
 		if($this->getRequest()->getPost("submit") === "remove")
@@ -277,7 +277,8 @@ class UsersController extends Zend_Controller_Action
 				GlobalUserManager::deleteUser($user);
 			}
 		}
-		else{
+		else
+		{
 			//get users from post
 			$users = $this->getRequest()->getPost('selectedUsers',array());
 				
@@ -290,10 +291,10 @@ class UsersController extends Zend_Controller_Action
 			$this->view->usersCount = count($users);
 			$this->view->users = json_encode($users);
 		}
-	}
+    }
 
-	public function resetpwAction()
-	{
+    public function resetpwAction()
+    {
 		$this->_helper->layout()->disableLayout();
 
 		if($this->getRequest()->getPost("submit") === "reset")
@@ -324,8 +325,7 @@ class UsersController extends Zend_Controller_Action
 				}
 				GlobalUserManager::resetUserPassword($person);
 			}
-		}
-		else{
+		}else{
 			//get users from post
 			$users = $this->getRequest()->getPost('selectedUsers',array());
 			 
@@ -342,9 +342,35 @@ class UsersController extends Zend_Controller_Action
 			$this->view->usersCount = count($users);
 			$this->view->users = json_encode($users);
 		}
-	}
+    }
+
+    public function searchAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        
+        
+        if($this->getRequest()->getParam("submit",false))
+        {
+        	$this->_helper->viewRenderer->setNoRender(true);
+        	
+        	$personsToEncode = array();
+        	
+        	$firstname = "%" . $this->getRequest()->getParam("voornaam","") . "%";
+        	$lastname = "%" . $this->getRequest()->getParam("naam",""). "%";
+        	$username ="%" . $this->getRequest()->getParam("gebruikersnaam",""). "%";
+        	
+        	foreach(Person::searchPerson($firstname,$lastname,$username) as $person)
+        	{
+        		$personsToEncode[] = $person->getJson();
+        	}
+        	
+        	echo json_encode($personsToEncode);
+        }
+    }
 
 
 }
+
+
 
 

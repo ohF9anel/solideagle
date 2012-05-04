@@ -28,6 +28,7 @@
           <actionMethod actionName="move"/>
           <actionMethod actionName="remove"/>
           <actionMethod actionName="resetpw"/>
+          <actionMethod actionName="search"/>
         </controllerFile>
         <controllerFile controllerName="Groups">
           <actionMethod actionName="index"/>
@@ -171,6 +172,9 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Databasetasks">
             <viewScriptFile forActionName="updateconfig"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Users">
+            <viewScriptFile forActionName="search"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>
