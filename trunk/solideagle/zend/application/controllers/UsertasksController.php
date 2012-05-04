@@ -44,9 +44,13 @@ class UsertasksController extends Zend_Controller_Action
 	 */
 	private function doTasksForUser($user,$configstdclass)
 	{
-		if($configstdclass->createAdAccount || $configstdclass->createSsAccount || $configstdclass->createGappAccount)
+		//check if user has password
+		if((strlen($user->getAccountPassword()) >= 8) && (
+				$configstdclass->createAdAccount || $configstdclass->createSsAccount || $configstdclass->createGappAccount))
 		{
 			GlobalUserManager::createAccounts($user, $configstdclass);
+		}else{
+			Logger::log("No account created for user: " . $user->getAccountUsername() . " because he does not have a password.",PEAR_LOG_ALERT);
 		}
 		 
 		if($configstdclass->deleteAdAccount || $configstdclass->deleteSsAccount || $configstdclass->deleteGappAccount)
