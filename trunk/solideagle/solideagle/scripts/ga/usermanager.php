@@ -19,6 +19,7 @@ class usermanager implements TaskInterface
         const ActionSetPhoto = 4;
         const ActionUpdatePassword = 5;
         const ActionAddUserToGroup = 6;
+        const ActionRemoveUserFromGroup = 7;
 
 	public function runTask($taskqueue)
 	{
@@ -47,8 +48,7 @@ class usermanager implements TaskInterface
 
 			if($ret->isSucces())
 			{
-				$platform = new PlatformGA();
-				$platform->setPersonId($config["user"]->getId());
+				$platform = PlatformGA::getPlatformConfigByPersonId($config["user"]);
 				$platform->setEnabled($config["enabled"]);
 				PlatformGA::updatePlatform($platform);
 				return true;
@@ -64,6 +64,7 @@ class usermanager implements TaskInterface
 
 			if($ret->isSucces())
 			{
+				PlatformGA::removePlatformByPersonId($config["user"]->getId());
 				return true;
 			}
 			else{
@@ -116,6 +117,17 @@ class usermanager implements TaskInterface
                 else if($config["action"] == self::ActionAddUserToGroup && isset($config["groupname"]) && isset($config["username"]))
 		{
 			$ret = manageuser::addUserToGroup($config["groupname"], $config["username"]);
+
+			if($ret->isSucces())
+				return true;
+			else{
+				$taskqueue->setErrorMessages($ret->getError());
+				return false;
+			}
+		}
+                else if($config["action"] == self::ActionRemoveUserFromGroup && isset($config["groupname"]) && isset($config["username"]))
+		{
+			$ret = manageuser::removeUserFromGroup($config["groupname"], $config["username"]);
 
 			if($ret->isSucces())
 				return true;
@@ -196,10 +208,19 @@ class usermanager implements TaskInterface
         public static function prepareAddUserToGroup($person)
 	{
 		$config["action"] = self::ActionAddUserToGroup;
-                $config["groupname"] = Group::getGroupById($person->getGroupId());
+                $config["groupname"] = Group::getGroupById($person->getGroupId())->getName();
 		$config["username"] = $person->getAccountUsername();
 
-		TaskQueue::insertNewTask($config, $group->getId(), TaskQueue::TypePerson);
+		TaskQueue::insertNewTask($config, $person->getId(), TaskQueue::TypePerson);
+	}
+        
+        public static function prepareRemoveUserFromGroup($person, $group)
+	{
+		$config["action"] = self::ActionRemoveUserFromGroup;
+                $config["groupname"] = $group->getName();
+		$config["username"] = $person->getAccountUsername();
+
+		TaskQueue::insertNewTask($config, $person->getId(), TaskQueue::TypePerson);
 	}
 }
 

@@ -12,8 +12,8 @@ class manageuser
 {
     public static function addUser($person, $enabled = true)
     {
-        $gamcmd = 'create user ' . $person->getAccountUsername() . ' firstname ' . $person->getFirstName() . 
-                 ' lastname ' . $person->getName() . ' password ' . $person->getAccountPassword();
+        $gamcmd = "create user " . $person->getAccountUsername() . " firstname \"" . $person->getFirstName() . 
+                 "\" lastname \"" . $person->getName() . "\" password \"" . $person->getAccountPassword() . "\"";
         if (!$enabled)
             $gamcmd .= " suspended on ";
         $report = GamExecutor::executeGamCommand($gamcmd);
@@ -25,6 +25,16 @@ class manageuser
     {
         $email = $username . "@" . Config::singleton()->googledomain;
         $gamcmd = "update group \"" . $groupname . "\" add member " . $email;
+        
+        $report = GamExecutor::executeGamCommand($gamcmd);
+        
+        return $report;
+    }
+    
+    public static function removeUserFromGroup($groupname, $username)
+    {
+        $email = $username . "@" . Config::singleton()->googledomain;
+        $gamcmd = "update group \"" . $groupname . "\" remove " . $email;
         
         $report = GamExecutor::executeGamCommand($gamcmd);
         
@@ -100,9 +110,8 @@ class manageuser
     public static function updateUser($person, $enabled)
     {
         $gamcmd = "update user " . $person->getAccountUsername() . " ";
-        $gamcmd .= "firstname " . $person->getFirstName() . " ";
-        $gamcmd .= "lastname " . $person->getName() . " ";
-        $gamcmd .= "password " . $person->getAccountPassword() . " ";
+        $gamcmd .= "firstname \"" . $person->getFirstName() . "\" ";
+        $gamcmd .= "lastname \"" . $person->getName() . "\" ";
 
         if (!$enabled)
             $gamcmd .= "suspended on";
@@ -169,7 +178,7 @@ class manageuser
     {
         $gamcmd = "delete user " . $person->getAccountUsername();
         
-        $report = self::executeGamCommand($gamcmd);
+        $report = GamExecutor::executeGamCommand($gamcmd);
         
         return $report;
 //        $errorHandler = new errorhandler();
