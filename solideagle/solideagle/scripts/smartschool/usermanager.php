@@ -66,6 +66,9 @@ class usermanager implements TaskInterface
 				
 			if($ret->isSucces())
 			{
+				$platformss =  PlatformSS::getPlatformConfigByPersonId($config["person"]->getId());
+				$platformss->setEnabled($config["enabled"]);
+				PlatformSS::updatePlatform($platformss);
 				return true;
 			}
 			else{
