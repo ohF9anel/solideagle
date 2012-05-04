@@ -92,6 +92,16 @@ class homefoldermanager implements TaskInterface
 		return false;
 	}
 
+/**
+ * 
+ * @param unknown_type $server
+ * @param unknown_type $homefolderpath
+ * @param unknown_type $scansharepath
+ * @param unknown_type $wwwsharepath
+ * @param Person $user
+ * @param unknown_type $uploadsharepath
+ * @param unknown_type $downloadsharepath
+ */
 	public static function prepareAddHomefolder($server, $homefolderpath, $scansharepath, $wwwsharepath, $user, $uploadsharepath=NULL,$downloadsharepath=NULL)
 	{
 		$config["action"] = self::ActionAddHomefolder;
@@ -101,10 +111,16 @@ class homefoldermanager implements TaskInterface
 		$config["wwwsharepath"] = $wwwsharepath;
 		$config["username"] = $user->getAccountUsername();
 
-
 		if ($user->isTypeOf(Type::TYPE_LEERLING))
-			$config["homefolderpath"] .= "\\" . substr($user->getMadeOn(), 2, 2);
-
+		{
+			if(is_numeric(substr($user->getAccountUsername(), -3)))
+			{
+				$config["homefolderpath"] .= "\\" . substr($user->getAccountUsername(), -3,2);
+			}
+			
+			$config["homefolderpath"] .= "\\" . substr($user->getAccountUsername(), 0, -2);
+		}
+			
 		if((!$user->isTypeOf(Type::TYPE_LEERLING)) && $uploadsharepath!=NULL && $downloadsharepath!=NULL)
 		{
 			$config["uploadsharepath"] = $uploadsharepath;

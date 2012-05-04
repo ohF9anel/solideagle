@@ -71,7 +71,6 @@ class UsertasksController extends Zend_Controller_Action
 		 
 		if($configstdclass->createAdHomedir)
 		{
-			 
 			$server = $configstdclass->homefolderServer;
 			$homeFolderPath = $configstdclass->homefolderPath;
 			$scanSharePath  = $configstdclass->scanSharePath;
@@ -85,11 +84,9 @@ class UsertasksController extends Zend_Controller_Action
 				$downloadSharePath = $configstdclass->downloadSharePath;
 				$uploadSharePath = $configstdclass->uploadSharePath;
 			}
-			 
-
+			
 			solideagle\scripts\ad\homefoldermanager::prepareAddHomefolder($server, $homeFolderPath, $scanSharePath,
 					$wwwSharePath, $user,$uploadSharePath,$downloadSharePath);
-
 		}
 		 
 	}
