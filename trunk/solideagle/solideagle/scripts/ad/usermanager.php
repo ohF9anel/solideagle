@@ -58,8 +58,7 @@ class usermanager implements TaskInterface
 
                 if($ret->isSucces())
                 {
-                    $platformad = new PlatformAD();
-                    $platformad->setPersonId($config["person"]->getId());
+                    $platformad = PlatformAD::getPlatformConfigByPersonId($config["person"]->getId());
                     $platformad->setEnabled($config["enabled"]);
                     PlatformAD::updatePlatform($platformad);
                     return true;	
