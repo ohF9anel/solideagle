@@ -16,10 +16,10 @@ class usermanager implements TaskInterface
 	const ActionUpdateUser = 1;
 	const ActionDelUser = 2;
 	const ActionAddUserToOu = 3;
-        const ActionSetPhoto = 4;
-        const ActionUpdatePassword = 5;
-        const ActionAddUserToGroup = 6;
-        const ActionRemoveUserFromGroup = 7;
+	const ActionSetPhoto = 4;
+	const ActionUpdatePassword = 5;
+	const ActionAddUserToGroup = 6;
+	const ActionRemoveUserFromGroup = 7;
 
 	public function runTask($taskqueue)
 	{
@@ -85,12 +85,12 @@ class usermanager implements TaskInterface
 				return false;
 			}
 		}
-                else if($config["action"] == self::ActionSetPhoto && isset($config["username"]) && isset($config["pictureurl"]))
+		else if($config["action"] == self::ActionSetPhoto && isset($config["username"]) && isset($config["pictureurl"]))
 		{
-                        $picturepath = manageuser::downloadTempFile($config["pictureurl"], "/var/www/tmp/", "png.png");
+			$picturepath = manageuser::downloadTempFile($config["pictureurl"], "/var/www/tmp/", "png.png");
 			$ret = manageuser::setPhoto($config["username"], $picturepath);
-                        
-                        
+
+
 
 			if($ret->isSucces())
 			{
@@ -101,7 +101,7 @@ class usermanager implements TaskInterface
 				return false;
 			}
 		}
-                else if($config["action"] == self::ActionUpdatePassword && isset($config["username"]) && isset($config["password"]))
+		else if($config["action"] == self::ActionUpdatePassword && isset($config["username"]) && isset($config["password"]))
 		{
 			$ret = manageuser::updatePassword($config["username"], $config["password"]);
 
@@ -114,7 +114,7 @@ class usermanager implements TaskInterface
 				return false;
 			}
 		}
-                else if($config["action"] == self::ActionAddUserToGroup && isset($config["groupname"]) && isset($config["username"]))
+		else if($config["action"] == self::ActionAddUserToGroup && isset($config["groupname"]) && isset($config["username"]))
 		{
 			$ret = manageuser::addUserToGroup($config["groupname"], $config["username"]);
 
@@ -125,7 +125,7 @@ class usermanager implements TaskInterface
 				return false;
 			}
 		}
-                else if($config["action"] == self::ActionRemoveUserFromGroup && isset($config["groupname"]) && isset($config["username"]))
+		else if($config["action"] == self::ActionRemoveUserFromGroup && isset($config["groupname"]) && isset($config["username"]))
 		{
 			$ret = manageuser::removeUserFromGroup($config["groupname"], $config["username"]);
 
@@ -145,6 +145,12 @@ class usermanager implements TaskInterface
 
 	public static function prepareAddUser($person, $enabled = true)
 	{
+
+		//                        if ($person->getPictureUrl() != null)
+		//                            \solideagle\scripts\ga\usermanager::prepareSetPhoto($person);
+		self::prepareAddUserToOu($person);
+		self::prepareAddUserToGroup($person);
+
 		$config["action"] = self::ActionAddUser;
 		$config["user"] = $person;
 		$config["enabled"] = $enabled;
@@ -152,31 +158,35 @@ class usermanager implements TaskInterface
 		TaskQueue::insertNewTask($config, $person->getId());
 	}
 
-	
+
 	/**
-	*
-	*
-	* @param Person $person
-	* @param bool $enabled
-	*/
+	 *
+	 *
+	 * @param Person $person
+	 * @param bool $enabled
+	 */
 	public static function prepareUpdateUser($person, $enabled)
 	{
+
+		//                        if ($person->getPictureUrl() != null)
+		//                           self::prepareSetPhoto($person);
+
 		$config["action"] = self::ActionUpdateUser;
 		$config["user"] = $person;
-		
+
 		$config["enabled"] = $enabled;
 
 		TaskQueue::insertNewTask($config, $person->getId());
 	}
-        
-        public static function prepareChangePassword($person)
-        {
-                $config["action"] = self::ActionUpdatePassword;
-                $config["username"] = $person->getAccountUsername();
-                $config["password"] = $person->getAccountPassword();
-                
-                TaskQueue::insertNewTask($config, $person->getId());
-        }
+
+	public static function prepareChangePassword($person)
+	{
+		$config["action"] = self::ActionUpdatePassword;
+		$config["username"] = $person->getAccountUsername();
+		$config["password"] = $person->getAccountPassword();
+
+		TaskQueue::insertNewTask($config, $person->getId());
+	}
 
 	public static function prepareDelUser($person)
 	{
@@ -191,33 +201,35 @@ class usermanager implements TaskInterface
 		$config["user"] = $person;
 		TaskQueue::insertNewTask($config, $person->getId());
 	}
-        
-        public static function prepareSetPhoto($person)
+
+	public static function prepareSetPhoto($person)
 	{
 		$config["action"] = self::ActionSetPhoto;
 		$config["username"] = $person->getAccountUsername();
-                $config["pictureurl"] = $person->getPictureUrl();
+		$config["pictureurl"] = $person->getPictureUrl();
 		TaskQueue::insertNewTask($config, $person->getId());
 	}
-        
-        public static function prepareMoveUser($person, $newgroup, $oldgroup)
-        {
-                self::prepareAddUserToOu($person);
-        }
-        
-        public static function prepareAddUserToGroup($person)
+
+	public static function prepareMoveUser($person, $newgroup, $oldgroup)
+	{
+		self::prepareRemoveUserFromGroup($person, $oldgroup);
+		self::prepareAddUserToGroup($person);
+		self::prepareAddUserToOu($person);
+	}
+
+	public static function prepareAddUserToGroup($person)
 	{
 		$config["action"] = self::ActionAddUserToGroup;
-                $config["groupname"] = Group::getGroupById($person->getGroupId())->getName();
+		$config["groupname"] = Group::getGroupById($person->getGroupId())->getName();
 		$config["username"] = $person->getAccountUsername();
 
 		TaskQueue::insertNewTask($config, $person->getId(), TaskQueue::TypePerson);
 	}
-        
-        public static function prepareRemoveUserFromGroup($person, $group)
+
+	public static function prepareRemoveUserFromGroup($person, $group)
 	{
 		$config["action"] = self::ActionRemoveUserFromGroup;
-                $config["groupname"] = $group->getName();
+		$config["groupname"] = $group->getName();
 		$config["username"] = $person->getAccountUsername();
 
 		TaskQueue::insertNewTask($config, $person->getId(), TaskQueue::TypePerson);
