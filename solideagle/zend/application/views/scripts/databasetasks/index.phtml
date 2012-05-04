@@ -1,4 +1,20 @@
-<br /><br />
-<div id="view-content">
-	<p>View script for controller <b>Databasetasks</b> and script/action name <b>index</b></p>
-</div>
+<table>
+
+<?php 
+foreach($this->themethods as $methodname)
+{
+?>
+<tr><td>
+	<?php 
+	if(($pos = strpos($methodname,"Action")) !== false)
+	{
+		$realname = substr($methodname, 0,-6);
+		echo '<a href="' . $realname . '">' . $realname . '</a>';
+	}
+	?>
+</td></tr>
+<?php
+}
+?>
+
+</table>

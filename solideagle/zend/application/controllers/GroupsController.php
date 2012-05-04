@@ -123,6 +123,8 @@ class GroupsController extends Zend_Controller_Action
 	{
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
+		
+		$deletesubgroups = false;
 			
 		$data = $this->getRequest()->getParams();
 
@@ -137,6 +139,23 @@ class GroupsController extends Zend_Controller_Action
 
 			if(count(Group::getChilderen($groupToDelete)) !== 0)
 			{
+				
+				if($deletesubgroups)
+				{
+					foreach(Group::getAllChilderen($groupToDelete) as $childgroup)
+					{
+						groupmanager::Delete(Group::getParents($childgroup), $childgroup);
+							
+						Group::delGroupById($childgroup->getId());
+					}
+					
+					groupmanager::Delete(Group::getParents($groupToDelete), $groupToDelete);
+					
+					Group::delGroupById($groupToDelete->getId());
+					
+					return;
+				}
+				
 				echo "Deze groep kan niet verwijderd worden omdat hij subgroepen bevat.";
 				return;
 			}

@@ -57,12 +57,6 @@ class ClassGroup{
 	{
 		$retval = 0;
 		
-		assert('isset($classGroup->name) /* name required!*/');
-		assert('isset($classGroup->desc) /* desc required!*/');
-		assert('isset($classGroup->code) /* code required!*/');
-		
-		echo $classGroup->parentCode;
-		
 		$api = Api::singleton();
 		$retval += $api->saveClass($classGroup->name, $classGroup->desc, $classGroup->code,$classGroup->parentCode,		
 									$classGroup->untis, $classGroup->instituteNumber, $classGroup->adminNumber);
