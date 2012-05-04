@@ -154,6 +154,8 @@ class UsertasksController extends Zend_Controller_Action
 		$this->view->defaults->disableGappAccount = false;
 		$this->view->defaults->enableGappAccount = false;
 		
+		
+		
 		//get users from post
 		$usersArr = $this->getRequest()->getPost('selectedUsers',array());
 		
@@ -188,7 +190,11 @@ class UsertasksController extends Zend_Controller_Action
 		if($templatename != null)
 		{
 			$this->view->defaults = TaskTemplate::getTemplateByName($templatename)->getTemplateConfig();
+			
+			
 		}
+		
+		
 		
 		if ($edittemplate)
 		{
