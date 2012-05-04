@@ -28,50 +28,75 @@ use solideagle\logging\Logger;
 class UsertasksController extends Zend_Controller_Action
 {
 
-    public function init()
-    {
-	
-    }
+	public function init()
+	{
 
-    public function indexAction()
-    {   
-        
-    }
-    
-    /**
-     * 
-     * @param Person $user
-     */
-    private function doTasksForUser($user,$configstdclass)
-    {
-    	if($configstdclass->createAdAccount || $configstdclass->createSsAccount || $configstdclass->createGappAccount)
-    	{
-    		GlobalUserManager::createAccounts($user, $configstdclass);
-    	}
-    	
-    	if($configstdclass->deleteAdAccount || $configstdclass->deleteSsAccount || $configstdclass->deleteGappAccount)
-    	{
-    		GlobalUserManager::deleteAccounts($user,$configstdclass);
-    	}
-    	
-    	if($configstdclass->enableAdAccount || $configstdclass->enableSsAccount || $configstdclass->enableGappAccount)
-    	{
-    		GlobalUserManager::enableDisableAccounts($user,$configstdclass);
-    	}
-    	
-    	if($configstdclass->disableAdAccount || $configstdclass->disableSsAccount || $configstdclass->disableGappAccount)
-    	{
-    		GlobalUserManager::enableDisableAccounts($user,$configstdclass);
-    	}
-    }
-   
-    public function posttaskAction()
-    {
+	}
+
+	public function indexAction()
+	{
+
+	}
+
+	/**
+	 *
+	 * @param Person $user
+	 */
+	private function doTasksForUser($user,$configstdclass)
+	{
+		if($configstdclass->createAdAccount || $configstdclass->createSsAccount || $configstdclass->createGappAccount)
+		{
+			GlobalUserManager::createAccounts($user, $configstdclass);
+		}
+		 
+		if($configstdclass->deleteAdAccount || $configstdclass->deleteSsAccount || $configstdclass->deleteGappAccount)
+		{
+			GlobalUserManager::deleteAccounts($user,$configstdclass);
+		}
+		 
+		if($configstdclass->enableAdAccount || $configstdclass->enableSsAccount || $configstdclass->enableGappAccount)
+		{
+			GlobalUserManager::enableDisableAccounts($user,$configstdclass);
+		}
+		 
+		if($configstdclass->disableAdAccount || $configstdclass->disableSsAccount || $configstdclass->disableGappAccount)
+		{
+			GlobalUserManager::enableDisableAccounts($user,$configstdclass);
+		}
+		 
+		 
+		if($configstdclass->createAdHomedir)
+		{
+			 
+			$server = $configstdclass->homefolderServer;
+			$homeFolderPath = $configstdclass->homefolderPath;
+			$scanSharePath  = $configstdclass->scanSharePath;
+			$wwwSharePath = $configstdclass->wwwSharePath;
+			 
+			//up & down folders
+			$downloadSharePath = NULL;
+			$uploadSharePath = NULL;
+			if($configstdclass->createUpDownFolders)
+			{
+				$downloadSharePath = $configstdclass->downloadSharePath;
+				$uploadSharePath = $configstdclass->uploadSharePath;
+			}
+			 
+
+			solideagle\scripts\ad\homefoldermanager::prepareAddHomefolder($server, $homeFolderPath, $scanSharePath,
+					$wwwSharePath, $user,$uploadSharePath,$downloadSharePath);
+
+		}
+		 
+	}
+	 
+	public function posttaskAction()
+	{
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
 
 		$configstdclass = new stdClass();
-		
+
 		$configstdclass->createAdAccount = $this->getRequest()->getPost('createAdAccount',false);
 		$configstdclass->deleteAdAccount = $this->getRequest()->getPost('deleteAdAccount',false);
 		$configstdclass->disableAdAccount = $this->getRequest()->getPost('disableAdAccount',false);
@@ -93,7 +118,7 @@ class UsertasksController extends Zend_Controller_Action
 		$configstdclass->deleteGappAccount = $this->getRequest()->getPost('deleteGappAccount',false);
 		$configstdclass->disableGappAccount = $this->getRequest()->getPost('disableGappAccount',false);
 		$configstdclass->enableGappAccount = $this->getRequest()->getPost('enableGappAccount',false);
-		
+
 		if($this->getRequest()->getPost('submitBtn') == "addTasks")
 		{
 			if(count($this->getRequest()->getPost('users',array())) <= 0)
@@ -101,7 +126,7 @@ class UsertasksController extends Zend_Controller_Action
 				echo "Geen gebruikers geselecteerd!";
 				return;
 			}
-			
+				
 			foreach(Person::getPersonsByIds($this->getRequest()->getPost('users')) as $user)
 			{
 				$this->doTasksForUser($user,$configstdclass);
@@ -111,23 +136,23 @@ class UsertasksController extends Zend_Controller_Action
 		{
 			$taskTemplate = new TaskTemplate();
 			$taskTemplate->setTemplateName($this->getRequest()->getPost('txtName'));
-			
+				
 			$taskTemplate->setTemplateConfig($configstdclass);
-			
+				
 			if($this->getRequest()->getPost('submitBtn') == "editTemplate")
 			{
 				//bit unorthodox but will have to do for now
 				TaskTemplate::delTaskTemplateByName($this->getRequest()->getPost('txtName'));
 			}
-			
+				
 			TaskTemplate::addTaskTemplate($taskTemplate);
 		}
 
 		return;
-    }
+	}
 
-    public function showtaskAction()
-    {
+	public function showtaskAction()
+	{
 		$this->_helper->layout()->disableLayout();
 
 		$this->view->defaults = new stdClass();
@@ -153,31 +178,31 @@ class UsertasksController extends Zend_Controller_Action
 		$this->view->defaults->deleteGappAccount = false;
 		$this->view->defaults->disableGappAccount = false;
 		$this->view->defaults->enableGappAccount = false;
-		
-		
-		
+
+
+
 		//get users from post
 		$usersArr = $this->getRequest()->getPost('selectedUsers',array());
-		
+
 		//no users given in post, try other options
 		if(count($usersArr) < 1)
 		{
 			$usersArr = Person::getPersonIdsByGroupId($this->getRequest()->getPost('selectedGroup'));
 		}
-		
-		
+
+
 		$this->view->users = json_encode($usersArr);
 
 		//get template name
 		$templatename = $this->getRequest()->getPost('templatename',NULL);
 		$this->view->templatename = $templatename;
-		
+
 		//create task from template
 		$tasksFromTemplate =  $this->getRequest()->getPost('fromTemplate',false);
-		
+
 		//are we called from template edit link?
 		$edittemplate = $this->getRequest()->getPost('editTemplate',false);
-		
+
 		$addtemplate = $this->getRequest()->getParam('addtemplate',false);
 
 		//init
@@ -190,12 +215,12 @@ class UsertasksController extends Zend_Controller_Action
 		if($templatename != null)
 		{
 			$this->view->defaults = TaskTemplate::getTemplateByName($templatename)->getTemplateConfig();
-			
-			
+				
+				
 		}
-		
-		
-		
+
+
+
 		if ($edittemplate)
 		{
 			$this->view->manageTemplate = true;
@@ -219,8 +244,8 @@ class UsertasksController extends Zend_Controller_Action
 
 			$userId = $usersArr[0];
 			$platformAd = PlatformAD::getPlatformConfigByPersonId($userId);
-			$platformSs = PlatformSS::getPlatformConfigByPersonId($userId); 
-			$platformGa = PlatformGA::getPlatformConfigByPersonId($userId); 
+			$platformSs = PlatformSS::getPlatformConfigByPersonId($userId);
+			$platformGa = PlatformGA::getPlatformConfigByPersonId($userId);
 
 			// ad?
 			if ($platformAd != null)
@@ -250,93 +275,93 @@ class UsertasksController extends Zend_Controller_Action
 				$this->view->hasSSAccount = false;
 			// multiple accounts selected
 		}
-		
 
-    }
 
-    public function managetasktemplatesAction()
-    {
-      $this->_helper->layout()->disableLayout();
-      $users = $this->getRequest()->getParam('selectedUsers',array());
-      
-      //no users given try to get the from the group
-      if(count($users) < 1)
-      {
-      	$users = Person::getPersonIdsByGroupId($this->getRequest()->getParam('selectedGroup'));
-      }
-      
-      $this->view->users = json_encode($users);
+	}
 
-    }
-    
-    public function removetasktemplateAction()
-    {
-    	$this->_helper->layout()->disableLayout();
-    	$this->_helper->viewRenderer->setNoRender(true);
-    
-    	if(($taskname = $this->getRequest()->getPost("templatename",false)))
-    	{
-    		TaskTemplate::delTaskTemplateByName($taskname);
-    	}
-    }
-    
-    public function gettemplatesAction()
-    {
-    	$this->_helper->layout()->disableLayout();
-    	$this->_helper->viewRenderer->setNoRender(true);
-    	
-    	echo $this->templatesToJson(TaskTemplate::getAllTemplates());
-    	return;
-    }
-    
-    private function templatesToJson($templates)
-    {
-    	$finalarr = array();
-    	foreach($templates as $template)
-    	{
-    		$finalarr[] = $template->getTemplateName();
-    	}
-    
-    	return json_encode($finalarr);
-    }
-    
-   
+	public function managetasktemplatesAction()
+	{
+		$this->_helper->layout()->disableLayout();
+		$users = $this->getRequest()->getParam('selectedUsers',array());
 
-    //placeholder, do not use!
-    /*private function doUserThings()
-    {
-    	die("placeholder, do not use!");
-    	//placeholder, do not use!
-    	return;
-    	return; //placeholder, do not use!
-    	return; //placeholder, do not use!
-    	//placeholder, do not use!
-    	
-    	if($this->getRequest()->getPost('createAdHomedir',false))
-    	{
-    		 
-    		$server = $this->getRequest()->getPost("HomefolderServer",NULL);
-    		$homeFolderPath = $this->getRequest()->getPost("HomefolderPath",NULL);
-    		$scanSharePath  = $this->getRequest()->getPost("ScanSharePath",NULL);
-    		$wwwSharePath = $this->getRequest()->getPost("WWWSharePath",NULL);
-    		 
-    		//up & down folders
-    		$downloadSharePath = NULL;
-    		$uploadSharePath = NULL;
-    		if($this->getRequest()->getPost('createUpDownFolders',false))
-    		{
-    			$downloadSharePath = $this->getRequest()->getPost("DownloadSharePath",NULL);
-    			$uploadSharePath = $this->getRequest()->getPost("UploadSharePath",NULL);
-    		}
-    		 
-    		foreach($users as $user)
-    		{
-    			solideagle\scripts\ad\homefoldermanager::prepareAddHomefolder($server, $homeFolderPath, $scanSharePath,
-    					$wwwSharePath, $user,$uploadSharePath,$downloadSharePath);
-    		}
-    	}
-    }*/
-    
+		//no users given try to get the from the group
+		if(count($users) < 1)
+		{
+			$users = Person::getPersonIdsByGroupId($this->getRequest()->getParam('selectedGroup'));
+		}
+
+		$this->view->users = json_encode($users);
+
+	}
+
+	public function removetasktemplateAction()
+	{
+		$this->_helper->layout()->disableLayout();
+		$this->_helper->viewRenderer->setNoRender(true);
+
+		if(($taskname = $this->getRequest()->getPost("templatename",false)))
+		{
+			TaskTemplate::delTaskTemplateByName($taskname);
+		}
+	}
+
+	public function gettemplatesAction()
+	{
+		$this->_helper->layout()->disableLayout();
+		$this->_helper->viewRenderer->setNoRender(true);
+		 
+		echo $this->templatesToJson(TaskTemplate::getAllTemplates());
+		return;
+	}
+
+	private function templatesToJson($templates)
+	{
+		$finalarr = array();
+		foreach($templates as $template)
+		{
+			$finalarr[] = $template->getTemplateName();
+		}
+
+		return json_encode($finalarr);
+	}
+
+	 
+
+	//placeholder, do not use!
+	/*private function doUserThings()
+	 {
+	die("placeholder, do not use!");
+	//placeholder, do not use!
+	return;
+	return; //placeholder, do not use!
+	return; //placeholder, do not use!
+	//placeholder, do not use!
+	 
+	if($this->getRequest()->getPost('createAdHomedir',false))
+	{
+	 
+	$server = $this->getRequest()->getPost("HomefolderServer",NULL);
+	$homeFolderPath = $this->getRequest()->getPost("HomefolderPath",NULL);
+	$scanSharePath  = $this->getRequest()->getPost("ScanSharePath",NULL);
+	$wwwSharePath = $this->getRequest()->getPost("WWWSharePath",NULL);
+	 
+	//up & down folders
+	$downloadSharePath = NULL;
+	$uploadSharePath = NULL;
+	if($this->getRequest()->getPost('createUpDownFolders',false))
+	{
+	$downloadSharePath = $this->getRequest()->getPost("DownloadSharePath",NULL);
+	$uploadSharePath = $this->getRequest()->getPost("UploadSharePath",NULL);
+	}
+	 
+	foreach($users as $user)
+	{
+	solideagle\scripts\ad\homefoldermanager::prepareAddHomefolder($server, $homeFolderPath, $scanSharePath,
+			$wwwSharePath, $user,$uploadSharePath,$downloadSharePath);
+	}
+	}
+	}*/
+
 
 }
 

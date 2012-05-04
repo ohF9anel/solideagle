@@ -376,8 +376,8 @@ class Person
 			
 		$counter = "";
 			
-		$saneName = iconv("UTF-8", "ASCII//TRANSLIT",$person->getName());
-		$saneFirstName = iconv("UTF-8", "ASCII//TRANSLIT",$person->getFirstName());
+		$saneName = cleanUTFChars($person->getName());
+		$saneFirstName = cleanUTFChars($person->getFirstName());
 			
 		$username =  $saneName . substr($saneFirstName,0,1);
 			
