@@ -838,7 +838,7 @@ class Person
 		}
 
 		// account password
-		$valErrors = Validator::validateString($person->getAccountPassword(), 1, 64, true);
+		$valErrors = Validator::validateString($person->getAccountPassword(), 0, 64, true);
 		foreach ($valErrors as $valError)
 		{
 			switch($valError) {
@@ -846,10 +846,10 @@ class Person
 					$validationErrors[] = "Wachtwoord: mag niet langer zijn dan 45 karakters.";
 					break;
 				case ValidationError::STRING_TOO_SHORT:
-					$validationErrors[] = "Wachtwoord: te kort.";
+					$validationErrors[] = "Wachtwoord: moet langer zijn dan 4 karakters.";
 					break;
 				default:
-					//todo $validationErrors[] = "Wachtwoord: fout."; break;
+					//$validationErrors[] = "Wachtwoord: fout."; break;
 			}
 		}
 		if(!IsNullOrEmptyString($person->getAccountActiveUntill()))

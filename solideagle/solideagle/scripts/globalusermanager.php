@@ -29,6 +29,8 @@ class GlobalUserManager
 		if($person->getHasGaAccount())
 		{
 			\solideagle\scripts\ga\usermanager::prepareMoveUser($person,$newgroup,$oldgroup);
+                        \solideagle\scripts\ga\usermanager::prepareRemoveUserFromGroup($person, $oldgroup);
+                        \solideagle\scripts\ga\usermanager::prepareAddUserToGroup($person);
 		}
 
 		if($person->getHasSSAccount())
