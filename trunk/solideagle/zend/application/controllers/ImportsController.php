@@ -308,7 +308,7 @@ class ImportsController extends Zend_Controller_Action
 						$group->setParentId($studentsParentGroup->getId());
 						break;
 				}
-					
+				
 				$group->setName($klas);
 				$group->addType(new Type(Type::TYPE_LEERLING));
 

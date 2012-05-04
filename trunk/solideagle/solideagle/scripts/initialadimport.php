@@ -34,13 +34,15 @@ class InitialAdImport
 		}
 		
 		
-		$sr = ldap_search($conn, "OU=eerstes,OU=leerlingen, OU=gebruikers,DC=dbz, DC=lok", "(&(objectCategory=person)(objectClass=user))");
+		$sr = ldap_search($conn, "OU=leerlingen,OU=gebruikers,DC=dbz,DC=lok", "(&(objectCategory=person)(objectClass=user))");
 		$usrs = ldap_get_entries($conn, $sr);
 		
 		echo "<pre>";
 		
 		foreach($usrs as $ldapusr)
 		{
+			set_time_limit(5);
+			
 			$tmpstdusr = new \stdClass();
 			
 			$tmpstdusr->uniqueId = $ldapusr["employeeid"][0];
@@ -67,8 +69,13 @@ class InitialAdImport
 			$person->setAccountUsername($tmpstdusr->accountname);
 			$person->setAccountPassword("No Password Known");
 			$person->setUniqueIdentifier($tmpstdusr->uniqueId);
-			$person->setGroupId(Group::getGroupByName($tmpstdusr->group)->getId());
 			
+			if(($group = Group::getGroupByName($tmpstdusr->group)) !== NULL)
+			{
+				$person->setGroupId($group->getId());
+			}else{
+				$person->setGroupId(1);
+			}
 			
 			$personid = Person::addPerson($person);
 			$person->setId($personid);
