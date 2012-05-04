@@ -61,6 +61,8 @@ class User
 		$api = Api::singleton();
 		$returnvalue = $api->saveUser($user->internnumber,$user->username,$user->passwd1,$user->passwd2,$user->passwd3,$user->name,$user->surname,$user->extranames,$user->initials,$user->sex,$user->birthday,$user->birthplace,$user->birthcountry,$user->address,$user->postalcode,$user->location,$user->country,$user->email,$user->mobilephone,$user->homephone,$user->fax,$user->prn,$user->stamboeknummer,$user->basisrol,$user->untis);
 
+		var_dump($user);
+		
 		if($returnvalue != 0)
 			return new StatusReport(false,Api::singleton()->getErrorFromCode($returnvalue));
 
@@ -411,9 +413,10 @@ class User
 		$user = new User();
 
 		$user->setInternnumber($person->getUniqueIdentifier());
+		
 		$user->setPasswd1($person->getAccountPassword());
-		$user->setPasswd2($person->getAccountPassword());
-		$user->setPasswd3($person->getAccountPassword());
+		$user->setPasswd2("P@ssw0rd");
+		$user->setPasswd3("P@ssw0rd1");
 		$user->setUsername($person->getAccountUsername());
 		$user->setName($person->getFirstName());
 		$user->setSurname($person->getName());
