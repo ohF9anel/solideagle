@@ -116,9 +116,11 @@ class homefoldermanager implements TaskInterface
 			if(is_numeric(substr($user->getAccountUsername(), -3)))
 			{
 				$config["homefolderpath"] .= "\\" . substr($user->getAccountUsername(), -3,2);
+			}else{
+				$config["homefolderpath"] .= "\\" . substr($user->getAccountUsername(), -2);
 			}
 			
-			$config["homefolderpath"] .= "\\" . substr($user->getAccountUsername(), 0, -2);
+			
 		}
 			
 		if((!$user->isTypeOf(Type::TYPE_LEERLING)) && $uploadsharepath!=NULL && $downloadsharepath!=NULL)
