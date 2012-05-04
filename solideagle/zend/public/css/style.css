@@ -146,6 +146,11 @@ body
 	max-height:none;
 }
 
+.SEsupermodal .addminwidth
+{
+	min-width:600px;
+}
+
 .SEinline
 {
 	margin-left: 0;

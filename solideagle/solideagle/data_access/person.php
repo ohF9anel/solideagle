@@ -762,6 +762,12 @@ class Person
 
 	public static function getPersonsByIds($ids)
 	{
+		
+		if(count($ids) < 1)
+		{
+			return array();
+		}
+		
 		$params = "";
 		for($i=0;$i<count($ids);$i++)
 		{
@@ -1251,7 +1257,41 @@ class Person
 	{
 		return json_encode(get_object_vars($this));
 	}
+	
+	public static function searchPerson($naam,$voornaam,$username)
+	{
+		$sql ="SELECT id,first_name,name,account_username,group_id FROM allPersons 
+		WHERE 
+		first_name like :firstname AND
+		name like :name AND
+		account_username like :username";
+		
+		
+		$cmd = new DatabaseCommand($sql);
+			
+		$cmd->addParam(":firstname", $naam);
+		$cmd->addParam(":name", $voornaam);
+		$cmd->addParam(":username", $username);
+			
+		$retarr = array();
+			
+		$cmd->executeReader()->readAll(function($row) use (&$retarr){
+		
+			$tempperson = new Person();
+			$tempperson->setId($row->id);
+			$tempperson->setName($row->name);
+			$tempperson->setFirstName($row->first_name);
+			$tempperson->setAccountUsername($row->account_username);
+			$tempperson->setGroupId($row->group_id);
+		
+			$retarr[] = $tempperson;
+		
+		});
+		
+		return $retarr;
+	}
 
+	//does also find deleted persons, to cahnge select from allPerson view instead of person
 	public static function findPersonByName($naam,$voornaam)
 	{
 
@@ -1329,6 +1369,7 @@ class Person
 		$this->informatId = $informatId;
 	}
 
+	//gets users in this group
 	public static function getPersonIdsByGroup($groupid)
 	{
 		$sql = "SELECT
@@ -1349,6 +1390,8 @@ class Person
 		return $personidarr;
 	}
 	
+	//gets users in this group and subgroups
+	//should be renamed
 	public static function getPersonIdsByGroupId($groupid)
 	{
 		$usersArr = array();

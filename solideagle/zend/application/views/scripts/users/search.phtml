@@ -1,0 +1,138 @@
+<script type="text/javascript">
+
+$(function() {
+
+	$('#searchModal').modal('show');
+	$("#proccessingImg").hide();
+
+	$("#formSearch").ajaxForm({
+		beforeSubmit : function()
+		{
+			$("#searchButton").attr("disabled", "true");
+			$("#proccessingImg").show();
+		},
+		success : function(responseText, statusText, xhr, $form) {
+			$("#searchButton").removeAttr("disabled");
+			$("#proccessingImg").hide();
+			showFoundUsers($.parseJSON(responseText));
+			
+		}
+	});
+});
+
+function showFoundUsers(foundusers) {
+
+	$("#usercount").html(foundusers.length + " gebruikers gevonden");
+	$("#founduserstable").html("");
+	$.each(foundusers, function(key, val) {
+		val = $.parseJSON(val);
+		$("<tr>").click(function() {
+			selectUserinGroup(val.groupId,val.accountUsername);
+			$('#searchModal').modal('hide');
+		}).append(
+				$("<td>").append($("<span>").html(val.firstName))).append(
+				$("<td>").append($("<span>").html(val.groupId))).append(
+				$("<td>").append($("<span>").html(val.name))).append(
+				$("<td>").append($("<span>").html(val.accountUsername)))
+				.appendTo($("#founduserstable"));
+	});
+
+}
+</script>
+
+<form
+	class="form-horizontal"
+	action="<?php echo $this->SE_path . "/users/search" ?>"
+	method="post"
+	id="formSearch">
+
+	<div
+		class="hide SEsupermodal"
+		id="searchModal">
+		<div>
+			<div class="modal-header">
+				<a
+					class="close"
+					data-dismiss="modal">×</a>
+				<h3 id="modaltitle">Gebruikers zoeken in alle groepen</h3>
+			</div>
+			<div
+				class="modal-body addminwidth"
+				style="width: 300px;">
+
+				<div class="control-group">
+					<label
+						class="control-label"
+						for="txtPassword">Voornaam:</label>
+					<div class="controls">
+						<div class="input-append">
+							<input
+								name="voornaam"
+								type="text"
+								value="">
+						</div>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label
+						class="control-label"
+						for="txtPassword">Naam:</label>
+					<div class="controls">
+						<div class="input-append">
+							<input
+								name="naam"
+								type="text"
+								value="">
+						</div>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label
+						class="control-label"
+						for="txtPassword">Gebruikersnaam:</label>
+					<div class="controls">
+						<div class="input-append">
+							<input
+								name="gebruikersnaam"
+								type="text"
+								value="">
+						</div>
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="controls">
+						<button
+							class="btn btn-primary"
+							value="true"
+							id="searchButton"
+							name="submit"
+							type="submit">Zoeken</button>
+						<img
+							id="proccessingImg"
+							style="height: 25px;"
+							src="<?php echo $this->SE_path; ?>/images/loading.gif"
+							height="25px" />
+					</div>
+				</div>
+
+				<span id="usercount">Nog niet gezocht</span>
+
+				<table
+					class="table"
+					id="founduserstable">
+
+				</table>
+			</div>
+
+			<div class="modal-footer">
+				<a
+					href="#"
+					class="btn"
+					data-dismiss="modal">Sluiten</a>
+			</div>
+		</div>
+	</div>
+
+</form>
