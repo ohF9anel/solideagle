@@ -124,6 +124,8 @@ class GroupsController extends Zend_Controller_Action
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
 		
+		//if you enable this it will delete subgroups without warning
+		//this is however not supported and WILL mess up the application
 		$deletesubgroups = false;
 			
 		$data = $this->getRequest()->getParams();
@@ -136,10 +138,8 @@ class GroupsController extends Zend_Controller_Action
 
 		if($this->getRequest()->getParam("delete") !==NULL && $this->getRequest()->getParam("deletesure") !== NULL)
 		{
-
 			if(count(Group::getChilderen($groupToDelete)) !== 0)
 			{
-				
 				if($deletesubgroups)
 				{
 					foreach(Group::getAllChilderen($groupToDelete) as $childgroup)
