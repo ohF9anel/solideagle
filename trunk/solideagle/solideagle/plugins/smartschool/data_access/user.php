@@ -126,9 +126,7 @@ class User
 	public static function removeUser($user)
 	{
 		$api = Api::singleton();
-
-		$api = Api::singleton();
-		$returnvalue += $api->delUser($user->internnumber);
+		$returnvalue = $api->delUser($user->internnumber);
 
 		if($returnvalue != 0)
 			return new StatusReport(false,Api::singleton()->getErrorFromCode($returnvalue));
