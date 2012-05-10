@@ -12,6 +12,8 @@ class groupmanager implements TaskInterface
 {
 	const ActionAddGroup = 0;
 	const ActionRemoveGroup = 1;
+        const ActionAddGroupToGroup = 2;
+        const ActionRemoveGroupFromGroup = 3;
 
 	public function runTask($taskqueue)
 	{
@@ -31,6 +33,28 @@ class groupmanager implements TaskInterface
 		else if($config["action"] == self::ActionRemoveGroup && isset($config["group"]))
 		{
 			$ret = managegroup::removeGroup($config["group"]);
+
+			if($ret->isSucces())
+				return true;
+			else{
+				$taskqueue->setErrorMessages($ret->getError());
+				return false;
+			}
+		}
+                else if($config["action"] == self::ActionAddGroupToGroup && isset($config["childgroupname"]) && isset($config["parentgroupname"]))
+		{
+			$ret = managegroup::addGroupToGroup($config["childgroupname"], $config["parentgroupname"]);
+
+			if($ret->isSucces())
+				return true;
+			else{
+				$taskqueue->setErrorMessages($ret->getError());
+				return false;
+			}
+		}
+                else if($config["action"] == self::ActionRemoveGroupFromGroup && isset($config["childgroupname"]) && isset($config["parentgroupname"]))
+		{
+			$ret = managegroup::removeGroupFromGroup($config["childgroupname"], $config["parentgroupname"]);
 
 			if($ret->isSucces())
 				return true;
@@ -62,6 +86,24 @@ class groupmanager implements TaskInterface
 		$config["group"] = $group;
 
 		TaskQueue::insertNewTask($config, $group->getId(), TaskQueue::TypeGroup);
+	}
+        
+        public static function prepareAddGroupToGroup($parentgroup, $childgroup)
+	{
+		$config["action"] = self::ActionAddGroupToGroup;
+		$config["childgroupname"] = $childgroup->getName();
+                $config["parentgroupname"] = $parentgroup->getName();
+
+		TaskQueue::insertNewTask($config, $childgroup->getId(), TaskQueue::TypeGroup);
+	}
+        
+        public static function prepareRemoveGroupFromGroup($parentgroup, $childgroup)
+	{
+		$config["action"] = self::ActionRemoveGroupFromGroup;
+		$config["childgroupname"] = $childgroup->getName();
+                $config["parentgroupname"] = $parentgroup->getName();
+
+		TaskQueue::insertNewTask($config, $childgroup->getId(), TaskQueue::TypeGroup);
 	}
 
 }

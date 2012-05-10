@@ -30,6 +30,9 @@ class ManageUser
         unset($userInfo['groups']);
         unset($userInfo['enabled']);
         
+        // set description
+        $userInfo['description'] = "Solid Eagle made me on " . date('YmdHis');
+        
         foreach($userInfo as $key => $attr)
         {
             if ($attr == '') {
@@ -108,17 +111,6 @@ class ManageUser
         $disable = ($ac |  2); // set all bits plus bit 1 (=dec2)
         $enable = ($ac & ~2); // set all bits minus bit 1 (=dec2)
         $userInfo["useraccountcontrol"] = $userInfo['enabled'] ? $enable : $disable;
-        
-//        // remove previous group memberships
-//        if(isset($oldUserInfo[0]["memberof"]))
-//        {
-//            for($i = 0; $i < sizeof($oldUserInfo[0]["memberof"]) - 1; $i++)
-//            {
-//                $group = $oldUserInfo[0]["memberof"][$i];
-//                $group_info['member'] = array();
-//                ldap_mod_del($connLdap->getConn(), $group, $group_info);
-//            }
-//        }
         
         // rename cn later?
         $rename = ($oldUserInfo[0]['cn'] != $userInfo['cn']) ? true : false;
@@ -323,7 +315,7 @@ class ManageUser
             return new StatusReport(false, "User \"" . $username . "\" trying to set homefolder attribute in AD not found in: \"" . Config::singleton()->ad_dc. "\".");
         }
         
-        $update["homeDirectory"] = $share;
+        $update["homeDirectory"] = $share . "\\" . $username . "$";
         
         $ret = ldap_modify($connLdap->getConn(), $userInfo[0]["distinguishedname"][0], $update);
         if (!$ret)

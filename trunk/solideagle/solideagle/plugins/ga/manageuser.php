@@ -119,7 +119,7 @@ class manageuser
             $gamcmd .= "suspended off";
         
         $report = GamExecutor::executeGamCommand($gamcmd);
-        
+       
         return $report;
         
 //        $errorHandler = new errorhandler();
@@ -256,19 +256,24 @@ class manageuser
 //        return new StatusReport(!$errorHandler->hasErrors(), $errorHandler->toString());
     }
     
-    public function downloadTempFile($url, $path)
+    public static function setEmailSignature($username, $signature)
     {
-        ob_start();
-        passthru('wget ' . $url . ' ' . $path . ' 2>&1');
-        $out = ob_get_contents();
-        ob_end_clean();
-        if (preg_match('/saving to:.{4}([a-z0-9\.-_]*)/i', $out, $filename)) {
-            return $filename;
-        } else {
-            return "no match";
-        }
+        $gamcmd = "user " . $username . " signature \"" . $signature . "\"";
+        
+        $report = GamExecutor::executeGamCommand($gamcmd);
+        
+        return $report;
     }
-            
+    
+    public static function setAlias($username)
+    {
+        $gamcmd = "user " . $username . " signature \"" . $signature . "\"";
+        
+        $report = GamExecutor::executeGamCommand($gamcmd);
+        
+        return $report;
+    }
+    
 }
 
 ?>

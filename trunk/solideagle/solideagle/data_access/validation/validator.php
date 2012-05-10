@@ -20,6 +20,7 @@ class ValidationError {
     const TIME_DOES_NOT_EXIST = 13;
     const NO_NUMBER = 14;
     const EMAIL_ADDRESS_INVALID = 15;
+    const URL_INVALID = 16;
     
 }
 
@@ -217,6 +218,18 @@ class Validator
 
 		return false;
 	}
+        
+        
+        public static function validateUrl($url)
+        {
+                $valErrors = array();
+                $match = preg_match("|^http(s)?://[a-z0-9-]+(.[a-z0-9-=]+)*(:[0-9]+)?(/.*)?$|i", $url);
+                if (!$match)
+                    $valErrors[] = ValidationError::URL_INVALID;
+                
+                return $valErrors;
+                        
+        }
 
 }
 

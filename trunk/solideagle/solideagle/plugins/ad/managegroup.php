@@ -113,20 +113,20 @@ class managegroup
             }
         }
         // add new children to group
-        if ($newChildren != null)
-        {
-            foreach($newChildren as $child)
-            {
-                unset($info);
-                $info['member'] = "CN=" . $child->getName() . ", OU=" . Config::singleton()->ad_groups_ou . ", " . Config::singleton()->ad_dc;
-                $dn = "CN=" . $group->getName() . ", OU=" . Config::singleton()->ad_groups_ou . ", " . Config::singleton()->ad_dc;
-                if (!ldap_mod_add($connLdap->getConn(), $dn, $info))
-                {
-                    Logger::log("Group \"" . $child->getName() . "\" cannot be added to group \"" . $group->getName() . "\"");
-                    //return array($r,ldap_error($connLdap->getConn()));
-                }
-            }
-        }
+//        if ($newChildren != null)
+//        {
+//            foreach($newChildren as $child)
+//            {
+//                unset($info);
+//                $info['member'] = "CN=" . $child->getName() . ", OU=" . Config::singleton()->ad_groups_ou . ", " . Config::singleton()->ad_dc;
+//                $dn = "CN=" . $group->getName() . ", OU=" . Config::singleton()->ad_groups_ou . ", " . Config::singleton()->ad_dc;
+//                if (!ldap_mod_add($connLdap->getConn(), $dn, $info))
+//                {
+//                    Logger::log("Group \"" . $child->getName() . "\" cannot be added to group \"" . $group->getName() . "\"");
+//                    //return array($r,ldap_error($connLdap->getConn()));
+//                }
+//            }
+//        }
         
         return new StatusReport();
     }

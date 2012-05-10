@@ -37,47 +37,47 @@ class homefoldermanager implements TaskInterface
 			$taskqueue->setErrorMessages("Probleem met configuratie");
 			return false;
 		}
-		else if($config["action"] == self::ActionAddHomefolder && isset($config["server"]) && isset($config["homefolderpath"]) && isset($config["scansharepath"]) && isset($config["wwwsharepath"]) && isset($config["username"]))
+		else if($config["action"] == self::ActionAddHomefolder && isset($config["server"]) && isset($config["homefolderpath"]) && isset($config["scansharepath"]) && isset($config["wwwsharepath"]) && isset($config["person"]))
 		{
+                        $username = $config["person"]->getAccountUsername();
+                        
 			$conn = SSHManager::singleton()->getConnection($config["server"]);
-			
-			if(!HomeFolder::createHomeFolder($conn, $config["server"], $config["homefolderpath"], $config["username"]))
+                        
+			if(!HomeFolder::createHomeFolder($conn, $config["server"], $config["homefolderpath"], $username))
 			{
-				Logger::log("Creating homefolder failed! " . $key ,PEAR_LOG_ERR);
+				Logger::log("Creating homefolder failed! ",PEAR_LOG_ERR);
 			}
-			if(!ScanFolder::setScanFolder($conn, $config["server"], $config["homefolderpath"], $config["scansharepath"], $config["username"]))
+			if(!ScanFolder::setScanFolder($conn, $config["server"], $config["homefolderpath"], $config["scansharepath"], $username))
 			{
-				
-				Logger::log("Setting scanfolder failed! " . $key ,PEAR_LOG_ERR);
+				Logger::log("Setting scanfolder failed! ",PEAR_LOG_ERR);
 			}
-			if(!WwwFolder::setWwwFolder($conn ,$config["server"], $config["homefolderpath"],$config["wwwsharepath"], $config["username"]))
+			if(!WwwFolder::setWwwFolder($conn ,$config["server"], $config["homefolderpath"],$config["wwwsharepath"], $username))
 			{
-				Logger::log("Setting www folder failed! " . $key ,PEAR_LOG_ERR);
+				Logger::log("Setting www folder failed! ",PEAR_LOG_ERR);
 			}
 				
 			if(isset($config["uploadsharepath"]))
-				UploadFolder::setUploadFolder($conn,$config["server"], $config["homefolderpath"], $config["uploadsharepath"], $config["username"]);
+				UploadFolder::setUploadFolder($conn,$config["server"], $config["homefolderpath"], $config["uploadsharepath"], $username);
 				
 			if(isset($config["downloadsharepath"]))
-				DownloadFolder::setDownloadFolder($conn,$config["server"], $config["homefolderpath"], $config["downloadsharepath"], $config["username"]);
+				DownloadFolder::setDownloadFolder($conn,$config["server"], $config["homefolderpath"], $config["downloadsharepath"], $username);
 				
 			$conn->exitShell();
 		
 			//debug!
 			Logger::log("SSH SESSION:\n" . $conn->read(),PEAR_LOG_DEBUG);
-			
-			
 
-			$ret = ManageUser::setHomeFolder($config["username"], "\\\\" . $config["server"]);
+			$ret = ManageUser::setHomeFolder($username, "\\\\" . $config["server"]);
 			if($ret->isSucces())
 			{
 				$platformad = PlatformAD::getPlatformConfigByPersonId($config["person"]->getId());
 
-                                $homedir = "\\\\" . $config["server"] . "\\" . $config["username"] . "$";
+                                $homedir = "\\\\" . $config["server"] . "\\" . $username . "$";
                                 
                                 $platformad->setHomedir($homedir);
 
                                 PlatformAD::updatePlatform($platformad);
+                                return true;
 			}else{
 				$taskqueue->setErrorMessages($ret->getError());
 				return false;
@@ -109,8 +109,7 @@ class homefoldermanager implements TaskInterface
 		$config["homefolderpath"] = $homefolderpath;
 		$config["scansharepath"] = $scansharepath;
 		$config["wwwsharepath"] = $wwwsharepath;
-		$config["username"] = $user->getAccountUsername();
-
+		$config["person"] = $user;
 		if ($user->isTypeOf(Type::TYPE_LEERLING))
 		{
 			if(is_numeric(substr($user->getAccountUsername(), -3)))
@@ -129,4 +128,9 @@ class homefoldermanager implements TaskInterface
 		
 		TaskQueue::insertNewTask($config, $user->getId(), TaskQueue::TypePerson);
 	}
+        
+        public static function prepareMoveHomefolder($newserver, $newhomefolderpath, $oldGlobalShare, $user)
+        {
+            
+        }
 }

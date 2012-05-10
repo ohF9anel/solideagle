@@ -21,6 +21,7 @@ class usermanager implements TaskInterface
 	const ActionRemoveUser = 2;
 	const ActionMoveUser = 3;
 	const ActionUpdatePassword = 4;
+        const ActionSetPhoto = 5;
 
 	public function runTask($taskqueue)
 	{
@@ -90,6 +91,7 @@ class usermanager implements TaskInterface
 
 			if($ret->isSucces())
 			{
+                                PlatformSS::removePlatformByPersonId($config["person"]->getId());
 				return true;
 			}
 			else{
@@ -115,6 +117,30 @@ class usermanager implements TaskInterface
 				return false;
 			}
 		}
+                else if($config["action"] == self::ActionSetPhoto && isset($config["person"]))
+		{
+                    $ret = \solideagle\data_access\helpers\imagehelper::downloadTempFile($config["person"]->getPictureUrl(), "/var/www/tmp/tmpimage");
+                    if ($ret->isSucces())
+                    {
+                        $encodedPhoto = \solideagle\data_access\helpers\imagehelper::encodeImage("/var/www/tmp/tmpimage");
+                    
+                        $ret = User::setPhoto($config["person"],$encodedPhoto);
+
+                        if($ret->isSucces())
+                        {
+                            return true;
+                        }
+                        else{
+                            $taskqueue->setErrorMessages($ret->getError());
+                            return false;
+                        }
+                    }
+                    else
+                    {           
+                        $taskqueue->setErrorMessages($ret->getError());
+                        return false;
+                    }
+		}
 
 		$taskqueue->setErrorMessages("Probleem met action type");
 		return false;
@@ -136,9 +162,11 @@ class usermanager implements TaskInterface
 		}else{
 			//we do not support people having no group
 		}
+                if ($person->getPictureUrl() != null)
+                    self::prepareSetPhoto($person);
 	}
 
-	public static function prepareUpdateUser($person,$accountenabled)
+	public static function prepareUpdateUser($person, $oldPerson, $accountenabled)
 	{
 		$config["action"] = self::ActionUpdateUser;
 		$config["person"] = $person;
@@ -151,6 +179,9 @@ class usermanager implements TaskInterface
 		}else{
 			//we do not support people having no group
 		}
+                
+                if ($person->getPictureUrl() != null && $person->getPictureUrl() != $oldPerson->getPictureUrl())
+                    self::prepareSetPhoto($person);
 	}
 
 	public static function prepareRemoveUser($person)
@@ -182,6 +213,14 @@ class usermanager implements TaskInterface
 		$config["person"] = $person;
 		TaskQueue::insertNewTask($config, $person->getId());
 	}
+        
+        public static function prepareSetPhoto($person)
+        {
+                $config["action"] = self::ActionSetPhoto;
+                $config["person"] = $person;    
+
+                TaskQueue::insertNewTask($config, $person->getId());
+        }
 	
 
 

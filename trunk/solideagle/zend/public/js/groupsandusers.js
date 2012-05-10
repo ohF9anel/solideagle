@@ -202,7 +202,7 @@ function updateTree() {
 		groupname = data.rslt.obj.attr("groupname");
 
 		$("#groupname").html(groupname);
-
+                
 		updateUsers();
 
 	});

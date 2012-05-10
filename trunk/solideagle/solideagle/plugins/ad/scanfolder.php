@@ -31,8 +31,6 @@ class ScanFolder
         {
             $conn->write("rmdir " . $scanSharePath . "\\" . $username . " /s /q\n");
         }
-
-        
 		return true;
         
         
