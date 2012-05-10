@@ -18,10 +18,11 @@ class SSHManager
 		}
 		return self::$instance;
 	}
-
-
-	public function getConnection($servername)
+        
+        // dbz testing!
+        public function getConnection($servername)
 	{
+            $servername = "s02.dbz.lok";
 		if(isset($this->_connections[$servername]))
 		{
 			return $this->_connections[$servername];
@@ -31,7 +32,7 @@ class SSHManager
 
 		$conn = new sshconn($servername);
                 
-		if (!$conn->login(Config::singleton()->ad_administrator, Config::singleton()->ad_password))
+		if (!$conn->login("sys_solideagle", ""))
 		{
 			Logger::log("Login to SSH failed on " . $servername);
 			return null;
@@ -43,6 +44,31 @@ class SSHManager
 
 		return $conn;
 	}
+
+
+//	public function getConnection($servername)
+//	{
+//		if(isset($this->_connections[$servername]))
+//		{
+//			return $this->_connections[$servername];
+//		}
+//
+//		Logger::log("Opening new SSH connection to: " . $servername . " with user: " . Config::singleton()->ad_administrator,PEAR_LOG_INFO);
+//
+//		$conn = new sshconn($servername);
+//                
+//		if (!$conn->login(Config::singleton()->ad_administrator, Config::singleton()->ad_password))
+//		{
+//			Logger::log("Login to SSH failed on " . $servername);
+//			return null;
+//		}
+//
+//		Logger::log("Login succes on: " . $servername,PEAR_LOG_INFO);
+//
+//		$this->_connections[$servername] = $conn;
+//
+//		return $conn;
+//	}
 }
 
 class sshconn

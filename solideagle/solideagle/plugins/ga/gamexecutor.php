@@ -11,7 +11,7 @@ class GamExecutor
         $errorHandler = new errorhandler();
 
         ob_start();
-        $cmd = 'python ../../gam/gam.py ' . $cmd;
+        $cmd = 'python ../../gam/gam.py ' . $cmd . ' 2>&1';
 
         passthru($cmd);
         $out = ob_get_contents();
@@ -20,7 +20,7 @@ class GamExecutor
         foreach(preg_split("/(\r?\n)/", $out) as $key => $line)
         {
             //if ($key == 0) continue;
-            if (preg_match('/^ERROR/i', $line, $matches))
+            if (preg_match('/^ERROR/i', $line, $matches) || preg_match('/^IOERROR/i', $line, $matches))
                 $errorHandler->addGappsError($line);   
         }
 

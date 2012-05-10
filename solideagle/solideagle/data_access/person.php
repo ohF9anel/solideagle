@@ -425,13 +425,21 @@ class Person
 
 	public static function generatePassword($length = 8)
 	{
-		$passchars = 'aeuybdghjmnpqrstvzBDGHJLMNPQRSTVWXZAEUY23456789';
+		$passchars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
 
 		$password = '';
 			
 		for ($i = 0; $i < $length; $i++) {
 			$password .= $passchars[(rand() % strlen($passchars))];
 		}
+                
+                if(!(preg_match('`[A-Z]`',$password) // at least one upper case 
+                    && preg_match('`[a-z]`',$password) // at least one lower case 
+                    && preg_match('`[0-9]`',$password))) // at least one number
+                {
+                    self::generatePassword($length);
+                }
+                
 		return $password;
 		//return "P@ssw0rd"; //cool and 1337 password that is as good as any other password!
 	}
@@ -811,6 +819,23 @@ class Person
 
 		return $person;
 	}
+        
+        public static function getPersonByUsername($username)
+	{
+		$sql = "SELECT * FROM  `allPersons`
+		WHERE `account_username` = :account_username;";
+
+		$cmd = new DatabaseCommand($sql);
+		$cmd->addParam(":account_username", $username);
+
+		$reader = $cmd->executeReader();
+
+		$retObj = $reader->read();
+
+		$person = self::createPersonByDbRow($retObj);
+
+		return $person;
+	}
 
 	//TODO check if uniqueident is unqiue, and username does not yet exist
 	/**
@@ -1150,6 +1175,22 @@ class Person
 					$validationErrors[] = "Stamnummer student: fout."; break;
 			}
 		}
+                
+                // picture url
+                if ($person->getPictureUrl() != null)
+                {
+                    $valErrors = Validator::validateUrl($person->getPictureUrl());
+                    foreach ($valErrors as $valError)
+                    {
+                            switch($valError)
+                            {
+                                    case ValidationError::URL_INVALID:
+                                            $validationErrors[] = "Foto URL: ongeldig (moet met http(s): starten en mag geen gevaarlijke karakters bevatten."; break;
+                                    default:
+                                            $validationErrors[] = "Foto URL: fout."; break;
+                            }
+                    }
+                }
 
 		if($person->getGroupId()===NULL)
 		{
@@ -1450,6 +1491,55 @@ class Person
 	{
 		return $this->hasGaAccount;
 	}
+        
+//        public static function setRandomPassword($id)
+//	{
+//		 $sql = "UPDATE `person` 
+//                SET `account_password` = :password 
+//                WHERE `id` = :id";
+//
+//		$cmd = new DatabaseCommand($sql);
+//
+//		$cmd->newQuery($sql);
+//		$cmd->addParam(":id", $id);
+//                $psw = substr(str_shuffle("abcefghijklmnopqrstuvwxyz" . 
+//                "ABCDEFGHIJKLMNOPQRSTUVWXYZ" . "012345678901234567890123456789"), 0, 16);
+//                $cmd->addParam(":password", $psw);
+//		$cmd->execute();
+//                
+//                $cmd->newQuery("SELECT LAST_INSERT_ID();");
+//
+//                return $id;
+//                
+//	}
+//        
+//        public static function setTypeLeerling($id)
+//	{
+//		$sql = "INSERT INTO  `type_person`
+//		(
+//		`type_id`,
+//		`person_id`
+//		)
+//		VALUES
+//		(
+//		:type_id,
+//		:person_id
+//		);";
+//
+//		$cmd = new DatabaseCommand($sql);
+//
+//		$cmd->newQuery($sql);
+//                $cmd->addParam(":type_id", 3);
+//                $cmd->addParam(":person_id", $id);
+//
+//                $cmd->execute();
+//                
+//                $cmd->newQuery("SELECT LAST_INSERT_ID();");
+//
+//                return $id;
+//                
+//	}
+        
 }
 
 

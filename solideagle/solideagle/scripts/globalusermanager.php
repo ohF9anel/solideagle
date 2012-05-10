@@ -39,6 +39,7 @@ class GlobalUserManager
 
 	public static function updateUser($person)
 	{
+                $oldPerson = Person::getPersonById($person->getId());
 		Person::updatePerson($person);
 		
 		$enabled = true; //TODO: fix
@@ -50,18 +51,18 @@ class GlobalUserManager
                 
 		if($person->getHasGaAccount())
 		{
-			\solideagle\scripts\ga\usermanager::prepareUpdateUser($person,$enabled);
+			\solideagle\scripts\ga\usermanager::prepareUpdateUser($person, $oldPerson, $enabled);
 		}
 
 		if($person->getHasSSAccount())
 		{
-			\solideagle\scripts\smartschool\usermanager::prepareUpdateUser($person,$enabled);
+			\solideagle\scripts\smartschool\usermanager::prepareUpdateUser($person, $oldPerson, $enabled);
 		}
 	}
 	
 	public static function resetUserPassword($person)
 	{
-		Person::updatePerson($person);
+		//Person::updatePerson($person);
 		
 		if($person->getHasAdAccount())
 		{
@@ -77,6 +78,7 @@ class GlobalUserManager
 		{
 			\solideagle\scripts\smartschool\usermanager::prepareChangePassword($person);
 		}
+
 	}
 
 	public static function deleteUser($person)
@@ -120,6 +122,8 @@ class GlobalUserManager
 		{
 			\solideagle\scripts\smartschool\usermanager::prepareAddUser($person);
 		}
+                
+                //Person::clearPasswordByPersonId($person->getId());
 	}
 
 	public static function deleteAccounts($person,$configstdclass)

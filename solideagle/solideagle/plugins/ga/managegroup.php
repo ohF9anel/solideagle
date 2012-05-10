@@ -13,7 +13,7 @@ class managegroup
     public static function addGroup($group)
     {
         $gamcmd = "create group \"" . $group->getName() . "\"";
-        if ($ou->getDescription() != null)
+        if ($group->getDescription() != null)
             $gamcmd .= " description \"" . $group->getDescription() . "\"";
         
         $report = GamExecutor::executeGamCommand($gamcmd);
@@ -21,7 +21,33 @@ class managegroup
         return $report;
     }
     
-    // rename not supported (todo)
+    public static function addGroupToGroup($childGroupName, $parentGroupName)
+    {
+        // clean chars not allowed in email address
+        $cleanGroupName = \solideagle\data_access\helpers\UnicodeHelper::cleanEmailString($childGroupName);
+        
+        $email = $cleanGroupName . "@" . Config::singleton()->googledomain;
+        $gamcmd = "update group \"" . $parentGroupName . "\" add member " . $email;
+        
+        $report = GamExecutor::executeGamCommand($gamcmd);
+        
+        return $report;
+    }
+    
+    public static function removeGroupFromGroup($childGroupName, $parentGroupName)
+    {
+        // clean chars not allowed in email address
+        $cleanGroupName = \solideagle\data_access\helpers\UnicodeHelper::cleanEmailString($childGroupName);
+        
+        $email = $cleanGroupName . "@" . Config::singleton()->googledomain;
+        $gamcmd = "update group \"" . $parentGroupName . "\" remove " . $email;
+        
+        $report = GamExecutor::executeGamCommand($gamcmd);
+        
+        return $report;
+    }
+    
+    // rename not supported (todo?)
     public static function updateGroup($group)
     {
         

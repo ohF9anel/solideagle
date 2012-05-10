@@ -37,6 +37,7 @@ class User
 	private $stamboeknummer;
 	private $basisrol; //(verplicht op te geven: 'leerling', 'leerkracht' of 'andere')
 	private $untis;
+        private $photo;
 
 	//class properties
 	private $classCodes = ""; //csv, see saveUserToClasses documentation from smartschool
@@ -135,6 +136,17 @@ class User
 		
 		return new StatusReport();
 	}
+        
+        public static function setPhoto($person, $encodedPhoto)
+        {
+                $api = Api::singleton();
+                $returnvalue = $api->setAccountPhoto($person->getUniqueIdentifier(), $encodedPhoto);
+                
+                if($returnvalue != 0)
+			return new StatusReport(false,Api::singleton()->getErrorFromCode($returnvalue));
+
+		return new StatusReport();
+        }
 
 	public function setInternnumber($internnumber)
 	{
@@ -401,7 +413,8 @@ class User
 	{
 		return $this->accountStatus;
 	}
-
+        
+        
 	/**
 	 *
 	 * @param Person $person

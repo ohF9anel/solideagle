@@ -16,29 +16,30 @@ use solideagle\utilities\SuperEntities;
 
    		$('#myModal').modal('show');
    		$("#deleteadsure").hide();
-        $("#deletesssure").hide();
-        $("#deletegappsure").hide();     
+                $("#deletesssure").hide();
+                $("#deletegappsure").hide(); 
         
 		if(!manageTemplate)
 		{
-            $("#blnDeleteAd").click(function(){
-                    $("#deleteadsure").toggle();
-                    $("#blnDeleteAdSure").removeAttr("checked");
-            });
-            $("#blnAdMultipleEnableDisable").click(function(){
-                    $("#radioAdEnableAccounts").toggle();
-                    $("#radioAdDisableAccounts").toggle();
-                    $("#optionAdMultipleEnable").removeAttr("checked");
-                    $("#optionAdMultipleDisable").removeAttr("checked");
-            });
-            $("#blnDeleteSs").click(function(){
-                    $("#deletesssure").toggle();
-                    $("#blnDeleteSsSure").removeAttr("checked");
-            });
-            $("#blnDeleteGapp").click(function(){
-                    $("#deletegappsure").toggle();
-                    $("#blnDeleteGappSure").removeAttr("checked");
-            });
+                    $("#blnDeleteAd").click(function(){
+                            $("#deleteadsure").toggle();
+                            $("#blnDeleteAdSure").removeAttr("checked");
+                    });
+                    $("#blnAdMultipleEnableDisable").click(function(){
+                            $("#radioAdEnableAccounts").toggle();
+                            $("#radioAdDisableAccounts").toggle();
+                            $("#optionAdMultipleEnable").removeAttr("checked");
+                            $("#optionAdMultipleDisable").removeAttr("checked");
+                    });
+                    $("#blnDeleteSs").click(function(){
+                            $("#deletesssure").toggle();
+                            $("#blnDeleteSsSure").removeAttr("checked");
+                    });
+                    $("#blnDeleteGapp").click(function(){
+                            $("#deletegappsure").toggle();
+                            $("#blnDeleteGappSure").removeAttr("checked");
+                    });
+                    
 		}
 	
 		$("#formTasks").ajaxForm({
@@ -158,236 +159,264 @@ use solideagle\utilities\SuperEntities;
 					</div>
 
 					<div class="row">
-						<div class="span12">
-
-
-
-
+                                            
+                                            <div class="span12">
 							<?php if ($this->multipleAccountsSelected || !$this->hasAdAccount || $this->manageTemplate)
-                            {?>
-							<label class="checkbox">
-								<input
-									name="createAdAccount"
-									id="createAdAccount"
-									type="checkbox"
-									<?php echo $this->defaults->createAdAccount ? "checked='checked'" : "" ?>>
-								Account maken
-							</label>
-
+                                                {?>
+                                                    <div class="control-group">
+                                                        <label class="control-label" for="createAdAccount">    
+                                                                Account maken
+                                                        </label>
+                                                        <div class="controls">
+                                                            <input
+                                                                name="createAdAccount"
+                                                                id="createAdAccount"
+                                                                type="checkbox"
+                                                                value="true"
+                                                                <?php echo $this->defaults->createAdAccount ? "checked='checked'" : "" ?>>
+                                                        </div>
+                                                    </div>
+                                                    
 							<?php 
-                            }
-
-                            if ($this->multipleAccountsSelected || $this->hasAdAccount || $this->manageTemplate)
+                                                }
+                                                if ($this->multipleAccountsSelected || $this->hasAdAccount || $this->manageTemplate)
                             {?>
-							<label class="checkbox">
-								Account verwijderen
-								<input
-									name="deleteAdAccount"
-									id="blnDeleteAd"
-									type="checkbox"
-									value="false"
-									<?php echo $this->defaults->deleteAdAccount ? "checked='checked'" : "" ?>>
-							</label>
-							<div
-								class="control-group error"
-								id="deleteadsure">
-								<label
-									class="checkbox error"
-									id="lbldeleteadsure">
-									Ja, ik ben zeker
-									<input
-										id="blndeleteadsure"
-										name="deleteAdAccountSure"
-										type="checkbox"
-										value="false">
-								</label>
-							</div>
+                                                    <div class="control-group">
+                                                        <label class="control-label" for="blnDeleteAd">    
+                                                                Account verwijderen
+                                                        </label>
+                                                        <div class="controls">
+                                                            <input
+                                                                name="deleteAdAccount"
+                                                                id="blnDeleteAd"
+                                                                type="checkbox"
+                                                                value="false"
+                                                                <?php echo $this->defaults->deleteAdAccount ? "checked='checked'" : "" ?>>
+                                                        </div>
+                                                    </div>
+                                                    <div class="control-group error" id="deleteadsure">
+                                                            <label
+                                                                    class="control-label error"
+                                                                    id="lbldeleteadsure" for="blndeleteadsure">
+                                                                    Ja, ik ben zeker
+                                                            </label>
+                                                            <div class="controls">
+                                                                <input
+                                                                    id="blndeleteadsure"
+                                                                    name="deleteAdAccountSure"
+                                                                    type="checkbox"
+                                                                    value="false">
+                                                            </div>
+                                                    </div>
 							<?php
                             }
                             if ($this->multipleAccountsSelected || $this->hasAdAccountEnabled || $this->manageTemplate)
-                           	{?>
-							<label class="checkbox">
+                           {?>
+                                                    <div class="control-group">
+							<label class="control-label" for="blnAdDisable">
 								Account deactiveren
+                                                        </label>
+                                                        <div class="controls">
 								<input
 									name="disableAdAccount"
 									id="blnAdDisable"
 									type="checkbox"
 									<?php echo $this->defaults->disableAdAccount ? "checked='checked'" : "" ?>>
-							</label>
+                                                        </div>
+                                                    </div>
 							<?php
-                           	}
-                           	if($this->multipleAccountsSelected || !$this->hasAdAccountEnabled || $this->manageTemplate)
-                            {?>
-							<label class="checkbox">
+                           }
+                           if($this->multipleAccountsSelected || !$this->hasAdAccountEnabled || $this->manageTemplate)
+                           {?>
+							<div class="control-group">
+                                                            <label class="control-label" for="blnAdEnable">
 								Account activeren
+                                                            </label>
+                                                            <div class="controls">
 								<input
 									name="enableAdAccount"
 									id="blnAdEnable"
 									type="checkbox"
 									<?php echo $this->defaults->enableAdAccount ? "checked='checked'" : "" ?>>
-							</label>
-							<?php
-                            }?>
+                                                            </div>
+                                                        </div>
+                                                
+							<?php }?>
+                                                        
+                                                        <div class="control-group">
+                                                            <label class="control-label" for="createAdHomedir">
+                                                                Homedir maken
+                                                            </label>
+                                                            <div class="controls">
+                                                                <input
+                                                                        name="createAdHomedir"
+                                                                        id="createAdHomedir"
+                                                                        type="checkbox"
+                                                                        data-toggle="collapse"
+                                                                        data-target="#adHomeDirParams"
+                                                                        value="true"
+                                                                        <?php echo $this->defaults->createAdHomedir ? "checked='checked'" : "" ?>>
+                                                            </div>
+                                                        </div>
+                                                
+                                                        <div
+                                                                id="adHomeDirParams"
+                                                                class="collapse out">
+                                                                <fieldset>
+                                                                        <legend>Homefolder</legend>
 
-							<label class="checkbox">
-								<input
-									name="createAdHomedir"
-									type="checkbox"
-									data-toggle="collapse"
-									data-target="#adHomeDirParams"
-									value="true"
-									<?php echo $this->defaults->createAdHomedir ? "checked='checked'" : "" ?>>
-								Homedir maken
-							</label>
+                                                                        <div class="control-group">
+                                                                                <label
+                                                                                        class="control-label"
+                                                                                        for="server">Server</label>
+                                                                                <div class="controls">
+                                                                                        <input
+                                                                                                id="server"
+                                                                                                name="homefolderServer"
+                                                                                                class="input-xlarge"
+                                                                                                type="text"
+                                                                                                value="<?php echo SuperEntities::encode($this->defaults->homefolderServer); ?>">
+                                                                                        <p class="help-block ">
+                                                                                                <i>server.domain.example</i>
+                                                                                        </p>
+                                                                                </div>
+                                                                        </div>
 
-							<div
-								id="adHomeDirParams"
-								class="collapse out">
-								<fieldset>
-									<legend>Homefolder</legend>
+                                                                        <div class="control-group">
+                                                                                <label
+                                                                                        class="control-label"
+                                                                                        for="serverpath">Homefolder pad op server</label>
+                                                                                <div class="controls">
+                                                                                        <div class="input-append">
+                                                                                                <input
+                                                                                                        id="serverpath"
+                                                                                                        name="homefolderPath"
+                                                                                                        class="input-xlarge"
+                                                                                                        type="text"
+                                                                                                        value="<?php echo SuperEntities::encode($this->defaults->homefolderPath); ?>">
+                                                                                                <span class="add-on">\janssensj</span>
+                                                                                                <p class="help-block ">
+                                                                                                        <i>c:\pad\naar\homefolders</i>
+                                                                                                </p>
+                                                                                        </div>
+                                                                                </div>
+                                                                        </div>
 
-									<div class="control-group">
-										<label
-											class="control-label"
-											for="server">Server</label>
-										<div class="controls">
-											<input
-												id="server"
-												name="homefolderServer"
-												class="input-xlarge"
-												type="text"
-												value="<?php echo SuperEntities::encode($this->defaults->homefolderServer); ?>">
-											<p class="help-block ">
-												<i>server.domain.example</i>
-											</p>
-										</div>
-									</div>
+                                                                        <div class="control-group">
+                                                                                <label
+                                                                                        class="control-label"
+                                                                                        for="scanpath">Scanpad op server</label>
+                                                                                <div class="controls">
+                                                                                        <input
+                                                                                                id="scanpath"
+                                                                                                name="scanSharePath"
+                                                                                                class="input-xlarge"
+                                                                                                type="text"
+                                                                                                value="<?php echo SuperEntities::encode($this->defaults->scanSharePath); ?>">
+                                                                                        <p class="help-block ">
+                                                                                                <i>c:\pad\naar\scanshare</i>
+                                                                                        </p>
+                                                                                </div>
+                                                                        </div>
 
-									<div class="control-group">
-										<label
-											class="control-label"
-											for="serverpath">Homefolder pad op server</label>
-										<div class="controls">
-											<div class="input-append">
-												<input
-													id="serverpath"
-													name="homefolderPath"
-													class="input-xlarge"
-													type="text"
-													value="<?php echo SuperEntities::encode($this->defaults->homefolderPath); ?>">
-												<span class="add-on">\janssensj</span>
-												<p class="help-block ">
-													<i>c:\pad\naar\homefolders</i>
-												</p>
-											</div>
-										</div>
-									</div>
+                                                                        <div class="control-group">
+                                                                                <label
+                                                                                        class="control-label"
+                                                                                        for="wwwpath">WWW pad op server</label>
+                                                                                <div class="controls">
+                                                                                        <input
+                                                                                                id="wwwpath"
+                                                                                                name="wwwSharePath"
+                                                                                                class="input-xlarge"
+                                                                                                type="text"
+                                                                                                value="<?php echo SuperEntities::encode($this->defaults->wwwSharePath); ?>">
+                                                                                        <p class="help-block ">
+                                                                                                <i>c:\pad\naar\wwwshare</i>
+                                                                                        </p>
+                                                                                </div>
+                                                                        </div>
 
-									<div class="control-group">
-										<label
-											class="control-label"
-											for="scanpath">Scanpad op server</label>
-										<div class="controls">
-											<input
-												id="scanpath"
-												name="scanSharePath"
-												class="input-xlarge"
-												type="text"
-												value="<?php echo SuperEntities::encode($this->defaults->scanSharePath); ?>">
-											<p class="help-block ">
-												<i>c:\pad\naar\scanshare</i>
-											</p>
-										</div>
-									</div>
+                                                                </fieldset>
 
-									<div class="control-group">
-										<label
-											class="control-label"
-											for="wwwpath">WWW pad op server</label>
-										<div class="controls">
-											<input
-												id="wwwpath"
-												name="wwwSharePath"
-												class="input-xlarge"
-												type="text"
-												value="<?php echo SuperEntities::encode($this->defaults->wwwSharePath); ?>">
-											<p class="help-block ">
-												<i>c:\pad\naar\wwwshare</i>
-											</p>
-										</div>
-									</div>
+                                                        </div>
 
-								</fieldset>
+                                                        <div class="control-group">
+                                                            <label class="control-label" for="createUpDownFolders">
+                                                                Upload &amp; Downloadfolders maken
+                                                            </label>
+                                                            <div class="controls">
+                                                                <input
+                                                                        name="createUpDownFolders"
+                                                                        id="createUpDownFolders"
+                                                                        type="checkbox"
+                                                                        data-toggle="collapse"
+                                                                        data-target="#adUpDownParams"
+                                                                        value="true"
+                                                                        <?php echo $this->defaults->createUpDownFolders ? "checked='checked'" : "" ?>>
+                                                            </div>
+                                                        </div>
 
-							</div>
+                                                        <div
+                                                                id="adUpDownParams"
+                                                                class="collapse out">
+                                                                <fieldset>
+                                                                        <legend>Upload &amp; Downloadfolders</legend>
 
-							<label class="checkbox">
-								<input
-									name="createUpDownFolders"
-									type="checkbox"
-									data-toggle="collapse"
-									data-target="#adUpDownParams"
-									value="true"
-									<?php echo $this->defaults->createUpDownFolders ? "checked='checked'" : "" ?>>
-								Upload &amp; Downloadfolders maken
-							</label>
+                                                                        <div class="control-group">
+                                                                                <label
+                                                                                        class="control-label"
+                                                                                        for="server">Uploadpad</label>
+                                                                                <div class="controls">
+                                                                                        <input
+                                                                                                id="server"
+                                                                                                name="uploadSharePath"
+                                                                                                class="input-xlarge"
+                                                                                                type="text"
+                                                                                                value="<?php echo SuperEntities::encode($this->defaults->uploadSharePath); ?>">
+                                                                                        <p class="help-block ">
+                                                                                                <i>c:\pad\naar\upload</i>
+                                                                                        </p>
+                                                                                </div>
 
-							<div
-								id="adUpDownParams"
-								class="collapse out">
-								<fieldset>
-									<legend>Upload &amp; Downloadfolders</legend>
+                                                                                <label
+                                                                                        class="control-label"
+                                                                                        for="server">Downloadpad</label>
+                                                                                <div class="controls">
+                                                                                        <input
+                                                                                                id="server"
+                                                                                                name="downloadSharePath"
+                                                                                                class="input-xlarge"
+                                                                                                type="text"
+                                                                                                value="<?php echo SuperEntities::encode($this->defaults->downloadSharePath); ?>">
+                                                                                        <p class="help-block ">
+                                                                                                <i>c:\pad\naar\download</i>
+                                                                                        </p>
+                                                                                </div>
 
-									<div class="control-group">
-										<label
-											class="control-label"
-											for="server">Uploadpad</label>
-										<div class="controls">
-											<input
-												id="server"
-												name="uploadSharePath"
-												class="input-xlarge"
-												type="text"
-												value="<?php echo SuperEntities::encode($this->defaults->uploadSharePath); ?>">
-											<p class="help-block ">
-												<i>c:\pad\naar\upload</i>
-											</p>
-										</div>
+                                                                        </div>
 
-										<label
-											class="control-label"
-											for="server">Downloadpad</label>
-										<div class="controls">
-											<input
-												id="server"
-												name="downloadSharePath"
-												class="input-xlarge"
-												type="text"
-												value="<?php echo SuperEntities::encode($this->defaults->downloadSharePath); ?>">
-											<p class="help-block ">
-												<i>c:\pad\naar\download</i>
-											</p>
-										</div>
+                                                                </fieldset>
 
-									</div>
+                                                        </div>
 
-								</fieldset>
-
-							</div>
-
-							<label class="checkbox">
-								<input
-									name="moveAdHomedir"
-									type="checkbox"
-									value="true"
-									<?php echo $this->defaults->moveAdHomedir ? "checked='checked'" : "" ?>>
-								Homedir verplaatsen
-							</label>
-
+                                                        <div class="control-group">
+                                                            <label class="control-label" for="moveAdHomedir">
+                                                                Homedir verplaatsen
+                                                            </label>
+                                                            <div class="controls">
+                                                                <input
+                                                                        name="moveAdHomedir"
+                                                                        id="moveAdHomedir"
+                                                                        type="checkbox"
+                                                                        value="true"
+                                                                        <?php echo $this->defaults->moveAdHomedir ? "checked='checked'" : "" ?>>
+                                                            </div>
+                                                        </div>
+                                                
 						</div>
-					</div>
-				</section>
-
+                                        </div>
+                                </section>
+ 
 				<section id="smartschool">
 					<div class="page-header">
 						<h1>
@@ -395,73 +424,91 @@ use solideagle\utilities\SuperEntities;
 						</h1>
 					</div>
 
-					<div class="row">
-						<div class="span12">
-
+					<div class="row"> 
+                                            
+                                            <div class="span12">
 							<?php if ($this->multipleAccountsSelected || !$this->hasSsAccount || $this->manageTemplate)
-                            {?>
-							<label class="checkbox">
-								<input
-									name="createSsAccount"
-									type="checkbox"
-									value="true"
-									<?php echo $this->defaults->createSsAccount ? "checked='checked'" : "" ?>>
-								Account maken
-							</label>
+                                                {?>
+                                                    <div class="control-group">
+                                                        <label class="control-label" for="createSsAccount">    
+                                                                Account maken
+                                                        </label>
+                                                        <div class="controls">
+                                                            <input
+                                                                name="createSsAccount"
+                                                                id="createSsAccount"
+                                                                type="checkbox"
+                                                                value="true"
+                                                                <?php echo $this->defaults->createSsAccount ? "checked='checked'" : "" ?>>
+                                                        </div>
+                                                    </div>
+                                                   
 							<?php 
-                            }
-                            if ($this->multipleAccountsSelected || $this->hasSsAccount || $this->manageTemplate)
+                                                }
+                                                if ($this->multipleAccountsSelected || $this->hasSsAccount || $this->manageTemplate)
                             {?>
-							<label class="checkbox">
-								Account verwijderen
-								<input
-									name="deleteSsAccount"
-									id="blnDeleteSs"
-									type="checkbox"
-									value="false"
-									<?php echo $this->defaults->deleteSsAccount ? "checked='checked'" : "" ?>>
-							</label>
-							<div
-								class="control-group error"
-								id="deletesssure">
-								<label
-									class="checkbox error"
-									id="lbldeletesssure">
-									Ja, ik ben zeker
-									<input
-										id="blndeletesssure"
-										name="deleteSsAccountSure"
-										type="checkbox"
-										value="false">
-								</label>
-							</div>
+                                                    <div class="control-group">
+                                                        <label class="control-label" for="blnDeleteSs">    
+                                                                Account verwijderen
+                                                        </label>
+                                                        <div class="controls">
+                                                            <input
+                                                                name="deleteSsAccount"
+                                                                id="blnDeleteSs"
+                                                                type="checkbox"
+                                                                value="false"
+                                                                <?php echo $this->defaults->deleteSsAccount ? "checked='checked'" : "" ?>>
+                                                        </div>
+                                                    </div>
+                                                    <div class="control-group error" id="deletesssure">
+                                                            <label
+                                                                    class="control-label error"
+                                                                    id="lbldeletesssure">
+                                                                    Ja, ik ben zeker
+                                                            </label>
+                                                            <div class="controls">
+                                                                <input
+                                                                    id="blndeletesssure"
+                                                                    name="deleteSsAccountSure"
+                                                                    type="checkbox"
+                                                                    value="false">
+                                                            </div>
+                                                    </div>
 							<?php
-                            }if ($this->multipleAccountsSelected || $this->hasSsAccountEnabled || $this->manageTemplate)
-                                                    {?>
-							<label class="checkbox">
+                            }
+                            if ($this->multipleAccountsSelected || $this->hasSsAccountEnabled || $this->manageTemplate)
+                           {?>
+                                                    <div class="control-group">
+							<label class="control-label" for="blnSsDisable">
 								Account deactiveren
+                                                        </label>
+                                                        <div class="controls">
 								<input
 									name="disableSsAccount"
 									id="blnSsDisable"
 									type="checkbox"
 									<?php echo $this->defaults->disableSsAccount ? "checked='checked'" : "" ?>>
-							</label>
+                                                        </div>
+                                                    </div>
 							<?php
-                                                    }
-                                                    if($this->multipleAccountsSelected || !$this->hasSsAccountEnabled || $this->manageTemplate)
-                            {?>
-							<label class="checkbox">
+                           }
+                           if($this->multipleAccountsSelected || !$this->hasSsAccountEnabled || $this->manageTemplate)
+                           {?>
+							<div class="control-group">
+                                                            <label class="control-label" for="blnSsEnable">
 								Account activeren
+                                                            </label>
+                                                            <div class="controls">
 								<input
 									name="enableSsAccount"
 									id="blnSsEnable"
 									type="checkbox"
 									<?php echo $this->defaults->enableSsAccount ? "checked='checked'" : "" ?>>
-							</label>
-							<?php
-                            }?>
-
+                                                            </div>
+                                                        </div>
+							<?php }?>
 						</div>
+        
 					</div>
 				</section>
 
@@ -476,65 +523,83 @@ use solideagle\utilities\SuperEntities;
 						<div class="span12">
 							<?php if ($this->multipleAccountsSelected || !$this->hasGappAccount || $this->manageTemplate)
                                                 {?>
-							<label class="checkbox">
-								<input
-									name="createGappAccount"
-									type="checkbox"
-									value="true"
-									<?php echo $this->defaults->createGappAccount ? "checked='checked'" : "" ?>>
-								Account maken
-							</label>
+                                                    <div class="control-group">
+                                                        <label class="control-label" for="createGappAccount">    
+                                                                Account maken
+                                                        </label>
+                                                        <div class="controls">
+                                                            <input
+                                                                name="createGappAccount"
+                                                                id="createGappAccount"
+                                                                type="checkbox"
+                                                                value="true"
+                                                                <?php echo $this->defaults->createGappAccount ? "checked='checked'" : "" ?>>
+                                                        </div>
+                                                    </div>
+                                                    
 							<?php 
                                                 }
                                                 if ($this->multipleAccountsSelected || $this->hasGappAccount || $this->manageTemplate)
                             {?>
-							<label class="checkbox">
-								Account verwijderen
-								<input
-									name="deleteGappAccount"
-									id="blnDeleteGapp"
-									type="checkbox"
-									value="false"
-									<?php echo $this->defaults->deleteGappAccount ? "checked='checked'" : "" ?>>
-							</label>
-							<div
-								class="control-group error"
-								id="deletegappsure">
-								<label
-									class="checkbox error"
-									id="lbldeletegappsure">
-									Ja, ik ben zeker
-									<input
-										id="blndeletegappsure"
-										name="deleteGappAccountSure"
-										type="checkbox"
-										value="false">
-								</label>
-							</div>
+                                                    <div class="control-group">
+                                                        <label class="control-label" for="blnDeleteGapp">    
+                                                                Account verwijderen
+                                                        </label>
+                                                        <div class="controls">
+                                                            <input
+                                                                name="deleteGappAccount"
+                                                                id="blnDeleteGapp"
+                                                                type="checkbox"
+                                                                value="false"
+                                                                <?php echo $this->defaults->deleteGappAccount ? "checked='checked'" : "" ?>>
+                                                        </div>
+                                                    </div>
+                                                    <div class="control-group error" id="deletegappsure">
+                                                            <label
+                                                                    class="control-label error"
+                                                                    id="lbldeletegappsure">
+                                                                    Ja, ik ben zeker
+                                                            </label>
+                                                            <div class="controls">
+                                                                <input
+                                                                    id="blndeletegappsure"
+                                                                    name="deleteGappAccountSure"
+                                                                    type="checkbox"
+                                                                    value="false">
+                                                            </div>
+                                                    </div>
 							<?php
                             }
                             if ($this->multipleAccountsSelected || $this->hasGappAccountEnabled || $this->manageTemplate)
                            {?>
-							<label class="checkbox">
+                                                    <div class="control-group">
+							<label class="control-label" for="blnGappDisable">
 								Account deactiveren
+                                                        </label>
+                                                        <div class="controls">
 								<input
 									name="disableGappAccount"
 									id="blnGappDisable"
 									type="checkbox"
 									<?php echo $this->defaults->disableGappAccount ? "checked='checked'" : "" ?>>
-							</label>
+                                                        </div>
+                                                    </div>
 							<?php
                            }
                            if($this->multipleAccountsSelected || !$this->hasGappAccountEnabled || $this->manageTemplate)
                            {?>
-							<label class="checkbox">
+							<div class="control-group">
+                                                            <label class="control-label" for="blnGappEnable">
 								Account activeren
+                                                            </label>
+                                                            <div class="controls">
 								<input
 									name="enableGappAccount"
 									id="blnGappEnable"
 									type="checkbox"
 									<?php echo $this->defaults->enableGappAccount ? "checked='checked'" : "" ?>>
-							</label>
+                                                            </div>
+                                                        </div>
 							<?php }?>
 						</div>
 					</div>

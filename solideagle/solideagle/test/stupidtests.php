@@ -15,6 +15,14 @@ set_include_path(get_include_path().PATH_SEPARATOR."../../");
 spl_autoload_extensions(".php"); // comma-separated list
 spl_autoload_register();
 
+$string = "string";
+
+//for($i = 0; $i < strlen($string); $i++)
+//{
+//    var_dump($string[$i]);
+//}
+echo date('YmdHis');
+
 //$user = Person::getPersonById(158);
 //echo "<pre>";
 //var_dump($user);
@@ -31,16 +39,16 @@ spl_autoload_register();
 //var_dump(\solideagle\Config::singleton()->ad_password);
 //var_dump($user->isTypeOf(Type::TYPE_LEERLING));
 
-$groups = Group::getChilderen(Group::getGroupById(2));
-
-foreach($groups as $group)
-{
-        ob_start();
-        $cmd = 'python /var/www/solideagle/gam/gam.py delete org segebruikers/leerlingen/' . $group->getName();
-
-        passthru($cmd);
-        $out = ob_get_contents();
-        ob_end_clean();
+//$groups = Group::getChilderen(Group::getGroupById(2));
+//
+//foreach($groups as $group)
+//{
+//        ob_start();
+//        $cmd = 'python /var/www/solideagle/gam/gam.py delete org segebruikers/leerlingen/' . $group->getName();
+//
+//        passthru($cmd);
+//        $out = ob_get_contents();
+//        ob_end_clean();
 
 //        foreach(preg_split("/(\r?\n)/", $out) as $key => $line)
 //        {
@@ -48,7 +56,7 @@ foreach($groups as $group)
 //            if (preg_match('/^ERROR/i', $line, $matches))
 //                $line;   
 //        }
-}
+//}
 
 
 ?>

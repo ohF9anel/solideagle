@@ -34,8 +34,8 @@ class DownloadFolder
             $conn->write("rmdir " . $downloadSharePath . "\\" . $username . " /s /q\n");
         }
         
-        $conn->write("echo ENDOFCODE\n");
-        $conn->read("ENDOFCODE");
+//        $conn->write("echo ENDOFCODE\n");
+//        $conn->read("ENDOFCODE");
 //        while($data = $conn->_get_channel_packet(NET_SSH2_CHANNEL_SHELL))
 //{
 //	echo $data;
