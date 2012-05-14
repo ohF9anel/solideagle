@@ -132,6 +132,15 @@ function makeLinks() {
 		}
 
 	});
+	
+	$("#mailGroup").click(function() {
+		$.get(SEpath + '/groups/sendmail', {
+			selectedGroup : selectedGroupId
+		}, function(data){
+			window.location.href = "mailto:" + data;
+		});
+	});
+		
 }
 
 function setGroupSearchField(valueToSet)
@@ -202,7 +211,7 @@ function updateTree() {
 		groupname = data.rslt.obj.attr("groupname");
 
 		$("#groupname").html(groupname);
-                
+       
 		updateUsers();
 
 	});

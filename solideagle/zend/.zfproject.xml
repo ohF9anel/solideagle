@@ -40,6 +40,7 @@
           <actionMethod actionName="getgroupbreadcrumbs"/>
           <actionMethod actionName="deletegroup"/>
           <actionMethod actionName="deletegrouppost"/>
+          <actionMethod actionName="sendmail"/>
         </controllerFile>
         <controllerFile controllerName="Usertasks">
           <actionMethod actionName="index"/>
