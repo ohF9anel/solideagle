@@ -78,6 +78,7 @@ class groupmanager implements TaskInterface
 		}
 		else if($config->action == self::ActionRemove)
 		{
+	
 			$ret = ClassGroup::deleteClassGroupByCode($config->group->getName());
 			if($ret->isSucces())
 			{

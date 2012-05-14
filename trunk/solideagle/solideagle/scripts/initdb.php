@@ -70,7 +70,7 @@ class initdb
 		
 		$root = new Group();
 		
-		$root->setName("segebruikers");
+		$root->setName("dbzgebruikers");
 		
 		Group::addGroup($root);
 		

@@ -134,7 +134,7 @@ class TaskQueue
 		return $retarr;
 	}*/
 	
-	public static function getTasksToRunForPlatform($platform)
+	public static function getTasksToRunForPlatform($platform,$minerrorcount = 0)
 	{
 		$sql = "SELECT
 		`task_queue`.`id`,
@@ -146,10 +146,11 @@ class TaskQueue
 		`task_queue`.`errormessages`,
 		`task_queue`.`platform`
 		FROM  `task_queue` 
-		WHERE `task_queue`.`platform` = :platform;";
+		WHERE `task_queue`.`platform` = :platform and `task_queue`.`errorcount` >= :errorcount;";
 		
 		$cmd = new DatabaseCommand($sql);
 		$cmd->addParam(":platform", $platform);
+		$cmd->addParam(":errorcount", $minerrorcount);
 		
 		$retarr = array();
 		

@@ -17,6 +17,11 @@ class UnicodeHelper
 		return strtolower(preg_replace("/[^A-Za-z0-9]/", "", $email));
 	}
 	
+	public static function cleanSmartschoolCodeString($input)
+	{
+		return self::cleanEmailString($input); //samestuff as email cleaning
+	}
+	
 	//removes all utf8 chars
 	public static function cleanUTFChars($string)
 	{
