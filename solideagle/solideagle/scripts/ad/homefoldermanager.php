@@ -25,8 +25,8 @@ use solideagle\plugins\ad\SSHManager;
 class homefoldermanager implements TaskInterface
 {
 	const ActionAddHomefolder = 0;
-        const ActionCopyHomefolder = 1;
-        const ActionRemoveShare = 2;
+	const ActionCopyHomefolder = 1;
+	const ActionRemoveShare = 2;
 
 	public function runTask($taskqueue)
 	{
@@ -39,10 +39,10 @@ class homefoldermanager implements TaskInterface
 		}
 		else if($config["action"] == self::ActionAddHomefolder && isset($config["server"]) && isset($config["homefolderpath"]) && isset($config["scansharepath"]) && isset($config["wwwsharepath"]) && isset($config["person"]))
 		{
-                        $username = $config["person"]->getAccountUsername();
-                        
+			$username = $config["person"]->getAccountUsername();
+
 			$conn = SSHManager::singleton()->getConnection($config["server"]);
-                        
+
 			if(!HomeFolder::createHomeFolder($conn, $config["homefolderpath"], $username))
 			{
 				Logger::log("Creating homefolder failed! ",PEAR_LOG_ERR);
@@ -55,58 +55,54 @@ class homefoldermanager implements TaskInterface
 			{
 				Logger::log("Setting www folder failed! ",PEAR_LOG_ERR);
 			}
-				
+
 			if(isset($config["uploadsharepath"]))
 				UploadFolder::setUploadFolder($conn,$config["server"], $config["homefolderpath"], $config["uploadsharepath"], $username);
-				
+
 			if(isset($config["downloadsharepath"]))
 				DownloadFolder::setDownloadFolder($conn,$config["server"], $config["homefolderpath"], $config["downloadsharepath"], $username);
-				
-			$conn->exitShell();
+
 		
-			//debug!
-			Logger::log("SSH SESSION:\n" . $conn->read(),PEAR_LOG_DEBUG);
+
+		
 
 			$ret = ManageUser::setHomeFolder($username, "\\\\" . $config["server"]);
 			if($ret->isSucces())
 			{
 				$platformad = PlatformAD::getPlatformConfigByPersonId($config["person"]->getId());
 
-                                $homedir = "\\\\" . $config["server"] . "\\" . $username . "$";
-                                
-                                $platformad->setHomedir($homedir);
+				$homedir = "\\\\" . $config["server"] . "\\" . $username . "$";
 
-                                PlatformAD::updatePlatform($platformad);
-                                return true;
+				$platformad->setHomedir($homedir);
+
+				PlatformAD::updatePlatform($platformad);
+				return true;
 			}else{
 				$taskqueue->setErrorMessages($ret->getError());
 				return false;
 			}
 		}
-                else if($config["action"] == self::ActionCopyHomefolder && isset($config["server"]) && isset($config["homefolderpath"]) && isset($config["person"]) && isset($config["oldserver"]))
+		else if($config["action"] == self::ActionCopyHomefolder && isset($config["server"]) && isset($config["homefolderpath"]) && isset($config["person"]) && isset($config["oldserver"]))
 		{
-                        $username = $config["person"]->getAccountUsername();
-                        
+			$username = $config["person"]->getAccountUsername();
+
 			$conn = SSHManager::singleton()->getConnection($config["server"]);
-                        
+
 			$ret = HomeFolder::copyHomeFolder($conn, $username, $config["homefolderpath"], $config["oldserver"]);
-                        
-                        $conn->exitShell();
+
 		
-			//debug!
-			Logger::log("SSH SESSION:\n" . $conn->read(),PEAR_LOG_DEBUG);
-                        
-                        if($ret)
+
+			if($ret)
 			{
-                                return true;
+				return true;
 			}if(!$ret)
-                        {
-                                Logger::log($ret->getError(),PEAR_LOG_ERR);
+			{
+				Logger::log($ret->getError(),PEAR_LOG_ERR);
 				$taskqueue->setErrorMessages($ret->getError());
 				return false;
 			}
-			
-                }
+				
+		}
 		else{
 			$taskqueue->setErrorMessages("Probleem met configuratie");
 			return false; //it failed for some reason
@@ -115,16 +111,16 @@ class homefoldermanager implements TaskInterface
 		return false;
 	}
 
-/**
- * 
- * @param unknown_type $server
- * @param unknown_type $homefolderpath
- * @param unknown_type $scansharepath
- * @param unknown_type $wwwsharepath
- * @param Person $user
- * @param unknown_type $uploadsharepath
- * @param unknown_type $downloadsharepath
- */
+	/**
+	 *
+	 * @param unknown_type $server
+	 * @param unknown_type $homefolderpath
+	 * @param unknown_type $scansharepath
+	 * @param unknown_type $wwwsharepath
+	 * @param Person $user
+	 * @param unknown_type $uploadsharepath
+	 * @param unknown_type $downloadsharepath
+	 */
 	public static function prepareAddHomefolder($server, $homefolderpath, $scansharepath, $wwwsharepath, $user, $uploadsharepath=NULL,$downloadsharepath=NULL)
 	{
 		$config["action"] = self::ActionAddHomefolder;
@@ -141,56 +137,56 @@ class homefoldermanager implements TaskInterface
 		}
 		TaskQueue::insertNewTask($config, $user->getId(), TaskQueue::TypePerson);
 	}
-        
-        public static function prepareCopyHomefolder($newserver, $newhomefolderpath, $person, $newscansharepath,
-                $newwwwsharepath, $newuploadsharepath, $newdownloadsharepath)
-        {
-                // prepare add homefolder task
-                self::prepareAddHomefolder($newserver, $newhomefolderpath, $newscansharepath, $newwwwsharepath, $person, $newuploadsharepath, $newdownloadsharepath);
-                    
-                // copy homefolder task
-                $config["action"] = self::ActionCopyHomefolder;
+
+	public static function prepareCopyHomefolder($newserver, $newhomefolderpath, $person, $newscansharepath,
+			$newwwwsharepath, $newuploadsharepath, $newdownloadsharepath)
+	{
+		// prepare add homefolder task
+		self::prepareAddHomefolder($newserver, $newhomefolderpath, $newscansharepath, $newwwwsharepath, $person, $newuploadsharepath, $newdownloadsharepath);
+
+		// copy homefolder task
+		$config["action"] = self::ActionCopyHomefolder;
 		$config["server"] = $newserver;
 		$config["homefolderpath"] = self::makeHomefolderPath($newhomefolderpath, $person);
 		$config["person"] = $person;
-                
-                $oldsharepath = PlatformAD::getPlatformConfigByPersonId($person->getId())->getHomedir();
-                if ($oldsharepath != null)
-                {
-                    if ($oldsharepath[0] == "\\" && $oldsharepath[1] == "\\")
-                    {
-                        $oldserver = substr($oldsharepath, 2);
-                        
-                        for ($i = 0; $i < strlen($oldserver); $i++)
-                        {
-                            if ($oldserver[$i] == "/" || $oldserver[$i] == "\\")
-                            {
-                                $oldserver = substr($oldserver, 0, $i);
-                                $config["oldserver"] = $oldserver;
-                                break;
-                            }
-                        }
-                    }
-                }
-                
+
+		$oldsharepath = PlatformAD::getPlatformConfigByPersonId($person->getId())->getHomedir();
+		if ($oldsharepath != null)
+		{
+			if ($oldsharepath[0] == "\\" && $oldsharepath[1] == "\\")
+			{
+				$oldserver = substr($oldsharepath, 2);
+
+				for ($i = 0; $i < strlen($oldserver); $i++)
+				{
+					if ($oldserver[$i] == "/" || $oldserver[$i] == "\\")
+					{
+						$oldserver = substr($oldserver, 0, $i);
+						$config["oldserver"] = $oldserver;
+						break;
+					}
+				}
+			}
+		}
+
 		TaskQueue::insertNewTask($config, $person->getId(), TaskQueue::TypePerson);
-                
-                // delete old share
-                
-        }
-        
-        private static function makeHomefolderPath($homefolderpath, $person)
-        {
-                if ($person->isTypeOf(Type::TYPE_LEERLING))
-                {
-                    if(is_numeric(substr($person->getAccountUsername(), -3)))
-                    {
-                            $homefolderpath .= "\\" . substr($person->getAccountUsername(), -3, 2);
-                    }else{
-                            $homefolderpath .= "\\" . substr($person->getAccountUsername(), -2);
-                    }
-                }
-                
-                return $homefolderpath;
-        }
+
+		// delete old share
+
+	}
+
+	private static function makeHomefolderPath($homefolderpath, $person)
+	{
+		if ($person->isTypeOf(Type::TYPE_LEERLING))
+		{
+			if(is_numeric(substr($person->getAccountUsername(), -3)))
+			{
+				$homefolderpath .= "\\" . substr($person->getAccountUsername(), -3, 2);
+			}else{
+				$homefolderpath .= "\\" . substr($person->getAccountUsername(), -2);
+			}
+		}
+
+		return $homefolderpath;
+	}
 }
