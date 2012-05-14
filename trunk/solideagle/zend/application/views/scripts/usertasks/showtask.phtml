@@ -365,10 +365,10 @@ use solideagle\utilities\SuperEntities;
                                                                         <div class="control-group">
                                                                                 <label
                                                                                         class="control-label"
-                                                                                        for="server">Uploadpad</label>
+                                                                                        for="uploadpath">Uploadpad</label>
                                                                                 <div class="controls">
                                                                                         <input
-                                                                                                id="server"
+                                                                                                id="uploadpath"
                                                                                                 name="uploadSharePath"
                                                                                                 class="input-xlarge"
                                                                                                 type="text"
@@ -380,10 +380,10 @@ use solideagle\utilities\SuperEntities;
 
                                                                                 <label
                                                                                         class="control-label"
-                                                                                        for="server">Downloadpad</label>
+                                                                                        for="downloadpath">Downloadpad</label>
                                                                                 <div class="controls">
                                                                                         <input
-                                                                                                id="server"
+                                                                                                id="downloadpath"
                                                                                                 name="downloadSharePath"
                                                                                                 class="input-xlarge"
                                                                                                 type="text"
@@ -408,10 +408,128 @@ use solideagle\utilities\SuperEntities;
                                                                         name="moveAdHomedir"
                                                                         id="moveAdHomedir"
                                                                         type="checkbox"
+                                                                        data-toggle="collapse"
+                                                                        data-target="#adMoveHomeDirParams"
                                                                         value="true"
                                                                         <?php echo $this->defaults->moveAdHomedir ? "checked='checked'" : "" ?>>
                                                             </div>
                                                         </div>
+                                                
+                                                         <div
+                                                                id="adMoveHomeDirParams"
+                                                                class="collapse out">
+                                                                <fieldset>
+                                                                        <legend>Homefolder verplaatsen</legend>
+
+                                                                        <div class="control-group">
+                                                                                <label
+                                                                                        class="control-label"
+                                                                                        for="server">Server</label>
+                                                                                <div class="controls">
+                                                                                        <input
+                                                                                                id="mServer"
+                                                                                                name="moveHomefolderServer"
+                                                                                                class="input-xlarge"
+                                                                                                type="text"
+                                                                                                value="<?php echo SuperEntities::encode($this->defaults->moveHomefolderServer); ?>">
+                                                                                        <p class="help-block ">
+                                                                                                <i>server.domain.example</i>
+                                                                                        </p>
+                                                                                </div>
+                                                                        </div>
+
+                                                                        <div class="control-group">
+                                                                                <label
+                                                                                        class="control-label"
+                                                                                        for="moveserverpath">Homefolder pad op server</label>
+                                                                                <div class="controls">
+                                                                                        <div class="input-append">
+                                                                                                <input
+                                                                                                        id="serverpath"
+                                                                                                        name="moveHomefolderPath"
+                                                                                                        class="input-xlarge"
+                                                                                                        type="text"
+                                                                                                        value="<?php echo SuperEntities::encode($this->defaults->moveHomefolderPath); ?>">
+                                                                                                <span class="add-on">\janssensj</span>
+                                                                                                <p class="help-block ">
+                                                                                                        <i>c:\pad\naar\homefolders</i>
+                                                                                                </p>
+                                                                                        </div>
+                                                                                </div>
+                                                                        </div>
+                                                                        
+                                                                        <div class="control-group">
+                                                                                <label
+                                                                                        class="control-label"
+                                                                                        for="movescanpath">Scanpad op server</label>
+                                                                                <div class="controls">
+                                                                                        <input
+                                                                                                id="movescanpath"
+                                                                                                name="moveScanSharePath"
+                                                                                                class="input-xlarge"
+                                                                                                type="text"
+                                                                                                value="<?php echo SuperEntities::encode($this->defaults->moveScanSharePath); ?>">
+                                                                                        <p class="help-block ">
+                                                                                                <i>c:\pad\naar\scanshare</i>
+                                                                                        </p>
+                                                                                </div>
+                                                                        </div>
+
+                                                                        <div class="control-group">
+                                                                                <label
+                                                                                        class="control-label"
+                                                                                        for="movewwwpath">WWW pad op server</label>
+                                                                                <div class="controls">
+                                                                                        <input
+                                                                                                id="movewwwpath"
+                                                                                                name="moveWwwSharePath"
+                                                                                                class="input-xlarge"
+                                                                                                type="text"
+                                                                                                value="<?php echo SuperEntities::encode($this->defaults->moveWwwSharePath); ?>">
+                                                                                        <p class="help-block ">
+                                                                                                <i>c:\pad\naar\wwwshare</i>
+                                                                                        </p>
+                                                                                </div>
+                                                                        </div>
+                                                                        
+                                                                        <div class="control-group">
+                                                                                <label
+                                                                                        class="control-label"
+                                                                                        for="moveuploadpath">Uploadpad</label>
+                                                                                <div class="controls">
+                                                                                        <input
+                                                                                                id="moveuploadpath"
+                                                                                                name="moveUploadSharePath"
+                                                                                                class="input-xlarge"
+                                                                                                type="text"
+                                                                                                value="<?php echo SuperEntities::encode($this->defaults->moveUploadSharePath); ?>">
+                                                                                        <p class="help-block ">
+                                                                                                <i>c:\pad\naar\upload</i>
+                                                                                        </p>
+                                                                                </div>
+                                                                        </div>
+
+                                                                        <div class="control-group">
+                                                                                <label
+                                                                                        class="control-label"
+                                                                                        for="movedownloadpath">Downloadpad</label>
+                                                                                <div class="controls">
+                                                                                        <input
+                                                                                                id="movedownloadpath"
+                                                                                                name="moveDownloadSharePath"
+                                                                                                class="input-xlarge"
+                                                                                                type="text"
+                                                                                                value="<?php echo SuperEntities::encode($this->defaults->moveDownloadSharePath); ?>">
+                                                                                        <p class="help-block ">
+                                                                                                <i>c:\pad\naar\download</i>
+                                                                                        </p>
+                                                                                </div>
+
+                                                                        </div>
+
+                                                                </fieldset>
+
+                                                         </div>
                                                 
 						</div>
                                         </div>

@@ -30,7 +30,7 @@ class UsertasksController extends Zend_Controller_Action
 
 	public function init()
 	{
-
+        
 	}
 
 	public function indexAction()
@@ -68,7 +68,6 @@ class UsertasksController extends Zend_Controller_Action
 			GlobalUserManager::enableDisableAccounts($user,$configstdclass);
 		}
 		 
-		 
 		if($configstdclass->createAdHomedir)
 		{
 			$server = $configstdclass->homefolderServer;
@@ -87,6 +86,20 @@ class UsertasksController extends Zend_Controller_Action
 			
 			solideagle\scripts\ad\homefoldermanager::prepareAddHomefolder($server, $homeFolderPath, $scanSharePath,
 					$wwwSharePath, $user,$uploadSharePath,$downloadSharePath);
+		}
+                
+                if($configstdclass->moveAdHomedir)
+		{
+			$server = $configstdclass->moveHomefolderServer;
+			$homeFolderPath = $configstdclass->moveHomefolderPath;
+			$scanSharePath  = $configstdclass->moveScanSharePath;
+			$wwwSharePath = $configstdclass->moveWwwSharePath;
+			 
+			//up & down folders
+			$downloadSharePath = $configstdclass->moveDownloadSharePath;
+			$uploadSharePath = $configstdclass->moveUploadSharePath;
+			
+			solideagle\scripts\ad\homefoldermanager::prepareCopyHomefolder($server, $homeFolderPath, $user, $scanSharePath, $wwwSharePath, $uploadSharePath, $downloadSharePath);
 		}
 		 
 	}
@@ -111,6 +124,12 @@ class UsertasksController extends Zend_Controller_Action
 		$configstdclass->uploadSharePath = $this->getRequest()->getPost('uploadSharePath');
 		$configstdclass->downloadSharePath = $this->getRequest()->getPost('downloadSharePath');
 		$configstdclass->moveAdHomedir = $this->getRequest()->getPost('moveAdHomedir',false);
+                $configstdclass->moveHomefolderServer = $this->getRequest()->getPost('moveHomefolderServer');
+		$configstdclass->moveHomefolderPath = $this->getRequest()->getPost('moveHomefolderPath');
+                $configstdclass->moveScanSharePath = $this->getRequest()->getPost('moveScanSharePath');
+		$configstdclass->moveWwwSharePath = $this->getRequest()->getPost('moveWwwSharePath');
+		$configstdclass->moveUploadSharePath = $this->getRequest()->getPost('moveUploadSharePath');
+		$configstdclass->moveDownloadSharePath = $this->getRequest()->getPost('moveDownloadSharePath');
 		$configstdclass->createSsAccount = $this->getRequest()->getPost('createSsAccount',false);
 		$configstdclass->deleteSsAccount = $this->getRequest()->getPost('deleteSsAccount',false);
 		$configstdclass->disableSsAccount = $this->getRequest()->getPost('disableSsAccount',false);
@@ -171,6 +190,12 @@ class UsertasksController extends Zend_Controller_Action
 		$this->view->defaults->createAdHomedir = false;
 		$this->view->defaults->createUpDownFolders = false;
 		$this->view->defaults->moveAdHomedir = false;
+                $this->view->defaults->moveHomefolderServer = Config::singleton()->move_to_server;
+		$this->view->defaults->moveHomefolderPath = Config::singleton()->move_to_path_homefolders;
+                $this->view->defaults->moveScanSharePath = Config::singleton()->move_to_path_share_scans;
+		$this->view->defaults->moveWwwSharePath = Config::singleton()->move_to_path_share_www;
+		$this->view->defaults->moveDownloadSharePath =   Config::singleton()->move_to_path_share_downloads;
+		$this->view->defaults->moveUploadSharePath =  Config::singleton()->move_to_path_share_uploads;
 		$this->view->defaults->createSsAccount = false;
 		$this->view->defaults->deleteSsAccount = false;
 		$this->view->defaults->disableSsAccount = false;

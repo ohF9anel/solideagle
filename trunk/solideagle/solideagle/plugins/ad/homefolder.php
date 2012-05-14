@@ -4,6 +4,7 @@ namespace solideagle\plugins\ad;
 
 use solideagle\logging\Logger;
 use solideagle\Config;
+use solideagle\plugins\StatusReport;
 
 class HomeFolder
 {
@@ -16,15 +17,14 @@ class HomeFolder
      * @param group[] $arrReadRightsGroups 
      * @return boolean 
      */
-    public static function createHomeFolder($conn, $server, $path, $username, $arrReadRightsGroups = null)
+    public static function createHomeFolder($conn, $path, $username, $arrReadRightsGroups = null)
     {
-
         // make folder & subfolders
         $conn->write("mkdir " . $path . "\\" . $username . "\n");
        
         // set permissions to local folder
-        
-        $conn->write("setacl -ot file -actn ace -ace \"n:" . Config::singleton()->ad_dns . "\Domain Administrators;s:n;p:full;i:sc,so\" -on " . $path . "\\" . $username . "\n");        
+        $conn->write("setacl -ot file -actn ace -ace \"n:" .Config::singleton()->ad_dns . "\\" . $username . ";s:n;p:change;i:sc,so\" -on " . $path . "\\" . $username . "\n");
+        $conn->write("setacl -ot file -actn ace -ace \"n:" . Config::singleton()->ad_dns . "\Domain Admins;s:n;p:full;i:sc,so\" -on " . $path . "\\" . $username . "\n");        
         $conn->write("takeown /F " . $path . "\\" . $username . " /A /R /D Y\n");
         $conn->write("takeown /F " . $path . "\\" . $username . "\\*.* /A /R /D Y\n");
         
@@ -55,50 +55,13 @@ class HomeFolder
         $cmd .= "/cache:None\n";
         $conn->write($cmd);  
         
-//        $conn->write("echo ENDOFCODE\n");
-//        $conn->read("ENDOFCODE");
-        
-//        while($data = $conn->_get_channel_packet(NET_SSH2_CHANNEL_SHELL))
-//{
-//	echo $data;
-//}
-//        
         return true;
     }
     
-    public static function moveHomeFolder($oldServer, $oldPath, $newServer, $newPath, $username, $arrReadRightsGroups) 
+    public static function copyHomeFolder($conn, $username, $homefolderpath, $oldserver) 
     {
-        $conn = SSHManager::singleton()->getConnection($server);
-        if ($conn == null)
-            return false;
-        
-        if (HomeFolder::createHomeFolder($newServer, $newPath, $username, $arrReadRightsGroups))
-        {
-        
-            $conn->write("cmd\n");
-
-            $conn->write("robocopy /e \\\\" . $oldServer . "\\" . $username . "$ " . $newPath . "\\" . $username . "\n");
-
-            $conn->write("echo COPY_DONE\n");
-
-            $conn->read("COPY_DONE");
-            if (HomeFolder::removeHomeFolder($oldServer, $oldPath, $username))
-            {
-                // share and set permissions
-                $cmd = "net share " . $username . "$=" . $newPath . "\\" . $username . " /grant:" .Config::singleton()->ad_dns . "\\" . $username . ",change /grant:\"" .Config::singleton()->ad_dns . "\\Domain Admins\",read ";
-                foreach($arrReadRightsGroups as $group)
-                {
-                    $cmd .= "/grant:" .Config::singleton()->ad_dns . "\\" . $group->getName() . ",read ";
-                }
-                $cmd .= "/cache:None\n";
-
-                $conn->write($cmd);  
-
-              
-                
-                return true;
-            }
-        }
+        $conn->write("robocopy /S /E /COPYALL /PURGE /MIR /R:1 /W:1 \\\\" . $oldserver . "\\" . $username . "$ " . $homefolderpath . "\\" . $username . "\n");
+        return true;
     }
     
     public static function removeHomeFolder($server, $path, $username, $scanSharePath, $wwwSharePath, $uploadSharePath, $downloadSharePath)

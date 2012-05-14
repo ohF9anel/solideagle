@@ -6,6 +6,7 @@ use solideagle\plugins\ga\GamExecutor;
 use solideagle\plugins\StatusReport;
 use solideagle\data_access\Person;
 use solideagle\data_access\Group;
+use solideagle\data_access\helpers\UnicodeHelper;
 use solideagle\Config;
 
 class manageuser
@@ -60,51 +61,6 @@ class manageuser
         $report = GamExecutor::executeGamCommand($gamcmd);
         
         return $report;
-//        $errorHandler = new errorhandler();
-//        
-//        $descriptorspec = array(
-//                        0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
-//                        1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
-//                        2 => array("pipe", "a")   // stderr is a file to write to
-//        );
-//        
-//        // add user to ou
-//        $cmd = "gam update org ";
-//        
-//        $childou = Group::getGroupById($person->getGroupId());
-//        $parentous = Group::getParents($childou);
-//        if ($parentous != null)
-//        {
-//            for($i = sizeof($parentous) - 1; $i >= 0; $i--)
-//            {
-//                $cmd .= $parentous[$i]->getName() . "/";
-//            }
-//        }
-//        $cmd .= $childou->getName();
-//        $cmd .= " add " . $person->getAccountUsername();
-//        
-//        $proc_ls = proc_open($cmd, $descriptorspec, $pipes);
-//
-//        while(true) 
-//        {   
-//            if(($buffer = fgets($pipes[1])) === false)
-//                break;
-//
-//            if (substr($buffer, 0, 5) === 'Error')
-//                $errorHandler->addGappsError($buffer);
-//            
-//            echo $buffer;
-//            flush();
-//        }
-//        
-//        foreach ($pipes as $pipe)
-//            fclose($pipe);
-//
-//        proc_close($proc_ls);
-//
-//        var_dump($errorHandler->toString());
-//        
-//        return new StatusReport(!$errorHandler->hasErrors(), $errorHandler->toString());
     }
     
     public static function updateUser($person, $enabled)
@@ -121,47 +77,6 @@ class manageuser
         $report = GamExecutor::executeGamCommand($gamcmd);
        
         return $report;
-        
-//        $errorHandler = new errorhandler();
-//        
-//        $descriptorspec = array(
-//                        0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
-//                        1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
-//                        2 => array("pipe", "a")   // stderr is a file to write to
-//        );
-//        $cmd = "gam update user " . $person->getAccountUsername() . " ";
-//        $cmd .= "username " . $person->getAccountUsername() . " ";
-//        $cmd .= "firstname " . $person->getFirstName() . " ";
-//        $cmd .= "lastname " . $person->getName() . " ";
-//        $cmd .= "password " . $person->getAccountPassword() . " ";
-//        
-//        if (!$enabled)
-//            $cmd .= "suspended on";
-//        else
-//            $cmd .= "suspended off";
-//
-//        $proc_ls = proc_open($cmd, $descriptorspec, $pipes);
-//
-//        while(true) 
-//        {   
-//            if(($buffer = fgets($pipes[1])) === false)
-//                break;
-//
-//            if (substr($buffer, 0, 5) === 'Error')
-//                $errorHandler->addGappsError($buffer);
-//            
-//            echo $buffer;
-//            flush();
-//        }
-//
-//        foreach ($pipes as $pipe)
-//            fclose($pipe);
-//
-//        proc_close($proc_ls);
-//
-//        var_dump($errorHandler->toString());
-//        
-//        return new StatusReport(!$errorHandler->hasErrors(), $errorHandler->toString());
     }
     
     public static function updatePassword($username, $password)
@@ -181,38 +96,6 @@ class manageuser
         $report = GamExecutor::executeGamCommand($gamcmd);
         
         return $report;
-//        $errorHandler = new errorhandler();
-//        
-//        $descriptorspec = array(
-//                        0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
-//                        1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
-//                        2 => array("pipe", "a")   // stderr is a file to write to
-//        );
-//        
-//        $cmd = "gam delete user " . $person->getAccountUsername();
-//
-//        $proc_ls = proc_open($cmd, $descriptorspec, $pipes);
-//
-//        while(true) 
-//        {   
-//            if(($buffer = fgets($pipes[1])) === false)
-//                break;
-//
-//            if (substr($buffer, 0, 5) === 'Error')
-//                $errorHandler->addGappsError($buffer);
-//            
-//            echo $buffer;
-//            flush();
-//        }
-//
-//        foreach ($pipes as $pipe)
-//            fclose($pipe);
-//
-//        proc_close($proc_ls);
-//
-//        var_dump($errorHandler->toString());
-//        
-//        return new StatusReport(!$errorHandler->hasErrors(), $errorHandler->toString());
     }
     
     public function setPhoto($username, $filepath)
@@ -222,38 +105,6 @@ class manageuser
         $report = GamExecutor::executeGamCommand($gamcmd);
         
         return $report;
-//        $errorHandler = new errorhandler();
-//        
-//        $descriptorspec = array(
-//                        0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
-//                        1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
-//                        2 => array("pipe", "a")   // stderr is a file to write to
-//        );
-//        
-//        $cmd = "gam user " . $username . " update photo " . $filepath;
-//
-//        $proc_ls = proc_open($cmd, $descriptorspec, $pipes);
-//
-//        while(true) 
-//        {   
-//            if(($buffer = fgets($pipes[1])) === false)
-//                break;
-//
-//            if (substr($buffer, 0, 5) === 'Error')
-//                $errorHandler->addGappsError($buffer);
-//            
-//            echo $buffer;
-//            flush();
-//        }
-//
-//        foreach ($pipes as $pipe)
-//            fclose($pipe);
-//
-//        proc_close($proc_ls);
-//
-//        var_dump($errorHandler->toString());
-//        
-//        return new StatusReport(!$errorHandler->hasErrors(), $errorHandler->toString());
     }
     
     public static function setEmailSignature($username, $signature)
@@ -265,11 +116,15 @@ class manageuser
         return $report;
     }
     
-    public static function setAlias($username)
+    public static function setAlias($username, $firstname, $lastname)
     {
-        $gamcmd = "user " . $username . " signature \"" . $signature . "\"";
+        $alias = UnicodeHelper::cleanEmailString($firstname) . "." . UnicodeHelper::cleanEmailString($lastname);
+        
+        $gamcmd = "create nickname " . $alias . " user \"" . $username . "\"";
         
         $report = GamExecutor::executeGamCommand($gamcmd);
+        
+        var_dump($report);
         
         return $report;
     }
