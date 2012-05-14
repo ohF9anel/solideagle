@@ -29,17 +29,18 @@ class Logger
 		return Logger::$logger;
 	}
 	
-	public static function log($errormessage,$messagetype = PEAR_LOG_ERR)
+	public static function log($errormessage,$messagetype = PEAR_LOG_ERR,$hidepathandline = false)
 	{
 		$traces = debug_backtrace();
 		
 		$logplace = "";
 		
-		if (isset($traces[2]))
-		{
-			if (isset($traces[2]["file"]) && isset($traces[2]["line"]))
-                            $logplace = "Path: " . $traces[2]["file"] . "\nLine: " . $traces[2]["line"] . "\n\n";
-		}
+//		if (isset($traces[2]))
+//		{
+//			if (isset($traces[2]["file"]) && isset($traces[2]["line"]))
+                        if (!$hidepathandline)
+                            $logplace = "Path: " . $traces[1]["file"] . "\nLine: " . $traces[1]["line"] . "\n\n";
+//		}
 		
 		self::getLogger()->log("\n" . $logplace . $errormessage . "\n", $messagetype);
 	}
