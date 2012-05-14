@@ -12,10 +12,10 @@ use solideagle\data_access\TaskInterface;
 
 class groupmanager implements TaskInterface
 {
-	const ActionAdd = 0;
-	const ActionMove = 1;
-	const ActionModify = 2;
-	const ActionRemove = 3;
+	const ActionAdd = "AddGroup";
+	const ActionMove = "MoveGroup";
+	const ActionModify = "ModifyGroup";
+	const ActionRemove = "RemoveGroup";
 
 	/**
 	 * (non-PHPdoc)

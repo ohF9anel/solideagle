@@ -10,10 +10,10 @@ use solideagle\data_access\TaskInterface;
 
 class oumanager implements TaskInterface
 {
-	const ActionAddOu = 0;
-	const ActionMoveOu = 1;
-	const ActionUpdateOu = 2;
-	const ActionRemoveOu = 3;
+	const ActionAddOu = "AddOU";
+	const ActionMoveOu = "MoveOU";
+	const ActionUpdateOu = "UpdateOU";
+	const ActionRemoveOu = "RemoveOU";
 
 	public function runTask($taskqueue)
 	{
@@ -22,7 +22,7 @@ class oumanager implements TaskInterface
 		if($config["action"] == self::ActionAddOu && isset($config["ou"]) && isset($config["parentous"]))
 		{
 			$ret = manageou::addOu($config["ou"], $config["parentous"]);
-
+                        
 			if($ret->isSucces())
 			{
 				return true;

@@ -118,13 +118,22 @@ class manageuser
     
     public static function setAlias($username, $firstname, $lastname)
     {
-        $alias = UnicodeHelper::cleanEmailString($firstname) . "." . UnicodeHelper::cleanEmailString($lastname);
-        
-        $gamcmd = "create nickname " . $alias . " user \"" . $username . "\"";
-        
-        $report = GamExecutor::executeGamCommand($gamcmd);
-        
-        var_dump($report);
+        for($i = 0; $i < 10; $i++)
+        {
+            $alias = UnicodeHelper::cleanEmailString($firstname) . "." . UnicodeHelper::cleanEmailString($lastname);
+            
+            if ($i != 0)
+                $alias .= $i;
+
+            $gamcmd = "create nickname " . $alias . " user \"" . $username . "\"";
+
+            $report = GamExecutor::executeGamCommand($gamcmd);
+
+            if(!$report->isSucces() && $report->getError() == "EntityExists")
+                continue;
+            
+            break;
+        }
         
         return $report;
     }

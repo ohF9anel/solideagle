@@ -12,16 +12,16 @@ use solideagle\Config;
 
 class usermanager implements TaskInterface
 {
-	const ActionAddUser = 0;
-	const ActionUpdateUser = 1;
-	const ActionDelUser = 2;
-	const ActionAddUserToOu = 3;
-	const ActionSetPhoto = 4;
-	const ActionUpdatePassword = 5;
-	const ActionAddUserToGroup = 6;
-	const ActionRemoveUserFromGroup = 7;
-        const ActionSetEmailSignature = 8;
-        const ActionSetAlias = 9;
+	const ActionAddUser = "AddUser";
+	const ActionUpdateUser = "UpdateUser";
+	const ActionDelUser = "DelUser";
+	const ActionAddUserToOu = "AddUserToOU";
+	const ActionSetPhoto = "SetPhoto";
+	const ActionUpdatePassword = "UpdatePassword";
+	const ActionAddUserToGroup = "AddUserToGroup";
+	const ActionRemoveUserFromGroup = "RemoveUserFromGroup";
+        const ActionSetEmailSignature = "SetEmailSignature";
+        const ActionSetAlias = "SetAlias";
 
 	public function runTask($taskqueue)
 	{
@@ -182,6 +182,7 @@ class usermanager implements TaskInterface
                 self::prepareAddUserToOu($person);
                 self::prepareAddUserToGroup($person);
                 self::prepareSetEmailSignature($person);
+                self::prepareSetAlias($person);
 	}
 
 	/**
@@ -207,8 +208,6 @@ class usermanager implements TaskInterface
                     self::prepareSetEmailSignature($person);
                     
                 }
-                self::prepareSetAlias($person);
-                    
 	}
 
 	public static function prepareChangePassword($person)

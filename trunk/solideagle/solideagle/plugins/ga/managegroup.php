@@ -5,6 +5,7 @@ namespace solideagle\plugins\ga;
 use solideagle\plugins\ga\GamExecutor;
 use solideagle\plugins\StatusReport;
 use solideagle\Config;
+use solideagle\data_access\helpers\UnicodeHelper;
 
 
 class managegroup
@@ -12,7 +13,8 @@ class managegroup
     
     public static function addGroup($group)
     {
-        $gamcmd = "create group \"" . $group->getName() . "\"";
+        $gamcmd = "create group \"" . UnicodeHelper::cleanEmailString($group->getName()) . "\"";
+        $gamcmd .= " name \"" . $group->getName() . "\"";
         if ($group->getDescription() != null)
             $gamcmd .= " description \"" . $group->getDescription() . "\"";
         
@@ -24,7 +26,7 @@ class managegroup
     public static function addGroupToGroup($childGroupName, $parentGroupName)
     {
         // clean chars not allowed in email address
-        $cleanGroupName = \solideagle\data_access\helpers\UnicodeHelper::cleanEmailString($childGroupName);
+        $cleanGroupName = UnicodeHelper::cleanEmailString($childGroupName);
         
         $email = $cleanGroupName . "@" . Config::singleton()->googledomain;
         $gamcmd = "update group \"" . $parentGroupName . "\" add member " . $email;
@@ -37,7 +39,7 @@ class managegroup
     public static function removeGroupFromGroup($childGroupName, $parentGroupName)
     {
         // clean chars not allowed in email address
-        $cleanGroupName = \solideagle\data_access\helpers\UnicodeHelper::cleanEmailString($childGroupName);
+        $cleanGroupName = UnicodeHelper::cleanEmailString($childGroupName);
         
         $email = $cleanGroupName . "@" . Config::singleton()->googledomain;
         $gamcmd = "update group \"" . $parentGroupName . "\" remove " . $email;
@@ -55,7 +57,7 @@ class managegroup
 
     public static function removeGroup($group)
     {
-        $gamcmd = "delete group \"" . $group->getName() . "\"";
+        $gamcmd = "delete group \"" . UnicodeHelper::cleanEmailString($group->getName()) . "\"";
         
         $report = GamExecutor::executeGamCommand($gamcmd);
         

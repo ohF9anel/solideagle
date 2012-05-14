@@ -6,14 +6,17 @@ use solideagle\data_access\Group;
 use solideagle\plugins\ga\managegroup;
 use solideagle\data_access\TaskQueue;
 use solideagle\data_access\TaskInterface;
+use solideagle\plugins\StatusReport;
+use solideagle\Config;
 
 
 class groupmanager implements TaskInterface
 {
-	const ActionAddGroup = 0;
-	const ActionRemoveGroup = 1;
-        const ActionAddGroupToGroup = 2;
-        const ActionRemoveGroupFromGroup = 3;
+	const ActionAddGroup = "AddGroup";
+	const ActionRemoveGroup = "RemoveGroup";
+        const ActionAddGroupToGroup = "AddGroupToGroup";
+        const ActionRemoveGroupFromGroup = "RemoveGroupFromGroup";
+        const ActionRenameGroup = "RenameGroup";
 
 	public function runTask($taskqueue)
 	{
@@ -63,6 +66,20 @@ class groupmanager implements TaskInterface
 				return false;
 			}
 		}
+                else if($config["action"] == self::ActionRenameGroup && isset($config["oldgroupname"]) && isset($config["newgroupname"]))
+		{
+			$ret = new StatusReport(false,"Deze actie wordt niet ondersteund door GAM. Hernoem de groep \""
+                                . $config["oldgroupname"] . "\" manueel naar \"" . $config["newgroupname"] . "\" en e-mailadres naar \""
+                                . \solideagle\data_access\helpers\UnicodeHelper::cleanEmailString($config["newgroupname"]) 
+                                . "@" . Config::singleton()->googledomain . "\".");
+
+			if($ret->isSucces())
+				return true;
+			else{
+				$taskqueue->setErrorMessages($ret->getError());
+				return false;
+			}
+		}
 		else
 		{
 			$taskqueue->setErrorMessages("Probleem met configuratie");
@@ -104,6 +121,15 @@ class groupmanager implements TaskInterface
                 $config["parentgroupname"] = $parentgroup->getName();
 
 		TaskQueue::insertNewTask($config, $childgroup->getId(), TaskQueue::TypeGroup);
+	}
+        
+        public static function prepareRenameGroup($oldgroup, $newgroup)
+	{
+		$config["action"] = self::ActionRenameGroup;
+		$config["oldgroupname"] = $oldgroup->getName();
+                $config["newgroupname"] = $newgroup->getName();
+
+		TaskQueue::insertNewTask($config, $oldgroup->getId(), TaskQueue::TypeGroup);
 	}
 
 }
