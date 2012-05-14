@@ -8,10 +8,10 @@ use solideagle\data_access\TaskInterface;
 
 class oumanager implements TaskInterface
 {
-	const ActionAdd = 0;
-	const ActionDelete = 1;
-	const ActionModify = 2;
-	const ActionMove = 3;
+	const ActionAdd = "AddOU";
+	const ActionDelete = "DeleteOU";
+	const ActionModify = "ModifyOU";
+	const ActionMove = "MoveOU";
 
 	public function runTask($taskqueue)
 	{

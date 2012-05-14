@@ -24,9 +24,9 @@ use solideagle\plugins\ad\SSHManager;
 
 class homefoldermanager implements TaskInterface
 {
-	const ActionAddHomefolder = 0;
-	const ActionCopyHomefolder = 1;
-	const ActionRemoveShare = 2;
+	const ActionAddHomefolder = "AddHomefolder";
+        const ActionCopyHomefolder = "CopyHomefolder";
+        const ActionRemoveShare = "RemoveShare";
 
 	public function runTask($taskqueue)
 	{

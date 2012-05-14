@@ -27,6 +27,8 @@ class groupmanager {
 		ad\groupmanager::prepareRenameGroup($oldgroup, $newgroup);
                 
 		ga\oumanager::prepareUpdateOu($parents,$oldgroup, $newgroup);
+                if($oldgroup->getName() != $newgroup->getName())
+                    ga\groupmanager::prepareRenameGroup($oldgroup, $newgroup);
                 
 		Smartschool\groupmanager::prepareModifyGroup($parents,$oldgroup, $newgroup);
 	}

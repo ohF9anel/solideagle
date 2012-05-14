@@ -16,12 +16,12 @@ use solideagle\data_access\TaskInterface;
 class usermanager implements TaskInterface
 {
 
-	const ActionAddUser = 0;
-	const ActionUpdateUser = 1;
-	const ActionRemoveUser = 2;
-	const ActionMoveUser = 3;
-	const ActionUpdatePassword = 4;
-        const ActionSetPhoto = 5;
+	const ActionAddUser = "AddUser";
+	const ActionUpdateUser = "UpdateUser";
+	const ActionRemoveUser = "RemoveUser";
+	const ActionMoveUser = "MoveUser";
+	const ActionUpdatePassword = "UpdatePassword";
+        const ActionSetPhoto = "SetPhoto";
 
 	public function runTask($taskqueue)
 	{

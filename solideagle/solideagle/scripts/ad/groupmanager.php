@@ -9,10 +9,10 @@ use solideagle\data_access\Group;
 
 class groupmanager implements TaskInterface
 {
-    const ActionAdd = 0;
-    const ActionRemove = 1;
-    const ActionRename = 2;
-    const ActionMove = 3;
+    const ActionAdd = "AddGroup";
+    const ActionRemove = "RemoveGroup";
+    const ActionRename = "RenameGroup";
+    const ActionMove = "MoveGroup";
 
     public function runTask($taskqueue)
     {

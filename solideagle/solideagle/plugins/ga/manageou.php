@@ -167,7 +167,7 @@ class manageou
     
     public static function updateOU($oldGroup, $newGroup, $parentOus)
     {
-        $cmd = "update org ";
+        $cmd = "update org \"";
         
         // ou to update
         if ($parentOus != null)
@@ -177,13 +177,15 @@ class manageou
                 $cmd .= $parentOus[$i]->getName() . "/";
             }
         }
-        $cmd .= $oldGroup->getName();
+        $cmd .= $oldGroup->getName() . "\"";
 
         // rename ou?
-        $cmd .= " name " . $newGroup->getName();
+        $cmd .= " name \"" . $newGroup->getName() . "\"";
         
         // set new description?
         $cmd .= " description \"" . $newGroup->getDescription() . "\"";
+
+        var_dump($cmd);
         
         $report = GamExecutor::executeGamCommand($cmd);
         

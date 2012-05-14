@@ -1513,32 +1513,32 @@ class Person
 //                
 //	}
 //        
-//        public static function setTypeLeerling($id)
-//	{
-//		$sql = "INSERT INTO  `type_person`
-//		(
-//		`type_id`,
-//		`person_id`
-//		)
-//		VALUES
-//		(
-//		:type_id,
-//		:person_id
-//		);";
-//
-//		$cmd = new DatabaseCommand($sql);
-//
-//		$cmd->newQuery($sql);
-//                $cmd->addParam(":type_id", 3);
-//                $cmd->addParam(":person_id", $id);
-//
-//                $cmd->execute();
-//                
-//                $cmd->newQuery("SELECT LAST_INSERT_ID();");
-//
-//                return $id;
-//                
-//	}
+        public static function setTypeLeerling($id)
+	{
+		$sql = "INSERT INTO  `type_person`
+		(
+		`type_id`,
+		`person_id`
+		)
+		VALUES
+		(
+		:type_id,
+		:person_id
+		);";
+
+		$cmd = new DatabaseCommand($sql);
+
+		$cmd->newQuery($sql);
+                $cmd->addParam(":type_id", 3);
+                $cmd->addParam(":person_id", $id);
+
+                $cmd->execute();
+                
+                $cmd->newQuery("SELECT LAST_INSERT_ID();");
+
+                return $id;
+                
+	}
         
 }
 
