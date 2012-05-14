@@ -47,24 +47,20 @@ class homefoldermanager implements TaskInterface
 			{
 				Logger::log("Creating homefolder failed! ",PEAR_LOG_ERR);
 			}
-			if(!ScanFolder::setScanFolder($conn, $config["server"], $config["homefolderpath"], $config["scansharepath"], $username))
+			if(!ScanFolder::setScanFolder($conn, $config["homefolderpath"], $config["scansharepath"], $username))
 			{
 				Logger::log("Setting scanfolder failed! ",PEAR_LOG_ERR);
 			}
-			if(!WwwFolder::setWwwFolder($conn ,$config["server"], $config["homefolderpath"],$config["wwwsharepath"], $username))
+			if(!WwwFolder::setWwwFolder($conn, $config["homefolderpath"],$config["wwwsharepath"], $username))
 			{
 				Logger::log("Setting www folder failed! ",PEAR_LOG_ERR);
 			}
 
 			if(isset($config["uploadsharepath"]))
-				UploadFolder::setUploadFolder($conn,$config["server"], $config["homefolderpath"], $config["uploadsharepath"], $username);
+				UploadFolder::setUploadFolder($conn, $config["homefolderpath"], $config["uploadsharepath"], $username);
 
 			if(isset($config["downloadsharepath"]))
-				DownloadFolder::setDownloadFolder($conn,$config["server"], $config["homefolderpath"], $config["downloadsharepath"], $username);
-
-		
-
-		
+				DownloadFolder::setDownloadFolder($conn, $config["homefolderpath"], $config["downloadsharepath"], $username);
 
 			$ret = ManageUser::setHomeFolder($username, "\\\\" . $config["server"]);
 			if($ret->isSucces())
@@ -82,7 +78,7 @@ class homefoldermanager implements TaskInterface
 				return false;
 			}
 		}
-		else if($config["action"] == self::ActionCopyHomefolder && isset($config["server"]) && isset($config["homefolderpath"]) && isset($config["person"]) && isset($config["oldserver"]))
+		else if($config["action"] == self::ActionCopyHomefolder && isset($config["server"]) && isset($config["homefolderpath"]) && isset($config["person"]) && isset($config["oldserver"]) && isset($config["oldshare"]))
 		{
 			$username = $config["person"]->getAccountUsername();
 
@@ -90,10 +86,10 @@ class homefoldermanager implements TaskInterface
 
 			$ret = HomeFolder::copyHomeFolder($conn, $username, $config["homefolderpath"], $config["oldserver"]);
 
-		
-
 			if($ret)
 			{
+                                $conn = SSHManager::singleton()->getConnection($config["oldserver"]);
+                                $ret = HomeFolder::removeShare($conn, $config["oldshare"]);
 				return true;
 			}if(!$ret)
 			{
@@ -155,14 +151,16 @@ class homefoldermanager implements TaskInterface
 		{
 			if ($oldsharepath[0] == "\\" && $oldsharepath[1] == "\\")
 			{
-				$oldserver = substr($oldsharepath, 2);
+				$serversharepath = substr($oldsharepath, 2);
 
-				for ($i = 0; $i < strlen($oldserver); $i++)
+				for ($i = 0; $i < strlen($serversharepath); $i++)
 				{
-					if ($oldserver[$i] == "/" || $oldserver[$i] == "\\")
+					if ($serversharepath[$i] == "/" || $serversharepath[$i] == "\\")
 					{
-						$oldserver = substr($oldserver, 0, $i);
-						$config["oldserver"] = $oldserver;
+						$server = substr($serversharepath, 0, $i);
+						$config["oldserver"] = $server;
+                                                $config["oldshare"] = substr($serversharepath, $i + 1);
+                                                
 						break;
 					}
 				}

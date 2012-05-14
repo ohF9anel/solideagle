@@ -10,7 +10,7 @@ use solideagle\Config;
 class WwwFolder
 {
     
-    public static function setWwwFolder($conn,$server, $path, $wwwSharePath, $username, $enabled = true)
+    public static function setWwwFolder($conn, $path, $wwwSharePath, $username, $enabled = true)
     {
       
 

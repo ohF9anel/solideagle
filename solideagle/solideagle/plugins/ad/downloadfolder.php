@@ -7,7 +7,7 @@ use solideagle\Config;
 
 class DownloadFolder
 {
-    public static function setDownloadFolder($conn,$server, $path, $downloadSharePath, $username, $enabled = true)
+    public static function setDownloadFolder($conn, $path, $downloadSharePath, $username, $enabled = true)
     {
        
         

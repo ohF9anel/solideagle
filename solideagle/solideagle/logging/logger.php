@@ -37,7 +37,8 @@ class Logger
 		
 		if (isset($traces[2]))
 		{
-			$logplace = "Path: " . $traces[2]["file"] . "\nLine: " . $traces[2]["line"] . "\n\n";
+			if (isset($traces[2]["file"]) && isset($traces[2]["line"]))
+                            $logplace = "Path: " . $traces[2]["file"] . "\nLine: " . $traces[2]["line"] . "\n\n";
 		}
 		
 		self::getLogger()->log("\n" . $logplace . $errormessage . "\n", $messagetype);

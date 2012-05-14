@@ -64,37 +64,43 @@ class HomeFolder
         return true;
     }
     
-    public static function removeHomeFolder($server, $path, $username, $scanSharePath, $wwwSharePath, $uploadSharePath, $downloadSharePath)
+    public static function removeShare($conn, $share)
     {
-        $conn = SSHManager::singleton()->getConnection($server);
-        if ($conn == null)
-            return false;
-        
-        $conn->write("cmd\n");
-        
-        // remove junctions
-        $conn->write("rmdir " . $scanSharePath . "\\" . $username . " /s /q\n");
-        $conn->write("rmdir " . $wwwSharePath . "\\" . $username . " /s /q\n");
-        $conn->write("rmdir " . $uploadSharePath . "\\" . $username . " /s /q\n");
-        $conn->write("rmdir " . $downloadSharePath . "\\" . $username . " /s /q\n");
-        
-        // unshare homefolder
-        $conn->write("net share /DELETE /y " . $username . "$ \n");
-        
-        $conn->write("echo SHARE_DELETED\n");
-        $conn->read('SHARE_DELETED');
-        
-        // delete folder and subfolders
-        $conn->write("rd /s /q " . $path . "\\" . $username . "\n");
-      
-        $conn->write("exit\nexit\n");
-        $conn->write("echo ENDOFCODE");
-        $conn->read('ENDOFCODE');
-        $conn->_close_channel(NET_SSH2_CHANNEL_SHELL); 
-        $conn->disconnect();
-        
+        $conn->write("net share " . $share . " /DELETE \n");
         return true;
     }
+//    
+//    public static function removeHomeFolder($server, $path, $username, $scanSharePath, $wwwSharePath, $uploadSharePath, $downloadSharePath)
+//    {
+//        $conn = SSHManager::singleton()->getConnection($server);
+//        if ($conn == null)
+//            return false;
+//        
+//        $conn->write("cmd\n");
+//        
+//        // remove junctions
+//        $conn->write("rmdir " . $scanSharePath . "\\" . $username . " /s /q\n");
+//        $conn->write("rmdir " . $wwwSharePath . "\\" . $username . " /s /q\n");
+//        $conn->write("rmdir " . $uploadSharePath . "\\" . $username . " /s /q\n");
+//        $conn->write("rmdir " . $downloadSharePath . "\\" . $username . " /s /q\n");
+//        
+//        // unshare homefolder
+//        $conn->write("net share /DELETE /y " . $username . "$ \n");
+//        
+//        $conn->write("echo SHARE_DELETED\n");
+//        $conn->read('SHARE_DELETED');
+//        
+//        // delete folder and subfolders
+//        $conn->write("rd /s /q " . $path . "\\" . $username . "\n");
+//      
+//        $conn->write("exit\nexit\n");
+//        $conn->write("echo ENDOFCODE");
+//        $conn->read('ENDOFCODE');
+//        $conn->_close_channel(NET_SSH2_CHANNEL_SHELL); 
+//        $conn->disconnect();
+//        
+//        return true;
+//    }
 }
 
 ?>
