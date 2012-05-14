@@ -42,6 +42,14 @@ class SSHManager
 
 		return $conn;
 	}
+	
+	public function __destruct()
+	{
+		foreach($this->_connections as $conn)
+		{
+			$conn->exitShell();
+		}
+	}
 }
 
 class sshconn
@@ -189,9 +197,11 @@ class sshconn
 		return true;
 	}
 	
-	public function exitShell()
+	
+	private function exitShell()
 	{
 		$this->write("exit\nexit\n"); //exit shell
+		endConn();
 	}
 
 	private function endConn()
@@ -205,13 +215,13 @@ class sshconn
 		Logger::log("Closed SSH connection to: " . $this->server ,PEAR_LOG_INFO);
 	}
 
-	public function __destruct(){
+	/*public function __destruct(){
 		
 		foreach ($this->pipes as $pipe)
 			fclose($pipe);
 
 		proc_close($this->handle);
-	}
+	}*/
 }
 
 
