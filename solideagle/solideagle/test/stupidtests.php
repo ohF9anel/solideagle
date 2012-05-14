@@ -17,11 +17,16 @@ spl_autoload_register();
 
 $string = "string";
 
+$string = substr($string, 2);
+
+var_dump($string);
+
+
 //for($i = 0; $i < strlen($string); $i++)
 //{
 //    var_dump($string[$i]);
 //}
-echo date('YmdHis');
+//echo date('YmdHis');
 
 //$user = Person::getPersonById(158);
 //echo "<pre>";

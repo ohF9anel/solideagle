@@ -21,6 +21,7 @@ class usermanager implements TaskInterface
 	const ActionAddUserToGroup = 6;
 	const ActionRemoveUserFromGroup = 7;
         const ActionSetEmailSignature = 8;
+        const ActionSetAlias = 9;
 
 	public function runTask($taskqueue)
 	{
@@ -146,6 +147,17 @@ class usermanager implements TaskInterface
 				return false;
 			}
 		}
+                else if($config["action"] == self::ActionSetAlias && isset($config["username"]) && isset($config["lastname"]) && isset($config["firstname"]))
+		{
+			$ret = manageuser::setAlias($config["username"], $config["firstname"], $config["lastname"]);
+
+			if($ret->isSucces())
+				return true;
+			else{
+				$taskqueue->setErrorMessages($ret->getError());
+				return false;
+			}
+		}
 		else
 		{
 			$taskqueue->setErrorMessages("Probleem met configuratie");
@@ -155,9 +167,6 @@ class usermanager implements TaskInterface
 
 	public static function prepareAddUser($person, $enabled = true)
 	{
-
-		//                        if ($person->getPictureUrl() != null)
-		//                            \solideagle\scripts\ga\usermanager::prepareSetPhoto($person);
 		self::prepareAddUserToOu($person);
 		self::prepareAddUserToGroup($person);
 
@@ -169,6 +178,7 @@ class usermanager implements TaskInterface
                 
                 if ($person->getPictureUrl() != null)
                     self::prepareSetPhoto($person);
+                
                 self::prepareAddUserToOu($person);
                 self::prepareAddUserToGroup($person);
                 self::prepareSetEmailSignature($person);
@@ -182,10 +192,6 @@ class usermanager implements TaskInterface
 	 */
 	public static function prepareUpdateUser($person, $oldPerson, $enabled)
 	{
-
-		//                        if ($person->getPictureUrl() != null)
-		//                           self::prepareSetPhoto($person);
-
 		$config["action"] = self::ActionUpdateUser;
 		$config["user"] = $person;
 
@@ -197,7 +203,12 @@ class usermanager implements TaskInterface
                     self::prepareSetPhoto($person);
                 
                 if ($oldPerson->getFirstName() != $person->getFirstName() || $oldPerson->getName() != $person->getName())
+                {
                     self::prepareSetEmailSignature($person);
+                    
+                }
+                self::prepareSetAlias($person);
+                    
 	}
 
 	public static function prepareChangePassword($person)
@@ -269,6 +280,16 @@ class usermanager implements TaskInterface
                 $signature .= "http://www.dbz.be/";
                 
                 $config["signature"] = $signature;
+
+		TaskQueue::insertNewTask($config, $person->getId(), TaskQueue::TypePerson);
+        }
+        
+        public static function prepareSetAlias($person)
+        {
+                $config["action"] = self::ActionSetAlias;
+		$config["username"] = $person->getAccountUsername();
+                $config["firstname"] = $person->getFirstName();
+                $config["lastname"] = $person->getName();
 
 		TaskQueue::insertNewTask($config, $person->getId(), TaskQueue::TypePerson);
         }
