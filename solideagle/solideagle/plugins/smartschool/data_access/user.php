@@ -1,6 +1,8 @@
 <?php
 namespace solideagle\plugins\smartschool\data_access;
 
+use solideagle\plugins\smartschool\GroupsAndUsersCache;
+
 use solideagle\data_access\Group;
 
 use solideagle\data_access\Type;
@@ -37,7 +39,7 @@ class User
 	private $stamboeknummer;
 	private $basisrol; //(verplicht op te geven: 'leerling', 'leerkracht' of 'andere')
 	private $untis;
-        private $photo;
+	private $photo;
 
 	//class properties
 	private $classCodes = ""; //csv, see saveUserToClasses documentation from smartschool
@@ -63,7 +65,7 @@ class User
 		$returnvalue = $api->saveUser($user->internnumber,$user->username,$user->passwd1,$user->passwd2,$user->passwd3,$user->name,$user->surname,$user->extranames,$user->initials,$user->sex,$user->birthday,$user->birthplace,$user->birthcountry,$user->address,$user->postalcode,$user->location,$user->country,$user->email,$user->mobilephone,$user->homephone,$user->fax,$user->prn,$user->stamboeknummer,$user->basisrol,$user->untis);
 
 		var_dump($user);
-		
+
 		if($returnvalue != 0)
 			return new StatusReport(false,Api::singleton()->getErrorFromCode($returnvalue));
 
@@ -81,48 +83,68 @@ class User
 	}
 
 	public static function updateUser($user)
-	{	
+	{
 		$api = Api::singleton();
 		$returnvalue = $api->saveUser($user->internnumber,$user->username,
-		//undocumented feature: if you pass null to the password fields they will not update
-		NULL/*$user->passwd1*/,NULL/*$user->passwd2*/,NULL/*$user->passwd3*/,
-		$user->name,$user->surname,$user->extranames,$user->initials,$user->sex,$user->birthday,
-		$user->birthplace,$user->birthcountry,$user->address,$user->postalcode,$user->location,
-		$user->country,$user->email,$user->mobilephone,$user->homephone,$user->fax,
-		$user->prn,$user->stamboeknummer,$user->basisrol,$user->untis);
-		
+				//undocumented feature: if you pass null to the password fields they will not update
+				NULL/*$user->passwd1*/,NULL/*$user->passwd2*/,NULL/*$user->passwd3*/,
+				$user->name,$user->surname,$user->extranames,$user->initials,$user->sex,$user->birthday,
+				$user->birthplace,$user->birthcountry,$user->address,$user->postalcode,$user->location,
+				$user->country,$user->email,$user->mobilephone,$user->homephone,$user->fax,
+				$user->prn,$user->stamboeknummer,$user->basisrol,$user->untis);
+
 		if($returnvalue != 0)
 			return new StatusReport(false,Api::singleton()->getErrorFromCode($returnvalue));
-		
+
 		$returnvalue = $api->setAccountStatus($user->internnumber,$user->accountStatus);
-		
+
 		if($returnvalue != 0)
 			return new StatusReport(false,Api::singleton()->getErrorFromCode($returnvalue));
-		
+
 		return new StatusReport();
 	}
-	
+
 	public static function updatePassword($user)
 	{
 		$api = Api::singleton();
-		
+
 		$returnvalue = $api->savePassword($user->internnumber,$user->passwd1,0);
-		
+
 		if($returnvalue != 0)
 			return new StatusReport(false,Api::singleton()->getErrorFromCode($returnvalue));
-		
+
 		return new StatusReport();
 	}
 	
-	public static function moveUser($user)
+	/**
+	 * 
+	 * @param User $user
+	 * @param string $oldgroupcode
+	 * @return \solideagle\plugins\StatusReport
+	 */
+
+	public static function moveUser($user,$oldgroupcode)
 	{
 		$api = Api::singleton();
 		
-		$returnvalue = $api->saveUserToClasses($user->internnumber,$user->classCodes);
+		$usergroupcodes = GroupsAndUsersCache::getUserGroupCodes($user->getUsername());
 		
+		foreach($usergroupcodes as $usergroupcode)
+		{
+			if($usergroupcode == $oldgroupcode)
+			{
+				continue;
+			}
+			
+			$user->addClass($usergroupcode);
+		
+		}
+
+		$returnvalue = $api->saveUserToClasses($user->internnumber,$user->classCodes);
+
 		if($returnvalue != 0)
 			return new StatusReport(false,Api::singleton()->getErrorFromCode($returnvalue));
-		
+
 		return new StatusReport();
 	}
 
@@ -133,20 +155,20 @@ class User
 
 		if($returnvalue != 0)
 			return new StatusReport(false,Api::singleton()->getErrorFromCode($returnvalue));
-		
+
 		return new StatusReport();
 	}
-        
-        public static function setPhoto($person, $encodedPhoto)
-        {
-                $api = Api::singleton();
-                $returnvalue = $api->setAccountPhoto($person->getUniqueIdentifier(), $encodedPhoto);
-                
-                if($returnvalue != 0)
+
+	public static function setPhoto($person, $encodedPhoto)
+	{
+		$api = Api::singleton();
+		$returnvalue = $api->setAccountPhoto($person->getUniqueIdentifier(), $encodedPhoto);
+
+		if($returnvalue != 0)
 			return new StatusReport(false,Api::singleton()->getErrorFromCode($returnvalue));
 
 		return new StatusReport();
-        }
+	}
 
 	public function setInternnumber($internnumber)
 	{
@@ -413,8 +435,8 @@ class User
 	{
 		return $this->accountStatus;
 	}
-        
-        
+
+
 	/**
 	 *
 	 * @param Person $person
@@ -426,7 +448,7 @@ class User
 		$user = new User();
 
 		$user->setInternnumber($person->getUniqueIdentifier());
-		
+
 		$user->setPasswd1($person->getAccountPassword());
 		$user->setPasswd2("P@ssw0rd");
 		$user->setPasswd3("P@ssw0rd1");

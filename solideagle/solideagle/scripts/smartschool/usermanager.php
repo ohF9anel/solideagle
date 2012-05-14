@@ -16,12 +16,12 @@ use solideagle\data_access\TaskInterface;
 class usermanager implements TaskInterface
 {
 
-	const ActionAddUser = "AddUser";
-	const ActionUpdateUser = "UpdateUser";
-	const ActionRemoveUser = "RemoveUser";
-	const ActionMoveUser = "MoveUser";
-	const ActionUpdatePassword = "UpdatePassword";
-        const ActionSetPhoto = "SetPhoto";
+	const ActionAddUser = 0;
+	const ActionUpdateUser = 1;
+	const ActionRemoveUser = 2;
+	const ActionMoveUser = 3;
+	const ActionUpdatePassword = 4;
+	const ActionSetPhoto = 5;
 
 	public function runTask($taskqueue)
 	{
@@ -62,9 +62,9 @@ class usermanager implements TaskInterface
 				$taskqueue->setErrorMessages("Probleem met configuratie");
 				return false;
 			}
-				
+
 			$ret = User::updateUser(User::convertPersonToSsUser($config["person"],$config["groupname"],$config["enabled"]));
-				
+
 			if($ret->isSucces())
 			{
 				$platformss =  PlatformSS::getPlatformConfigByPersonId($config["person"]->getId());
@@ -76,7 +76,7 @@ class usermanager implements TaskInterface
 				$taskqueue->setErrorMessages($ret->getError());
 				return false;
 			}
-				
+
 		}
 		else if($config["action"] == self::ActionRemoveUser)
 		{
@@ -85,13 +85,13 @@ class usermanager implements TaskInterface
 				$taskqueue->setErrorMessages("Probleem met configuratie");
 				return false;
 			}
-				
+
 			//we don't need the groupname for removing
 			$ret = User::removeUser(User::convertPersonToSsUser($config["person"],""));
 
 			if($ret->isSucces())
 			{
-                                PlatformSS::removePlatformByPersonId($config["person"]->getId());
+				PlatformSS::removePlatformByPersonId($config["person"]->getId());
 				return true;
 			}
 			else{
@@ -100,14 +100,14 @@ class usermanager implements TaskInterface
 			}
 		}else if($config["action"] == self::ActionMoveUser)
 		{
-			if (!isset($config["person"]) || !isset($config["groupname"]) || !isset($config["enabled"]))
+			if (!isset($config["person"]) || !isset($config["groupname"]))
 			{
 				$taskqueue->setErrorMessages("Probleem met configuratie");
 				return false;
 			}
-			
-			$ret = User::moveUser(User::convertPersonToSsUser($config["person"],$config["groupname"],$config["enabled"]));
-			
+				
+			$ret = User::moveUser(User::convertPersonToSsUser($config["person"],$config["groupname"]),$config["oldgroupname"]);
+				
 			if($ret->isSucces())
 			{
 				return true;
@@ -117,29 +117,29 @@ class usermanager implements TaskInterface
 				return false;
 			}
 		}
-                else if($config["action"] == self::ActionSetPhoto && isset($config["person"]))
+		else if($config["action"] == self::ActionSetPhoto && isset($config["person"]))
 		{
-                    $ret = \solideagle\data_access\helpers\imagehelper::downloadTempFile($config["person"]->getPictureUrl(), "/var/www/tmp/tmpimage");
-                    if ($ret->isSucces())
-                    {
-                        $encodedPhoto = \solideagle\data_access\helpers\imagehelper::encodeImage("/var/www/tmp/tmpimage");
-                    
-                        $ret = User::setPhoto($config["person"],$encodedPhoto);
+			$ret = \solideagle\data_access\helpers\imagehelper::downloadTempFile($config["person"]->getPictureUrl(), "/var/www/tmp/tmpimage");
+			if ($ret->isSucces())
+			{
+				$encodedPhoto = \solideagle\data_access\helpers\imagehelper::encodeImage("/var/www/tmp/tmpimage");
 
-                        if($ret->isSucces())
-                        {
-                            return true;
-                        }
-                        else{
-                            $taskqueue->setErrorMessages($ret->getError());
-                            return false;
-                        }
-                    }
-                    else
-                    {           
-                        $taskqueue->setErrorMessages($ret->getError());
-                        return false;
-                    }
+				$ret = User::setPhoto($config["person"],$encodedPhoto);
+
+				if($ret->isSucces())
+				{
+					return true;
+				}
+				else{
+					$taskqueue->setErrorMessages($ret->getError());
+					return false;
+				}
+			}
+			else
+			{
+				$taskqueue->setErrorMessages($ret->getError());
+				return false;
+			}
 		}
 
 		$taskqueue->setErrorMessages("Probleem met action type");
@@ -162,8 +162,8 @@ class usermanager implements TaskInterface
 		}else{
 			//we do not support people having no group
 		}
-                if ($person->getPictureUrl() != null)
-                    self::prepareSetPhoto($person);
+		if ($person->getPictureUrl() != null)
+			self::prepareSetPhoto($person);
 	}
 
 	public static function prepareUpdateUser($person, $oldPerson, $accountenabled)
@@ -179,9 +179,9 @@ class usermanager implements TaskInterface
 		}else{
 			//we do not support people having no group
 		}
-                
-                if ($person->getPictureUrl() != null && $person->getPictureUrl() != $oldPerson->getPictureUrl())
-                    self::prepareSetPhoto($person);
+
+		if ($person->getPictureUrl() != null && $person->getPictureUrl() != $oldPerson->getPictureUrl())
+			self::prepareSetPhoto($person);
 	}
 
 	public static function prepareRemoveUser($person)
@@ -202,26 +202,26 @@ class usermanager implements TaskInterface
 		$config["action"] = self::ActionMoveUser;
 		$config["person"] = $person;
 		$config["groupname"] = $newgroup->getName();
-		$config["enabled"] = $accountenabled;
+		$config["oldgroupname"] = $oldgroup->getName();
 
 		TaskQueue::insertNewTask($config, $person->getId());
 	}
-	
+
 	public static function prepareChangePassword($person)
 	{
 		$config["action"] = self::ActionUpdatePassword;
 		$config["person"] = $person;
 		TaskQueue::insertNewTask($config, $person->getId());
 	}
-        
-        public static function prepareSetPhoto($person)
-        {
-                $config["action"] = self::ActionSetPhoto;
-                $config["person"] = $person;    
 
-                TaskQueue::insertNewTask($config, $person->getId());
-        }
-	
+	public static function prepareSetPhoto($person)
+	{
+		$config["action"] = self::ActionSetPhoto;
+		$config["person"] = $person;
+
+		TaskQueue::insertNewTask($config, $person->getId());
+	}
+
 
 
 }

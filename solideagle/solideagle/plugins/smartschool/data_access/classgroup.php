@@ -2,10 +2,13 @@
 namespace solideagle\plugins\smartschool\data_access;
 
 
+use solideagle\data_access\helpers\UnicodeHelper;
+
 use solideagle\plugins\StatusReport;
 
 class ClassGroup{
 
+	const GroupPrefix = "x1x";
 	private $name;
 	private $desc;
 	private $code;
@@ -30,12 +33,12 @@ class ClassGroup{
 	 */
 	public function setCode($code)
 	{
-	    $this->code = $code;
+	    $this->code = self::GroupPrefix . UnicodeHelper::cleanSmartschoolCodeString($code);
 	}
 
 	public function setParentCode($parentCode) 
 	{
-	    $this->parentCode = $parentCode;
+	    $this->parentCode = self::GroupPrefix . UnicodeHelper::cleanSmartschoolCodeString($parentCode);
 	}
 
 	public function setUntis($untis)
@@ -75,7 +78,7 @@ class ClassGroup{
 		$retval = 0;
 				
 		$api = Api::singleton();
-		$retval += $api->delClass($classGroupCode);
+		$retval += $api->delClass(self::GroupPrefix . UnicodeHelper::cleanSmartschoolCodeString($classGroupCode));
 		
 		if($retval == 0)
 		{

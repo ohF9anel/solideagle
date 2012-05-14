@@ -201,7 +201,7 @@ class sshconn
 	public function exitShell()
 	{
 		$this->write("exit\nexit\n"); //exit shell
-                Logger::log($this->read(), PEAR_LOG_INFO);
+        Logger::log($this->read(), PEAR_LOG_INFO);
 		self::endConn();
 	}
 

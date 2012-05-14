@@ -1,7 +1,17 @@
 <?php
 
 
+use solideagle\plugins\smartschool\GroupsAndUsersCache;
+
+use solideagle\utilities\XMLParser;
+
+use solideagle\plugins\smartschool\data_access\Api;
+
 use solideagle\data_access\Course;
+
+
+
+
 
 class CourseController extends Zend_Controller_Action
 {
@@ -13,7 +23,7 @@ class CourseController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        // action body
+    	
     }
 
     public function getallAction()
