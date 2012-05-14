@@ -10,7 +10,7 @@ use solideagle\Config;
 class UploadFolder
 {
     
-    public static function setUploadFolder($conn,$server, $path, $uploadSharePath, $username, $enabled = true)
+    public static function setUploadFolder($conn, $path, $uploadSharePath, $username, $enabled = true)
     {
     
         

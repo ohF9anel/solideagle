@@ -197,11 +197,12 @@ class sshconn
 		return true;
 	}
 	
-	
-	private function exitShell()
+	// never call this manually!
+	public function exitShell()
 	{
 		$this->write("exit\nexit\n"); //exit shell
-		endConn();
+                Logger::log($this->read(), PEAR_LOG_INFO);
+		self::endConn();
 	}
 
 	private function endConn()

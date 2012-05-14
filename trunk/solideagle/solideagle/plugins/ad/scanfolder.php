@@ -9,7 +9,7 @@ use solideagle\Config;
 class ScanFolder
 {
     
-    public static function setScanFolder($conn,$server, $path, $scanSharePath, $username, $enabled = true)
+    public static function setScanFolder($conn, $path, $scanSharePath, $username, $enabled = true)
     {
    
         

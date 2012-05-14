@@ -47,7 +47,8 @@ class ManageUser
         }
         
         $dn .= Config::singleton()->ad_dc;
-        $r = ldap_add($connLdap->getConn(), $dn, $userInfo);
+        
+        $r = ldap_add($connLdap->getConn(), ConnectionLdap::ldap_escape($dn), $userInfo);
         if ($r)
         {
             ManageUser::addUserToGroup($groups[0], $dn);
