@@ -123,7 +123,10 @@ class GlobalUserManager
 			\solideagle\scripts\smartschool\usermanager::prepareAddUser($person);
 		}
                 
-                //Person::clearPasswordByPersonId($person->getId());
+                if($person->getHasAdAccount() || $configstdclass->createAdAccount &&
+                   $person->getHasGaAccount() || $configstdclass->createGappAccount &&
+                   $person->getHasSSAccount() || $configstdclass->createSsAccount)
+                        Person::clearPasswordByPersonId($person->getId());
 	}
 
 	public static function deleteAccounts($person,$configstdclass)

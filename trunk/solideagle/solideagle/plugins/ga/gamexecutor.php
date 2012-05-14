@@ -43,7 +43,6 @@ class GamExecutor
             }
             
         }
-
         return new StatusReport(!$errorHandler->hasErrors(), $errorHandler->toString());
     }
     

@@ -184,8 +184,6 @@ class manageou
         
         // set new description?
         $cmd .= " description \"" . $newGroup->getDescription() . "\"";
-
-        var_dump($cmd);
         
         $report = GamExecutor::executeGamCommand($cmd);
         
@@ -250,7 +248,7 @@ class manageou
     
     public static function removeOU($ou, $parentOus)
     {
-        $cmd = " delete org ";
+        $cmd = " delete org \"";
         
         // ou to delete
         if ($parentOus != null)
@@ -260,7 +258,7 @@ class manageou
                 $cmd .= $parentOus[$i]->getName() . "/";
             }
         }
-        $cmd .= $ou->getName();
+        $cmd .= $ou->getName() . "\"";
         
         $report = GamExecutor::executeGamCommand($cmd);
         

@@ -112,18 +112,18 @@ class daemon
 
 	private function runTasks()
 	{
-		//foreach(TaskQueue::getAllPlatforms() as $platform)
-			$platform = platforms::PLATFORM_SMARTSCHOOL;
+		foreach(TaskQueue::getAllPlatforms() as $platform)
 		{
+                        $platform = platforms::PLATFORM_AD;
+                    
 			$tasksss = TaskQueue::getTasksToRunForPlatform($platform);
-			Logger::log("running " . count($tasksss) . " tasks for platform " . $platform . "...",PEAR_LOG_INFO);
+			Logger::log("Platform " . $platform . " has " . count($tasksss) . " tasks in queue...",PEAR_LOG_INFO, true);
 			
 			foreach($tasksss as $taskqueue)
 			{
+                                $conf = $taskqueue->getConfiguration();                              
 				$class = $taskqueue->getTask_class();
-					
-				Logger::log("Running task: " . $class ,PEAR_LOG_INFO);
-				
+			
 				if(class_exists($class))
 				{
 					$script = new $class();
@@ -134,18 +134,22 @@ class daemon
 				}
 					
 				if(method_exists($script,"runTask"))
-				{
+				{      
+                                        Logger::log("Starting task: \"" . $conf["action"] . "\" in \"". $class . "\"",PEAR_LOG_INFO, true);
+                                    
 					if($script->runTask($taskqueue))
 					{
 						TaskQueue::addToRollback($taskqueue);
-						Logger::log("Task: " . $class . " ran succesfully!",PEAR_LOG_ALERT);
+                                                $conf = $taskqueue->getConfiguration();
+						Logger::log("Successfully completed task: \"" . $conf["action"] . "\" in \"" . $class . "\" ran succesfully!",PEAR_LOG_INFO, true);
 					
 					}else{
-							
-						TaskQueue::increaseErrorCount($taskqueue);
-						Logger::log("Task: " . $class . " failed with error:\n". $taskqueue->getErrormessages() . 
-								"Dump:\n" . var_export($taskqueue,true) ,PEAR_LOG_ALERT);
+                                                Logger::log("Task: " . $class . " failed with error:\n". $taskqueue->getErrormessages() . "\n"
+                                                       . "Task ID: ". $taskqueue->getId() . "\n"
+                                                       . "Config: " . var_export($taskqueue->getConfiguration(), true) . "\n", PEAR_LOG_ALERT, true);
 						
+                                                TaskQueue::increaseErrorCount($taskqueue);
+                                                
 						break;
 					}
 				}else{
