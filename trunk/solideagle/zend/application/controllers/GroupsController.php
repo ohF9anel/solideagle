@@ -1,5 +1,9 @@
 <?php
 
+use solideagle\Config;
+
+use solideagle\data_access\helpers\UnicodeHelper;
+
 use solideagle\data_access\Person;
 
 use solideagle\data_access\Type;
@@ -267,6 +271,20 @@ class GroupsController extends Zend_Controller_Action
 
 		return $thisrootarr;
 
+	}
+	
+	public function sendmailAction()
+	{
+		$this->_helper->layout()->disableLayout();
+		$this->_helper->viewRenderer->setNoRender(true);
+		
+		$groupid = $this->getRequest()->getParam("selectedGroup");
+		
+		if(($group = Group::getGroupById($groupid)) !== null)
+		{
+			$mailname = UnicodeHelper::cleanEmailString($group->getName());
+			echo $mailname . "@" . Config::singleton()->googledomain;
+		}
 	}
 
 }
