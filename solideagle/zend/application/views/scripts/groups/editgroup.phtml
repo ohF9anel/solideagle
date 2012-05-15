@@ -8,13 +8,13 @@
 		$('#myModal').modal('show');
 		
 		$("#lbldeletesure").hide();
+                $("#alertRenameGroup").hide();
 
 		$("#blnDelete").click(function(){
 			$("#lbldeletesure").toggle();
 			$("#blnDeleteSure").removeAttr("checked");
 		});
-
-		
+	
 		$("#groupbreadcrumbs").load("<?php echo $this->SE_path . '/groups/getgroupbreadcrumbs?groupid=' . $this->group->getId() ?>");
 		
 		$("#formEditGroup").ajaxForm({
@@ -29,8 +29,11 @@
 					updateTree();
 				}
 				
-	    } });
-		
+                } });
+        
+                $("#txtName").focusin(function() {
+                           $("#alertRenameGroup").fadeIn();
+                });
 	});
 
 </script>
@@ -62,6 +65,10 @@
 							<input id="txtName" name="groupName" class="input-xlarge" type="text"
 								value="<?php echo SuperEntities::encode($this->group->getName()); ?>">
 						</div>
+					</div>
+                                    
+                                        <div class="alert" id="alertRenameGroup">
+						<strong>Opgelet!</strong> Een groep hernoemen zorgt voor extra manueel werk!
 					</div>
 
 

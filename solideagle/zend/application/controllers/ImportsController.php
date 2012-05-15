@@ -17,19 +17,19 @@ class ImportsController extends Zend_Controller_Action
 	
 	
 
-	public function init()
-	{
+    public function init()
+    {
 		/* Initialize action controller here */
-	}
+    }
 
-	public function indexAction()
-	{
+    public function indexAction()
+    {
 			
 
-	}
+    }
 
-	public function importklassenAction()
-	{
+    public function importklassenAction()
+    {
 		if($this->getRequest()->getParam("submit",false))
 		{
 
@@ -116,10 +116,10 @@ class ImportsController extends Zend_Controller_Action
 		}
 			
 
-	}
+    }
 
-	public function showclassesAction()
-	{
+    public function showclassesAction()
+    {
 			
 		if($this->getRequest()->getParam("submit",false))
 		{
@@ -344,18 +344,17 @@ class ImportsController extends Zend_Controller_Action
 					$this->view->klassen[] = $origklas;
 				}
 			}
+                }
 
+    }
 
-		}
-	}
-
-	public function importfinishedAction()
-	{
+    public function importfinishedAction()
+    {
 		// action body
-	}
+    }
 
-	public function importstudentsAction()
-	{
+    public function importstudentsAction()
+    {
 
 		if($this->getRequest()->getParam("submit",false))
 		{
@@ -495,12 +494,10 @@ class ImportsController extends Zend_Controller_Action
 
 		}
 
-	}
+    }
 
-
-	//thise code field is a serious WTF, so this parser is too!
-	private function parseCode($code)
-	{
+    private function parseCode($code)
+    {
 		if(!(substr($code, 0,1) == "N"))//code must start with N
 		{
 			return false;
@@ -526,18 +523,18 @@ class ImportsController extends Zend_Controller_Action
 
 		}
 
-	}
+    }
 
-	public function showstudentsAction()
-	{
+    public function showstudentsAction()
+    {
 		$importNamespace = new Zend_Session_Namespace('importspace');
 
 		//Defaults, prevent display errors
 		$this->view->llnToAdd =array();
 		$this->view->llnToMove =array();
-		
 		if($this->getRequest()->getParam("submit",false))
 		{
+                        
 			$checkedArr = $this->getRequest()->getParam("llnAddKeys",array());
 				
 			//add students
@@ -569,7 +566,175 @@ class ImportsController extends Zend_Controller_Action
 			$this->view->llnFail = $importNamespace->llnFailArr;
 		}
 
-	}
+    }
+
+    public function importpersonsAction()
+    {
+        if($this->getRequest()->getParam("submit",false))
+        {
+                $this->view->step2 = true;
+                $adapter = new Zend_File_Transfer_Adapter_Http();
+                
+                @mkdir(Config::singleton()->tempstorage);
+
+                $adapter->setDestination(Config::singleton()->tempstorage);
+
+                if (!$adapter->receive("csvfile")) {
+                        $messages = $adapter->getMessages();
+                        echo implode("\n", $messages);
+                        return;
+                }
+
+                $file = fopen($adapter->getFileName(),"r");
+
+                $counter = 0;
+
+                $std = new stdClass();
+                $colarr = array(
+                            "firstname" => 0,
+                            "name" => 1,
+                            "type" => 2,
+                            "madeon" => 3,
+                            "gender" => 4,
+                            "birthdate" => 5,
+                            "birthplace" => 6,
+                            "nationality" => 7,
+                            "street" => 8,
+                            "housenumber" => 9,
+                            "postcode" => 10,
+                            "city" => 11,
+                            "country" => 12,
+                            "email" => 13,
+                            "phone" => 14,
+                            "phone2" => 15,
+                            "mobile" => 16,
+                            "otherinformation" => 17,
+                            "studentpreviousschool" => 18,
+                            "studentstamnr" => 19,
+                            "parentoccupation" => 20,
+                            "pictureurl" => 21,
+                            "uniqueidentifier" => 22,
+                            "informatid" => 23,
+                            "activefrom" => 24,
+                            "activeuntill" => 25,
+                            "class" => 26
+                            );
+                
+                // order of columns
+                $std->firstname = 0;
+                $std->name = 1;
+                $std->type = 2;
+                $std->madeon = 3;
+                $std->gender = 4;
+                $std->birthdate = 5;
+                $std->birthplace = 6;
+                $std->nationality = 7;
+                $std->street = 8;
+                $std->housenumber = 9;
+                $std->postcode = 10;
+                $std->city = 11;
+                $std->country = 12;
+                $std->email = 13;
+                $std->phone = 14;
+                $std->phone2 = 15;
+                $std->mobile = 16;
+                $std->otherinformation = 17;
+                $std->studentpreviousschool = 18;
+                $std->studentstamnr = 19;
+                $std->parentoccupation = 20;
+                $std->pictureurl = 21;
+                $std->uniqueidentifier = 22;
+                $std->informatid = 23;
+                $std->activefrom = 24;
+                $std->activeuntill = 25;
+                $std->class = 26;
+                           
+                $persons = array();
+                $data = array();
+                $key = 0;
+                
+                while (($line = fgetcsv($file, 1000, ";")) !== FALSE) {
+                    $data[] = $line;
+                    
+                    if(sizeof($line) != 27)
+                    {
+                        echo "Lijn " . $key . ": heeft geen 27 velden";
+                        continue;
+                    }
+                    
+                    // #comment?
+                    if($line[0][0] == '#')
+                    {
+                        continue;
+                    }
+                   
+                    // columns that can't be empty
+                    if($line[$std->firstname] == null || $line[$std->name] == null || $line[$std->type] == null)
+                    {
+                        echo "Lijn " . $key . ": Voornaam, naam of type mag niet leeg zijn!";
+                        continue;
+                    }
+                        
+                    $p = new Person();
+                    $p->setFirstname($line[$std->firstname]);
+                    $p->setName($line[$std->name]);
+                    $isStudent = strcasecmp($line[$std->type], "leerling");
+                    $p->setAccountUsername(Person::generateUsername($p), $isStudent);
+                    $p->setMadeOn($line[$std->madeon]);
+                    $p->setAccountActiveFrom($line[$std->activefrom]);
+                    $p->setAccountActiveUntill($line[$std->activeuntill]);
+                    $p->setGender($line[$std->gender]);
+                    $p->setBirthDate($line[$std->birthdate]);
+                    $p->setBirthPlace($line[$std->birthplace]);
+                    $p->setNationality($line[$std->nationality]);
+                    $p->setStreet($line[$std->street]);
+                    $p->setHouseNumber($line[$std->housenumber]);
+                    $p->setPostCode($line[$std->postcode]);
+                    $p->setCity($line[$std->city]);
+                    $p->setEmail($line[$std->email]);
+                    $p->setPhone($line[$std->phone]);
+                    $p->setPhone2($line[$std->phone2]);
+                    $p->setMobile($line[$std->mobile]);
+                    $p->setOtherInformation($line[$std->otherinformation]);
+                    $p->setStudentPreviousSchool($line[$std->studentpreviousschool]);
+                    $p->setParentOccupation($line[$std->parentoccupation]);
+                    $p->setPictureUrl($line[$std->pictureurl]);
+                    
+                    $group = Group::getGroupByName($line[$std->class]);
+                    $groupid = $group != null ? $group->getId() : 1;
+                    
+                    $p->setGroupId($groupid);
+                    $p->setUniqueIdentifier($line[$std->uniqueidentifier]);
+                    $p->setInformatId($line[$std->informatid]);
+
+                    $checkPerson = Person::getPersonByUsername($p->getAccountUsername());
+                    if ($checkPerson != null)
+                    {
+                        echo "Lijn " . $key . ": Persoon \"" . $checkPerson->getAccountUsername() . "\" bestaat al in database.";
+                        continue;
+                    }
+                    $this->view->logInfo = "jkdkjdskj";
+                    $persons[] = $p;
+                    
+                    $this->view->data = $data;
+                    
+                    $counter += 1;
+                    $key++;
+                }
+                
+                $this->view->logInfo = "Lines in CSV: " . $counter;
+
+                fclose($file);
+
+                shell_exec("rm " . $adapter->getFileName());
+
+                //$this->_helper->redirector('showstudents', 'Imports');
+
+        }
+    }
+
 }
+
+
 
 

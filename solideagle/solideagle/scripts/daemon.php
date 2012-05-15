@@ -115,9 +115,12 @@ class daemon
 	private function runTasks()
 	{
 		
-		//foreach(TaskQueue::getAllPlatforms() as $platform)
-		$platform = platforms::PLATFORM_SMARTSCHOOL;
+		foreach(TaskQueue::getAllPlatforms() as $platform)
+		//$platform = platforms::PLATFORM_SMARTSCHOOL;
 		{
+			 
+                    $platform = \solideagle\data_access\platforms::PLATFORM_GAPP;
+
 			$tasksss = TaskQueue::getTasksToRunForPlatform($platform);
 			Logger::log("Platform " . $platform . " has " . count($tasksss) . " tasks in queue...",PEAR_LOG_INFO, true);
 				
@@ -166,7 +169,7 @@ class daemon
 			if($platform == platforms::PLATFORM_AD)
 			{
 				//run all batch files for AD
-				sshpreformatter::singleton()->runAllBatchfiles();
+				\solideagle\plugins\ad\sshpreformatter::singleton()->runAllBatchfiles();
 			}
 		}
 	}
