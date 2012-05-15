@@ -20,7 +20,7 @@ class sshpreformatter
 			//clean batch dir
 			exec("rm " . Config::singleton()->batchscriptsdir . "*"); 
 			//create plink yes script
-			exec('echo -e "y\n" > ' . Config::singleton()->batchscriptsdir . "plink.yes.batch");
+			exec('echo "y\n" > ' . Config::singleton()->batchscriptsdir . "plink.yes.batch");
 		}
 		return self::$instance;
 	}
@@ -76,8 +76,10 @@ class sshrunner
 
 		Logger::log("Running batch file for: " . $server ,PEAR_LOG_INFO);
 
-		$commandToExecute = "plink -m " . $pathtofile . " -pw " . $password .  " " . $username . "@" . $server . " < " . Config::singleton()->batchscriptsdir . "plink.yes.batch" . " 2>&1";
+		//$commandToExecute = "plink -m " . $pathtofile . " -pw " . $password .  " " . $username . "@" . $server . " < " . Config::singleton()->batchscriptsdir . "plink.yes.batch" . " 2>&1";
 
+		$commandToExecute = "plink -pw " . $password .  " " . $username . "@" . $server . " < " . $pathtofile . " 2>&1";
+		
 		$outputarr = array();
 
 		exec("cat " . $pathtofile,$outputarr);
@@ -114,7 +116,7 @@ class batchfile
 		if($this->batchfile)
 		{
 			$this->isOpenForWriting = true;
-			$this->writeToFile("cmd\n");
+			$this->writeToFile("y\n");
 		}
 
 		return $this->isOpenForWriting;
@@ -123,6 +125,8 @@ class batchfile
 	//backwards compatibility with sshmanager
 	public function write($data)
 	{
+	
+	
 		$this->writeToFile($data);
 	}
 	
