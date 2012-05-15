@@ -1,6 +1,8 @@
 <?php
 namespace solideagle\scripts;
 
+use solideagle\plugins\ad\sshpreformatter;
+
 use solideagle\data_access\platforms;
 
 use solideagle\logging\Logger;
