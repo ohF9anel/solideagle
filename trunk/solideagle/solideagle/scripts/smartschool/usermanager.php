@@ -77,7 +77,6 @@ class usermanager implements TaskInterface
 				$taskqueue->setErrorMessages($ret->getError());
 				return false;
 			}
-
 		}
 		else if($config["action"] == self::ActionRemoveUser)
 		{

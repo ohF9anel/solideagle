@@ -114,10 +114,10 @@ class daemon
 
 	private function runTasks()
 	{
-		foreach(TaskQueue::getAllPlatforms() as $platform)
+		
+		//foreach(TaskQueue::getAllPlatforms() as $platform)
+		$platform = platforms::PLATFORM_SMARTSCHOOL;
 		{
-			 
-
 			$tasksss = TaskQueue::getTasksToRunForPlatform($platform);
 			Logger::log("Platform " . $platform . " has " . count($tasksss) . " tasks in queue...",PEAR_LOG_INFO, true);
 				

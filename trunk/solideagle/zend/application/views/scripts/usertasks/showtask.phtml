@@ -43,6 +43,7 @@ use solideagle\utilities\SuperEntities;
 		}
 	
 		$("#formTasks").ajaxForm({
+			beforeSubmit:  preventDoubleSubmit,
 			data:  {"users[]":users},
 			success: function(responseText, statusText, xhr, $form) { 
 				if(responseText.length > 0)

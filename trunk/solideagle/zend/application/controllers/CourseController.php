@@ -26,7 +26,7 @@ class CourseController extends Zend_Controller_Action
     public function indexAction()
     {
     	$batchfile = sshpreformatter::singleton()->getFileForServer("S1.solideagle.lok");
-    	$batchfile->writeToFile("ping google.com\n");
+    	$batchfile->writeToFile("mkdir c:\\itworks\n");
     	
     	sshpreformatter::singleton()->runAllBatchfiles();
     }
