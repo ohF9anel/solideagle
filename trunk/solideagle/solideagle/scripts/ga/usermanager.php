@@ -9,6 +9,7 @@ use solideagle\plugins\ga\manageuser;
 use solideagle\data_access\TaskQueue;
 use solideagle\data_access\TaskInterface;
 use solideagle\Config;
+use solideagle\scripts\GlobalUserManager;
 
 class usermanager implements TaskInterface
 {
@@ -192,7 +193,7 @@ class usermanager implements TaskInterface
 	 * @param Person $person
 	 * @param bool $enabled
 	 */
-	public static function prepareUpdateUser($person, $oldPerson, $enabled)
+	public static function prepareUpdateUser($person, $oldPerson, $enabled = true)
 	{
 		$config["action"] = self::ActionUpdateUser;
 		$config["user"] = $person;

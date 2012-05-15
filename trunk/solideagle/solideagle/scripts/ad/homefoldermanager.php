@@ -62,7 +62,7 @@ class homefoldermanager implements TaskInterface
 
 			if(isset($config["downloadsharepath"]))
 				DownloadFolder::setDownloadFolder($conn, $config["homefolderpath"], $config["downloadsharepath"], $username);
-
+                        
 			$ret = ManageUser::setHomeFolder($username, "\\\\" . $config["server"]);
 			if($ret->isSucces())
 			{

@@ -55,6 +55,12 @@
 							<controller>imports</controller>
 							<action>importstudents</action>
 						</studentImport>
+                                                
+                                                <personImport>
+							<label>Import personen</label>
+							<controller>imports</controller>
+							<action>importpersons</action>
+						</personImport>
 					</pages>
 				
 				

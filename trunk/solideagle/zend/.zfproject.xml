@@ -55,6 +55,7 @@
           <actionMethod actionName="importfinished"/>
           <actionMethod actionName="importstudents"/>
           <actionMethod actionName="showstudents"/>
+          <actionMethod actionName="importpersons"/>
         </controllerFile>
         <controllerFile controllerName="Tasktemplate">
           <actionMethod actionName="index"/>
@@ -176,6 +177,9 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Users">
             <viewScriptFile forActionName="search"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Imports">
+            <viewScriptFile forActionName="importpersons"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>

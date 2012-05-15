@@ -10,6 +10,8 @@ use solideagle\data_access\platforms;
 
 use solideagle\data_access\Person;
 
+use solideagle\data_access\Type;
+
 class InitialAdImport
 {
 
@@ -34,7 +36,7 @@ class InitialAdImport
 		}
 		
 		
-		$sr = ldap_search($conn, "OU=schoolverlaters,OU=leerlingen,OU=gebruikers,DC=dbz,DC=lok", "(&(objectCategory=person)(objectClass=user))");
+		$sr = ldap_search($conn, "OU=leerkrachten,OU=gebruikers,DC=dbz,DC=lok", "(&(objectCategory=person)(objectClass=user))");
 		$usrs = ldap_get_entries($conn, $sr);
 		
 		echo "<pre>";
@@ -76,6 +78,9 @@ class InitialAdImport
 			}else{
 				$person->setGroupId(1);
 			}
+                        
+                        // type?
+                        $person->addType(new Type(2)); // 2 = leerkracht, 3 = leerling
 			
 			$personid = Person::addPerson($person);
 			$person->setId($personid);

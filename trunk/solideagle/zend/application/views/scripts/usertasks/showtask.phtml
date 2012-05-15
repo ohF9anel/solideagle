@@ -18,7 +18,15 @@ use solideagle\utilities\SuperEntities;
    		$("#deleteadsure").hide();
                 $("#deletesssure").hide();
                 $("#deletegappsure").hide(); 
-        
+                
+                if ($("#createAdHomedir").is(":checked")) { 
+                    $("#createAdHomedir").trigger('click').attr('checked','checked');
+                }
+                
+                if ($("#moveAdHomedir").is(":checked")) { 
+                    $("#moveAdHomedir").trigger('click').attr('checked','checked');
+                }
+
 		if(!manageTemplate)
 		{
                     $("#blnDeleteAd").click(function(){
