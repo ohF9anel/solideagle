@@ -232,10 +232,10 @@ function showUsers() {
 			.dataTable(
 					{
 						"bSort" : true,
-						"aaSorting" : [ [ 5, "desc" ] ],
+						"aaSorting" : [ [ 6, "desc" ] ],
 						"aoColumns" : [ {
 							"bSortable" : false
-						}, null, null, null, null, null ],
+						}, null, null, null, null, null,null ],
 						"iDisplayLength" : -1,
 						// "aLengthMenu": [[-1, 10, 25, 50], ["All",10, 25,
 						// 50]],
@@ -268,7 +268,17 @@ function showUsers() {
 							$('td:eq(0)', nRow).html(
 									"<input class='selectUser' type=checkbox name='user[]' value='"
 											+ aData[0] + "'/>");
+							
 
+							var accountstatus = "";
+							
+							$.each(aData[5],function(k,v){
+								accountstatus += k;
+								accountstatus += v;
+								accountstatus += " ";
+							}); 
+							
+							$('td:eq(5)', nRow).html(accountstatus);
 						}
 
 					});

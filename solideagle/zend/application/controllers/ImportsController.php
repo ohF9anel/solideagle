@@ -12,10 +12,10 @@ use solideagle\plugins\ad\HomeFolder;
 
 use solideagle\Config;
 
-use solideagle\plugins\ad\SSHManager;
-
 class ImportsController extends Zend_Controller_Action
 {
+	
+	
 
 	public function init()
 	{
@@ -133,7 +133,7 @@ class ImportsController extends Zend_Controller_Action
 			//Check if structure of groups exists
 			foreach(Group::getChilderen($studentsParentGroup) as $childGroup)
 			{
-				if($childGroup->getName() == "eerste graad")
+				if($childGroup->getName() == "graad 1")
 				{
 					$groupStructureResults->eerstegraad = $childGroup;
 					foreach(Group::getChilderen($childGroup) as $subchildGroup)
@@ -147,7 +147,7 @@ class ImportsController extends Zend_Controller_Action
 						}
 					}
 				}
-				else if($childGroup->getName() == "tweede graad")
+				else if($childGroup->getName() == "graad 2")
 				{
 					$groupStructureResults->tweedegraad = $childGroup;
 					foreach(Group::getChilderen($childGroup) as $subchildGroup)
@@ -161,7 +161,7 @@ class ImportsController extends Zend_Controller_Action
 						}
 					}
 				}
-				else if($childGroup->getName() == "derde graad")
+				else if($childGroup->getName() == "graad 3")
 				{
 					$groupStructureResults->derdegraad = $childGroup;
 					foreach(Group::getChilderen($childGroup) as $subchildGroup)
@@ -184,7 +184,7 @@ class ImportsController extends Zend_Controller_Action
 			if(!isset($groupStructureResults->eerstegraad ))
 			{
 				$group = new Group();
-				$group->setName("eerste graad");
+				$group->setName("graad 1");
 				$group->setParentId($studentsParentGroup->getId());
 				$gid = Group::addGroup($group);
 				$group->setId($gid);
@@ -195,7 +195,7 @@ class ImportsController extends Zend_Controller_Action
 			if(!isset($groupStructureResults->tweedegraad ))
 			{
 				$group = new Group();
-				$group->setName("tweede graad");
+				$group->setName("graad 2");
 				$group->setParentId($studentsParentGroup->getId());
 				$gid = Group::addGroup($group);
 				$group->setId($gid);
@@ -206,7 +206,7 @@ class ImportsController extends Zend_Controller_Action
 			if(!isset($groupStructureResults->derdegraad ))
 			{
 				$group = new Group();
-				$group->setName("derde graad");
+				$group->setName("graad 3");
 				$group->setParentId($studentsParentGroup->getId());
 				$gid = Group::addGroup($group);
 				$group->setId($gid);
@@ -374,7 +374,7 @@ class ImportsController extends Zend_Controller_Action
 			$klasCount = -1;
 			$voornaamCount = -1;
 			$naamCount = -1;
-			$codeCount = -1; //jaartal halen we hieruit door heeeel veel trucjes toe te passen
+			$codeCount = -1; //jaartal halen we hieruit door een aantal trucjes toe te passen
 
 			//zoek de kolommen waar we in geinterreseerd zijn
 			foreach (fgetcsv($file,0,";") as $linearrelem)

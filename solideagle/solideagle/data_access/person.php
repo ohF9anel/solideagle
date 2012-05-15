@@ -1215,7 +1215,7 @@ class Person
 
 	/**
 	 *
-	 * Pass -1 to get all users
+	 * 
 	 * Will only partially fill the user object!
 	 * @param int $groupid
 	 */

@@ -1,11 +1,14 @@
 <?php
 
+/*
+ * DEPRECATED
+ */
 namespace solideagle\plugins\ad;
 use solideagle\Config;
 
 use solideagle\logging\Logger;
 
-class SSHManager
+class SSHManagerDEPRECATED
 {
 	private  $_connections = array();
 	private static $instance;
