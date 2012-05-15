@@ -1,6 +1,8 @@
 <?php
 namespace solideagle\scripts\ad;
 
+use solideagle\plugins\ad\sshpreformatter;
+
 use solideagle\logging\Logger;
 
 
@@ -17,7 +19,6 @@ use solideagle\plugins\ad\ScanFolder;
 use solideagle\plugins\ad\WwwFolder;
 use solideagle\plugins\ad\DownloadFolder;
 use solideagle\plugins\ad\UploadFolder;
-use solideagle\plugins\ad\SSHManager;
 
 
 
@@ -41,7 +42,7 @@ class homefoldermanager implements TaskInterface
 		{
 			$username = $config["person"]->getAccountUsername();
 
-			$conn = SSHManager::singleton()->getConnection($config["server"]);
+			$conn = sshpreformatter::singleton()->getFileForServer($config["server"]);
 
 			if(!HomeFolder::createHomeFolder($conn, $config["homefolderpath"], $username))
 			{
@@ -82,13 +83,13 @@ class homefoldermanager implements TaskInterface
 		{
 			$username = $config["person"]->getAccountUsername();
 
-			$conn = SSHManager::singleton()->getConnection($config["server"]);
+			$conn = sshpreformatter::singleton()->getFileForServer($config["server"]);
 
 			$ret = HomeFolder::copyHomeFolder($conn, $username, $config["homefolderpath"], $config["oldserver"]);
 
 			if($ret)
 			{
-                                $conn = SSHManager::singleton()->getConnection($config["oldserver"]);
+                                $conn = sshpreformatter::singleton()->getFileForServer($config["oldserver"]);
                                 $ret = HomeFolder::removeShare($conn, $config["oldshare"]);
 				return true;
 			}if(!$ret)

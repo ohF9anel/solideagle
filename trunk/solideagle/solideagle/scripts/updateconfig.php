@@ -106,6 +106,12 @@ class UpdateConfig
 		$arr["ad_administrator"] = $solideagleAdmin;
 		$arr["ad_username"] = $arr["ad_administrator"] . "@" . $arr["ad_dns"]; //'SYS_Solideagle@solideagle.lok'
 		$arr["ad_password"] = $solideagleAdminPass;
+		
+		/*
+		 * Batch scripts folder
+		 */
+		
+		$arr["batchscriptsdir"] = "/tmp/solideagle/";
 
 		/*
 		 * DEFAULT HOMEFOLDER CONFIG

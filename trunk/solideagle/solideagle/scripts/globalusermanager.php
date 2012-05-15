@@ -20,7 +20,7 @@ class GlobalUserManager
 
 		$newgroup = Group::getGroupById($newgid);
 		$oldgroup = Group::getGroupById($oldgid);
-		
+
 		if($person->getHasAdAccount())
 		{
 			\solideagle\scripts\ad\usermanager::prepareMoveUser($person,$newgroup,$oldgroup);
@@ -29,7 +29,7 @@ class GlobalUserManager
 		if($person->getHasGaAccount())
 		{
 			\solideagle\scripts\ga\usermanager::prepareMoveUser($person,$newgroup,$oldgroup);
-  		}
+		}
 
 		if($person->getHasSSAccount())
 		{
@@ -39,16 +39,16 @@ class GlobalUserManager
 
 	public static function updateUser($person)
 	{
-                $oldPerson = Person::getPersonById($person->getId());
+		$oldPerson = Person::getPersonById($person->getId());
 		Person::updatePerson($person);
-		
+
 		$enabled = true; //TODO: fix
 
 		if($person->getHasAdAccount())
 		{
 			\solideagle\scripts\ad\usermanager::prepareUpdateUser($person,$enabled);
 		}
-                
+
 		if($person->getHasGaAccount())
 		{
 			\solideagle\scripts\ga\usermanager::prepareUpdateUser($person, $oldPerson, $enabled);
@@ -59,21 +59,21 @@ class GlobalUserManager
 			\solideagle\scripts\smartschool\usermanager::prepareUpdateUser($person, $oldPerson, $enabled);
 		}
 	}
-	
+
 	public static function resetUserPassword($person)
 	{
 		//Person::updatePerson($person);
-		
+
 		if($person->getHasAdAccount())
 		{
 			\solideagle\scripts\ad\usermanager::prepareChangePassword($person);
 		}
-	
+
 		if($person->getHasGaAccount())
 		{
 			\solideagle\scripts\ga\usermanager::prepareChangePassword($person);
 		}
-	
+
 		if($person->getHasSSAccount())
 		{
 			\solideagle\scripts\smartschool\usermanager::prepareChangePassword($person);
@@ -100,7 +100,7 @@ class GlobalUserManager
 			\solideagle\scripts\smartschool\usermanager::prepareRemoveUser($person);
 		}
 	}
-	
+
 	//
 	// Platforms only
 	//
@@ -122,11 +122,8 @@ class GlobalUserManager
 		{
 			\solideagle\scripts\smartschool\usermanager::prepareAddUser($person);
 		}
-                
-                if($person->getHasAdAccount() || $configstdclass->createAdAccount &&
-                   $person->getHasGaAccount() || $configstdclass->createGappAccount &&
-                   $person->getHasSSAccount() || $configstdclass->createSsAccount)
-                        Person::clearPasswordByPersonId($person->getId());
+
+			
 	}
 
 	public static function deleteAccounts($person,$configstdclass)
@@ -147,7 +144,7 @@ class GlobalUserManager
 			\solideagle\scripts\smartschool\usermanager::prepareRemoveUser($person);
 		}
 	}
-	
+
 	public static function enableDisableAccounts($person,$configstdclass)
 	{
 		if($person->getHasAdAccount())
@@ -160,7 +157,7 @@ class GlobalUserManager
 			{
 				\solideagle\scripts\ad\usermanager::prepareUpdateUser($person,false);
 			}
-			
+
 		}
 
 		if($person->getHasGaAccount())
@@ -173,7 +170,7 @@ class GlobalUserManager
 			{
 				\solideagle\scripts\ga\usermanager::prepareUpdateUser($person,false);
 			}
-			
+
 		}
 
 		if($person->getHasSSAccount())
@@ -187,8 +184,19 @@ class GlobalUserManager
 			}
 		}
 	}
-	
 
-	
-	
+
+	public static function cleanPasswordIfAllAccountsExist($personid)
+	{
+		$person = Person::getPersonById($personid);
+		
+		if($person->getHasAdAccount()  &&	$person->getHasGaAccount()  && $person->getHasSSAccount())
+		{
+			Person::clearPasswordByPersonId($person->getId());
+		}
+	}
+
+
+
+
 }

@@ -72,7 +72,7 @@ class HomeFolder
 //    
 //    public static function removeHomeFolder($server, $path, $username, $scanSharePath, $wwwSharePath, $uploadSharePath, $downloadSharePath)
 //    {
-//        $conn = SSHManager::singleton()->getConnection($server);
+//        $conn = sshpreformatter::singleton()->getFileForServer($server);
 //        if ($conn == null)
 //            return false;
 //        

@@ -1,6 +1,8 @@
 <?php
 
 
+use solideagle\plugins\ad\sshpreformatter;
+
 use solideagle\plugins\smartschool\GroupsAndUsersCache;
 
 use solideagle\utilities\XMLParser;
@@ -23,7 +25,10 @@ class CourseController extends Zend_Controller_Action
 
     public function indexAction()
     {
+    	$batchfile = sshpreformatter::singleton()->getFileForServer("S1.solideagle.lok");
+    	$batchfile->writeToFile("ping google.com\n");
     	
+    	sshpreformatter::singleton()->runAllBatchfiles();
     }
 
     public function getallAction()

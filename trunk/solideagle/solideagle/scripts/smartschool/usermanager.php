@@ -48,6 +48,7 @@ class usermanager implements TaskInterface
 				$platformss = new PlatformSS();
 				$platformss->setPersonId($config["person"]->getId());
 				PlatformSS::addToPlatform($platformss);
+				GlobalUserManager::cleanPasswordIfAllAccountsExist($config["person"]->getId());
 				return true;
 			}
 			else{

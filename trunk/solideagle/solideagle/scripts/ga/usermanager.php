@@ -37,6 +37,7 @@ class usermanager implements TaskInterface
 				$platform->setPersonId($config["user"]->getId());
 				$platform->setEnabled($config["enabled"]);
 				PlatformGA::addToPlatform($platform);
+				GlobalUserManager::cleanPasswordIfAllAccountsExist($config["user"]->getId());
 				return true;
 			}
 			else{

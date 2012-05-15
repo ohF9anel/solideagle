@@ -1,6 +1,8 @@
 <?php
 namespace solideagle\scripts\ad;
 
+use solideagle\scripts\GlobalUserManager;
+
 use solideagle\plugins\ad\ManageUser;
 
 use solideagle\data_access\Group;
@@ -43,6 +45,9 @@ class usermanager implements TaskInterface
                     $platformad->setEnabled($config["enabled"]);
 
                     PlatformAD::addToPlatform($platformad);
+                    
+                    GlobalUserManager::cleanPasswordIfAllAccountsExist($config["person"]->getId());
+                    
                     return true;	
                 }
                 else{

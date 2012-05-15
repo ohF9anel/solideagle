@@ -34,7 +34,7 @@ class InitialAdImport
 		}
 		
 		
-		$sr = ldap_search($conn, "OU=leerlingen,OU=gebruikers,DC=dbz,DC=lok", "(&(objectCategory=person)(objectClass=user))");
+		$sr = ldap_search($conn, "OU=schoolverlaters,OU=leerlingen,OU=gebruikers,DC=dbz,DC=lok", "(&(objectCategory=person)(objectClass=user))");
 		$usrs = ldap_get_entries($conn, $sr);
 		
 		echo "<pre>";

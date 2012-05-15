@@ -20,63 +20,63 @@ class daemon
 		{
 			$this->startDaemon();
 		}else{
-			
+				
 			exec(sprintf("%s > %s 2>&1 & echo $! >> %s", "php daemon.php", "daemon.out", "daemon.pid"));
-			
+				
 			/*set_time_limit(60);
-			echo "Running from command line! Output will stop after 60 seconds or when all tasks have been run";
-				
+			 echo "Running from command line! Output will stop after 60 seconds or when all tasks have been run";
+
 			exec(sprintf("%s > %s 2>&1 & echo $! >> %s", "php daemon.php", "daemon.out", "daemon.pid"));
-				
-				
+
+
 			$descriptorspec = array(
 					0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
 					1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
 					2 => array("pipe", "a") // stderr is a file to write to
 			);
-				
+
 			echo shell_exec("touch daemon.out 2>&1");
-				
+
 			$p = proc_open("tail -f daemon.out",$descriptorspec,$pipes);
-				
-				
+
+
 			echo "<pre>";
-				
+
 			$buffer = "";
 
 			while(true)
 			{
-				if(($buffer = fgets($pipes[1])) === false)
-				{
-					echo "error\n";
-					ob_flush();
-					flush();
-					//break;
-				}
-					
-				if(strpos($buffer,"SEENDBUFFER") !== false)
-				{
-					break;
-				}
-				echo $buffer;
-				ob_flush();
-				flush();
+			if(($buffer = fgets($pipes[1])) === false)
+			{
+			echo "error\n";
+			ob_flush();
+			flush();
+			//break;
 			}
 				
+			if(strpos($buffer,"SEENDBUFFER") !== false)
+			{
+			break;
+			}
+			echo $buffer;
+			ob_flush();
+			flush();
+			}
+
 			foreach ($pipes as $pipe)
 				fclose($pipe);
-				
+
 			proc_terminate($p);
 			proc_close($p);
-				
+
 			echo "daemon ended\n";
 
-				
+
 			echo "</pre>";
-				
+
 			ob_flush();
 			flush();*/
-				
+
 		}
 	}
 
@@ -114,16 +114,16 @@ class daemon
 	{
 		foreach(TaskQueue::getAllPlatforms() as $platform)
 		{
-                        $platform = platforms::PLATFORM_AD;
-                    
+			 
+
 			$tasksss = TaskQueue::getTasksToRunForPlatform($platform);
 			Logger::log("Platform " . $platform . " has " . count($tasksss) . " tasks in queue...",PEAR_LOG_INFO, true);
-			
+				
 			foreach($tasksss as $taskqueue)
 			{
-                                $conf = $taskqueue->getConfiguration();                              
+				$conf = $taskqueue->getConfiguration();
 				$class = $taskqueue->getTask_class();
-			
+					
 				if(class_exists($class))
 				{
 					$script = new $class();
@@ -134,31 +134,37 @@ class daemon
 				}
 					
 				if(method_exists($script,"runTask"))
-				{      
-                                        Logger::log("Starting task: \"" . $conf["action"] . "\" in \"". $class . "\"",PEAR_LOG_INFO, true);
-                                    
+				{
+					Logger::log("Starting task: \"" . $conf["action"] . "\" in \"". $class . "\"",PEAR_LOG_INFO, true);
+
 					if($script->runTask($taskqueue))
 					{
 						TaskQueue::addToRollback($taskqueue);
-                                                $conf = $taskqueue->getConfiguration();
+						$conf = $taskqueue->getConfiguration();
 						Logger::log("Successfully completed task: \"" . $conf["action"] . "\" in \"" . $class . "\" ran succesfully!",PEAR_LOG_INFO, true);
-					
+							
 					}else{
-                                                Logger::log("Task: " . $class . " failed with error:\n". $taskqueue->getErrormessages() . "\n"
-                                                       . "Task ID: ". $taskqueue->getId() . "\n"
-                                                       . "Config: " . var_export($taskqueue->getConfiguration(), true) . "\n", PEAR_LOG_ALERT, true);
-						
-                                                TaskQueue::increaseErrorCount($taskqueue);
-                                                
+						Logger::log("Task: " . $class . " failed with error:\n". $taskqueue->getErrormessages() . "\n"
+								. "Task ID: ". $taskqueue->getId() . "\n"
+								. "Config: " . var_export($taskqueue->getConfiguration(), true) . "\n", PEAR_LOG_ALERT, true);
+
+						TaskQueue::increaseErrorCount($taskqueue);
+
 						break;
 					}
 				}else{
 					$taskqueue->setErrorMessages("Task method: runScript does not exist!");
 					TaskQueue::increaseErrorCount($taskqueue);
-					
+						
 					break;
 				}
 					
+			}
+			
+			if($platform == platforms::PLATFORM_AD)
+			{
+				//run all batch files for AD
+				sshpreformatter::singleton()->runAllBatchfiles();
 			}
 		}
 	}

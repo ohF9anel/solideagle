@@ -14,34 +14,32 @@ class Logger
 	private	static $logger = NULL;
 
 	/**
-	 * 
+	 *
 	 * @return Log
 	 */
 	private static function getLogger()
 	{
 		$loglevel = Config::singleton()->debugLevel;
-		
+
 		if(Logger::$logger == NULL)
 		{
-			   	Logger::$logger = &Log::singleton('file', '/var/log/solideagle/out.log', 'ident', Logger::$conf,$loglevel);
+			Logger::$logger = &Log::singleton('file', '/var/log/solideagle/out.log', 'ident', Logger::$conf,$loglevel);
 		}
-	
+
 		return Logger::$logger;
 	}
-	
+
 	public static function log($errormessage,$messagetype = PEAR_LOG_ERR,$hidepathandline = false)
 	{
 		$traces = debug_backtrace();
-		
+
 		$logplace = "";
-		
-//		if (isset($traces[2]))
-//		{
-//			if (isset($traces[2]["file"]) && isset($traces[2]["line"]))
-                        if (!$hidepathandline)
-                            $logplace = "Path: " . $traces[1]["file"] . "\nLine: " . $traces[1]["line"] . "\n\n";
-//		}
-		
+
+
+		if (!$hidepathandline)
+			$logplace = "File: " . $traces[1]["file"] . " Line: " . $traces[1]["line"] . "\n";
+
+
 		self::getLogger()->log("\n" . $logplace . $errormessage . "\n", $messagetype);
 	}
 }
