@@ -35,7 +35,10 @@ class ImportsController extends Zend_Controller_Action
 
 			$adapter = new Zend_File_Transfer_Adapter_Http();
 
-			$adapter->setDestination('/tmp');
+			
+			@mkdir(Config::singleton()->tempstorage);
+			
+			$adapter->setDestination(Config::singleton()->tempstorage);
 
 			if (!$adapter->receive("csvfile")) {
 				$messages = $adapter->getMessages();

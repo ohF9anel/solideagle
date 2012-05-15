@@ -30,7 +30,7 @@ class UsertasksController extends Zend_Controller_Action
 
 	public function init()
 	{
-        
+
 	}
 
 	public function indexAction()
@@ -47,34 +47,41 @@ class UsertasksController extends Zend_Controller_Action
 		//check if user has password
 		if($configstdclass->createAdAccount || $configstdclass->createSsAccount || $configstdclass->createGappAccount)
 		{
-                    if((strlen($user->getAccountPassword()) >= 8))
-			GlobalUserManager::createAccounts($user, $configstdclass);
-                    else
-                        Logger::log("No account created for user: " . $user->getAccountUsername() . " because he does not have a password.",PEAR_LOG_ALERT);
-                }
-		 
+			if((strlen($user->getAccountPassword()) >= 6))
+			{
+				GlobalUserManager::createAccounts($user, $configstdclass);
+			}
+			else
+			{
+				echo "No account created for user: " . $user->getAccountUsername() . " because he does not have a password.\n";
+				
+				Logger::log("No account created for user: " . $user->getAccountUsername() . " because he does not have a password.", PEAR_LOG_ALERT);
+			}
+				
+		}
+			
 		if($configstdclass->deleteAdAccount || $configstdclass->deleteSsAccount || $configstdclass->deleteGappAccount)
 		{
 			GlobalUserManager::deleteAccounts($user,$configstdclass);
 		}
-		 
+			
 		if($configstdclass->enableAdAccount || $configstdclass->enableSsAccount || $configstdclass->enableGappAccount)
 		{
 			GlobalUserManager::enableDisableAccounts($user,$configstdclass);
 		}
-		 
+			
 		if($configstdclass->disableAdAccount || $configstdclass->disableSsAccount || $configstdclass->disableGappAccount)
 		{
 			GlobalUserManager::enableDisableAccounts($user,$configstdclass);
 		}
-		 
+			
 		if($configstdclass->createAdHomedir)
 		{
 			$server = $configstdclass->homefolderServer;
 			$homeFolderPath = $configstdclass->homefolderPath;
 			$scanSharePath  = $configstdclass->scanSharePath;
 			$wwwSharePath = $configstdclass->wwwSharePath;
-			 
+
 			//up & down folders
 			$downloadSharePath = NULL;
 			$uploadSharePath = NULL;
@@ -83,27 +90,27 @@ class UsertasksController extends Zend_Controller_Action
 				$downloadSharePath = $configstdclass->downloadSharePath;
 				$uploadSharePath = $configstdclass->uploadSharePath;
 			}
-			
+				
 			solideagle\scripts\ad\homefoldermanager::prepareAddHomefolder($server, $homeFolderPath, $scanSharePath,
 					$wwwSharePath, $user,$uploadSharePath,$downloadSharePath);
 		}
-                
-                if($configstdclass->moveAdHomedir)
+
+		if($configstdclass->moveAdHomedir)
 		{
 			$server = $configstdclass->moveHomefolderServer;
 			$homeFolderPath = $configstdclass->moveHomefolderPath;
 			$scanSharePath  = $configstdclass->moveScanSharePath;
 			$wwwSharePath = $configstdclass->moveWwwSharePath;
-			 
+
 			//up & down folders
 			$downloadSharePath = $configstdclass->moveDownloadSharePath;
 			$uploadSharePath = $configstdclass->moveUploadSharePath;
-			
+				
 			solideagle\scripts\ad\homefoldermanager::prepareCopyHomefolder($server, $homeFolderPath, $user, $scanSharePath, $wwwSharePath, $uploadSharePath, $downloadSharePath);
 		}
-		 
+			
 	}
-	 
+
 	public function posttaskAction()
 	{
 		$this->_helper->layout()->disableLayout();
@@ -124,9 +131,9 @@ class UsertasksController extends Zend_Controller_Action
 		$configstdclass->uploadSharePath = $this->getRequest()->getPost('uploadSharePath');
 		$configstdclass->downloadSharePath = $this->getRequest()->getPost('downloadSharePath');
 		$configstdclass->moveAdHomedir = $this->getRequest()->getPost('moveAdHomedir',false);
-                $configstdclass->moveHomefolderServer = $this->getRequest()->getPost('moveHomefolderServer');
+		$configstdclass->moveHomefolderServer = $this->getRequest()->getPost('moveHomefolderServer');
 		$configstdclass->moveHomefolderPath = $this->getRequest()->getPost('moveHomefolderPath');
-                $configstdclass->moveScanSharePath = $this->getRequest()->getPost('moveScanSharePath');
+		$configstdclass->moveScanSharePath = $this->getRequest()->getPost('moveScanSharePath');
 		$configstdclass->moveWwwSharePath = $this->getRequest()->getPost('moveWwwSharePath');
 		$configstdclass->moveUploadSharePath = $this->getRequest()->getPost('moveUploadSharePath');
 		$configstdclass->moveDownloadSharePath = $this->getRequest()->getPost('moveDownloadSharePath');
@@ -146,7 +153,7 @@ class UsertasksController extends Zend_Controller_Action
 				echo "Geen gebruikers geselecteerd!";
 				return;
 			}
-				
+
 			foreach(Person::getPersonsByIds($this->getRequest()->getPost('users')) as $user)
 			{
 				$this->doTasksForUser($user,$configstdclass);
@@ -156,15 +163,15 @@ class UsertasksController extends Zend_Controller_Action
 		{
 			$taskTemplate = new TaskTemplate();
 			$taskTemplate->setTemplateName($this->getRequest()->getPost('txtName'));
-				
+
 			$taskTemplate->setTemplateConfig($configstdclass);
-				
+
 			if($this->getRequest()->getPost('submitBtn') == "editTemplate")
 			{
 				//bit unorthodox but will have to do for now
 				TaskTemplate::delTaskTemplateByName($this->getRequest()->getPost('txtName'));
 			}
-				
+
 			TaskTemplate::addTaskTemplate($taskTemplate);
 		}
 
@@ -190,9 +197,9 @@ class UsertasksController extends Zend_Controller_Action
 		$this->view->defaults->createAdHomedir = false;
 		$this->view->defaults->createUpDownFolders = false;
 		$this->view->defaults->moveAdHomedir = false;
-                $this->view->defaults->moveHomefolderServer = Config::singleton()->move_to_server;
+		$this->view->defaults->moveHomefolderServer = Config::singleton()->move_to_server;
 		$this->view->defaults->moveHomefolderPath = Config::singleton()->move_to_path_homefolders;
-                $this->view->defaults->moveScanSharePath = Config::singleton()->move_to_path_share_scans;
+		$this->view->defaults->moveScanSharePath = Config::singleton()->move_to_path_share_scans;
 		$this->view->defaults->moveWwwSharePath = Config::singleton()->move_to_path_share_www;
 		$this->view->defaults->moveDownloadSharePath =   Config::singleton()->move_to_path_share_downloads;
 		$this->view->defaults->moveUploadSharePath =  Config::singleton()->move_to_path_share_uploads;
@@ -241,8 +248,8 @@ class UsertasksController extends Zend_Controller_Action
 		if($templatename != null)
 		{
 			$this->view->defaults = TaskTemplate::getTemplateByName($templatename)->getTemplateConfig();
-				
-				
+
+
 		}
 
 
@@ -335,7 +342,7 @@ class UsertasksController extends Zend_Controller_Action
 	{
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
-		 
+			
 		echo $this->templatesToJson(TaskTemplate::getAllTemplates());
 		return;
 	}
@@ -350,45 +357,6 @@ class UsertasksController extends Zend_Controller_Action
 
 		return json_encode($finalarr);
 	}
-
-	 
-
-	//placeholder, do not use!
-	/*private function doUserThings()
-	 {
-	die("placeholder, do not use!");
-	//placeholder, do not use!
-	return;
-	return; //placeholder, do not use!
-	return; //placeholder, do not use!
-	//placeholder, do not use!
-	 
-	if($this->getRequest()->getPost('createAdHomedir',false))
-	{
-	 
-	$server = $this->getRequest()->getPost("HomefolderServer",NULL);
-	$homeFolderPath = $this->getRequest()->getPost("HomefolderPath",NULL);
-	$scanSharePath  = $this->getRequest()->getPost("ScanSharePath",NULL);
-	$wwwSharePath = $this->getRequest()->getPost("WWWSharePath",NULL);
-	 
-	//up & down folders
-	$downloadSharePath = NULL;
-	$uploadSharePath = NULL;
-	if($this->getRequest()->getPost('createUpDownFolders',false))
-	{
-	$downloadSharePath = $this->getRequest()->getPost("DownloadSharePath",NULL);
-	$uploadSharePath = $this->getRequest()->getPost("UploadSharePath",NULL);
-	}
-	 
-	foreach($users as $user)
-	{
-	solideagle\scripts\ad\homefoldermanager::prepareAddHomefolder($server, $homeFolderPath, $scanSharePath,
-			$wwwSharePath, $user,$uploadSharePath,$downloadSharePath);
-	}
-	}
-	}*/
-
-
 }
 
 

@@ -2,6 +2,8 @@
 
 namespace solideagle\scripts;
 
+use solideagle\logging\Logger;
+
 use solideagle\data_access\Group;
 
 use solideagle\data_access\Person;
@@ -105,8 +107,21 @@ class GlobalUserManager
 	// Platforms only
 	//
 
+	/**
+	 * 
+	 * @param Person $person
+	 * @param stdobj $configstdclass
+	 */
 	public static function createAccounts($person,$configstdclass)
 	{
+		//safety check
+		if(strlen($person->getAccountPassword()) < 6)
+		{
+			return false;
+		}else{
+			Logger::log("Can not create account that has no password",PEAR_LOG_ERR);
+		}
+		
 		if(!$person->getHasAdAccount() && $configstdclass->createAdAccount)
 		{
 			\solideagle\scripts\ad\usermanager::prepareAddUser($person);
@@ -164,11 +179,11 @@ class GlobalUserManager
 		{
 			if($configstdclass->enableGappAccount)
 			{
-				\solideagle\scripts\ga\usermanager::prepareUpdateUser($person,true);
+				\solideagle\scripts\ga\usermanager::prepareUpdateUser($person,$person,true);
 			}
 			else if($configstdclass->disableGappAccount)
 			{
-				\solideagle\scripts\ga\usermanager::prepareUpdateUser($person,false);
+				\solideagle\scripts\ga\usermanager::prepareUpdateUser($person,$person,false);
 			}
 
 		}
@@ -177,10 +192,10 @@ class GlobalUserManager
 		{
 			if($configstdclass->enableSsAccount)
 			{
-				\solideagle\scripts\smartschool\usermanager::prepareUpdateUser($person,true);
+				\solideagle\scripts\smartschool\usermanager::prepareUpdateUser($person,$person,true);
 			}
 			else if($configstdclass->disableSsAccount){
-				\solideagle\scripts\smartschool\usermanager::prepareUpdateUser($person,false);
+				\solideagle\scripts\smartschool\usermanager::prepareUpdateUser($person,$person,false);
 			}
 		}
 	}

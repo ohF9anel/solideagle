@@ -6,6 +6,7 @@
 		$("#groupbreadcrumbs").load("<?php echo $this->SE_path . '/groups/getgroupbreadcrumbs?groupid=' . $this->groupid ?>");
 
 		$("#formAddGroup").ajaxForm({
+			beforeSubmit:  preventDoubleSubmit,
 			success: function(responseText, statusText, xhr, $form) { 
 
 				if(responseText.length > 0)

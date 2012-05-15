@@ -21,6 +21,7 @@ class sshpreformatter
 			exec("rm " . Config::singleton()->batchscriptsdir . "*"); 
 			//create plink yes script
 			exec('echo "y\n" > ' . Config::singleton()->batchscriptsdir . "plink.yes.batch");
+			exec('echo "cmd /C C:/solideagle.cmd\nexit\nexit\n" > ' . Config::singleton()->batchscriptsdir . "plink.execute.batch");
 		}
 		return self::$instance;
 	}
@@ -66,25 +67,25 @@ class sshpreformatter
 
 class sshrunner
 {
+
+	
 	public static function executeSSHBatchScript($username,$password,$server,$pathtofile)
 	{
-		$descriptorspec = array(
-				0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
-				1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
-				2 => array("pipe", "a")   // stderr is a pipe to write to
-		);
-
+		Logger::log("Copying batch file to: " . $server ,PEAR_LOG_INFO);
+		
+		$copyCommand = "pscp -pw " . $password .  " " . $pathtofile . " " . $username . "@" . $server . ":/cygdrive/c/solideagle.cmd";
+		
+		exec($copyCommand);
+		
 		Logger::log("Running batch file for: " . $server ,PEAR_LOG_INFO);
 
-		//$commandToExecute = "plink -m " . $pathtofile . " -pw " . $password .  " " . $username . "@" . $server . " < " . Config::singleton()->batchscriptsdir . "plink.yes.batch" . " 2>&1";
-
-		$commandToExecute = "plink -pw " . $password .  " " . $username . "@" . $server . " < " . $pathtofile . " 2>&1";
+		$commandToExecute = "plink -m " . Config::singleton()->batchscriptsdir . "plink.execute.batch" . " -pw " . $password .  " " . $username . "@" . $server . " < " . Config::singleton()->batchscriptsdir . "plink.yes.batch" . " 2>&1";
 		
 		$outputarr = array();
 
-		exec("cat " . $pathtofile,$outputarr);
+		//exec("cat " . $pathtofile,$outputarr);
 
-		Logger::log("Batchfile input:\n" . implode("\n",$outputarr),PEAR_LOG_INFO);
+		//Logger::log("Batchfile input:\n" . implode("\n",$outputarr),PEAR_LOG_INFO);
 
 		$outputarr = array();
 
@@ -117,6 +118,7 @@ class batchfile
 		{
 			$this->isOpenForWriting = true;
 			$this->writeToFile("y\n");
+			
 		}
 
 		return $this->isOpenForWriting;
