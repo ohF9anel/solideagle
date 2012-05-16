@@ -114,27 +114,40 @@ class GlobalUserManager
 	 */
 	public static function createAccounts($person,$configstdclass)
 	{
-		//safety check
-		if(strlen($person->getAccountPassword()) < 6)
-		{
-			return false;
-		}else{
-			Logger::log("Can not create account that has no password",PEAR_LOG_ERR);
-		}
-		
 		if(!$person->getHasAdAccount() && $configstdclass->createAdAccount)
 		{
+			//safety check
+			if(strlen($person->getAccountPassword()) < 8)
+			{
+				Logger::log("Can not create account " . $person->getAccountUsername()  . " that has short or no password (" . $person->getAccountPassword() . ")",PEAR_LOG_ERR);
+				return false;
+			}
+			
 			\solideagle\scripts\ad\usermanager::prepareAddUser($person);
 		}
 
 		if(!$person->getHasGaAccount() && $configstdclass->createGappAccount)
 		{
+			//safety check
+			if(strlen($person->getAccountPassword()) < 8)
+			{
+				Logger::log("Can not create account " . $person->getAccountUsername()  . " that has short or no password (" . $person->getAccountPassword() . ")",PEAR_LOG_ERR);
+				return false;
+			}
+			
 			\solideagle\scripts\ga\usermanager::prepareAddUser($person);
 
 		}
 
 		if(!$person->getHasSSAccount() && $configstdclass->createSsAccount)
 		{
+			//safety check
+			if(strlen($person->getAccountPassword()) < 8)
+			{
+				Logger::log("Can not create account " . $person->getAccountUsername()  . " that has short or no password (" . $person->getAccountPassword() . ")",PEAR_LOG_ERR);
+				return false;
+			}
+			
 			\solideagle\scripts\smartschool\usermanager::prepareAddUser($person);
 		}
 

@@ -12,8 +12,6 @@ class UploadFolder
     
     public static function setUploadFolder($conn, $path, $uploadSharePath, $username, $enabled = true)
     {
-    
-        
         if ($enabled)
         {
             $conn->write("mkdir " . $path . "\\" . $username . "\\" . Config::singleton()->dir_name_uploads . "\n");
@@ -34,14 +32,6 @@ class UploadFolder
         {
             $conn->write("rmdir " . $uploadSharePath . "\\" . $username . " /s /q\n");
         }
-        
-//        $conn->write("echo ENDOFCODE\n");
-//        $conn->read("ENDOFCODE");
-        
-//        while($data = $conn->_get_channel_packet(NET_SSH2_CHANNEL_SHELL))
-//            echo $data;
-     
-        
     }
     
 }

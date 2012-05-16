@@ -22,6 +22,9 @@ class Group
 	private $types = array();
 	private $amountOfmembers;
 	private $totalAmountOfMembers;
+	
+	private $instituteNumber;
+	private $administrativeNumber;
 
 	// getters, setters & functions
 
@@ -140,17 +143,23 @@ class Group
 		$sql = "INSERT INTO  `group`
 		(
 		`name`,
-		`description`)
+		`description`,
+		`instituteNumber`,
+		`administrativeNumber`)
 		VALUES
 		(
 		:name,
-		:desc
+		:desc,
+		:instnr,
+		:adminnr
 		);";
 			
 		$cmd->newQuery($sql);
 
 		$cmd->addParam(":name", $group->getName());
 		$cmd->addParam(":desc", $group->getDescription());
+		$cmd->addParam(":instnr", $group->getInstituteNumber());
+		$cmd->addParam(":adminnr", $group->getAdministrativeNumber());
 			
 		$cmd->execute();
 
@@ -660,7 +669,10 @@ class Group
 	{
 		$sql = "SELECT p.`id`,
 		p.`name`,
-		p.`description`FROM `group` p WHERE  p.`id` = :groupid";
+		p.`administrativeNumber`,
+		p.`instituteNumber`,
+		p.`description`
+		FROM `group` p WHERE  p.`id` = :groupid";
 
 		$cmd = new DatabaseCommand($sql);
 
@@ -674,6 +686,8 @@ class Group
 			$tmpgroup->setId($row->id);
 			$tmpgroup->setName($row->name);
 			$tmpgroup->setDescription($row->description);
+			$tmpgroup->setAdministrativeNumber($row->administrativeNumber);
+			$tmpgroup->setInstituteNumber($row->instituteNumber);
 		}
 
 
@@ -686,7 +700,10 @@ class Group
 	{
 		$sql = "SELECT p.`id`,
 		p.`name`,
-		p.`description`FROM `group` p WHERE  p.`name` = :groupname";
+		p.`administrativeNumber`,
+		p.`instituteNumber`,
+		p.`description`
+		FROM `group` p WHERE  p.`name` = :groupname";
 
 		$cmd = new DatabaseCommand($sql);
 
@@ -700,6 +717,8 @@ class Group
 			$tmpgroup->setId($row->id);
 			$tmpgroup->setName($row->name);
 			$tmpgroup->setDescription($row->description);
+			$tmpgroup->setAdministrativeNumber($row->administrativeNumber);
+			$tmpgroup->setInstituteNumber($row->instituteNumber);
 		}
 
 		return $tmpgroup;
@@ -770,7 +789,25 @@ class Group
 	    $this->totalAmountOfMembers = $totalAmountOfMembers;
 	}
 	
-	
+	public function getInstituteNumber()
+	{
+	    return $this->instituteNumber;
+	}
+
+	public function setInstituteNumber($instituteNumber)
+	{
+	    $this->instituteNumber = $instituteNumber;
+	}
+
+	public function getAdministrativeNumber()
+	{
+	    return $this->administrativeNumber;
+	}
+
+	public function setAdministrativeNumber($administrativeNumber)
+	{
+	    $this->administrativeNumber = $administrativeNumber;
+	}
 }
 
 

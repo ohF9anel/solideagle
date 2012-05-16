@@ -198,9 +198,6 @@ class GroupsController extends Zend_Controller_Action
 	{
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
-			
-
-
 
 		$parentgroupid = $this->getRequest()->getParam("parentgroupid");
 		if(Group::getGroupById($parentgroupid) === NULL)
@@ -208,11 +205,24 @@ class GroupsController extends Zend_Controller_Action
 			echo "Parent groep bestaat niet.";
 			return;
 		}
+		
+		if(Group::getGroupByName($this->getRequest()->getParam("groupName")) !== NULL)
+		{
+			echo "Een groep met deze naam bestaat al.";
+			return;
+		}
 			
 		$newSubGroup = new Group();
 		$newSubGroup->setParentId($parentgroupid);
 		$newSubGroup->setName($this->getRequest()->getParam("groupName"));
 		$newSubGroup->setDescription($this->getRequest()->getParam("groupDescription"));
+		
+		//this group is an official class (smartschool uses this)
+		if($this->getRequest()->getParam("officialclass",false))
+		{
+			$newSubGroup->setInstituteNumber($this->getRequest()->getParam("instellingsnummer",false));
+			$newSubGroup->setAdministrativeNumber($this->getRequest()->getParam("administratievegroep",false));
+		}
 			
 		$newsubgroupid = Group::addGroup($newSubGroup);
 			

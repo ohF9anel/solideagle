@@ -67,6 +67,7 @@
           <actionMethod actionName="index"/>
           <actionMethod actionName="startclean"/>
           <actionMethod actionName="updateconfig"/>
+          <actionMethod actionName="deleteoldgroups"/>
         </controllerFile>
       </controllersDirectory>
       <formsDirectory enabled="false"/>
@@ -180,6 +181,9 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Imports">
             <viewScriptFile forActionName="importpersons"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Databasetasks">
+            <viewScriptFile forActionName="deleteoldgroups"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>

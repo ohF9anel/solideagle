@@ -24,13 +24,20 @@
 </script>
 
 
-<form class="form-horizontal" action="<?php echo $this->SE_path . "/groups/addsubgrouppost" ?>" method="post"
+<form
+	class="form-horizontal"
+	action="<?php echo $this->SE_path . "/groups/addsubgrouppost" ?>"
+	method="post"
 	id="formAddGroup">
 
-	<div class="hide SEsupermodal" id="myModal">
+	<div
+		class="hide SEsupermodal"
+		id="myModal">
 		<div>
 			<div class="modal-header">
-				<a class="close" data-dismiss="modal">×</a>
+				<a
+					class="close"
+					data-dismiss="modal">×</a>
 				<h3 id="modaltitle">
 					Subgroep maken<small id="groupbreadcrumbs"></small>
 				</h3>
@@ -39,49 +46,125 @@
 
 				<fieldset>
 					<div class="control-group">
-						<label class="control-label" for="txtName">Naam</label>
+						<label
+							class="control-label"
+							for="txtName">Naam</label>
 						<div class="controls">
-							<input id="txtName" name="groupName" class="input-xlarge" type="text" value="">
+							<input
+								id="txtName"
+								name="groupName"
+								class="input-xlarge"
+								type="text"
+								value="">
 						</div>
 					</div>
 
 					<div class="control-group">
-						<label class="control-label" for="txtDescription">Omschrijving</label>
+						<label
+							class="control-label"
+							for="txtDescription">Omschrijving</label>
 						<div class="controls">
-							<textarea id="txtDescription" name="groupDescription" class="input-xlarge" rows="3"></textarea>
+							<textarea
+								id="txtDescription"
+								name="groupDescription"
+								class="input-xlarge"
+								rows="3"></textarea>
 						</div>
 					</div>
 
 					<div class="control-group">
-						<label class="control-label" for="cbActive">Standaard Types</label>
+						<label
+							class="control-label"
+							for="cbActive">Standaard Types</label>
 						<div class="controls">
 							<?php foreach($this->types as $type)
                                         {?>
 							<label class="checkbox">
-								<input name="ptype[]"
-							<?php
-							
-							if(in_array($type, $this->parentTypes))
+								<input
+									name="ptype[]"
+									<?php
+
+									if(in_array($type, $this->parentTypes))
 									{
 										echo 'checked="checked"';
 									}
-							
-							?>
-								
-								 value="<?php echo $type->getId(); ?>" type="checkbox">
+
+									?>
+									value="<?php echo $type->getId(); ?>"
+									type="checkbox">
 								<?php echo $type->getTypeName(); ?>
 							</label>
 							<?php } ?>
 						</div>
 					</div>
 
-					<input type="hidden" name="parentgroupid" value="<?php echo $this->groupid ?>">
+					<div class="control-group">
+						<label
+							class="control-label"
+							for="chkOfficial">Officiële klas</label>
+						<div class="controls">
+							<input
+								id="txtDeschkOfficialcription"
+								value="true"
+								name="officialclass"
+								type="checkbox"
+								data-toggle="collapse"
+								data-target="#officialClassDiv" />
+
+						</div>
+					</div>
+
+					<div
+						id="officialClassDiv"
+						class="collapse out">
+						<div class="control-group">
+							<label
+								class="control-label"
+								for="instellingsnummer">Instellingsnummer</label>
+							<div class="controls">
+								<input
+									id="instellingsnummer"
+									name="instellingsnummer"
+									class="input-xlarge"
+									type="text"
+									value="">
+								<p class="help-block ">
+									<i>Enkel voor het aanmaken van een officiële klas</i>
+								</p>
+							</div>
+							<label
+								class="control-label"
+								for="administratievegroep">Administratieve Groep</label>
+							<div class="controls">
+								<input
+									id="administratievegroep"
+									name="administratievegroep"
+									class="input-xlarge"
+									type="text"
+									value="">
+								<p class="help-block ">
+									<i>Enkel voor het aanmaken van een officiële klas</i>
+								</p>
+							</div>
+						</div>
+
+					</div>
+
+					<input
+						type="hidden"
+						name="parentgroupid"
+						value="<?php echo $this->groupid ?>">
 				</fieldset>
 
 			</div>
 			<div class="modal-footer">
-				<a href="#" class="btn" data-dismiss="modal">Annuleren</a>
-				<button class="btn btn-primary" type="submit">Opslaan</button>
+				<a
+					href="#"
+					class="btn"
+					data-dismiss="modal">Annuleren</a>
+				<button
+					class="btn btn-primary"
+					type="submit">Opslaan</button>
 			</div>
 		</div>
 	</div>

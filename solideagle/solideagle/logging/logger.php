@@ -19,6 +19,15 @@ class Logger
 	 */
 	private static function getLogger()
 	{
+		
+		if(!file_exists("/var/log/solideagle/out.log"))
+		{
+			exec("touch /var/log/solideagle/out.log");
+			exec("chmod 777 /var/log/solideagle/out.log");
+			
+			self::log("Created log file");
+		}
+		
 		$loglevel = Config::singleton()->debugLevel;
 
 		if(Logger::$logger == NULL)
@@ -36,8 +45,8 @@ class Logger
 		$logplace = "";
 
 
-		if (!$hidepathandline)
-			$logplace = "File: " . $traces[1]["file"] . " Line: " . $traces[1]["line"] . "\n";
+		//if (!$hidepathandline)
+			$logplace = "Class: " . $traces[1]["class"]. " Function: " . $traces[1]["function"] . " Line: " . $traces[0]["line"] . "\n";
 
 
 		self::getLogger()->log("\n" . $logplace . $errormessage . "\n", $messagetype);
