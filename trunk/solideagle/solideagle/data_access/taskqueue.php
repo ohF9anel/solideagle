@@ -101,38 +101,6 @@ class TaskQueue
 		self::addToQueue($tq);
 	}
 	
-	/*public static function getTasksToRun()
-	{
-		$sql = "SELECT
-			`task_queue`.`id`,
-			`task_queue`.`person_id`,
-			`task_queue`.`group_id`,
-			`task_queue`.`task_class`,
-			`task_queue`.`configuration`,
-			`task_queue`.`errorcount`,
-			`task_queue`.`errormessages`
-			FROM  `task_queue`;";
-		
-		$cmd = new DatabaseCommand($sql);
-		
-		$retarr = array();
-		
-		$cmd->executeReader()->readAll(function($row) use (&$retarr){
-			
-			$tq = new TaskQueue();
-			$tq->setId($row->id);
-			$tq->setPersonid($row->person_id);
-			$tq->setGroupid($row->group_id);
-			$tq->setTask_class($row->task_class);
-			$tq->setConfigurationFromDb($row->configuration);
-			$tq->setErrorcount($row->errorcount);
-			$tq->setErrormessages($row->errormessages);
-			
-			$retarr[] = $tq;
-		});
-		
-		return $retarr;
-	}*/
 	
 	public static function getTasksToRunForPlatform($platform,$minerrorcount = 0)
 	{

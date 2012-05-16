@@ -115,12 +115,9 @@ class daemon
 	private function runTasks()
 	{
 		
-		foreach(TaskQueue::getAllPlatforms() as $platform)
-		//$platform = platforms::PLATFORM_SMARTSCHOOL;
+		//foreach(TaskQueue::getAllPlatforms() as $platform)
+		$platform = platforms::PLATFORM_SMARTSCHOOL;
 		{
-			 
-                    $platform = \solideagle\data_access\platforms::PLATFORM_GAPP;
-
 			$tasksss = TaskQueue::getTasksToRunForPlatform($platform);
 			Logger::log("Platform " . $platform . " has " . count($tasksss) . " tasks in queue...",PEAR_LOG_INFO, true);
 				
@@ -140,18 +137,20 @@ class daemon
 					
 				if(method_exists($script,"runTask"))
 				{
-					Logger::log("Starting task: \"" . $conf["action"] . "\" in \"". $class . "\"",PEAR_LOG_INFO, true);
-
+					//Kan niet, $conf["action"] bestaat niet altijd
+					//Logger::log("Starting task: \"" . $conf["action"] . "\" in \"". $class . "\"",PEAR_LOG_INFO, true);
+					
 					if($script->runTask($taskqueue))
 					{
 						TaskQueue::addToRollback($taskqueue);
 						$conf = $taskqueue->getConfiguration();
-						Logger::log("Successfully completed task: \"" . $conf["action"] . "\" in \"" . $class . "\" ran succesfully!",PEAR_LOG_INFO, true);
+						//Kan niet, $conf["action"] bestaat niet altijd
+						//Logger::log("Successfully completed task: \"" . $conf["action"] . "\" in \"" . $class . "\" ran succesfully!",PEAR_LOG_INFO, true);
 							
 					}else{
 						Logger::log("Task: " . $class . " failed with error:\n". $taskqueue->getErrormessages() . "\n"
 								. "Task ID: ". $taskqueue->getId() . "\n"
-								. "Config: " . var_export($taskqueue->getConfiguration(), true) . "\n", PEAR_LOG_ALERT, true);
+								. "Config: " . var_export($taskqueue->getConfiguration(), true) . "\n", PEAR_LOG_ERR, true);
 
 						TaskQueue::increaseErrorCount($taskqueue);
 

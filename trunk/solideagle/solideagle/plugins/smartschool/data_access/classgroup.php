@@ -9,6 +9,7 @@ use solideagle\plugins\StatusReport;
 class ClassGroup{
 
 	const GroupPrefix = "x1x";
+	
 	private $name;
 	private $desc;
 	private $code;
@@ -20,6 +21,9 @@ class ClassGroup{
 	public function setName($name)
 	{
 	    $this->name = $name;
+	    
+	    //The field code is used as the unique identifier for groups on smartschool, we use the name of our group
+	    $this->setCode($name);
 	}
 
 	public function setDesc($desc)
@@ -28,17 +32,17 @@ class ClassGroup{
 	}
 
 	/**
-	 * This field is used as the unique identifier for groups on smartschool, we use the name of our group
+	 * This field is used as the unique identifier for groups on smartschool
 	 * @param string $code
 	 */
-	public function setCode($code)
+	private function setCode($code)
 	{
-	    $this->code = self::GroupPrefix . UnicodeHelper::cleanSmartschoolCodeString($code);
+	    $this->code = self::createGroupcodeFromName($code);
 	}
 
 	public function setParentCode($parentCode) 
 	{
-	    $this->parentCode = self::GroupPrefix . UnicodeHelper::cleanSmartschoolCodeString($parentCode);
+	    $this->parentCode = self::createGroupcodeFromName($parentCode);
 	}
 
 	public function setUntis($untis)
@@ -58,10 +62,8 @@ class ClassGroup{
 	
 	public static function saveClassGroup($classGroup)
 	{
-		$retval = 0;
-		
 		$api = Api::singleton();
-		$retval += $api->saveClass($classGroup->name, $classGroup->desc, $classGroup->code,$classGroup->parentCode,		
+		$retval = $api->saveClass($classGroup->name, $classGroup->desc, $classGroup->code,$classGroup->parentCode,		
 									$classGroup->untis, $classGroup->instituteNumber, $classGroup->adminNumber);
 		
 		if($retval == 0)
@@ -75,10 +77,9 @@ class ClassGroup{
 	
 	public static function deleteClassGroupByCode($classGroupCode)
 	{
-		$retval = 0;
-				
+			
 		$api = Api::singleton();
-		$retval += $api->delClass(self::GroupPrefix . UnicodeHelper::cleanSmartschoolCodeString($classGroupCode));
+		$retval = $api->delClass(self::createGroupcodeFromName($classGroupCode));
 		
 		if($retval == 0)
 		{
@@ -91,12 +92,23 @@ class ClassGroup{
 	public static function updateClassGroup()
 	{
 		//not supported by smartschool!
+		
 	}
 	
 	
-	public static function moveClassGroup($newparentgroupcode,$classgroup)
+	public static function moveClassGroup($classgroup)
 	{
 		//not supported by smartschool!
+		//trying to set the parentcode does nothing
+		return;
+		
+		//there is only one API function for smartschool
+		saveClassGroup($classgroup);
+	}
+	
+	private static function createGroupcodeFromName($name)
+	{
+		return self::GroupPrefix . UnicodeHelper::cleanSmartschoolCodeString($name);
 	}
 
 	

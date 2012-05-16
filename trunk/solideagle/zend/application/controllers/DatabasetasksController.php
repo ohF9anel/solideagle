@@ -1,5 +1,7 @@
 <?php
 
+use solideagle\scripts\oldgroupDeleter;
+
 use solideagle\scripts\UpdateConfig;
 
 use solideagle\scripts\InitialAdImport;
@@ -34,8 +36,15 @@ class DatabasetasksController extends Zend_Controller_Action
         UpdateConfig::update();
     }
 
+    public function deleteoldgroupsAction()
+    {
+        oldgroupDeleter::deleteOldGroups();
+    }
+
 
 }
+
+
 
 
 

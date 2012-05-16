@@ -2,6 +2,8 @@
 namespace solideagle\scripts\smartschool;
 
 
+use solideagle\logging\Logger;
+
 use solideagle\plugins\StatusReport;
 
 use solideagle\plugins\smartschool\data_access\ClassGroup;
@@ -27,14 +29,24 @@ class groupmanager implements TaskInterface
 
 		if($config->action == self::ActionAdd)
 		{
+			Logger::log("Trying to create group: " .$config->newgroup->getName() ." on smartschool",PEAR_LOG_INFO);
+			
 			$classGroup = new ClassGroup();
 			$classGroup->setName($config->newgroup->getName());
-			//The field code is used as the unique identifier for groups on smartschool, we use the name of our group
-			$classGroup->setCode($config->newgroup->getName());
+
 			//do not put ANY weird characters in desc, because smartschool does not handle it properly and smartschool WILL break
 			//(it does allow html injection... yay!)
 			//I did send a bugreport so I hope they fix this
 			$classGroup->setDesc("Gemaakt door SolidEagle");
+			
+			if($config->newgroup->getAdministrativeNumber() !== NULL)
+			{
+				Logger::log("Group: " .$config->newgroup->getName() ." is an official class with instituenumber: " .
+						$config->newgroup->getInstituteNumber() . " and adminnr: " . $config->newgroup->getAdministrativeNumber()  ,PEAR_LOG_INFO);
+			}
+			
+			$classGroup->setAdminNumber($config->newgroup->getAdministrativeNumber());
+			$classGroup->setInstituteNumber($config->newgroup->getInstituteNumber());
 			
 			if(isset($config->parents) && count($config->parents) > 0)
 			{
@@ -45,6 +57,7 @@ class groupmanager implements TaskInterface
 			
 			if($ret->isSucces())
 			{
+				Logger::log("Group: " .$config->newgroup->getName() ." succesfully created on smartschool",PEAR_LOG_INFO);
 				return true;
 			}else{
 				$taskqueue->setErrorMessages($ret->getError());
@@ -53,10 +66,14 @@ class groupmanager implements TaskInterface
 			
 		}else if($config->action == self::ActionMove)
 		{
+			Logger::log("Trying to move group: " .$config->group->getName() ." on smartschool from " .
+					 $config->oldparents[0]->getName() . " to " . $config->newparents[0]->getName(),PEAR_LOG_INFO);
+				
 			$ret = new StatusReport(false,"Deze actie wordt niet ondersteund door smartschool. Voer de verplaatsing manueel uit");
-			
+				
 			if($ret->isSucces())
 			{
+				Logger::log("Group: " .$config->group->getName() ." succesfully moved on smartschool",PEAR_LOG_INFO);
 				return true;
 			}else{
 				$taskqueue->setErrorMessages($ret->getError());
@@ -79,9 +96,12 @@ class groupmanager implements TaskInterface
 		else if($config->action == self::ActionRemove)
 		{
 	
+			Logger::log("Trying to remove group: " .$config->group->getName() ." on smartschool",PEAR_LOG_INFO);
+			
 			$ret = ClassGroup::deleteClassGroupByCode($config->group->getName());
 			if($ret->isSucces())
 			{
+				Logger::log("Group: " .$config->group->getName() ." succesfully removed from smartschool",PEAR_LOG_INFO);
 				return true;
 			}else{
 				$taskqueue->setErrorMessages($ret->getError());
@@ -136,7 +156,7 @@ class groupmanager implements TaskInterface
 		$stdConfig = new \stdClass();
 		$stdConfig->action = self::ActionMove;
 
-		//$stdConfig->oldparents = $oldparents;
+		$stdConfig->oldparents = $oldparents;
 		$stdConfig->newparents = $newparents;
 		$stdConfig->group = $group;
 

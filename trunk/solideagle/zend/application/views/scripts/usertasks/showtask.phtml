@@ -22,6 +22,10 @@ use solideagle\utilities\SuperEntities;
                 if ($("#createAdHomedir").is(":checked")) { 
                     $("#createAdHomedir").trigger('click').attr('checked','checked');
                 }
+
+                if ($("#createUpDownFolders").is(":checked")) { 
+                    $("#createUpDownFolders").trigger('click').attr('checked','checked');
+                }
                 
                 if ($("#moveAdHomedir").is(":checked")) { 
                     $("#moveAdHomedir").trigger('click').attr('checked','checked');
@@ -63,40 +67,7 @@ use solideagle\utilities\SuperEntities;
 	    } });
 	});
 
-	<?php /*function loadTemplate(templatename)
-	{
-		$.getJSON("<?php echo $this->SE_path . '/tasktemplate/gettemplate' ?>",{'templatename':templatename} ,
-
-                function(data)  {
-                	 $.each(data, function(key, val) {
-                		 if(key=="templateConfig")
-                		 {
-                			 $.each(val, function(param, value) {
-
-                    			var elem = $("#"+ param);
-                    			
-                    			if(elem.attr("type") == "text")
-                    			{
-                        			alert("TEXT: " + elem + " " + value)
-                    				elem.attr("value",value);
-                    			}else if(elem.attr("type") == "checkbox")
-                    			{                			
-                        			if(value)
-                        			{
-                        				elem.attr("checked","checked");
-                        			}
-                    				
-                    			}else{
-                    				alert("UNK: " + elem.attr("type")  + " " + value)
-                    			}
-                				
-                 				
-                			 });
-                		 }
-                    });
-                }
-        );
-	}*/ ?>
+	
 </script>
 
 <form
