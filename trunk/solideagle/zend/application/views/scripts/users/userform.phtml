@@ -316,7 +316,9 @@ $ppp = $this->person; ?>
 							<div class="control-group">
 								<label class="control-label" for="txtUniqueident">UniqueIdentifier</label>
 								<div class="controls">
-									<input id="txtUniqueident" name="uniqueIdentifier" class="input-xlarge" type="text"
+									<input id="txtUniqueident"
+									<?php if($this->state === $this->stateEdit) echo 'readonly="readonly"'; ?>
+									 name="uniqueIdentifier" class="input-xlarge" type="text"
 										value="<?php echo SuperEntities::encode($ppp->getUniqueIdentifier()) ?>">
 								</div>
 							</div>
@@ -328,10 +330,6 @@ $ppp = $this->person; ?>
 										value="<?php echo SuperEntities::encode($ppp->getInformatId()) ?>">
 								</div>
 							</div>
-							
-						
-							
-							
 
 							<div class="control-group">
 								<label class="control-label" for="txtOtherInformation">Extra informatie</label>

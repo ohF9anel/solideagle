@@ -58,9 +58,9 @@ class Person
 	private $year;
 
 	//readonly
-	private $hasAdAccount;
-	private $hasSSAccount;
-	private $hasGaAccount;
+	private $hasAdAccount = false;
+	private $hasSSAccount= false;
+	private $hasGaAccount= false;
 
 	public function __construct()
 	{
@@ -340,7 +340,7 @@ class Person
 	{
 		$this->pictureUrl = $pictureUrl;
 	}
-	 
+
 	public function getGroupId()
 	{
 		return $this->groupId;
@@ -424,24 +424,24 @@ class Person
 	public static function generatePassword($length = 8)
 	{
 		$passchars = 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ1234567890';
-		
-                $goodpassword = false;
-                
-                while (!$goodpassword)
-                {
-                    $password = '';
-                    for ($i = 0; $i < $length; $i++) {
-                            $password .= $passchars[(rand() % strlen($passchars))];
-                    }
 
-                    if((preg_match('`[A-Z]`',$password) // at least one upper case 
-                        && preg_match('`[a-z]`',$password) // at least one lower case 
-                        && preg_match('`[0-9]`',$password))) // at least one number
-                    {
-                        $goodpassword = true;
-                    }
-                }
-                
+		$goodpassword = false;
+
+		while (!$goodpassword)
+		{
+			$password = '';
+			for ($i = 0; $i < $length; $i++) {
+				$password .= $passchars[(rand() % strlen($passchars))];
+			}
+
+			if((preg_match('`[A-Z]`',$password) // at least one upper case
+					&& preg_match('`[a-z]`',$password) // at least one lower case
+					&& preg_match('`[0-9]`',$password))) // at least one number
+			{
+				$goodpassword = true;
+			}
+		}
+
 		return $password;
 		//return "P@ssw0rd"; //cool and 1337 password that is as good as any other password!
 	}
@@ -460,6 +460,11 @@ class Person
 		{
 			Logger::log("Person not validated before saving! Validation errors:\n" . var_export($err,true) . "\nPerson object dump:\n" . var_export($person,true) . "\n",PEAR_LOG_ERR);
 			return false;
+		}
+
+		if(strlen($person->getUniqueIdentifier()) < 1)
+		{
+			$person->setUniqueIdentifier($person->getAccountUsername());
 		}
 
 		$sql = "INSERT INTO  `person`
@@ -772,12 +777,12 @@ class Person
 
 	public static function getPersonsByIds($ids)
 	{
-		
+
 		if(count($ids) < 1)
 		{
 			return array();
 		}
-		
+
 		$params = "";
 		for($i=0;$i<count($ids);$i++)
 		{
@@ -821,8 +826,8 @@ class Person
 
 		return $person;
 	}
-        
-        public static function getPersonByUsername($username)
+
+	public static function getPersonByUsername($username)
 	{
 		$sql = "SELECT * FROM  `allPersons`
 		WHERE `account_username` = :account_username;";
@@ -1177,22 +1182,22 @@ class Person
 					$validationErrors[] = "Stamnummer student: fout."; break;
 			}
 		}
-                
-                // picture url
-                if ($person->getPictureUrl() != null)
-                {
-                    $valErrors = Validator::validateUrl($person->getPictureUrl());
-                    foreach ($valErrors as $valError)
-                    {
-                            switch($valError)
-                            {
-                                    case ValidationError::URL_INVALID:
-                                            $validationErrors[] = "Foto URL: ongeldig (moet met http(s): starten en mag geen gevaarlijke karakters bevatten."; break;
-                                    default:
-                                            $validationErrors[] = "Foto URL: fout."; break;
-                            }
-                    }
-                }
+
+		// picture url
+		if ($person->getPictureUrl() != null)
+		{
+			$valErrors = Validator::validateUrl($person->getPictureUrl());
+			foreach ($valErrors as $valError)
+			{
+				switch($valError)
+				{
+					case ValidationError::URL_INVALID:
+						$validationErrors[] = "Foto URL: ongeldig (moet met http(s): starten en mag geen gevaarlijke karakters bevatten."; break;
+					default:
+						$validationErrors[] = "Foto URL: fout."; break;
+				}
+			}
+		}
 
 		if($person->getGroupId()===NULL)
 		{
@@ -1217,7 +1222,7 @@ class Person
 
 	/**
 	 *
-	 * 
+	 *
 	 * Will only partially fill the user object!
 	 * @param int $groupid
 	 */
@@ -1300,16 +1305,16 @@ class Person
 	{
 		return json_encode(get_object_vars($this));
 	}
-	
+
 	public static function searchPerson($naam,$voornaam,$username)
 	{
-		$sql ="SELECT id,first_name,name,account_username,group_id FROM allPersons 
-		WHERE 
+		$sql ="SELECT id,first_name,name,account_username,group_id FROM allPersons
+		WHERE
 		first_name like :firstname AND
 		name like :name AND
 		account_username like :username";
-		
-		
+
+
 		$cmd = new DatabaseCommand($sql);
 			
 		$cmd->addParam(":firstname", $naam);
@@ -1319,18 +1324,18 @@ class Person
 		$retarr = array();
 			
 		$cmd->executeReader()->readAll(function($row) use (&$retarr){
-		
+
 			$tempperson = new Person();
 			$tempperson->setId($row->id);
 			$tempperson->setName($row->name);
 			$tempperson->setFirstName($row->first_name);
 			$tempperson->setAccountUsername($row->account_username);
 			$tempperson->setGroupId($row->group_id);
-		
+
 			$retarr[] = $tempperson;
-		
+
 		});
-		
+
 		return $retarr;
 	}
 
@@ -1432,19 +1437,19 @@ class Person
 
 		return $personidarr;
 	}
-	
-	
+
+
 	public static function updatePasswordField($personid,$password)
 	{
 		$sql = "UPDATE person p set p.account_password = :accountpassword where p.id = :personid";
-		
+
 		$cmd = new DatabaseCommand($sql);
 		$cmd->addParam(":personid", $personid);
 		$cmd->addParam(":accountpassword", $password);
-		
+
 		$cmd->execute();
 	}
-	
+
 	//gets users in this group and subgroups
 	//should be renamed
 	public static function getPersonIdsByGroupId($groupid)
@@ -1454,15 +1459,15 @@ class Person
 		{
 			//get users in group and subgroups
 			$group = Group::getGroupById($groupid);
-			 
+
 			$usersArr = array_merge($usersArr,Person::getPersonIdsByGroup($groupid));
-			 
+
 			foreach (Group::getAllChilderen($group) as $chldgroup)
 			{
 				$usersArr = array_merge($usersArr,Person::getPersonIdsByGroup($chldgroup->getId()));
 			}
 		}
-		 
+			
 		return $usersArr;
 	}
 
@@ -1485,11 +1490,11 @@ class Person
 		$cmd->addParam(":group_id", $person->getGroupId());
 		$cmd->execute();
 	}
-        
-        public static function clearPasswordByPersonId($id)
-        {
-            $sql = "UPDATE  `person` SET
-		`account_password` = ''
+
+	public static function clearPasswordByPersonId($id)
+	{
+		$sql = "UPDATE  `person` SET
+		`account_password` = null
 		WHERE id = :id";
 
 		$cmd = new DatabaseCommand($sql);
@@ -1497,7 +1502,7 @@ class Person
 		$cmd->newQuery($sql);
 		$cmd->addParam(":id", $id);
 		$cmd->execute();
-        }
+	}
 
 	public function getValErrors()
 	{
@@ -1518,55 +1523,100 @@ class Person
 	{
 		return $this->hasGaAccount;
 	}
-        
-//        public static function setRandomPassword($id)
-//	{
-//		 $sql = "UPDATE `person` 
-//                SET `account_password` = :password 
-//                WHERE `id` = :id";
-//
-//		$cmd = new DatabaseCommand($sql);
-//
-//		$cmd->newQuery($sql);
-//		$cmd->addParam(":id", $id);
-//                $psw = substr(str_shuffle("abcefghijklmnopqrstuvwxyz" . 
-//                "ABCDEFGHIJKLMNOPQRSTUVWXYZ" . "012345678901234567890123456789"), 0, 16);
-//                $cmd->addParam(":password", $psw);
-//		$cmd->execute();
-//                
-//                $cmd->newQuery("SELECT LAST_INSERT_ID();");
-//
-//                return $id;
-//                
-//	}
-//        
-//        public static function setTypeLeerling($id)
-//	{
-//		$sql = "INSERT INTO  `type_person`
-//		(
-//		`type_id`,
-//		`person_id`
-//		)
-//		VALUES
-//		(
-//		:type_id,
-//		:person_id
-//		);";
-//
-//		$cmd = new DatabaseCommand($sql);
-//
-//		$cmd->newQuery($sql);
-//                $cmd->addParam(":type_id", 3);
-//                $cmd->addParam(":person_id", $id);
-//
-//                $cmd->execute();
-//                
-//                $cmd->newQuery("SELECT LAST_INSERT_ID();");
-//
-//                return $id;
-//                
-//	}
-        
+
+	//        public static function setRandomPassword($id)
+	//	{
+	//		 $sql = "UPDATE `person`
+	//                SET `account_password` = :password
+	//                WHERE `id` = :id";
+	//
+	//		$cmd = new DatabaseCommand($sql);
+	//
+	//		$cmd->newQuery($sql);
+	//		$cmd->addParam(":id", $id);
+	//                $psw = substr(str_shuffle("abcefghijklmnopqrstuvwxyz" .
+	//                "ABCDEFGHIJKLMNOPQRSTUVWXYZ" . "012345678901234567890123456789"), 0, 16);
+	//                $cmd->addParam(":password", $psw);
+	//		$cmd->execute();
+	//
+	//                $cmd->newQuery("SELECT LAST_INSERT_ID();");
+	//
+	//                return $id;
+	//
+	//	}
+	//
+	//        public static function setTypeLeerling($id)
+	//	{
+	//		$sql = "INSERT INTO  `type_person`
+	//		(
+	//		`type_id`,
+	//		`person_id`
+	//		)
+	//		VALUES
+	//		(
+	//		:type_id,
+	//		:person_id
+	//		);";
+	//
+	//		$cmd = new DatabaseCommand($sql);
+	//
+	//		$cmd->newQuery($sql);
+	//                $cmd->addParam(":type_id", 3);
+	//                $cmd->addParam(":person_id", $id);
+	//
+	//                $cmd->execute();
+	//
+	//                $cmd->newQuery("SELECT LAST_INSERT_ID();");
+	//
+	//                return $id;
+	//
+	//	}
+
+	/**
+	 * Checks if all the given userids have a password set
+	* @param array $userids
+	*/
+	public static function allUseridsHavePassword($userids)
+	{
+
+		if(count($userids) < 1)
+		{
+			return true;
+		}
+
+		$params = "";
+		for($i=0;$i<count($userids);$i++)
+		{
+			$params.= ",:param" . $i;
+		}
+
+		//cut off first semicol
+		$params = substr($params, 1);
+
+		$sql = "SELECT count(*) as nopasscount from allPersons p where (p.account_password is null or p.account_password = '') AND p.id IN (" .$params. ")";
+
+		$cmd = new DatabaseCommand($sql);
+		for($i=0;$i<count($userids);$i++)
+		{
+			$cmd->addParam(":param".$i, $userids[$i]);
+		}
+
+		$val = $cmd->executeReader()->read()->nopasscount;
+		
+		
+		if($val > 0)
+		{
+			return false;
+		}
+
+		return true;
+
+
+
+
+
+	}
+
 }
 
 

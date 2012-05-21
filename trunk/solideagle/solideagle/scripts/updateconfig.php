@@ -160,7 +160,7 @@ class UpdateConfig
 		 * LOGGING LEVEL
 		*/
 
-		$arr["debugLevel"] = PEAR_LOG_DEBUG;
+		$arr["debugLevel"] = PEAR_LOG_ALL;
 
 		Config::setConfig($arr);
 

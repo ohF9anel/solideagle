@@ -94,6 +94,17 @@ use solideagle\utilities\SuperEntities;
 			</div>
 
 			<div class="modal-body">
+			
+			<?php if($this->hasAccountsWithoutPassword)
+					{
+						?>
+						<div class="alert alert-error">
+
+						<strong>Opgelet!</strong> Er zijn accounts geselecteerd die geen wachtwoord hebben!
+					</div>
+						<?php
+					}?>
+			
 
 				<?php if($this->templatename != NULL || $this->manageTemplate)
                 {?>
@@ -119,6 +130,11 @@ use solideagle\utilities\SuperEntities;
 								value="<?php  echo $this->templatename  ?>">
 						</div>
 					</div>
+					
+					
+					
+					
+					
 					<?php if($this->manageTemplate && !$this->addtemplate)
 							{ ?>
 

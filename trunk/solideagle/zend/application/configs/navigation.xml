@@ -13,20 +13,11 @@
 					<action>index</action>
 					
 					<pages>
-				
 					<deamon>
-					<label>Run deamon</label>
-					<controller>databasetasks</controller>
-					<action>rundaemon</action>
+						<label>Run deamon</label>
+						<controller>databasetasks</controller>
+						<action>rundaemon</action>
 					</deamon>
-					<tq>
-					<label>Clean tasks queue</label>
-					<uri>../../solideagle/scripts/emptyqueue.php</uri>
-					</tq>
-					<og>
-					<label>Delete old groups</label>
-					<uri>../../solideagle/scripts/DeleteDeletedGroups.php</uri>
-					</og>
 					</pages>
 					
 				</dashboard>
