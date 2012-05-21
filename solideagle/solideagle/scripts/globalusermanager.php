@@ -68,7 +68,7 @@ class GlobalUserManager
 	 */
 	public static function resetUserPassword($person)
 	{
-		//Person::updatePerson($person);
+		Person::updatePerson($person);
 		Person::updatePasswordField($person->getid(),$person->getAccountPassword());
 
 		if($person->getHasAdAccount())

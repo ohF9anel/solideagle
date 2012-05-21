@@ -91,8 +91,8 @@ class usermanager implements TaskInterface
 		}
 		else if($config["action"] == self::ActionSetPhoto && isset($config["username"]) && isset($config["pictureurl"]))
 		{
-                        \solideagle\data_access\helpers\imagehelper::downloadTempFile($config["pictureurl"], "/var/www/tmp/tmpimage");
-			$ret = manageuser::setPhoto($config["username"], "/var/www/tmp/tmpimage");
+                        \solideagle\data_access\helpers\imagehelper::downloadTempFile($config["pictureurl"], "/tmp/solideagle/tempPic");
+			$ret = manageuser::setPhoto($config["username"], "/tmp/solideagle/tempPic");
 
 			if($ret->isSucces())
 			{
@@ -294,6 +294,7 @@ class usermanager implements TaskInterface
 
 		TaskQueue::insertNewTask($config, $person->getId(), TaskQueue::TypePerson);
         }
+        
 }
 
 ?>
