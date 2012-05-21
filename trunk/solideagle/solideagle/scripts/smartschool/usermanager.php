@@ -20,12 +20,12 @@ use solideagle\data_access\TaskInterface;
 class usermanager implements TaskInterface
 {
 
-	const ActionAddUser = 0;
-	const ActionUpdateUser = 1;
-	const ActionRemoveUser = 2;
-	const ActionMoveUser = 3;
-	const ActionUpdatePassword = 4;
-	const ActionSetPhoto = 5;
+	const ActionAddUser = "AddUser";
+	const ActionUpdateUser = "UpdateUser";
+	const ActionRemoveUser = "RemoveUser";
+	const ActionMoveUser = "MoveUser";
+	const ActionUpdatePassword = "UpdatePassword";
+	const ActionSetPhoto = "SetPhoto";
 
 	public function runTask($taskqueue)
 	{
@@ -123,10 +123,10 @@ class usermanager implements TaskInterface
 		}
 		else if($config["action"] == self::ActionSetPhoto && isset($config["person"]))
 		{
-			$ret = \solideagle\data_access\helpers\imagehelper::downloadTempFile($config["person"]->getPictureUrl(), "/var/www/tmp/tmpimage");
+			$ret = \solideagle\data_access\helpers\imagehelper::downloadTempFile($config["person"]->getPictureUrl(), Config::singleton()->tempstorage . "tempPic");
 			if ($ret->isSucces())
 			{
-				$encodedPhoto = \solideagle\data_access\helpers\imagehelper::encodeImage("/var/www/tmp/tmpimage");
+				$encodedPhoto = \solideagle\data_access\helpers\imagehelper::encodeImage(Config::singleton()->tempstorage . "tempPic");
 
 				$ret = User::setPhoto($config["person"],$encodedPhoto);
 

@@ -222,7 +222,7 @@ use solideagle\utilities\SuperEntities;
                                                     </div>
 							<?php
                            }
-                           if($this->multipleAccountsSelected || !$this->hasAdAccountEnabled || $this->manageTemplate)
+                           if($this->multipleAccountsSelected || !$this->hasAdAccountEnabled && $this->hasAdAccount || $this->manageTemplate)
                            {?>
 							<div class="control-group">
                                                             <label class="control-label" for="blnAdEnable">
@@ -290,9 +290,9 @@ use solideagle\utilities\SuperEntities;
                                                                                                         class="input-xlarge"
                                                                                                         type="text"
                                                                                                         value="<?php echo SuperEntities::encode($this->defaults->homefolderPath); ?>">
-                                                                                                <span class="add-on">\janssensj</span>
+                                                                                                <span class="add-on">\leerkrachten\janssensj</span>
                                                                                                 <p class="help-block ">
-                                                                                                        <i>c:\pad\naar\homefolders</i>
+                                                                                                        <i>c:\pad\naar\homefolders    (eindigt op \homefolders)</i>
                                                                                                 </p>
                                                                                         </div>
                                                                                 </div>
@@ -606,7 +606,7 @@ use solideagle\utilities\SuperEntities;
                                                     </div>
 							<?php
                            }
-                           if($this->multipleAccountsSelected || !$this->hasSsAccountEnabled || $this->manageTemplate)
+                           if($this->multipleAccountsSelected || !$this->hasSsAccountEnabled && $this->hasSsAccount || $this->manageTemplate)
                            {?>
 							<div class="control-group">
                                                             <label class="control-label" for="blnSsEnable">
@@ -700,7 +700,7 @@ use solideagle\utilities\SuperEntities;
                                                     </div>
 							<?php
                            }
-                           if($this->multipleAccountsSelected || !$this->hasGappAccountEnabled || $this->manageTemplate)
+                           if($this->multipleAccountsSelected || !$this->hasGappAccountEnabled && $this->hasGaAccount || $this->manageTemplate)
                            {?>
 							<div class="control-group">
                                                             <label class="control-label" for="blnGappEnable">

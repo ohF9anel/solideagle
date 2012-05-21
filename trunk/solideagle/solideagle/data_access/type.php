@@ -11,7 +11,7 @@ class Type
 	const TYPE_ADMIN = 1;
 	const TYPE_LEERKRACHT = 2;
 	const TYPE_LEERLING =3;
-	const TYPE_STAGIAR =4;
+	const TYPE_STAFF =4;
 	//const TYPE_OUDER =5;
 	
 	// variables

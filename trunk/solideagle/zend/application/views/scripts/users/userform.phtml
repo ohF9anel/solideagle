@@ -133,7 +133,7 @@ $ppp = $this->person; ?>
 						<div class="span6">
 
 							<div class="control-group">
-								<label class="control-label" for="cbActive">Type</label>
+								<label class="control-label" for="cbActive">Basisrol</label>
 								<div class="controls">
 
 									<?php foreach($this->types as $type)
@@ -357,28 +357,28 @@ $ppp = $this->person; ?>
 									<div class="control-group">
 										<label class="control-label" for="txtPhone2">Telefoonnummer 2</label>
 										<div class="controls">
-											<input id="txtPhone2" name="txtPhone2" class="input-xlarge" type="text" value="">
+											<input id="txtPhone2" name="txtPhone2" class="input-xlarge" type="text" value="<?php echo SuperEntities::encode($ppp->getPhone2()) ?>">
 										</div>
 									</div>
 
 									<div class="control-group">
 										<label class="control-label" for="txtMobile">GSM-nummer</label>
 										<div class="controls">
-											<input id="txtMobile" name="txtMobile" class="input-xlarge" type="text" value="">
+											<input id="txtMobile" name="txtMobile" class="input-xlarge" type="text" value="<?php echo SuperEntities::encode($ppp->getMobile()) ?>">
 										</div>
 									</div>
 
 									<div class="control-group">
 										<label class="control-label" for="txtBirthPlace">Geboorteplaats</label>
 										<div class="controls">
-											<input id="txtBirthPlace" name="txtBirthPlace" class="input-xlarge" type="text" value="">
+											<input id="txtBirthPlace" name="txtBirthPlace" class="input-xlarge" type="text" value="<?php echo SuperEntities::encode($ppp->getBirthPlace()) ?>">
 										</div>
 									</div>
 
 									<div class="control-group">
-										<label class="control-label" for="txtNatinality">Nationaliteit</label>
+										<label class="control-label" for="txtNationality">Nationaliteit</label>
 										<div class="controls">
-											<input id="txtNationality" name="txtNationality" class="input-xlarge" type="text" value="">
+											<input id="txtNationality" name="txtNationality" class="input-xlarge" type="text" value="<?php echo SuperEntities::encode($ppp->getNationality()) ?>">
 										</div>
 									</div>
 
@@ -387,28 +387,35 @@ $ppp = $this->person; ?>
 									<div class="control-group">
 										<label class="control-label" for="txtStreet">Straat</label>
 										<div class="controls">
-											<input id="txtStreet" name="txtStreet" class="input-xlarge" type="text" value="">
+											<input id="txtStreet" name="txtStreet" class="input-xlarge" type="text" value="<?php echo SuperEntities::encode($ppp->getStreet()) ?>">
 										</div>
 									</div>
 
 									<div class="control-group">
 										<label class="control-label" for="txtHouseNumber">Huisnummer</label>
 										<div class="controls">
-											<input id="txtHouseNumber" name="txtHouseNumber" class="input-xlarge" type="text" value="">
+											<input id="txtHouseNumber" name="txtHouseNumber" class="input-xlarge" type="text" value="<?php echo SuperEntities::encode($ppp->getHouseNumber()) ?>">
 										</div>
 									</div>
 
 									<div class="control-group">
 										<label class="control-label" for="txtCity">Woonplaats</label>
 										<div class="controls">
-											<input id="txtCity" name="txtCity" class="input-xlarge" type="text" value="">
+											<input id="txtCity" name="txtCity" class="input-xlarge" type="text" value="<?php echo SuperEntities::encode($ppp->getCity()) ?>">
+										</div>
+									</div>
+                                                                    
+                                                                        <div class="control-group">
+										<label class="control-label" for="txtPostCode">Postcode</label>
+										<div class="controls">
+											<input id="txtCity" name="txtPostCode" class="input-xlarge" type="text" value="<?php echo SuperEntities::encode($ppp->getPostCode()) ?>">
 										</div>
 									</div>
 
 									<div class="control-group">
 										<label class="control-label" for="txtCountry">Land</label>
 										<div class="controls">
-											<input id="txtCountry" name="txtCountry" class="input-xlarge" type="text" value="">
+											<input id="txtCountry" name="txtCountry" class="input-xlarge" type="text" value="<?php echo SuperEntities::encode($ppp->getCountry()) ?>">
 										</div>
 									</div>
 
@@ -421,21 +428,21 @@ $ppp = $this->person; ?>
 									<div class="control-group">
 										<label class="control-label" for="txtStamnumber">Stamnummer</label>
 										<div class="controls">
-											<input id="txtStamnumber" name="txtStamnumber" class="input-xlarge" type="text" value="">
+											<input id="txtStamnumber" name="txtStamnumber" class="input-xlarge" type="text" value="<?php echo SuperEntities::encode($ppp->getStudentStamNr()) ?>">
 										</div>
 									</div>
 
 									<div class="control-group">
 										<label class="control-label" for="txtPreviousSchool">Vorige school</label>
 										<div class="controls">
-											<input id="txtPreviousSchool" name="txtPreviousSchool" class="input-xlarge" type="text" value="">
+											<input id="txtPreviousSchool" name="txtPreviousSchool" class="input-xlarge" type="text" value="<?php echo SuperEntities::encode($ppp->getStudentPreviousSchool()) ?>">
 										</div>
 									</div>
 
 									<div class="control-group">
-										<label class="control-label" for="txtParentOccupation">Beroep</label>
+										<label class="control-label" for="txtParentOccupation">Beroep (ouder)</label>
 										<div class="controls">
-											<input id="txtParentOccupation" name="txtParentOccupation" class="input-xlarge" type="text" value="">
+											<input id="txtParentOccupation" name="txtParentOccupation" class="input-xlarge" type="text" value="<?php echo SuperEntities::encode($ppp->getParentOccupation()) ?>">
 										</div>
 									</div>
 

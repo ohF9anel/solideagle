@@ -12,7 +12,6 @@ class GamExecutor
 
         ob_start();
         $cmd = 'python ../../gam/gam.py ' . $cmd . ' 2>&1';
-
         passthru($cmd);
         $out = ob_get_contents();
         ob_end_clean();  

@@ -178,6 +178,7 @@ class homefoldermanager implements TaskInterface
 	{
 		if ($person->isTypeOf(Type::TYPE_LEERLING))
 		{
+                        $homefolderpath .= "\\leerlingen";
 			if(is_numeric(substr($person->getAccountUsername(), -3)))
 			{
 				$homefolderpath .= "\\" . substr($person->getAccountUsername(), -3, 2);
@@ -185,6 +186,14 @@ class homefoldermanager implements TaskInterface
 				$homefolderpath .= "\\" . substr($person->getAccountUsername(), -2);
 			}
 		}
+                else if($person->isTypeOf(Type::TYPE_LEERKRACHT))
+                {
+                    $homefolderpath .= "\\leerkrachten";
+                }
+                else if($person->isTypeOf(Type::TYPE_STAFF))
+                {
+                    $homefolderpath .= "\\staff";
+                }
 
 		return $homefolderpath;
 	}
