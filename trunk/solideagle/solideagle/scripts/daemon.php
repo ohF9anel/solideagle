@@ -136,15 +136,15 @@ class daemon
 					
 				if(method_exists($script,"runTask"))
 				{
-					//Kan niet, $conf["action"] bestaat niet altijd
-					//Logger::log("Starting task: \"" . $conf["action"] . "\" in \"". $class . "\"",PEAR_LOG_INFO, true);
+					
+					Logger::log("Running task with id: " . $taskqueue->getId(),PEAR_LOG_DEBUG, true);
 					
 					if($script->runTask($taskqueue))
 					{
 						TaskQueue::addToRollback($taskqueue);
 						$conf = $taskqueue->getConfiguration();
-						//Kan niet, $conf["action"] bestaat niet altijd
-						//Logger::log("Successfully completed task: \"" . $conf["action"] . "\" in \"" . $class . "\" ran succesfully!",PEAR_LOG_INFO, true);
+						
+						Logger::log("Task with id: " . $taskqueue->getId() ." ran succesfull",PEAR_LOG_DENUG, true);
 							
 					}else{
 						Logger::log("Task: " . $class . " failed with error:\n". $taskqueue->getErrormessages() . "\n"
