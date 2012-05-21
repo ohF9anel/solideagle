@@ -1415,7 +1415,7 @@ class Person
 	{
 		$sql = "SELECT
 		p.`id`
-		FROM `person` p
+		FROM `allPersons` p
 		WHERE p.`group_id` = :groupId";
 
 		$cmd = new DatabaseCommand($sql);
