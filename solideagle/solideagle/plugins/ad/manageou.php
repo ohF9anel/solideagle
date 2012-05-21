@@ -90,7 +90,10 @@ class ManageOU
     	
     	$sr = ldap_search($connLdap->getConn(), $oldDn, "(OU=" . ConnectionLdap::escapeForLDAPSearch($oldgroup->getName()) . ")");
     	$oldOuInfo = ldap_get_entries($connLdap->getConn(), $sr);
-    	
+        if (!isset($oldOuInfo[0]))
+        {
+            return new StatusReport(false, "OU \"" . $oldgroup->getName(). "\" not found.");
+        }
     	$r = ldap_rename($connLdap->getConn(), $oldOuInfo[0]['distinguishedname'][0], "OU=" . ConnectionLdap::ldap_escape($newgroup->getName(), true), NULL, true);
     	
     	return new StatusReport($r,ldap_error($connLdap->getConn()));

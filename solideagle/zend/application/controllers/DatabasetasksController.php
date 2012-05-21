@@ -1,7 +1,5 @@
 <?php
 
-use solideagle\scripts\daemon;
-
 use solideagle\scripts\oldgroupDeleter;
 
 use solideagle\scripts\UpdateConfig;
@@ -45,7 +43,7 @@ class DatabasetasksController extends Zend_Controller_Action
 
     public function rundaemonAction()
     {
-       $daemon = new daemon();
+       solideagle\scripts\daemon::doNothing();
     }
 
 

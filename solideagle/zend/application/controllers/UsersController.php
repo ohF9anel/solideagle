@@ -145,6 +145,20 @@ class UsersController extends Zend_Controller_Action
 		$person->setGroupId($this->getRequest()->getPost('groupId'));
 		$person->setInformatId($this->getRequest()->getPost('informatId'));
 		$person->setPictureUrl($this->getRequest()->getPost('PictureUrl'));
+                
+                // more information
+                $person->setPhone2($this->getRequest()->getPost('txtPhone2'));
+                $person->setMobile($this->getRequest()->getPost('txtMobile'));
+                $person->setBirthPlace($this->getRequest()->getPost('txtBirthPlace'));
+                $person->setNationality($this->getRequest()->getPost('txtNationality'));
+                $person->setStreet($this->getRequest()->getPost('txtStreet'));
+                $person->setHouseNumber($this->getRequest()->getPost('txtHouseNumber'));
+                $person->setCity($this->getRequest()->getPost('txtCity'));
+                $person->setPostCode($this->getRequest()->getPost('txtPostCode'));
+                $person->setCountry($this->getRequest()->getPost('txtCountry'));
+                $person->setStudentStamNr($this->getRequest()->getPost('txtStamnumber'));
+                $person->setStudentPreviousSchool($this->getRequest()->getPost('txtPreviousSchool'));
+                $person->setParentOccupation($this->getRequest()->getPost('txtParentOccupation'));
 			
 		if(count($errors = Person::validatePerson($person)) > 0)
 		{

@@ -8,6 +8,7 @@ use solideagle\data_access\TaskQueue;
 use solideagle\data_access\TaskInterface;
 use solideagle\plugins\StatusReport;
 use solideagle\Config;
+use solideagle\logging\Logger;
 
 
 class groupmanager implements TaskInterface
@@ -24,10 +25,14 @@ class groupmanager implements TaskInterface
 
 		if($config["action"] == self::ActionAddGroup && isset($config["group"]))
 		{
+                        Logger::log("Trying to add group \"" . $config["group"]->getName() . "\" in Google Apps.",PEAR_LOG_INFO);
 			$ret = managegroup::addGroup($config["group"]);
 
 			if($ret->isSucces())
+                        {
+                                Logger::log("Successfully added group \"" . $config["group"]->getName() . "\" in Google Apps.",PEAR_LOG_INFO);
 				return true;
+                        }
 			else{
 				$taskqueue->setErrorMessages($ret->getError());
 				return false;
@@ -35,10 +40,14 @@ class groupmanager implements TaskInterface
 		}
 		else if($config["action"] == self::ActionRemoveGroup && isset($config["group"]))
 		{
+                        Logger::log("Trying to remove group \"" . $config["group"]->getName() . "\" in Google Apps.",PEAR_LOG_INFO);
 			$ret = managegroup::removeGroup($config["group"]);
 
 			if($ret->isSucces())
+                        {
+                                Logger::log("Successfully removed group \"" . $config["group"]->getName() . "\" in Google Apps.",PEAR_LOG_INFO);
 				return true;
+                        }
 			else{
 				$taskqueue->setErrorMessages($ret->getError());
 				return false;
@@ -46,10 +55,14 @@ class groupmanager implements TaskInterface
 		}
                 else if($config["action"] == self::ActionAddGroupToGroup && isset($config["childgroupname"]) && isset($config["parentgroupname"]))
 		{
+                        Logger::log("Trying to add group \"" . $config["childgroupname"] . "\" to group \"" . $config["parentgroupname"] . "\" in Google Apps.",PEAR_LOG_INFO);
 			$ret = managegroup::addGroupToGroup($config["childgroupname"], $config["parentgroupname"]);
 
 			if($ret->isSucces())
-				return true;
+                        {
+                            Logger::log("Successfully added group \"" . $config["childgroupname"] . "\" to group \"" . $config["parentgroupname"] . "\" in Google Apps.",PEAR_LOG_INFO);
+                            return true;
+                        }
 			else{
 				$taskqueue->setErrorMessages($ret->getError());
 				return false;
@@ -57,10 +70,14 @@ class groupmanager implements TaskInterface
 		}
                 else if($config["action"] == self::ActionRemoveGroupFromGroup && isset($config["childgroupname"]) && isset($config["parentgroupname"]))
 		{
+                        Logger::log("Trying to remove group \"" . $config["childgroupname"] . "\" from group \"" . $config["parentgroupname"] . "\" in Google Apps.",PEAR_LOG_INFO);
 			$ret = managegroup::removeGroupFromGroup($config["childgroupname"], $config["parentgroupname"]);
 
 			if($ret->isSucces())
+                        {
+                                Logger::log("Successfully removed group \"" . $config["childgroupname"] . "\" from group \"" . $config["parentgroupname"] . "\" in Google Apps.",PEAR_LOG_INFO);
 				return true;
+                        }
 			else{
 				$taskqueue->setErrorMessages($ret->getError());
 				return false;

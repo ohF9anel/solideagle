@@ -29,10 +29,10 @@ class managegroup
         $cleanGroupName = UnicodeHelper::cleanEmailString($childGroupName);
         
         $email = $cleanGroupName . "@" . Config::singleton()->googledomain;
-        $gamcmd = "update group \"" . $parentGroupName . "\" add member " . $email;
+        $gamcmd = "update group \"" . UnicodeHelper::cleanEmailString($parentGroupName) . "\" add member " . $email;
         
         $report = GamExecutor::executeGamCommand($gamcmd);
-        
+
         return $report;
     }
     
@@ -42,7 +42,7 @@ class managegroup
         $cleanGroupName = UnicodeHelper::cleanEmailString($childGroupName);
         
         $email = $cleanGroupName . "@" . Config::singleton()->googledomain;
-        $gamcmd = "update group \"" . $parentGroupName . "\" remove " . $email;
+        $gamcmd = "update group \"" . UnicodeHelper::cleanEmailString($parentGroupName) . "\" remove " . $email;
         
         $report = GamExecutor::executeGamCommand($gamcmd);
         

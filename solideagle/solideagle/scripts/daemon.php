@@ -22,7 +22,7 @@ class daemon
 		{
 			$this->startDaemon();
 		}else{
-			exec(sprintf("%s > %s 2>&1 & echo $! >> %s", "php /var/www/solideagle/solideagle/scripts/daemon.php", "/var/www/solideagle/solideagle/scripts/daemon.out", "/var/www/solideagle/solideagle/scripts/daemon.pid"));
+			exec("php /var/www/solideagle/solideagle/scripts/daemon.php");
 				
 			/*set_time_limit(60);
 			 echo "Running from command line! Output will stop after 60 seconds or when all tasks have been run";
@@ -80,6 +80,11 @@ class daemon
 
 		}
 	}
+        
+        public static function doNothing()
+        {
+            
+        }
 
 	private function startDaemon()
 	{
@@ -144,7 +149,7 @@ class daemon
 						TaskQueue::addToRollback($taskqueue);
 						$conf = $taskqueue->getConfiguration();
 						
-						Logger::log("Task with id: " . $taskqueue->getId() ." ran succesfull",PEAR_LOG_DEBUG, true);
+						Logger::log("Task " . $taskqueue->getId() ." ran succesfully",PEAR_LOG_DEBUG, true);
 							
 					}else{
 						Logger::log("Task: " . $class . " failed with error:\n". $taskqueue->getErrormessages() . "\n"

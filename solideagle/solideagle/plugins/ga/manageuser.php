@@ -25,7 +25,7 @@ class manageuser
     public static function addUserToGroup($groupname, $username)
     {
         $email = $username . "@" . Config::singleton()->googledomain;
-        $gamcmd = "update group \"" . $groupname . "\" add member " . $email;
+        $gamcmd = "update group \"" . UnicodeHelper::cleanEmailString($groupname) . "\" add member " . $email;
         
         $report = GamExecutor::executeGamCommand($gamcmd);
         
@@ -35,19 +35,17 @@ class manageuser
     public static function removeUserFromGroup($groupname, $username)
     {
         $email = $username . "@" . Config::singleton()->googledomain;
-        $gamcmd = "update group \"" . $groupname . "\" remove " . $email;
+        $gamcmd = "update group \"" . UnicodeHelper::cleanEmailString($groupname) . "\" remove " . $email;
         
         $report = GamExecutor::executeGamCommand($gamcmd);
         
         return $report;
     }
     
-    public static function addUserToOu($person)
+    public static function addUserToOu($person, $childou, $parentous)
     {
         $gamcmd = "update org \"";
         
-        $childou = Group::getGroupById($person->getGroupId());
-        $parentous = Group::getParents($childou);
         if ($parentous != null)
         {
             for($i = sizeof($parentous) - 1; $i >= 0; $i--)

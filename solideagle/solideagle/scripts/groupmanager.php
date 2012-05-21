@@ -47,7 +47,7 @@ class groupmanager {
 	//wtf?
 	public static function Move($oldparents, $newparents, $group, $oldchildren, $newchildren)
 	{
-		ad\oumanager::prepareMoveOu($oldparents,$newparents,$group);
+		ad\oumanager::prepareMoveOu($newparents,$oldparents,$group);
 		//wtf?
 		ad\groupmanager::prepareMoveGroup($group, $newparents[0], $newchildren, $oldparents[0], $oldchildren);
                 

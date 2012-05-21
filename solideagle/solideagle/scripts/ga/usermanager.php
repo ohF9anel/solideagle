@@ -9,6 +9,7 @@ use solideagle\plugins\ga\manageuser;
 use solideagle\data_access\TaskQueue;
 use solideagle\data_access\TaskInterface;
 use solideagle\Config;
+use solideagle\logging\Logger;
 use solideagle\scripts\GlobalUserManager;
 
 class usermanager implements TaskInterface
@@ -30,10 +31,13 @@ class usermanager implements TaskInterface
 
 		if($config["action"] == self::ActionAddUser && isset($config["user"]) && isset($config["enabled"]))
 		{
+                        Logger::log("Trying to add user \"" . $config["user"]->getAccountUsername() . "\" in Google Apps.",PEAR_LOG_INFO);
+                    
 			$ret = manageuser::addUser($config["user"], $config["enabled"]);
 
 			if($ret->isSucces())
 			{
+                                Logger::log("Successfully created user \"" . $config["user"]->getAccountUsername() . "\" in Google Apps.",PEAR_LOG_INFO);
 				$platform = new PlatformGA();
 				$platform->setPersonId($config["user"]->getId());
 				$platform->setEnabled($config["enabled"]);
@@ -48,10 +52,12 @@ class usermanager implements TaskInterface
 		}
 		else if($config["action"] == self::ActionUpdateUser && isset($config["user"]) && isset($config["enabled"]))
 		{
+                        Logger::log("Trying to update user \"" . $config["user"]->getAccountUsername() . "\" in Google Apps.",PEAR_LOG_INFO);
 			$ret = manageuser::updateUser($config["user"], $config["enabled"]);
 
 			if($ret->isSucces())
 			{
+                                Logger::log("Successfully updated user \"" . $config["user"]->getAccountUsername() . "\" in Google Apps.",PEAR_LOG_INFO);
 				$platform = PlatformGA::getPlatformConfigByPersonId($config["user"]->getId());
 				$platform->setEnabled($config["enabled"]);
 				PlatformGA::updatePlatform($platform);
@@ -64,10 +70,12 @@ class usermanager implements TaskInterface
 		}
 		else if($config["action"] == self::ActionDelUser && isset($config["user"]))
 		{
+                        Logger::log("Trying to remove user \"" . $config["user"]->getAccountUsername() . "\" in Google Apps.",PEAR_LOG_INFO);
 			$ret = manageuser::removeUser($config["user"]);
 
 			if($ret->isSucces())
 			{
+                                Logger::log("Successfully removed user \"" . $config["user"]->getAccountUsername() . "\" in Google Apps.",PEAR_LOG_INFO);
 				PlatformGA::removePlatformByPersonId($config["user"]->getId());
 				return true;
 			}
@@ -78,10 +86,14 @@ class usermanager implements TaskInterface
 		}
 		else if($config["action"] == self::ActionAddUserToOu && isset($config["user"]))
 		{
-			$ret = manageuser::addUserToOu($config["user"]);
+                        $childou = Group::getGroupById($config["user"]->getGroupId());
+                        $parentous = Group::getParents($childou);
+                        Logger::log("Trying to add user \"" . $config["user"]->getAccountUsername() . "\" to OU \"" . $childou->getName() . "\" in Google Apps.",PEAR_LOG_INFO);
+			$ret = manageuser::addUserToOu($config["user"], $childou, $parentous);
 
 			if($ret->isSucces())
 			{
+                                Logger::log("Successfully added user \"" . $config["user"]->getAccountUsername() . "\" to OU \"" . $childou->getName() . "\" in Google Apps.",PEAR_LOG_INFO);
 				return true;
 			}
 			else{
@@ -91,11 +103,13 @@ class usermanager implements TaskInterface
 		}
 		else if($config["action"] == self::ActionSetPhoto && isset($config["username"]) && isset($config["pictureurl"]))
 		{
-                        \solideagle\data_access\helpers\imagehelper::downloadTempFile($config["pictureurl"], "/tmp/solideagle/tempPic");
-			$ret = manageuser::setPhoto($config["username"], "/tmp/solideagle/tempPic");
+                        Logger::log("Trying to set picture of user \"" . $config["username"] . "\" in Google Apps.",PEAR_LOG_INFO);
+                        \solideagle\data_access\helpers\imagehelper::downloadTempFile($config["pictureurl"], Config::singleton()->tempstorage . "tempPic");
+			$ret = manageuser::setPhoto($config["username"], Config::singleton()->tempstorage . "tempPic");
 
 			if($ret->isSucces())
 			{
+                                Logger::log("Successfully set picture of user \"" . $config["username"] . "\" in Google Apps.",PEAR_LOG_INFO);
 				return true;
 			}
 			else{
@@ -105,10 +119,12 @@ class usermanager implements TaskInterface
 		}
 		else if($config["action"] == self::ActionUpdatePassword && isset($config["username"]) && isset($config["password"]))
 		{
+                        Logger::log("Trying to update password of user \"" . $config["username"] . "\" in Google Apps.",PEAR_LOG_INFO);
 			$ret = manageuser::updatePassword($config["username"], $config["password"]);
 
 			if($ret->isSucces())
 			{
+                                Logger::log("Successfully updated password of user \"" . $config["username"] . "\" in Google Apps.",PEAR_LOG_INFO);
 				return true;
 			}
 			else{
@@ -118,10 +134,14 @@ class usermanager implements TaskInterface
 		}
 		else if($config["action"] == self::ActionAddUserToGroup && isset($config["groupname"]) && isset($config["username"]))
 		{
+                        Logger::log("Trying to add user \"" . $config["username"] . "\" to group \"" . $config["groupname"] . "\" in Google Apps.",PEAR_LOG_INFO);
 			$ret = manageuser::addUserToGroup($config["groupname"], $config["username"]);
 
 			if($ret->isSucces())
+                        {
+                                Logger::log("Successfully added user \"" . $config["username"] . "\" to group \"" . $config["groupname"] . "\" in Google Apps.",PEAR_LOG_INFO);
 				return true;
+                        }
 			else{
 				$taskqueue->setErrorMessages($ret->getError());
 				return false;
@@ -129,21 +149,29 @@ class usermanager implements TaskInterface
 		}
 		else if($config["action"] == self::ActionRemoveUserFromGroup && isset($config["groupname"]) && isset($config["username"]))
 		{
+                        Logger::log("Trying to remove user \"" . $config["username"] . "\" from group \"" . $config["groupname"] . "\" in Google Apps.",PEAR_LOG_INFO);
 			$ret = manageuser::removeUserFromGroup($config["groupname"], $config["username"]);
 
 			if($ret->isSucces())
+                        {
+                                Logger::log("Successfully removed user \"" . $config["username"] . "\" from group \"" . $config["groupname"] . "\" in Google Apps.",PEAR_LOG_INFO);
 				return true;
+                        }
 			else{
 				$taskqueue->setErrorMessages($ret->getError());
 				return false;
 			}
 		}
                 else if($config["action"] == self::ActionSetEmailSignature && isset($config["username"]) && isset($config["signature"]))
-		{
+		{       
+                        Logger::log("Trying set signature of user \"" . $config["username"] . "\" in Google Apps.",PEAR_LOG_INFO);
 			$ret = manageuser::setEmailSignature($config["username"], $config["signature"]);
 
 			if($ret->isSucces())
-				return true;
+                        {
+                                Logger::log("Successfully set signature of user \"" . $config["username"] . "\" in Google Apps.",PEAR_LOG_INFO);
+                                return true;
+                        }
 			else{
 				$taskqueue->setErrorMessages($ret->getError());
 				return false;
@@ -151,10 +179,14 @@ class usermanager implements TaskInterface
 		}
                 else if($config["action"] == self::ActionSetAlias && isset($config["username"]) && isset($config["lastname"]) && isset($config["firstname"]))
 		{
+                        Logger::log("Trying set alias of user \"" . $config["username"] . "\" in Google Apps.",PEAR_LOG_INFO);
 			$ret = manageuser::setAlias($config["username"], $config["firstname"], $config["lastname"]);
 
 			if($ret->isSucces())
+                        {
+                                Logger::log("Successfully set alias of user \"" . $config["username"] . "\" in Google Apps.",PEAR_LOG_INFO);
 				return true;
+                        }
 			else{
 				$taskqueue->setErrorMessages($ret->getError());
 				return false;
@@ -198,17 +230,21 @@ class usermanager implements TaskInterface
 		$config["action"] = self::ActionUpdateUser;
 		$config["user"] = $person;
 
-		$config["enabled"] = $enabled;
-
-		TaskQueue::insertNewTask($config, $person->getId());
+		$config["enabled"] = $enabled;	
                 
                 if ($person->getPictureUrl() != null && $person->getPictureUrl() != $oldPerson->getPictureUrl())
                     self::prepareSetPhoto($person);
                 
-                if ($oldPerson->getFirstName() != $person->getFirstName() || $oldPerson->getName() != $person->getName())
+                $platform = PlatformGA::getPlatformConfigByPersonId($person->getId());
+                
+                if ($oldPerson->getFirstName() != $person->getFirstName()
+                        || $oldPerson->getName() != $person->getName()
+                        || $enabled != $platform->getEnabled())
                 {
-                    self::prepareSetEmailSignature($person);
+                    if($enabled == $platform->getEnabled())
+                        self::prepareSetEmailSignature($person);
                     
+                    TaskQueue::insertNewTask($config, $person->getId());
                 }
 	}
 
@@ -232,6 +268,7 @@ class usermanager implements TaskInterface
 	{
 		$config["action"] = self::ActionAddUserToOu;
 		$config["user"] = $person;
+                
 		TaskQueue::insertNewTask($config, $person->getId());
 	}
 

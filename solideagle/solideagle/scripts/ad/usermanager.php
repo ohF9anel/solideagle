@@ -13,6 +13,8 @@ use solideagle\plugins\ad\ManageHomeFolder;
 use solideagle\data_access\TaskQueue;
 use solideagle\data_access\TaskInterface;
 
+use solideagle\logging\Logger;
+
 
 class usermanager implements TaskInterface
 {
@@ -34,95 +36,105 @@ class usermanager implements TaskInterface
 				$taskqueue->setErrorMessages("Probleem met configuratie");
 				return false;
 			}
+                        Logger::log("Trying to create user \"" . $config["person"]->getAccountUsername() . "\" in OU \"" . $config["arrParentsGroups"][0]->getName() . "\" in Active Directory.",PEAR_LOG_INFO);
 			 
 			$userInfo = User::convertPersonToAdUser($config["person"], $config["enabled"])->getUserInfo();
 			$ret = ManageUser::addUser($userInfo, $config["arrParentsGroups"]);
 
-                if($ret->isSucces())
-                {
-                    $platformad = new PlatformAD();
-                    $platformad->setPersonId($config["person"]->getId());
-                    $platformad->setEnabled($config["enabled"]);
+                        if($ret->isSucces())
+                        {
+                            Logger::log("Successfully created user \"" . $config["person"]->getAccountUsername() . "\" in OU \"" . $config["arrParentsGroups"][0]->getName() . "\" in Active Directory.",PEAR_LOG_INFO);
+                            $platformad = new PlatformAD();
+                            $platformad->setPersonId($config["person"]->getId());
+                            $platformad->setEnabled($config["enabled"]);
 
-                    PlatformAD::addToPlatform($platformad);
-                    
-                    GlobalUserManager::cleanPasswordIfAllAccountsExist($config["person"]->getId());
-                    
-                    return true;	
-                }
-                else{
-                    $taskqueue->setErrorMessages($ret->getError());
-                    return false;
-                }
-            }
-            // update user in ad
-            else if($config["action"] == self::ActionUpdateUser && isset($config["person"]) && isset($config["arrParentsGroups"]) && isset($config["enabled"]))
-            {
-                $userInfo = User::convertPersonToAdUser($config["person"], $config["enabled"])->getUserInfo();
-                $ret = ManageUser::updateUser($userInfo, $config["arrParentsGroups"]);
+                            PlatformAD::addToPlatform($platformad);
 
-                if($ret->isSucces())
-                {
-                    $platformad = PlatformAD::getPlatformConfigByPersonId($config["person"]->getId());
-                    $platformad->setEnabled($config["enabled"]);
-                    PlatformAD::updatePlatform($platformad);
-                    return true;	
-                }
-                else{
-                    $taskqueue->setErrorMessages($ret->getError());
-                    return false;
-                }
-            }
-            // change password
-            else if($config["action"] == self::ActionUpdatePassword && isset($config["username"]) && isset($config["password"]))
-            {
-                $ret = ManageUser::changePassword($config["username"], $config["password"]);
+                            GlobalUserManager::cleanPasswordIfAllAccountsExist($config["person"]->getId());
 
-                if($ret->isSucces())
+                            return true;	
+                        }
+                        else{
+                            $taskqueue->setErrorMessages($ret->getError());
+                            return false;
+                        }
+                }
+                // update user in ad
+                else if($config["action"] == self::ActionUpdateUser && isset($config["person"]) && isset($config["arrParentsGroups"]) && isset($config["enabled"]))
                 {
-                    return true;	
-                }
-                else{
-                    $taskqueue->setErrorMessages($ret->getError());
-                    return false;
-                }
-            }
-            // delete user in ad
-            else if($config["action"] == self::ActionDelUser && isset($config["person"]))
-            {
-                $ret = ManageUser::delUser($config["person"]->getAccountUsername());
+                    Logger::log("Trying to update user \"" . $config["person"]->getAccountUsername() . "\" in OU \"" . $config["arrParentsGroups"][0]->getName() . "\" in Active Directory.",PEAR_LOG_INFO);
+                    $userInfo = User::convertPersonToAdUser($config["person"], $config["enabled"])->getUserInfo();
+                    $ret = ManageUser::updateUser($userInfo, $config["arrParentsGroups"]);
 
-                if($ret->isSucces())
+                    if($ret->isSucces())
+                    {
+                        Logger::log("Successfully updated user \"" . $config["person"]->getAccountUsername() . "\" in OU \"" . $config["arrParentsGroups"][0]->getName() . "\" in Active Directory.",PEAR_LOG_INFO);
+                        $platformad = PlatformAD::getPlatformConfigByPersonId($config["person"]->getId());
+                        $platformad->setEnabled($config["enabled"]);
+                        PlatformAD::updatePlatform($platformad);
+                        return true;	
+                    }
+                    else{
+                        $taskqueue->setErrorMessages($ret->getError());
+                        return false;
+                    }
+                }
+                // change password
+                else if($config["action"] == self::ActionUpdatePassword && isset($config["username"]) && isset($config["password"]))
                 {
-                    PlatformAD::removePlatformByPersonId($config["person"]->getId());
-                    return true;
-                }
-                else{
-                    $taskqueue->setErrorMessages($ret->getError());
-                    return false;
-                }
-            }
-            // move user in ad
-            else if($config["action"] == self::ActionMoveUser && isset($config["person"]) && isset($config["newparents"]) && isset($config["oldparents"]))
-            {
-                $userinfo = User::convertPersonToAdUser($config["person"])->getUserInfo();
-                $ret = ManageUser::moveUser($userinfo, $config['newparents'], $config['oldparents']);
+                    Logger::log("Trying to update password of user \"" . $config["username"] . "\" in Active Directory.",PEAR_LOG_INFO);
+                    $ret = ManageUser::changePassword($config["username"], $config["password"]);
 
-                if($ret->isSucces())
+                    if($ret->isSucces())
+                    {
+                        Logger::log("Successfully updated password of user \"" . $config["username"] . "\" in Active Directory.",PEAR_LOG_INFO);
+                        return true;	
+                    }
+                    else{
+                        $taskqueue->setErrorMessages($ret->getError());
+                        return false;
+                    }
+                }
+                // delete user in ad
+                else if($config["action"] == self::ActionDelUser && isset($config["person"]))
                 {
-                    return true;
+                    Logger::log("Trying to remove user \"" . $config["person"]->getAccountUsername() . "\" in Active Directory.",PEAR_LOG_INFO);
+                    $ret = ManageUser::delUser($config["person"]->getAccountUsername());
+
+                    if($ret->isSucces())
+                    {
+                        Logger::log("Successfully removed user \"" . $config["person"]->getAccountUsername() . "\" in Active Directory.",PEAR_LOG_INFO);
+                        PlatformAD::removePlatformByPersonId($config["person"]->getId());
+                        return true;
+                    }
+                    else{
+                        $taskqueue->setErrorMessages($ret->getError());
+                        return false;
+                    }
                 }
-                else{
-                    $taskqueue->setErrorMessages($ret->getError());
-                    return false;
+                // move user in ad
+                else if($config["action"] == self::ActionMoveUser && isset($config["person"]) && isset($config["newparents"]) && isset($config["oldparents"]))
+                {
+                    Logger::log("Trying to move user \"" . $config["person"]->getAccountUsername() . "\" from OU \"" . $config["oldparents"][0]->getName() . "\" to OU \"" . $config["newparents"][0]->getName() . "\" in Active Directory.",PEAR_LOG_INFO);
+                    $userinfo = User::convertPersonToAdUser($config["person"])->getUserInfo();
+                    $ret = ManageUser::moveUser($userinfo, $config['newparents'], $config['oldparents']);
+
+                    if($ret->isSucces())
+                    {
+                        Logger::log("Successfully moved user \"" . $config["person"]->getAccountUsername() . "\" from OU \"" . $config["oldparents"][0]->getName() . "\" to OU \"" . $config["newparents"][0]->getName() . "\" in Active Directory.",PEAR_LOG_INFO);
+                        return true;
+                    }
+                    else{
+                        $taskqueue->setErrorMessages($ret->getError());
+                        return false;
+                    }
                 }
-            }
-            // problem!
-            else
-            {
-                    $taskqueue->setErrorMessages("Probleem met configuratie");
-                    return false; //it failed for some reason
-            }
+                // problem!
+                else
+                {
+                        $taskqueue->setErrorMessages("Probleem met configuratie");
+                        return false; //it failed for some reason
+                }
 	}
 
 
