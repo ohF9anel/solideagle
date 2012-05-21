@@ -68,6 +68,7 @@
           <actionMethod actionName="startclean"/>
           <actionMethod actionName="updateconfig"/>
           <actionMethod actionName="deleteoldgroups"/>
+          <actionMethod actionName="rundaemon"/>
         </controllerFile>
       </controllersDirectory>
       <formsDirectory enabled="false"/>
@@ -184,6 +185,9 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Databasetasks">
             <viewScriptFile forActionName="deleteoldgroups"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Databasetasks">
+            <viewScriptFile forActionName="rundaemon"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>

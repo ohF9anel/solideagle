@@ -2,6 +2,8 @@
 namespace solideagle\scripts\smartschool;
 
 
+use solideagle\scripts\GlobalUserManager;
+
 use solideagle\data_access\PlatformSS;
 
 use solideagle\data_access\Group;
