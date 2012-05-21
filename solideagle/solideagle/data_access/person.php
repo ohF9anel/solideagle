@@ -1429,6 +1429,18 @@ class Person
 		return $personidarr;
 	}
 	
+	
+	public static function updatePasswordField($personid,$password)
+	{
+		$sql = "UPDATE person p set p.account_password = :accountpassword where p.id = :personid";
+		
+		$cmd = new DatabaseCommand($sql);
+		$cmd->addParam(":personid", $personid);
+		$cmd->addParam(":accountpassword", $password);
+		
+		$cmd->execute();
+	}
+	
 	//gets users in this group and subgroups
 	//should be renamed
 	public static function getPersonIdsByGroupId($groupid)
