@@ -213,6 +213,9 @@ class UsertasksController extends Zend_Controller_Action
 		$this->view->defaults->deleteGappAccount = false;
 		$this->view->defaults->disableGappAccount = false;
 		$this->view->defaults->enableGappAccount = false;
+		
+		
+		$this->view->hasAccountsWithoutPassword = false;
 
 
 
@@ -224,6 +227,15 @@ class UsertasksController extends Zend_Controller_Action
 		{
 			$usersArr = Person::getPersonIdsByGroupId($this->getRequest()->getPost('selectedGroup'));
 		}
+		
+		//check if all users have a password
+		
+		if(!Person::allUseridsHavePassword($usersArr))
+		{
+			$this->view->hasAccountsWithoutPassword = true;
+		}
+		
+		
 
 
 		$this->view->users = json_encode($usersArr);

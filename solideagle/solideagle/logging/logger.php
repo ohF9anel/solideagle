@@ -45,7 +45,7 @@ class Logger
 		$logplace = "";
 
 
-		//if (!$hidepathandline)
+		if (!$hidepathandline)
 			$logplace = "Class: " . $traces[1]["class"]. " Function: " . $traces[1]["function"] . " Line: " . $traces[0]["line"] . "\n";
 
 

@@ -2,6 +2,8 @@
 namespace solideagle\scripts\smartschool;
 
 
+use solideagle\logging\Logger;
+
 use solideagle\scripts\GlobalUserManager;
 
 use solideagle\data_access\PlatformSS;
@@ -139,6 +141,28 @@ class usermanager implements TaskInterface
 			}
 			else
 			{
+				$taskqueue->setErrorMessages($ret->getError());
+				return false;
+			}
+		}
+		else if ($config["action"] == self::ActionUpdatePassword)
+		{
+			if (!isset($config["person"]))
+			{
+				$taskqueue->setErrorMessages("Probleem met configuratie");
+				return false;
+			}
+			
+			Logger::log("Updating passord for user " . $config["person"]->getAccountusername(),PEAR_LOG_INFO);
+			
+			$ret = User::updatePassword(User::convertPersonToSsUser($config["person"]));
+			
+			if($ret->isSucces())
+			{
+				GlobalUserManager::cleanPasswordIfAllAccountsExist($config["person"]->getId());
+				return true;
+			}
+			else{
 				$taskqueue->setErrorMessages($ret->getError());
 				return false;
 			}

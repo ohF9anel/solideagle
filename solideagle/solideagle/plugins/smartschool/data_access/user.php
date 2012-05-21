@@ -69,6 +69,8 @@ class User
 		if($returnvalue != 0)
 			return new StatusReport(false,Api::singleton()->getErrorFromCode($returnvalue));
 
+		echo $user->classCodes;
+		
 		$returnvalue = $api->saveUserToClasses($user->internnumber,$user->classCodes);
 
 		if($returnvalue != 0)
@@ -103,12 +105,38 @@ class User
 
 		return new StatusReport();
 	}
+	
+	public static function updateCoaccountpasswords($user)
+	{
+		$api = Api::singleton();
+		$returnvalue = $api->saveUser($user->internnumber,$user->username,
+				//undocumented feature: if you pass null to the password fields they will not update
+				NULL/*$user->passwd1*/,$user->passwd2,$user->passwd3,
+				$user->name,$user->surname,$user->extranames,$user->initials,$user->sex,$user->birthday,
+				$user->birthplace,$user->birthcountry,$user->address,$user->postalcode,$user->location,
+				$user->country,$user->email,$user->mobilephone,$user->homephone,$user->fax,
+				$user->prn,$user->stamboeknummer,$user->basisrol,$user->untis);
+		
+		//$returnvalue = $api->savePassword($user->internnumber,$user->passwd1);
+		
+		if($returnvalue != 0)
+			return new StatusReport(false,Api::singleton()->getErrorFromCode($returnvalue));
+		
+		return new StatusReport();
+	}
 
 	public static function updatePassword($user)
 	{
 		$api = Api::singleton();
+		$returnvalue = $api->saveUser($user->internnumber,$user->username,
+				//undocumented feature: if you pass null to the password fields they will not update
+				$user->passwd1,NULL/*$user->passwd2*/,NULL/*$user->passwd3*/,
+				$user->name,$user->surname,$user->extranames,$user->initials,$user->sex,$user->birthday,
+				$user->birthplace,$user->birthcountry,$user->address,$user->postalcode,$user->location,
+				$user->country,$user->email,$user->mobilephone,$user->homephone,$user->fax,
+				$user->prn,$user->stamboeknummer,$user->basisrol,$user->untis);
 
-		$returnvalue = $api->savePassword($user->internnumber,$user->passwd1,0);
+		//$returnvalue = $api->savePassword($user->internnumber,$user->passwd1);
 
 		if($returnvalue != 0)
 			return new StatusReport(false,Api::singleton()->getErrorFromCode($returnvalue));
@@ -443,7 +471,7 @@ class User
 	 * @param string $groupname
 	 * @param bool $enabled
 	 */
-	public static function convertPersonToSsUser($person,$groupname,$enabled=true)
+	public static function convertPersonToSsUser($person,$groupname=NULL,$enabled=true)
 	{
 		$user = new User();
 
@@ -472,8 +500,11 @@ class User
 		$user->setStamboeknummer($person->getStudentStamnr());
 
 	
+		if($groupname != NULL)
+		{
+			$user->addClass(ClassGroup::GroupPrefix . $groupname);
+		}
 		
-		$user->addClass(ClassGroup::GroupPrefix . $groupname);
 
 		if($person->isTypeOf(Type::TYPE_LEERLING))
 		{
