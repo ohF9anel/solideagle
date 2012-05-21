@@ -329,16 +329,14 @@ class UsersController extends Zend_Controller_Action
 				//predefined or random
 				if($randomPass)
 				{
-					//$person->setAccountPassword(Person::generatePassword());
-					Person::updatePasswordField($person->getid(),Person::generatePassword());
+					$person->setAccountPassword(Person::generatePassword());
 				}else{
 					$pass = $this->getRequest()->getParam("AccountPassword");
 					$passRepeat = $this->getRequest()->getParam("AccountPasswordRepeat");
 						
 					if($pass == $passRepeat)
 					{
-						Person::updatePasswordField($person->getid(),$pass);
-						
+						$person->setAccountPassword($pass);
 					}else{
 						echo "Wachtwoorden niet gelijk!";
 						return;
