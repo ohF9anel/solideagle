@@ -44,7 +44,7 @@ class manageuser
     
     public static function addUserToOu($person)
     {
-        $gamcmd = "update org ";
+        $gamcmd = "update org \"";
         
         $childou = Group::getGroupById($person->getGroupId());
         $parentous = Group::getParents($childou);
@@ -56,7 +56,7 @@ class manageuser
             }
         }
         $gamcmd .= $childou->getName();
-        $gamcmd .= " add " . $person->getAccountUsername(); 
+        $gamcmd .= "\" add " . $person->getAccountUsername(); 
         
         $report = GamExecutor::executeGamCommand($gamcmd);
         

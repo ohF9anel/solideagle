@@ -22,7 +22,7 @@ class daemon
 		{
 			$this->startDaemon();
 		}else{
-			exec(sprintf("%s > %s 2>&1 & echo $! >> %s", "php /home/machiel/rootspace/SolidEagle/solideagle/scripts/daemon.php", "/home/machiel/rootspace/SolidEagle/solideagle/scripts/daemon.out", "/home/machiel/rootspace/SolidEagle/solideagle/scripts/daemon.pid"));
+			exec(sprintf("%s > %s 2>&1 & echo $! >> %s", "php /var/www/solideagle/solideagle/scripts/daemon.php", "/var/www/solideagle/solideagle/scripts/daemon.out", "/var/www/solideagle/solideagle/scripts/daemon.pid"));
 				
 			/*set_time_limit(60);
 			 echo "Running from command line! Output will stop after 60 seconds or when all tasks have been run";

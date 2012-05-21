@@ -423,19 +423,23 @@ class Person
 
 	public static function generatePassword($length = 8)
 	{
-		$passchars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
-
-		$password = '';
-			
-		for ($i = 0; $i < $length; $i++) {
-			$password .= $passchars[(rand() % strlen($passchars))];
-		}
+		$passchars = 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ1234567890';
+		
+                $goodpassword = false;
                 
-                if(!(preg_match('`[A-Z]`',$password) // at least one upper case 
-                    && preg_match('`[a-z]`',$password) // at least one lower case 
-                    && preg_match('`[0-9]`',$password))) // at least one number
+                while (!$goodpassword)
                 {
-                    self::generatePassword($length);
+                    $password = '';
+                    for ($i = 0; $i < $length; $i++) {
+                            $password .= $passchars[(rand() % strlen($passchars))];
+                    }
+
+                    if((preg_match('`[A-Z]`',$password) // at least one upper case 
+                        && preg_match('`[a-z]`',$password) // at least one lower case 
+                        && preg_match('`[0-9]`',$password))) // at least one number
+                    {
+                        $goodpassword = true;
+                    }
                 }
                 
 		return $password;
