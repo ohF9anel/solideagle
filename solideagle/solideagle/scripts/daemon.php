@@ -144,7 +144,7 @@ class daemon
 						TaskQueue::addToRollback($taskqueue);
 						$conf = $taskqueue->getConfiguration();
 						
-						Logger::log("Task with id: " . $taskqueue->getId() ." ran succesfull",PEAR_LOG_DENUG, true);
+						Logger::log("Task with id: " . $taskqueue->getId() ." ran succesfull",PEAR_LOG_DEBUG, true);
 							
 					}else{
 						Logger::log("Task: " . $class . " failed with error:\n". $taskqueue->getErrormessages() . "\n"
