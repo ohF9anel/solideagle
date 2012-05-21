@@ -121,8 +121,6 @@ class Person
 		$this->accountActiveFrom = $accountActiveFrom;
 	}
 
-
-
 	public function getFirstName()
 	{
 		return $this->firstName;

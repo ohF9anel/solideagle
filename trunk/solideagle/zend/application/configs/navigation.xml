@@ -16,7 +16,8 @@
 				
 					<deamon>
 					<label>Run deamon</label>
-					<uri>../../solideagle/scripts/daemon.php</uri>
+					<controller>databasetasks</controller>
+					<action>rundaemon</action>
 					</deamon>
 					<tq>
 					<label>Clean tasks queue</label>

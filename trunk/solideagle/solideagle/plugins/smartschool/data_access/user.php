@@ -1,6 +1,8 @@
 <?php
 namespace solideagle\plugins\smartschool\data_access;
 
+use solideagle\scripts\smartschool\groupmanager;
+
 use solideagle\plugins\smartschool\GroupsAndUsersCache;
 
 use solideagle\data_access\Group;
@@ -471,7 +473,9 @@ class User
 		$user->setPrn("");
 		$user->setStamboeknummer($person->getStudentStamnr());
 
-		$user->addClass($groupname);
+	
+		
+		$user->addClass(ClassGroup::GroupPrefix . $groupname);
 
 		if($person->isTypeOf(Type::TYPE_LEERLING))
 		{
