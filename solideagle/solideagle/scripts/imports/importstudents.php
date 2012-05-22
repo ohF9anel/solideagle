@@ -1,0 +1,145 @@
+<?php
+
+namespace solideagle\scripts\imports;
+
+use solideagle\data_access\Person;
+
+use solideagle\utilities\csvparser;
+
+use solideagle\data_access\Group;
+
+use solideagle\data_access\Type;
+
+class importstudents
+{
+	private $fileptr;
+	
+	/**
+	 * When going out of scope we will automatically close the file, see the destructor
+	 * 
+	 * @param Fileptr $fileptr
+	 */
+	public function __construct($fileptr)
+	{
+		$this->fileptr = $fileptr;
+	}
+	
+	public function import()
+	{
+		$personparser = new csvparser($this->fileptr,";");
+			
+		$personparser->getFromField("name", "Naam");
+		$personparser->getFromField("informatid", "Nr. Leerling");
+		$personparser->getFromField("firstname", "Voornaam");
+		$personparser->getFromField("klas", "Klascode");
+		$personparser->getFromField("gender", "Geslacht");
+		
+		if(count(($notfoundfields = $personparser->canParse())) > 0)
+		{
+			//some fields were not found in csv, abort
+			echo "FOUT: Deze velden konden niet gevonden worden: <br />";
+			foreach($notfoundfields as $fieldname)
+			{
+				echo $fieldname . "<br />";
+			}
+			return;
+		}
+			
+		$arr = $personparser->parse();
+		
+		$retclass = new \stdClass();
+		$retclass->new = array();
+		$retclass->updated = array();
+		$retclass->classes = array();
+		 		
+		foreach($arr as $personattr)
+		{
+			//create klas lijst
+			$personattr->klas = str_replace(" ", "", $personattr->klas);
+			$retclass->classes[$personattr->klas] = $personattr->klas;
+			
+			//is deze gebruiker al geimporteerd?
+			if(Person::userExistsByInformatId($personattr->informatid))
+			{
+				if($this->hasChanged($personattr))
+				{
+					$retclass->updated[] = $personattr;
+				}
+			}else{
+				$retclass->new[] = $personattr;
+			}
+		}
+		
+		return $retclass;
+	}
+	
+	private function hasChanged($personattr)
+	{
+		//TODO
+		return false;
+	}
+	
+	public static function createClasses($arr)
+	{
+		
+	}
+	
+	public static function updateUsers($arr)
+	{
+		foreach($arr as $personattr)
+		{
+			self::updateUser($personattr);
+		}
+	}
+	
+	private function updateUser($personattr)
+	{
+		//TODO
+	}
+	
+	public static function addUsers($arr)
+	{
+		if(Group::getGroupByName("staff") === NULL )
+		{
+			echo "FOUT: De groep staff bestaat niet!";
+			return;
+		}
+			
+		if(Group::getGroupByName("leerkrachten") === NULL)
+		{
+			echo "FOUT: De groep leerkrachten bestaat niet!";
+			return;
+		}
+		
+		foreach($arr as $personattr)
+		{
+			self::newUser($personattr);
+		}
+	}
+	
+	private static function newUser($personattr)
+	{
+		$person= new Person();
+		$person->setName($personattr->name);
+		$person->setInformatId($personattr->informatid);
+		$person->setFirstName($personattr->firstname);
+		$person->setGender($personattr->gender);
+
+		
+		$person->addType(new Type(Type::TYPE_LEERLING));
+		$person->setGroupId(Group::getGroupByName($personattr->klas)->getId()); //we expect the group to exist...
+		
+		
+		$person->setAccountUsername(Person::generateUsername($person));
+		$person->setAccountPassword(Person::generatePassword());
+		
+		Person::addPerson($person);
+	}
+	
+	public function __destruct()
+	{
+		fclose($this->fileptr);
+	}
+	
+	
+}

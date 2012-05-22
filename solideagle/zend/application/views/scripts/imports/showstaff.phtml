@@ -1,0 +1,94 @@
+
+<?php $this->headTitle('Import staff'); ?>
+<form
+	class="form-horizontal"
+	method="post">
+	<div>
+		<fieldset>
+			<legend>Stap 2: Verifieer personen</legend>
+		</fieldset>
+
+		<div class="alert alert-info">
+			<?php echo "Er zijn " . count($this->staffImport->new) . " nieuwe gebruikers en " . count($this->staffImport->updated) . " worden geupdated." ?>
+		</div>
+
+		<h1>Nieuw:</h1>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<?php
+					if(count($this->staffImport->new) > 0)
+					{
+						$row = get_object_vars($this->staffImport->new[0]);
+						foreach($row as $key => $val)
+						{
+							echo "<td>" . $key . "</td>";
+						}
+
+					}
+					?>
+				</tr>
+			</thead>
+			<?php
+			foreach($this->staffImport->new as $row)
+			{
+				$row = get_object_vars($row)
+				?>
+			<tr>
+				<?php foreach($row as $val)
+				{
+					?>
+				<td><?php echo $val; ?></td>
+				<?php
+				}
+				?>
+			</tr>
+			<?php
+        }?>
+
+		</table>
+
+		<h1>Update:</h1>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<?php
+					if(count($this->staffImport->updated) > 0)
+					{
+						$row = get_object_vars($this->staffImport->updated[0]);
+						foreach($row as $key => $val)
+						{
+							echo "<td>" . $key . "</td>";
+						}
+
+					}
+					?>
+				</tr>
+			</thead>
+			<?php
+			foreach($this->staffImport->updated as $row)
+			{
+				$row = get_object_vars($row)
+				?>
+			<tr>
+				<?php foreach($row as $val)
+				{
+					?>
+				<td><?php echo $val; ?></td>
+				<?php
+				}
+				?>
+			</tr>
+			<?php
+        }?>
+
+		</table>
+	</div>
+
+	<button
+		class="btn btn-primary"
+		type="submit"
+		name="submit"
+		value="true">Import voltooien</button>
+
+</form>
