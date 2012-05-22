@@ -32,7 +32,7 @@ class importstudents
 		$personparser->getFromField("informatid", "Nr. Leerling");
 		$personparser->getFromField("firstname", "Voornaam");
 		$personparser->getFromField("klas", "Klascode");
-		$personparser->getFromField("gender", "Geslacht");
+		//$personparser->getFromField("gender", "Geslacht");
 		
 		if(count(($notfoundfields = $personparser->canParse())) > 0)
 		{
@@ -79,10 +79,7 @@ class importstudents
 		return false;
 	}
 	
-	public static function createClasses($arr)
-	{
-		
-	}
+	
 	
 	public static function updateUsers($arr)
 	{
@@ -99,18 +96,6 @@ class importstudents
 	
 	public static function addUsers($arr)
 	{
-		if(Group::getGroupByName("staff") === NULL )
-		{
-			echo "FOUT: De groep staff bestaat niet!";
-			return;
-		}
-			
-		if(Group::getGroupByName("leerkrachten") === NULL)
-		{
-			echo "FOUT: De groep leerkrachten bestaat niet!";
-			return;
-		}
-		
 		foreach($arr as $personattr)
 		{
 			self::newUser($personattr);
@@ -125,10 +110,19 @@ class importstudents
 		$person->setFirstName($personattr->firstname);
 		$person->setGender($personattr->gender);
 
-		
 		$person->addType(new Type(Type::TYPE_LEERLING));
-		$person->setGroupId(Group::getGroupByName($personattr->klas)->getId()); //we expect the group to exist...
 		
+		$group = Group::getGroupByName($personattr->klas);
+		
+		if($group != NULL)
+		{
+			$person->setGroupId($group->getId()); //we expect the group to exist...
+		}else{
+			//group does not exist, add to root group
+			echo "Opgelet! groep: " . $group->getName() . " bestaat niet\n";
+			echo "Gebruiker onder root geplaatst\n";
+			$person->setGroupId(1); 
+		}
 		
 		$person->setAccountUsername(Person::generateUsername($person));
 		$person->setAccountPassword(Person::generatePassword());

@@ -36,11 +36,7 @@
 					<action>index</action>
 					
 					<pages>
-						<klassenImport>
-							<label>Import klassen</label>
-							<controller>imports</controller>
-							<action>importklassen</action>
-						</klassenImport>
+						
 						
 						<studentImport>
 							<label>Import studenten</label>

@@ -1340,17 +1340,16 @@ class Person
 	}
 
 	//does also find deleted persons, to change this behaviour select from allPerson view instead of person
-	public static function findPersonByName($naam,$voornaam)
+	public static function findPersonByNameandClass($naam,$voornaam,$klas)
 	{
 
-		$sql = "SELECT id FROM  `person`
-		WHERE
-		`person`.`first_name` = :firstname
-		AND `person`.`name` = :name";
+		$sql = "SELECT p.id, count(p.id) as amount FROM  `person` p JOIN `group` g on p.group_id = g.id
+		WHERE p.first_name like :firstname AND p.name like :name AND g.name like :groupname AND (informatid is null or informatid = '')";
 
 		$cmd = new DatabaseCommand($sql);
 		$cmd->addParam(":firstname", $voornaam);
 		$cmd->addParam(":name", $naam);
+		$cmd->addParam(":groupname", $klas);
 
 		$reader = $cmd->executeReader();
 
@@ -1360,6 +1359,11 @@ class Person
 		{
 			return NULL;
 		}else{
+			if($retObj->amount > 1)
+			{
+				die("multiple results for " .$naam. " " . $voornaam." " .$klas. " !");
+				
+			}
 			return self::getPersonById($retObj->id);
 		}
 	}
