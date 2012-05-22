@@ -5,6 +5,7 @@ use solideagle\data_access\Group;
 
 use solideagle\data_access\database\DatabaseCommand;
 
+//this class will clean the db an prepare it for use
 class initdb
 {
 	
@@ -69,11 +70,13 @@ class initdb
 		$cmd->execute();
 		
 		$root = new Group();
-		
 		$root->setName("dbzgebruikers");
-		
+		$root->addChildGroup(new Group('',"admins"));
+		$root->addChildGroup(new Group('',"leerlingen"));
+		$root->addChildGroup(new Group('',"leerkrachten"));
+		$root->addChildGroup(new Group('',"staff"));
 		Group::addGroup($root);
-		
+
 	}
 	
 	

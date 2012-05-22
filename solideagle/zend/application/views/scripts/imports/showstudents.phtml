@@ -15,100 +15,79 @@
 		<fieldset>
 			<legend>Stap 2: Bekijk veranderingen</legend>
 
-			<div class="clearfix">
+			<h2>Leerlingen die aangemaakt worden</h2>
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<?php
+						if(count($this->studentsImport->new) > 0)
+						{
+							$row = get_object_vars($this->studentsImport->new[0]);
+							foreach($row as $key => $val)
+							{
+								echo "<td>" . $key . "</td>";
+							}
+
+						}
+						?>
+					</tr>
+				</thead>
 				<?php
-
-				if((count($this->llnToAdd) == 0) &&  (count($this->llnToMove) == 0))
+				foreach($this->studentsImport->new as $row)
 				{
-					echo "Er zijn geen veranderingen gevonden";
-				}
-				
-				if(count($this->llnFail))
-				{
+					$row = get_object_vars($row)
 					?>
-					
-					 <div class="alert alert-error">
-  
-    				<strong>Opgelet!</strong> Volgende lln konden niet geparsed worden!
-  
-					
-					<?php
-					foreach($this->llnFail as $failedline)
-					{
-						echo "<p>" . $failedline . "</p>";
-					}?>
-					
-					  </div>
-					  
-					<?php
-				}
-					
-				?>
-				<h2>Leerlingen die toegevoegd worden</h2>
-				<table class="table">
-					<thead>
-						<tr>
-							<td>Check om toe te voegen</td>
-							<td>Info</td>
-						</tr>
-					</thead>
-
-					<?php
-
-					foreach($this->llnToAdd as $key => $lln)
+				<tr>
+					<?php foreach($row as $val)
 					{
 						?>
-
-					<tr>
-						<td><input
-								type="checkbox"
-								checked="checked"
-								name="llnAddKeys[]"
-								value="<?php echo $key; ?>">
-						</td>
-						<td><pre>
-								<?php var_export($lln) ?>
-							</pre></td>
-					</tr>
-
-
-
-
+					<td><?php echo $val; ?></td>
 					<?php
 					}
 					?>
-				</table>
+				</tr>
+				<?php
+        }?>
 
-				<h2>Leerlingen die verplaatst worden</h2>
-				<table class="table">
-					<thead>
-						<tr>
-							<td>Check om te verplaatsen</td>
-							<td>Info</td>
-						</tr>
-					</thead>
-					<?php
-					foreach($this->llnToMove as $key => $lln)
+			</table>
+
+			<h2>Leerlingen die geupdate worden</h2>
+
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<?php
+						if(count($this->studentsImport->updated) > 0)
+						{
+							$row = get_object_vars($this->studentsImport->updated[0]);
+							foreach($row as $key => $val)
+							{
+								echo "<td>" . $key . "</td>";
+							}
+
+						}
+						?>
+					</tr>
+				</thead>
+				<?php
+				foreach($this->studentsImport->updated as $row)
+				{
+					$row = get_object_vars($row)
+					?>
+				<tr>
+					<?php foreach($row as $val)
 					{
-					?>
-
-					<tr>
-						<td><input
-								type="checkbox"
-								checked="checked"
-								name="llnAddKeys[]"
-								value="<?php echo $key; ?>">
-						</td>
-						<td><pre>
-								<?php var_export($lln) ?>
-							</pre></td>
-					</tr>
-					
+						?>
+					<td><?php echo $val; ?></td>
 					<?php
 					}
 					?>
-				</table>
-			</div>
+				</tr>
+				<?php
+        }?>
+
+			</table>
+
 			<div class="form-actions ">
 				<button
 					class="btn btn-primary"
