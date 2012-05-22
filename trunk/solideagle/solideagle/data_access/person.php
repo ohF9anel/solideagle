@@ -1339,7 +1339,7 @@ class Person
 		return $retarr;
 	}
 
-	//does also find deleted persons, to cahnge select from allPerson view instead of person
+	//does also find deleted persons, to change this behaviour select from allPerson view instead of person
 	public static function findPersonByName($naam,$voornaam)
 	{
 
@@ -1611,10 +1611,22 @@ class Person
 
 		return true;
 
+	}
+	
+	public static function userExistsByInformatId($informatid)
+	{
+		$sql = "SELECT count(*) as usercount from allPersons p WHERE p.informatId = :informatid";
+		$cmd = new DatabaseCommand($sql);
+		$cmd->addParam(":informatid", $informatid);
+		
+		$val = $cmd->executeReader()->read()->usercount;
 
-
-
-
+		if($val > 0)
+		{
+			return true;
+		}
+		
+		return false;
 	}
 
 }

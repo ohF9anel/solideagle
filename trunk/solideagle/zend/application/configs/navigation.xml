@@ -49,7 +49,7 @@
 						</studentImport>
                                                 
                                                 <personImport>
-							<label>Import personen</label>
+							<label>Import staff</label>
 							<controller>imports</controller>
 							<action>importpersons</action>
 						</personImport>
