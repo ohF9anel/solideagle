@@ -55,8 +55,22 @@ class importstudents
 		foreach($arr as $personattr)
 		{
 			//create klas lijst
-			$personattr->klas = str_replace(" ", "", $personattr->klas);
-			$retclass->classes[$personattr->klas] = $personattr->klas;
+			$personattr->klas = preg_replace("/[^A-Za-z0-9]/", "", $personattr->klas);
+			
+			//ignore empty classes
+			if(strlen($personattr->klas)== 0)
+			{
+				continue;
+			}
+			
+			$class = new \stdClass();
+			$class->name = $personattr->klas;
+			$class->instellingsnummer = "";
+			$class->administratievegroep = "";
+			
+			$retclass->classes[$personattr->klas] = $class;
+			
+			sort($retclass->classes);
 			
 			//is deze gebruiker al geimporteerd?
 			if(Person::userExistsByInformatId($personattr->informatid))
@@ -108,7 +122,7 @@ class importstudents
 		$person->setName($personattr->name);
 		$person->setInformatId($personattr->informatid);
 		$person->setFirstName($personattr->firstname);
-		$person->setGender($personattr->gender);
+		//$person->setGender($personattr->gender);
 
 		$person->addType(new Type(Type::TYPE_LEERLING));
 		

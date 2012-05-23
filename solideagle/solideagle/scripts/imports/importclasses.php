@@ -13,12 +13,34 @@ class importclasses
 	{
 		$retarr = array();
 		
-		foreach($arr as $classname)
+		foreach($arr as $classobj)
 		{
-			$class = Group::getGroupByName($classname);
+			$class = Group::getGroupByName($classobj->name);
 			if($class === NULL)
 			{
-				$retarr[] = $classname;
+				
+				switch (substr($classobj->name,0,1)) {
+					case 1:
+						$classobj->instellingsnummer = "12345";
+						break;
+					case 2:
+						$classobj->instellingsnummer = "22345";
+						break;
+					case 3:
+						$classobj->instellingsnummer = "32345";
+						break;
+					case 4:
+						$classobj->instellingsnummer = "42345";
+						break;
+					case 5:
+						$classobj->instellingsnummer = "52345";
+						break;
+					case 6:
+						$classobj->instellingsnummer = "62345";
+						break;
+				}
+				
+				$retarr[$classobj->name] = $classobj;
 			}
 		}
 		
@@ -27,7 +49,7 @@ class importclasses
 	
 	public static function createClasses($arr)
 	{
-		$studentsParentGroup = Group::getGroupByName("leerlingenINF");
+		$studentsParentGroup = Group::getGroupByName("leerlingenINFF"); //TODO demo only
 	
 		if($studentsParentGroup === NULL)
 		{
@@ -189,7 +211,7 @@ class importclasses
 		{
 			$group = new Group();
 	
-			switch (substr($klas,0,1)) {
+			switch (substr($klas->name,0,1)) {
 				case 1:
 					$group->setParentId($groupStructureResults->eerstes->getId());
 					break;
@@ -214,7 +236,9 @@ class importclasses
 					break;
 			}
 	
-			$group->setName($klas);
+			$group->setName($klas->name);
+			$group->setAdministrativeNumber($klas->administratievegroep);
+			$group->setInstituteNumber($klas->instellingsnummer);
 			$group->addType(new Type(Type::TYPE_LEERLING));
 	
 			$newgroupid = Group::addGroup($group);
