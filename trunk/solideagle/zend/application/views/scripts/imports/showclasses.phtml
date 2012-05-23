@@ -5,44 +5,78 @@
 <div>
 
 	<div class="page-header">
-		<h1>Klassen aanmaken</h1>
+		<h1>
+			Klassen aanmaken <small>Volgende klassen bestaan niet en zullen aangemaakt worden</small>
+		</h1>
 	</div>
+	
+	
+	<?php if(strlen($this->errormsg) != 0)
+	{
+		?>
+		<div class="alert alert-error">
+  
+    <strong>Fout!</strong> <pre><?php echo $this->errormsg ?> </pre>
+    </div>
+		<?php
+	}?>
 
 	<form
 		class="form-horizontal"
 		enctype="multipart/form-data"
 		method="post">
-		<fieldset>
-			<legend>Volgende klassen bestaan niet en zullen aangemaakt worden</legend>
 
-			<div class="clearfix">
-				<?php
+		<div class="clearfix">
+			<?php
 
-				foreach($this->klassen as $klas)
-				{
-					?>
-
-				<label
-					class="control-label"
-					for="checkbox">
-					<?php echo $klas; ?>
-
-					
-				</label>
-				<?php
-				}
-
+			foreach($this->klassen as $klas)
+			{
 				?>
+			<fieldset>
+				<legend>
+					<?php echo $klas->name; ?>
+				</legend>
 
-			</div>
-			<div class="form-actions ">
-				<button
-					class="btn btn-primary"
-					type="submit"
-					name="submit"
-					value="true">Klassen maken</button>
-			</div>
-		</fieldset>
+				<div class="control-group">
+					<label
+						class="control-label"
+						for="instellingsnummer">Instellingsnummer</label>
+					<div class="controls">
+						<input
+							id="instellingsnummer"
+							name="class[<?php echo $klas->name; ?>][instellingsnummer]"
+							class="input-xlarge"
+							type="text"
+							value="<?php echo $klas->instellingsnummer; ?>">
+					</div>
+					<label
+						class="control-label"
+						for="administratievegroep">Administratieve Groep</label>
+					<div class="controls">
+						<input
+							id="administratievegroep"
+							name="class[<?php echo $klas->name; ?>][administratievegroep]"
+							class="input-xlarge"
+							type="text"
+							value="<?php echo $klas->administratievegroep; ?>">
+					</div>
+				</div>
+
+			</fieldset>
+			<?php
+			}
+
+			?>
+
+		</div>
+		<div class="form-actions ">
+			<button
+				class="btn btn-primary"
+				type="submit"
+				name="submit"
+				value="true">Klassen maken</button>
+		</div>
+
 	</form>
 
 </div>

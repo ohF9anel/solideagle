@@ -14,6 +14,9 @@ class importstaff
 {
 	private $fileptr;
 	
+	const staffGroup = "staffINF"; //TODO demo only
+	const teacherGroup = "leerkrachtenINF"; //TODO demo only
+	
 	/**
 	 * When going out of scope we will automatically close the file, see the destructor
 	 * 
@@ -98,15 +101,15 @@ class importstaff
 	
 	public static function addUsers($arr)
 	{
-		if(Group::getGroupByName("staff") === NULL )
+		if(Group::getGroupByName(self::staffGroup) === NULL )
 		{
-			echo "FOUT: De groep staff bestaat niet!";
+			echo "FOUT: De groep ". self::staffGroup ." bestaat niet!";
 			return;
 		}
 			
-		if(Group::getGroupByName("leerkrachten") === NULL)
+		if(Group::getGroupByName(self::teacherGroup) === NULL)
 		{
-			echo "FOUT: De groep leerkrachten bestaat niet!";
+			echo "FOUT: De groep ".self::teacherGroup." bestaat niet!";
 			return;
 		}
 		
@@ -134,10 +137,10 @@ class importstaff
 		if( strpos(strtolower($personattr->type), "leraar") === false)
 		{
 			$person->addType(new Type(Type::TYPE_STAFF));
-			$person->setGroupId(Group::getGroupByName("staff")->getId()); //we expect the group staff to exist...
+			$person->setGroupId(Group::getGroupByName(self::staffGroup)->getId()); //we expect the group staff to exist...
 		}else{
 			$person->addType(new Type(Type::TYPE_LEERKRACHT));
-			$person->setGroupId(Group::getGroupByName("leerkrachten")->getId()); //we expect the group leerkrachten to exist...
+			$person->setGroupId(Group::getGroupByName(self::teacherGroup)->getId()); //we expect the group leerkrachten to exist...
 		}
 		
 		$person->setAccountUsername(Person::generateUsername($person));

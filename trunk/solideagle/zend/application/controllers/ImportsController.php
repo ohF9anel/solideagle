@@ -31,10 +31,7 @@ class ImportsController extends Zend_Controller_Action
 	public function indexAction()
 	{
 			
-		
-		
-		
-		
+
 	}
 
 	public function importklassenAction()
@@ -45,28 +42,54 @@ class ImportsController extends Zend_Controller_Action
 		}else{
 			$importNamespace = new Zend_Session_Namespace('importspace');
 			
+			//var_dump($importNamespace->studentsImport->classes);
+			
 			importclasses::createClasses($importNamespace->studentsImport->classes);
 		}
 	}
 
 	public function showclassesAction()
 	{
+		
+		$importNamespace = new Zend_Session_Namespace('importspace');
+		
+		$this->view->errormsg = "";
+		
 		if($this->getRequest()->getParam("submit",false))
 		{
-			$this->_helper->redirector('importklassen', 'Imports');
-		}else{
-			$importNamespace = new Zend_Session_Namespace('importspace');
 			
+			foreach($this->getRequest()->getParam("class",array()) as $classname => $officialnumbers)
+			{
+				if(strlen($officialnumbers["instellingsnummer"] == 0))
+				{
+					$this->view->errormsg.="Instellingsnummer niet ingevuld bij " . $classname . "\n";
+				}
+				if(strlen($officialnumbers["administratievegroep"] == 0))
+				{
+					$this->view->errormsg.="Administratieve groep niet ingevuld bij " . $classname . "\n";
+				}
+				$importNamespace->studentsImport->classes[$classname]->instellingsnummer = $officialnumbers["instellingsnummer"];
+				$importNamespace->studentsImport->classes[$classname]->administratievegroep= $officialnumbers["administratievegroep"];
+			}
 			
-			$this->view->klassen = $importNamespace->studentsImport->classes;
+			if(strlen($this->view->errormsg) == 0)
+			{
+				$this->_helper->redirector('importklassen', 'Imports');
+			}
 		}
 		
+		$this->view->klassen = $importNamespace->studentsImport->classes;
 		
 	}
 
 	public function importfinishedAction()
 	{
-		// action body
+		$importNamespace = new Zend_Session_Namespace('importspace');
+		
+		importstudents::addUsers($importNamespace->studentsImport->new);
+		importstudents::updateUsers($importNamespace->studentsImport->updated);
+		
+		$importNamespace = NULL; //throw away the data;
 	}
 
 	public function importstudentsAction()
@@ -86,11 +109,16 @@ class ImportsController extends Zend_Controller_Action
 			}
 
 			$importNamespace = new Zend_Session_Namespace('importspace');
+			
+			//reset
+			$importNamespace->studentsImport = NULL;
+			
 			$importNamespace->studentsImport = $this->importStudents($adapter->getFileName());
 				
 			//delete temp file to preserve space
 			shell_exec("rm " . $adapter->getFileName());
 				
+			//code that was used to add informat id to existing users
 			/*foreach($importNamespace->studentsImport->new as $studentsparams)
 			{
 				$person = Person::findPersonByNameandClass($studentsparams->name, $studentsparams->firstname,$studentsparams->klas);
@@ -104,15 +132,9 @@ class ImportsController extends Zend_Controller_Action
 				}else{
 					echo "Niet gevonden: ". $studentsparams->name. " " . $studentsparams->firstname . " " . $studentsparams->klas . "\n";
 				}
-				
-				
-				
-				
 			}*/
 		
-			
-			
-			
+
 			
 			
 			//check for new classes
@@ -122,9 +144,11 @@ class ImportsController extends Zend_Controller_Action
 				$importNamespace->studentsImport->classes = $newclasses;
 			
 				$this->_helper->redirector('showclasses', 'Imports');
-			}else{
+			}else if(count($importNamespace->studentsImport->new) != 0 || count($importNamespace->studentsImport->updated) != 0){
 				//show import students page
 				$this->_helper->redirector('showstudents', 'Imports');
+			}else{
+				echo "Geen wijzigingen gevonden!";
 			}
 
 		}
@@ -141,12 +165,13 @@ class ImportsController extends Zend_Controller_Action
 	{
 		$importNamespace = new Zend_Session_Namespace('importspace');
 		
-		//Defaults, prevent display errors
 		$this->view->studentsImport = $importNamespace->studentsImport;
-		
-		
+
 		if($this->getRequest()->getParam("submit",false))
 		{
+			$this->_helper->redirector('importfinished', 'Imports');
+			
+			
 			
 		}
 	}
@@ -168,6 +193,9 @@ class ImportsController extends Zend_Controller_Action
 			}
 
 			$importNamespace = new Zend_Session_Namespace('importspace');
+			
+			$importNamespace->staffImport = NULL;
+			
 			$importNamespace->staffImport = $this->importStaff($adapter->getFileName());
 				
 			//delete temp file to preserve space
