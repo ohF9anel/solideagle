@@ -4,9 +4,15 @@ namespace solideagle;
 
 class Config
 {
-	const mysqlserver = "mysql:host=10.3.7.102;dbname=CentralAccountDB;charset=utf8";
+	/*const mysqlserver = "mysql:host=10.3.7.102;dbname=CentralAccountDB;charset=utf8";
 	const mysqluser = "dbuser";
-	const mysqlpass = "ChaCha69";
+	const mysqlpass = "ChaCha69";*/
+	
+	const mysqlserver = "mysql:host=triton;dbname=sleeuwaertm_solideagle;charset=utf8";
+    const mysqluser = "sysSolidEagle";
+    const mysqlpass = "phizei2Chiem3aeH3xahngair9laesiepiegoleGhoo7heek4rooquai5uha";
+	
+	
 	
 	private $configarr = array();
 	
