@@ -1390,6 +1390,27 @@ class Person
 			return self::getPersonById($retObj->id);
 		}
 	}
+	
+	public static function getPersonByInformatId($informatid)
+	{
+		$sql = "SELECT id FROM  `person`
+		WHERE
+		`person`.`informatid` = :informatid";
+	
+		$cmd = new DatabaseCommand($sql);
+		$cmd->addParam(":informatid", $informatid);
+	
+		$reader = $cmd->executeReader();
+	
+		$retObj = $reader->read();
+			
+		if($retObj === false)
+		{
+			return NULL;
+		}else{
+			return self::getPersonById($retObj->id);
+		}
+	}
 
 	public function getYear()
 	{

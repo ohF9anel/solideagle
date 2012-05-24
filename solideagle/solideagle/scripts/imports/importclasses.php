@@ -21,22 +21,22 @@ class importclasses
 				
 				switch (substr($classobj->name,0,1)) {
 					case 1:
-						$classobj->instellingsnummer = "12345";
+						$classobj->instellingsnummer = "112144";
 						break;
 					case 2:
-						$classobj->instellingsnummer = "22345";
+						$classobj->instellingsnummer = "112144";
 						break;
 					case 3:
-						$classobj->instellingsnummer = "32345";
+						$classobj->instellingsnummer = "038604";
 						break;
 					case 4:
-						$classobj->instellingsnummer = "42345";
+						$classobj->instellingsnummer = "038604";
 						break;
 					case 5:
-						$classobj->instellingsnummer = "52345";
+						$classobj->instellingsnummer = "038604";
 						break;
 					case 6:
-						$classobj->instellingsnummer = "62345";
+						$classobj->instellingsnummer = "038604";
 						break;
 				}
 				

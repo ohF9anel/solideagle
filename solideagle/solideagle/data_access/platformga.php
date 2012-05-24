@@ -11,7 +11,7 @@ class PlatformGA
 	
 	public static function addToPlatform($platformGA)
 	{
-		$sql = "INSERT INTO `CentralAccountDB`.`platform_ga`
+		$sql = "INSERT INTO `platform_ga`
 				(`person_id`,
 				`enabled`)
 				VALUES
@@ -30,7 +30,7 @@ class PlatformGA
         
         public static function updatePlatform($platformGA)
 	{
-		$sql = "UPDATE `CentralAccountDB`.`platform_ga`
+		$sql = "UPDATE `platform_ga`
                         SET `enabled` = :enabled
 			WHERE `person_id` = :person_id
                         ";
@@ -48,7 +48,7 @@ class PlatformGA
 		$sql = "SELECT
                         `platform_ga`.`person_id`,
                         `platform_ga`.`enabled`
-                        FROM `CentralAccountDB`.`platform_ga`
+                        FROM `platform_ga`
                         WHERE `platform_ga`.`person_id` = :personid";
 		
 		$cmd = new DatabaseCommand($sql);
@@ -70,7 +70,7 @@ class PlatformGA
         
         public static function removePlatformByPersonId($personid)
 	{
-		$sql = "DELETE FROM `CentralAccountDB`.`platform_ga`
+		$sql = "DELETE FROM `platform_ga`
                         WHERE `platform_ga`.`person_id` = :personid";
 
 		$cmd = new DatabaseCommand($sql);
