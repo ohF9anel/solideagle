@@ -1,5 +1,9 @@
 <?php
 
+
+use solideagle\scripts\smartschoolgroupusertester;
+
+
 use solideagle\scripts\oldgroupDeleter;
 
 use solideagle\scripts\UpdateConfig;
@@ -18,6 +22,10 @@ class DatabasetasksController extends Zend_Controller_Action
 
     public function indexAction()
     {
+    	
+    	smartschoolgroupusertester::doTest();
+    	
+    	
        $this->view->themethods = get_class_methods($this);
     }
 
