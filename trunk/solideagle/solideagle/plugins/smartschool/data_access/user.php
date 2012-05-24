@@ -69,7 +69,7 @@ class User
 		if($returnvalue != 0)
 			return new StatusReport(false,Api::singleton()->getErrorFromCode($returnvalue));
 
-		echo $user->classCodes;
+	
 		
 		$returnvalue = $api->saveUserToClasses($user->internnumber,$user->classCodes);
 

@@ -2,6 +2,8 @@
 
 namespace solideagle;
 
+use solideagle\logging\Logger;
+
 class Config
 {
 	/*const mysqlserver = "mysql:host=10.3.7.102;dbname=CentralAccountDB;charset=utf8";
@@ -21,6 +23,7 @@ class Config
 		if (isset($this->configarr[$name])) {
 			return $this->configarr[$name];
 		}else{
+			Logger::log("Config option with name: " . $name . " not found!",PEAR_LOG_CRIT);
 			return "CONFIG_NOT_SET";
 		}
 	}
