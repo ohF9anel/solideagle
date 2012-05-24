@@ -11,7 +11,7 @@ class PlatformSS
 	
 	public static function addToPlatform($platformss)
 	{
-		$sql = "INSERT INTO `CentralAccountDB`.`platform_ss`
+		$sql = "INSERT INTO `platform_ss`
 				(`person_id`,
 				`enabled`)
 				VALUES
@@ -30,7 +30,7 @@ class PlatformSS
         
         public static function updatePlatform($platformss)
 	{
-		$sql = "UPDATE `CentralAccountDB`.`platform_ss`
+		$sql = "UPDATE `platform_ss`
                         SET `enabled` = :enabled
 			WHERE `person_id` = :person_id
                         ";
@@ -48,7 +48,7 @@ class PlatformSS
 		$sql = "SELECT
 					`platform_ss`.`person_id`,
 					`platform_ss`.`enabled`
-					FROM `CentralAccountDB`.`platform_ss`
+					FROM `platform_ss`
 					WHERE `platform_ss`.`person_id` = :personid";
 		
 		$cmd = new DatabaseCommand($sql);
@@ -70,7 +70,7 @@ class PlatformSS
         
         public static function removePlatformByPersonId($personid)
 	{
-		$sql = "DELETE FROM `CentralAccountDB`.`platform_ss`
+		$sql = "DELETE FROM `platform_ss`
                         WHERE `platform_ss`.`person_id` = :personid";
 
 		$cmd = new DatabaseCommand($sql);

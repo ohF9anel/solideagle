@@ -38,7 +38,7 @@ class PlatformAD
         
         public static function updatePlatform($platformAD)
 	{
-		$sql = "UPDATE `CentralAccountDB`.`platform_ad`
+		$sql = "UPDATE `platform_ad`
                         SET `enabled` = :enabled,
                             `homefolder_path` = :homefolder_path
 			WHERE `person_id` = :person_id
@@ -82,7 +82,7 @@ class PlatformAD
         
         public static function removePlatformByPersonId($personid)
 	{
-		$sql = "DELETE FROM `CentralAccountDB`.`platform_ad`
+		$sql = "DELETE FROM `platform_ad`
                         WHERE `platform_ad`.`person_id` = :personid";
 
 		$cmd = new DatabaseCommand($sql);

@@ -31,7 +31,7 @@
 				
 				
 				<importExport>
-					<label>Import &amp; Export</label>
+					<label>Import, batch &amp; Export</label>
 					<controller>imports</controller>
 					<action>index</action>
 					
