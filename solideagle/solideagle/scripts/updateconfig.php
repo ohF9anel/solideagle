@@ -37,6 +37,18 @@ class UpdateConfig
 		$arr["ad_administrator"] = $solideagleAdmin;
 		$arr["ad_username"] = $arr["ad_administrator"] . "@" . $arr["ad_dns"]; //'SYS_Solideagle@solideagle.lok'
 		$arr["ad_password"] = $solideagleAdminPass;
+		
+		/*
+		 * Batch scripts folder
+		*/
+		
+		$arr["batchscriptsdir"] = "/tmp/solideagle/";
+		
+		/*
+		 * temp location
+		*/
+		
+		$arr["tempstorage"] = "/tmp/solideagle/";
 
 		/*
 		 * DEFAULT HOMEFOLDER CONFIG
@@ -60,6 +72,9 @@ class UpdateConfig
 		$arr["move_to_path_share_uploads"] = 'E:\uploads';
 		$arr["move_to_path_share_scans"] = 'E:\scans';
 		$arr["move_to_path_share_www"] = 'E:\www';
+		
+		
+		
 
 
 		/*
