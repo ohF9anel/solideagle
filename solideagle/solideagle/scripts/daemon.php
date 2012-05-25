@@ -92,7 +92,7 @@ class daemon
 
 	private function startDaemon()
 	{
-		Logger::log("Checking for duplicate daemon",PEAR_LOG_INFO);
+		Logger::log("Checking for duplicate daemon",PEAR_LOG_INFO,true);
 		
 		if($this->isDaemonRunning())
 		{
@@ -101,19 +101,18 @@ class daemon
 			return;
 		}
 		
-		Logger::log("No lock file, deamon can start",PEAR_LOG_INFO);
-		Logger::log("Creating lock file",PEAR_LOG_INFO);
+		Logger::log("No lock file, deamon can start\nCreating lock file",PEAR_LOG_INFO,true);
+		
 
 
 		echo shell_exec("touch ". Config::singleton()->tempstorage ."daemon.lock 2>&1");
 			
 		$this->runTasks();
 		
-		Logger::log("Daemon finished, removing lock file ",PEAR_LOG_INFO);
+		Logger::log("Daemon finished, removing lock file ",PEAR_LOG_INFO,true);
 
 		echo shell_exec("rm ". Config::singleton()->tempstorage ."daemon.lock 2>&1");
 		
-		echo "Deamon finished";
 	}
 
 
@@ -133,9 +132,8 @@ class daemon
 
 	private function runTasks()
 	{
+		Logger::log("Daemon running tasks now.... please wait",PEAR_LOG_INFO,true);
 		
-		sleep(20);
-
 		//foreach(TaskQueue::getAllPlatforms() as $platform)
 		$platform = platforms::PLATFORM_SMARTSCHOOL;
 		{
