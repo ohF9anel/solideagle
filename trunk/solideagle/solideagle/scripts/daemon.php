@@ -1,6 +1,8 @@
 <?php
 namespace solideagle\scripts;
 
+use solideagle\Config;
+
 use solideagle\plugins\ad\sshpreformatter;
 
 use solideagle\data_access\platforms;
@@ -9,23 +11,25 @@ use solideagle\logging\Logger;
 
 use solideagle\data_access\TaskQueue;
 
-set_include_path(get_include_path().PATH_SEPARATOR."../../");
-
-spl_autoload_extensions(".php"); // comma-separated list
-spl_autoload_register();
-
 class daemon
 {
 	public function __construct()
 	{
 		if($this->isCli())
 		{
+			set_include_path(get_include_path().PATH_SEPARATOR."../../");
+			
+			spl_autoload_extensions(".php"); // comma-separated list
+			spl_autoload_register();
+			
 			$this->startDaemon();
 		}else{
-			exec("php /var/www/solideagle/solideagle/scripts/daemon.php");
-				
+			
+			echo "Daemon output:<br />\n";
+			exec("php " . __FILE__ . " 2>&1");
+
 			/*set_time_limit(60);
-			 echo "Running from command line! Output will stop after 60 seconds or when all tasks have been run";
+			echo "Running from command line! Output will stop after 60 seconds or when all tasks have been run";
 
 			exec(sprintf("%s > %s 2>&1 & echo $! >> %s", "php daemon.php", "daemon.out", "daemon.pid"));
 
@@ -47,21 +51,21 @@ class daemon
 
 			while(true)
 			{
-			if(($buffer = fgets($pipes[1])) === false)
-			{
-			echo "error\n";
-			ob_flush();
-			flush();
-			//break;
-			}
-				
-			if(strpos($buffer,"SEENDBUFFER") !== false)
-			{
-			break;
-			}
-			echo $buffer;
-			ob_flush();
-			flush();
+				if(($buffer = fgets($pipes[1])) === false)
+				{
+					echo "error\n";
+					ob_flush();
+					flush();
+					//break;
+				}
+
+				if(strpos($buffer,"SEENDBUFFER") !== false)
+				{
+					break;
+				}
+				echo $buffer;
+				ob_flush();
+				flush();
 			}
 
 			foreach ($pipes as $pipe)
@@ -80,31 +84,42 @@ class daemon
 
 		}
 	}
-        
-        public static function doNothing()
-        {
-            
-        }
+
+	public static function doNothing()
+	{
+
+	}
 
 	private function startDaemon()
 	{
+		Logger::log("Checking for duplicate daemon",PEAR_LOG_INFO);
+		
 		if($this->isDaemonRunning())
 		{
-			echo "Cannot start, daemon already running...\n";
+			Logger::log("Cannot start, daemon already running!",PEAR_LOG_WARNING);
+			echo "Cannot start, daemon already running!\n";
 			return;
 		}
+		
+		Logger::log("No lock file, deamon can start",PEAR_LOG_INFO);
+		Logger::log("Creating lock file",PEAR_LOG_INFO);
 
-		echo shell_exec("touch daemon.lock 2>&1");
+
+		echo shell_exec("touch ". Config::singleton()->tempstorage ."daemon.lock 2>&1");
 			
 		$this->runTasks();
+		
+		Logger::log("Daemon finished, removing lock file ",PEAR_LOG_INFO);
 
-		echo shell_exec("rm daemon.lock 2>&1");
+		echo shell_exec("rm ". Config::singleton()->tempstorage ."daemon.lock 2>&1");
+		
+		echo "Deamon finished";
 	}
 
 
 	private function isDaemonRunning()
 	{
-		if(file_exists("daemon.lock"))
+		if(file_exists(Config::singleton()->tempstorage ."daemon.lock"))
 		{
 			return true;
 		}
@@ -119,12 +134,14 @@ class daemon
 	private function runTasks()
 	{
 		
+		sleep(20);
+
 		//foreach(TaskQueue::getAllPlatforms() as $platform)
 		$platform = platforms::PLATFORM_SMARTSCHOOL;
 		{
 			$tasksss = TaskQueue::getTasksToRunForPlatform($platform);
 			Logger::log("Platform " . $platform . " has " . count($tasksss) . " tasks in queue...",PEAR_LOG_INFO, true);
-				
+
 			foreach($tasksss as $taskqueue)
 			{
 				$conf = $taskqueue->getConfiguration();
@@ -141,14 +158,14 @@ class daemon
 					
 				if(method_exists($script,"runTask"))
 				{
-					
+						
 					Logger::log("Running task with id: " . $taskqueue->getId(),PEAR_LOG_DEBUG, true);
-					
+						
 					if($script->runTask($taskqueue))
 					{
 						TaskQueue::addToRollback($taskqueue);
 						$conf = $taskqueue->getConfiguration();
-						
+
 						Logger::log("Task " . $taskqueue->getId() ." ran succesfully",PEAR_LOG_DEBUG, true);
 							
 					}else{
@@ -163,12 +180,12 @@ class daemon
 				}else{
 					$taskqueue->setErrorMessages("Task method: runScript does not exist!");
 					TaskQueue::increaseErrorCount($taskqueue);
-						
+
 					break;
 				}
 					
 			}
-			
+				
 			if($platform == platforms::PLATFORM_AD)
 			{
 				//run all batch files for AD

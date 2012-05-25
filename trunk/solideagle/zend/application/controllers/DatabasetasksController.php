@@ -1,5 +1,7 @@
 <?php
 
+use solideagle\scripts\daemon;
+
 use solideagle\scripts\oldDeleter;
 
 
@@ -50,7 +52,8 @@ class DatabasetasksController extends Zend_Controller_Action
 
 	public function rundaemonAction()
 	{
-		solideagle\scripts\daemon::doNothing();
+		
+	 $blah = solideagle\scripts\daemon::doNothing();
 	}
 
 
