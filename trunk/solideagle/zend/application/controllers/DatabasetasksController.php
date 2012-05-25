@@ -1,10 +1,7 @@
 <?php
 
+use solideagle\scripts\oldDeleter;
 
-use solideagle\scripts\smartschoolgroupusertester;
-
-
-use solideagle\scripts\oldgroupDeleter;
 
 use solideagle\scripts\UpdateConfig;
 
@@ -15,44 +12,46 @@ use solideagle\scripts\initdb;
 class DatabasetasksController extends Zend_Controller_Action
 {
 
-    public function init()
-    {
-        /* Initialize action controller here */
-    }
+	public function init()
+	{
+		/* Initialize action controller here */
+	}
 
-    public function indexAction()
-    {
-    	
-    	smartschoolgroupusertester::doTest();
-    	
-    	
-       $this->view->themethods = get_class_methods($this);
-    }
+	public function indexAction()
+	{
 
-    public function startcleanAction()
-    {
-        initdb::startclean();
-    }
+		$this->view->themethods = get_class_methods($this);
+	}
 
-    public function initialAdImportAction()
-    {
-      	InitialAdImport::doImport();
-    }
+	public function startcleanAction()
+	{
+		initdb::startclean();
+	}
 
-    public function updateconfigAction()
-    {
-        UpdateConfig::update();
-    }
+	public function initialAdImportAction()
+	{
+		InitialAdImport::doImport();
+	}
 
-    public function deleteoldgroupsAction()
-    {
-        oldgroupDeleter::deleteOldGroups();
-    }
+	public function updateconfigAction()
+	{
+		UpdateConfig::update();
+	}
 
-    public function rundaemonAction()
-    {
-       solideagle\scripts\daemon::doNothing();
-    }
+	public function deleteoldgroupsAction()
+	{
+		oldDeleter::deleteOldGroups();
+	}
+
+	public function deleteoldusersAction()
+	{
+		oldDeleter::deleteOldUsers();
+	}
+
+	public function rundaemonAction()
+	{
+		solideagle\scripts\daemon::doNothing();
+	}
 
 
 }

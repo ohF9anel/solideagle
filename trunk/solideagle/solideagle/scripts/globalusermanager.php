@@ -225,6 +225,7 @@ class GlobalUserManager
 		
 		if($person->getHasAdAccount()  &&	$person->getHasGaAccount()  && $person->getHasSSAccount())
 		{
+			Logger::log("Password for " . $person->getAccountUsername() . " was cleared");
 			Person::clearPasswordByPersonId($person->getId());
 		}
 	}

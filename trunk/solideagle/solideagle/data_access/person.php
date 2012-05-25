@@ -852,6 +852,35 @@ class Person
 	public static function validatePerson($person)
 	{
 		$validationErrors = array();
+		
+		
+		//check unique fields for uniqueness
+		
+		$sql = "SELECT p.account_username,p.uniqueIdentifier,p.informatId
+		from person p where p.account_username = :username or p.uniqueIdentifier = :uniqid or p.informatId = :informatid";
+		
+		$cmd = new DatabaseCommand($sql);
+		
+		$cmd->addParam(":username", $person->getAccountUsername());
+		$cmd->addParam(":uniqid", $person->getUniqueIdentifier());
+		$cmd->addParam(":informatid", $person->getInformatId());
+		
+		
+		
+		$cmd->executeReader()->readAll(function($data) use (&$validationErrors,&$person){
+			if($person->getAccountUsername() == $data->account_username)
+			{
+				$validationErrors[] ="This user conflicts with username: " . $data->account_username;
+			}if($person->getUniqueIdentifier() == $data->uniqueIdentifier && strlen($data->uniqueIdentifier) > 0)
+			{
+				$validationErrors[]="This user conflicts with uniqueIdentifier: " . $data->uniqueIdentifier;
+			}if($person->getInformatId() == $data->informatId && strlen($data->informatId) > 0)
+			{
+				$validationErrors[]="This user conflicts with informatid: " . $data->informatId;
+			}
+		});
+		
+		
 			
 		// account username
 		$valErrors = Validator::validateString($person->getAccountUsername(), 1, 45, false);
