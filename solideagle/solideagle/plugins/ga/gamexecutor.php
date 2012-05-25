@@ -3,6 +3,7 @@
 namespace solideagle\plugins\ga;
 
 use solideagle\plugins\StatusReport;
+use solideagle\logging\Logger;
 
 class GamExecutor
 {
@@ -12,6 +13,7 @@ class GamExecutor
 
         ob_start();
         $cmd = 'python ../../gam/gam.py ' . $cmd . ' 2>&1';
+        Logger::log($cmd,PEAR_LOG_INFO);
         passthru($cmd);
         $out = ob_get_contents();
         ob_end_clean();  
