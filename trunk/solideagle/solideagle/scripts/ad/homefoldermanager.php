@@ -63,11 +63,16 @@ class homefoldermanager implements TaskInterface
 			if(isset($config["downloadsharepath"]))
 				DownloadFolder::setDownloadFolder($conn, $config["homefolderpath"], $config["downloadsharepath"], $username);
                         
+                        return true;
 			$ret = ManageUser::setHomeFolder($username, "\\\\" . $config["server"]);
 			if($ret->isSucces())
 			{
 				$platformad = PlatformAD::getPlatformConfigByPersonId($config["person"]->getId());
-
+                                if ($platformad == null)
+                                {
+                                    $taskqueue->setErrorMessages("Cannot set homefolder in AD because the account does not exist");
+                                    return false;
+                                }
 				$homedir = "\\\\" . $config["server"] . "\\" . $username . "$";
 
 				$platformad->setHomedir($homedir);

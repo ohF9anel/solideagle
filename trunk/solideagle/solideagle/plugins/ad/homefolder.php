@@ -60,7 +60,7 @@ class HomeFolder
     
     public static function copyHomeFolder($conn, $username, $homefolderpath, $oldserver) 
     {
-        $conn->write("robocopy /S /E /COPYALL /PURGE /MIR /R:1 /W:1 \\\\" . $oldserver . "\\" . $username . "$ " . $homefolderpath . "\\" . $username . "\n");
+        $conn->write("robocopy /S /E /XO /COPYALL /R:1 /W:1 \\\\" . $oldserver . "\\" . $username . "$ " . $homefolderpath . "\\" . $username . "\n");
         return true;
     }
     

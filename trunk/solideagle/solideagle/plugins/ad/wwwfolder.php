@@ -12,8 +12,6 @@ class WwwFolder
     
     public static function setWwwFolder($conn, $path, $wwwSharePath, $username, $enabled = true)
     {
-      
-
         if ($enabled)
         {
             // make www folder in homedir
@@ -26,17 +24,31 @@ class WwwFolder
             // access webserver with user sysweb
             $conn->write("setacl -ot file -actn ace -ace \"n:" .Config::singleton()->ad_dns . "\\sysweb;s:n;m:grant;p:read;w:dacl\" -on " . $path . "\\" . $username . "\\" . Config::singleton()->dir_name_www . "\n");
             // make link
+            $wwwSharePath .= self::getSubFolderForUsername($username);
+            $conn->write("mkdir " . $wwwSharePath . "\n");
             $conn->write("mklink /j " . $wwwSharePath . "\\" . $username . ' ' . $path . "\\" . $username . "\\" . Config::singleton()->dir_name_www . "\n");
         }
         else 
         {
             $conn->write("rmdir " . $wwwSharePath . "\\" . $username . " /s /q\n");
         }
-        
-
        	return true;
-
-        
+    }
+    
+    private static function getSubFolderForUsername($username)
+    {
+        if(is_numeric(substr($username, -3)))
+        {
+                return "\\" . substr($username, -3, 2);
+        }
+        if(is_numeric(substr($username, -2)))
+        {
+                return "\\" . substr($username, -2);
+        }
+        else
+        {
+                return "\\";
+        }
     }
     
 }
