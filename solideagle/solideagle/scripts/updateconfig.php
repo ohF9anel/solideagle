@@ -48,7 +48,7 @@ class UpdateConfig
 		 * temp location
 		*/
 		
-		$arr["tempstorage"] = "/tmp/solideagle/";
+		$arr["tempstorage"] = "/tmp/solideagle/"; //DO NOT FORGET ADDING THE TRAILING SLASH!!!!!
 
 		/*
 		 * DEFAULT HOMEFOLDER CONFIG
