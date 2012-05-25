@@ -139,8 +139,8 @@ class daemon
 	{
 		Logger::log("Daemon running tasks now.... please wait",PEAR_LOG_INFO,true);
 		
-		//foreach(TaskQueue::getAllPlatforms() as $platform)
-		$platform = platforms::PLATFORM_GAPP;
+		foreach(TaskQueue::getAllPlatforms() as $platform)
+		//$platform = platforms::PLATFORM_GAPP;
 		{
 			$tasksss = TaskQueue::getTasksToRunForPlatform($platform);
 			Logger::log("Platform " . $platform . " has " . count($tasksss) . " tasks in queue...",PEAR_LOG_INFO, true);

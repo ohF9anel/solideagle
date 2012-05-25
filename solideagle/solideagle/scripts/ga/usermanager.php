@@ -177,10 +177,10 @@ class usermanager implements TaskInterface
 				return false;
 			}
 		}
-                else if($config["action"] == self::ActionSetAlias && isset($config["username"]) && isset($config["lastname"]) && isset($config["firstname"]))
+                else if($config["action"] == self::ActionSetAlias && isset($config["username"]) && isset($config["lastname"]) && isset($config["firstname"]) && isset($config["isStudent"]))
 		{
                         Logger::log("Trying set alias of user \"" . $config["username"] . "\" in Google Apps.",PEAR_LOG_INFO);
-			$ret = manageuser::setAlias($config["username"], $config["firstname"], $config["lastname"]);
+			$ret = manageuser::setAlias($config["username"], $config["firstname"], $config["lastname"], $config["isStudent"]);
 
 			if($ret->isSucces())
                         {
@@ -328,6 +328,10 @@ class usermanager implements TaskInterface
 		$config["username"] = $person->getAccountUsername();
                 $config["firstname"] = $person->getFirstName();
                 $config["lastname"] = $person->getName();
+                if ($person->isTypeOf(Type::TYPE_LEERLING))
+                    $config["isStudent"] = true;
+                else
+                    $config["isStudent"] = false;
 
 		TaskQueue::insertNewTask($config, $person->getId(), TaskQueue::TypePerson);
         }

@@ -1510,7 +1510,7 @@ class Person
 	}
 
 	//gets users in this group and subgroups
-	//should be renamed
+	//should be renamed 
 	public static function getPersonIdsByGroupId($groupid)
 	{
 		$usersArr = array();

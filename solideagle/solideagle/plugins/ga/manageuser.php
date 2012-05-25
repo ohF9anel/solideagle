@@ -114,7 +114,7 @@ class manageuser
         return $report;
     }
     
-    public static function setAlias($username, $firstname, $lastname)
+    public static function setAlias($username, $firstname, $lastname, $isStudent = true)
     {
         for($i = 0; $i < 10; $i++)
         {
@@ -123,7 +123,7 @@ class manageuser
             if ($i != 0)
                 $alias .= $i;
 
-            $gamcmd = "create nickname " . $alias . " user \"" . $username . "\"";
+            $gamcmd = "create nickname " . $alias . "@" . Config::singleton()->googledomainstudent . " user \"" . $username . "\"";
 
             $report = GamExecutor::executeGamCommand($gamcmd);
 
