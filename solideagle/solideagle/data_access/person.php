@@ -870,7 +870,7 @@ class Person
 		$cmd->executeReader()->readAll(function($data) use (&$validationErrors,&$person){
 			if($person->getId() == $data->id)
 			{
-				continue; //ignore if you are yourself
+				return; //ignore if you are yourself
 			}
 			
 			if($person->getAccountUsername() == $data->account_username)
