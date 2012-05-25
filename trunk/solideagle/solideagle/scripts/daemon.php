@@ -175,7 +175,7 @@ class daemon
                  ~-<_(_.^-~"
 
 EOT;
-		echo eagle;
+		echo $eagle;
 		
 		foreach(TaskQueue::getAllPlatforms() as $platform)
 		//$platform = platforms::PLATFORM_GAPP;
