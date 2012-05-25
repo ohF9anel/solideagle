@@ -17,6 +17,9 @@ class sshpreformatter
 		if (!isset(self::$instance)) {
 			$className = __CLASS__;
 			self::$instance = new $className;
+			
+			@mkdir(Config::singleton()->batchscriptsdir);
+			
 			//clean batch dir
 			exec("rm " . Config::singleton()->batchscriptsdir . "*.batch"); 
 			//create plink yes script
