@@ -95,7 +95,7 @@ class daemon
 	private function startDaemon()
 	{
 		
-		@exec("mkdir " . Config::singleton()->tempstorage);
+		@shell_exec("mkdir " . Config::singleton()->tempstorage);
 		
 		Logger::log("Checking for duplicate daemon",PEAR_LOG_INFO,true);
 		
@@ -246,13 +246,13 @@ EOT;
 	}
 }
 
-if(isset($_GET["kill"]))
+/*if(isset($_GET["kill"]))
 {
 	echo("<pre>");
 	echo shell_exec("killall php 2>&1") . "\n";
 	echo shell_exec("rm daemon.lock 2>&1"). "\n";
 	exit("daemon killed</pre>");
-}
+}*/
 
 new daemon();
 
