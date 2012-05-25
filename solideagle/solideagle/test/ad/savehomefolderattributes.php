@@ -17,10 +17,10 @@ if ($connLdap->getConn() == null)
     return new StatusReport(false, "Connection to AD cannot be made.");
 
 $attr = array('sAMAccountName', 'homeDirectory');
-$sr = ldap_search($connLdap->getConn(), "OU=staff,OU=gebruikers," . Config::singleton()->ad_dc, "(&(sAMAccountName=*))", $attr);
+$sr = ldap_search($connLdap->getConn(), "OU=leerlingen,OU=gebruikers," . Config::singleton()->ad_dc, "(&(sAMAccountName=*))", $attr);
 $entries = ldap_get_entries($connLdap->getConn(), $sr);
 
-$fp = fopen('/var/backups/solideagle/homefolderattrstaff.csv', 'w');
+$fp = fopen('/var/backups/solideagle/homefolderNEWattrleerlingen.csv', 'w');
 
 foreach($entries as $key => $entry)
 {

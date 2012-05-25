@@ -42,28 +42,28 @@ class homefoldermanager implements TaskInterface
 		{
 			$username = $config["person"]->getAccountUsername();
 
-			$conn = sshpreformatter::singleton()->getFileForServer($config["server"]);
+//			$conn = sshpreformatter::singleton()->getFileForServer($config["server"]);
 
-			if(!HomeFolder::createHomeFolder($conn, $config["homefolderpath"], $username))
-			{
-				Logger::log("Creating homefolder failed! ",PEAR_LOG_ERR);
-			}
-			if(!ScanFolder::setScanFolder($conn, $config["homefolderpath"], $config["scansharepath"], $username))
-			{
-				Logger::log("Setting scanfolder failed! ",PEAR_LOG_ERR);
-			}
-			if(!WwwFolder::setWwwFolder($conn, $config["homefolderpath"],$config["wwwsharepath"], $username))
-			{
-				Logger::log("Setting www folder failed! ",PEAR_LOG_ERR);
-			}
-
-			if(isset($config["uploadsharepath"]))
-				UploadFolder::setUploadFolder($conn, $config["homefolderpath"], $config["uploadsharepath"], $username);
-
-			if(isset($config["downloadsharepath"]))
-				DownloadFolder::setDownloadFolder($conn, $config["homefolderpath"], $config["downloadsharepath"], $username);
+//			if(!HomeFolder::createHomeFolder($conn, $config["homefolderpath"], $username))
+//			{
+//				Logger::log("Creating homefolder failed! ",PEAR_LOG_ERR);
+//			}
+//			if(!ScanFolder::setScanFolder($conn, $config["homefolderpath"], $config["scansharepath"], $username))
+//			{
+//				Logger::log("Setting scanfolder failed! ",PEAR_LOG_ERR);
+//			}
+//			if(!WwwFolder::setWwwFolder($conn, $config["homefolderpath"],$config["wwwsharepath"], $username))
+//			{
+//				Logger::log("Setting www folder failed! ",PEAR_LOG_ERR);
+//			}
+//
+//			if(isset($config["uploadsharepath"]))
+//				UploadFolder::setUploadFolder($conn, $config["homefolderpath"], $config["uploadsharepath"], $username);
+//
+//			if(isset($config["downloadsharepath"]))
+//				DownloadFolder::setDownloadFolder($conn, $config["homefolderpath"], $config["downloadsharepath"], $username);
                         
-                        return true;
+                        //return true;
 			$ret = ManageUser::setHomeFolder($username, "\\\\" . $config["server"]);
 			if($ret->isSucces())
 			{
