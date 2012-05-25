@@ -64,7 +64,7 @@ class ClassGroup{
 	{
 		$api = Api::singleton();
 		$retval = $api->saveClass($classGroup->name, $classGroup->desc, $classGroup->code,$classGroup->parentCode,		
-									$classGroup->untis, "112144"/*$classGroup->instituteNumber*/, $classGroup->adminNumber);
+									$classGroup->untis, $classGroup->instituteNumber, $classGroup->adminNumber);
 		
 		
 		
