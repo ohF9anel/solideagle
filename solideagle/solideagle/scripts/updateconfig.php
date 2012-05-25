@@ -42,7 +42,7 @@ class UpdateConfig
 		 * Batch scripts folder
 		*/
 		
-		$arr["batchscriptsdir"] = "/tmp/solideagle/";
+		$arr["batchscriptsdir"] = "/tmp/solideagle/batch/";//DO NOT FORGET ADDING THE TRAILING SLASH!!!!!
 		
 		/*
 		 * temp location
@@ -135,7 +135,7 @@ class UpdateConfig
 		 * Batch scripts folder
 		*/
 
-		$arr["batchscriptsdir"] = "/tmp/solideagle/";
+		$arr["batchscriptsdir"] = "/tmp/solideagle/batch/";
 
 		/*
 		 * temp location
