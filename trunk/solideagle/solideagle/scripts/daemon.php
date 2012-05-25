@@ -94,6 +94,9 @@ class daemon
 
 	private function startDaemon()
 	{
+		
+		@exec("mkdir " . Config::singleton()->tempstorage);
+		
 		Logger::log("Checking for duplicate daemon",PEAR_LOG_INFO,true);
 		
 		if($this->isDaemonRunning())
