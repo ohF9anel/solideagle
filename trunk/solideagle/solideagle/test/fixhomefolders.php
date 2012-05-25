@@ -17,7 +17,7 @@ spl_autoload_extensions(".php"); // comma-separated list
 spl_autoload_register();
 
 
-$persons = Person::getPersonIdsByGroupId(42);
+$persons = Person::getPersonIdsByGroupId(6);
 var_dump($persons);
 
 foreach($persons as $pid)
@@ -27,7 +27,7 @@ foreach($persons as $pid)
     $year = ereg_replace("[^0-9]", "",$username);
     $year = substr($year, 0, 2);
     var_dump("\\\\atlas4\\homefolders\\leerlingen\\" . $year . "\\" . $username);
-    ManageUser::setHomeFolder($p->getAccountUsername(), "\\\\atlas4\\homefolders\\leerlingen\\" . $year);
+    //ManageUser::setHomeFolder($p->getAccountUsername(), "\\\\atlas4\\homefolders\\leerlingen\\" . $year);
 }
 //solideagle\plugins\ad\manageuser::setHomeFolder($)
 

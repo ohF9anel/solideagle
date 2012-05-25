@@ -3,6 +3,7 @@ namespace solideagle\scripts\ga;
 
 use solideagle\data_access\Group;
 use solideagle\data_access\Person;
+use solideagle\data_access\Type;
 use solideagle\data_access\PlatformGA;
 
 use solideagle\plugins\ga\manageuser;
@@ -201,14 +202,14 @@ class usermanager implements TaskInterface
 
 	public static function prepareAddUser($person, $enabled = true)
 	{
-		self::prepareAddUserToOu($person);
-		self::prepareAddUserToGroup($person);
-
 		$config["action"] = self::ActionAddUser;
 		$config["user"] = $person;
 		$config["enabled"] = $enabled;
 
 		TaskQueue::insertNewTask($config, $person->getId());
+                
+                self::prepareAddUserToOu($person);
+		self::prepareAddUserToGroup($person);
                 
                 if ($person->getPictureUrl() != null)
                     self::prepareSetPhoto($person);
