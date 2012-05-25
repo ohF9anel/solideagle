@@ -856,7 +856,7 @@ class Person
 		
 		//check unique fields for uniqueness
 		
-		$sql = "SELECT p.account_username,p.uniqueIdentifier,p.informatId
+		$sql = "SELECT p.id,p.account_username,p.uniqueIdentifier,p.informatId
 		from person p where p.account_username = :username or p.uniqueIdentifier = :uniqid or p.informatId = :informatid";
 		
 		$cmd = new DatabaseCommand($sql);
@@ -868,6 +868,11 @@ class Person
 		
 		
 		$cmd->executeReader()->readAll(function($data) use (&$validationErrors,&$person){
+			if($person->getId() == $data->id)
+			{
+				continue; //ignore if you are yourself
+			}
+			
 			if($person->getAccountUsername() == $data->account_username)
 			{
 				$validationErrors[] ="This user conflicts with username: " . $data->account_username;
