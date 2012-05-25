@@ -18,7 +18,7 @@ class sshpreformatter
 			$className = __CLASS__;
 			self::$instance = new $className;
 			//clean batch dir
-			exec("rm " . Config::singleton()->batchscriptsdir . "*"); 
+			exec("rm " . Config::singleton()->batchscriptsdir . "*.batch"); 
 			//create plink yes script
 			exec('echo "y\n" > ' . Config::singleton()->batchscriptsdir . "plink.yes.batch");
 			exec('echo "cmd /C C:/solideagle.cmd\nexit\nexit\n" > ' . Config::singleton()->batchscriptsdir . "plink.execute.batch");
