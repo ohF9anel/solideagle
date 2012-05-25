@@ -12,8 +12,7 @@ class UpdateConfig
 		//self::updateForDev();
 		self::updateForProd();
 	}
-
-
+	
 	public static function updateForProd()
 	{
 		Logger::log("Config Update!",PEAR_LOG_DEBUG );
@@ -73,10 +72,6 @@ class UpdateConfig
 		$arr["move_to_path_share_scans"] = 'E:\scans';
 		$arr["move_to_path_share_www"] = 'E:\www';
 		
-		
-		
-
-
 		/*
 		 * SMARTSCHOOL CONFIG
 		*/
@@ -88,7 +83,8 @@ class UpdateConfig
 		 * Google CONFIG
 		*/
 
-		$arr["googledomain"] = 'pilot.dbz.be'; //pilot.dbz.be
+		$arr["googledomain"] = 'dbz.be'; //pilot.dbz.be
+		$arr["googledomainstudent"] = 'student.dbz.be'; //pilot.dbz.be
 
 		/*
 		 * LOGGING LEVEL

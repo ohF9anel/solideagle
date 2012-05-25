@@ -22,6 +22,8 @@ class daemon
 			spl_autoload_extensions(".php"); // comma-separated list
 			spl_autoload_register();
 			
+			date_default_timezone_set("Europe/Brussels");
+			
 			$this->startDaemon();
 		}else{
 			
@@ -135,7 +137,7 @@ class daemon
 		Logger::log("Daemon running tasks now.... please wait",PEAR_LOG_INFO,true);
 		
 		//foreach(TaskQueue::getAllPlatforms() as $platform)
-		$platform = platforms::PLATFORM_SMARTSCHOOL;
+		$platform = platforms::PLATFORM_GAPP;
 		{
 			$tasksss = TaskQueue::getTasksToRunForPlatform($platform);
 			Logger::log("Platform " . $platform . " has " . count($tasksss) . " tasks in queue...",PEAR_LOG_INFO, true);
