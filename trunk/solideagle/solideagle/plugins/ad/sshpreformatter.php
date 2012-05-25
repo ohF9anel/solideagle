@@ -21,7 +21,7 @@ class sshpreformatter
 			@mkdir(Config::singleton()->batchscriptsdir);
 			
 			//clean batch dir
-			exec("rm " . Config::singleton()->batchscriptsdir . "*.batch"); 
+			@exec("rm " . Config::singleton()->batchscriptsdir . "*.batch"); 
 			//create plink yes script
 			exec('echo "y\n" > ' . Config::singleton()->batchscriptsdir . "plink.yes.batch");
 			exec('echo "cmd /C C:/solideagle.cmd\nexit\nexit\n" > ' . Config::singleton()->batchscriptsdir . "plink.execute.batch");
