@@ -49,6 +49,14 @@
 							<controller>imports</controller>
 							<action>importpersons</action>
 						</personImport>
+						
+						<studentExport>
+							<label>Export studenten</label>
+							<controller>imports</controller>
+							<action>exportstudents</action>
+						</studentExport>
+						
+						
 					</pages>
 				
 				

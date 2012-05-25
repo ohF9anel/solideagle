@@ -1,5 +1,7 @@
 <?php
 
+use solideagle\scripts\exports\exportstudents;
+
 use solideagle\scripts\imports\importclasses;
 
 use solideagle\scripts\imports\importstudents;
@@ -23,19 +25,19 @@ use solideagle\Config;
 class ImportsController extends Zend_Controller_Action
 {
 
-	public function init()
-	{
+    public function init()
+    {
 		/* Initialize action controller here */
-	}
+    }
 
-	public function indexAction()
-	{
+    public function indexAction()
+    {
 			
 
-	}
+    }
 
-	public function importklassenAction()
-	{
+    public function importklassenAction()
+    {
 		if($this->getRequest()->getParam("submit",false))
 		{
 			$this->_helper->redirector('showstudents', 'Imports');
@@ -46,10 +48,11 @@ class ImportsController extends Zend_Controller_Action
 			
 			importclasses::createClasses($importNamespace->studentsImport->classes);
 		}
-	}
+		
+    }
 
-	public function showclassesAction()
-	{
+    public function showclassesAction()
+    {
 		
 		$importNamespace = new Zend_Session_Namespace('importspace');
 		
@@ -80,20 +83,20 @@ class ImportsController extends Zend_Controller_Action
 		
 		$this->view->klassen = $importNamespace->studentsImport->classes;
 		
-	}
+    }
 
-	public function importfinishedAction()
-	{
+    public function importfinishedAction()
+    {
 		$importNamespace = new Zend_Session_Namespace('importspace');
 		
 		importstudents::addUsers($importNamespace->studentsImport->new);
 		importstudents::updateUsers($importNamespace->studentsImport->updated);
 		
 		$importNamespace = NULL; //throw away the data;
-	}
+    }
 
-	public function importstudentsAction()
-	{
+    public function importstudentsAction()
+    {
 
 		if($this->getRequest()->getParam("submit",false))
 		{
@@ -153,16 +156,16 @@ class ImportsController extends Zend_Controller_Action
 
 		}
 
-	}
+    }
 
-	private function importStudents($filename)
-	{
+    private function importStudents($filename)
+    {
 		$studentsimporter = new importstudents(fopen($filename,"rb"));
 		return $studentsimporter->import();
-	}
+    }
 
-	public function showstudentsAction()
-	{
+    public function showstudentsAction()
+    {
 		$importNamespace = new Zend_Session_Namespace('importspace');
 		
 		$this->view->studentsImport = $importNamespace->studentsImport;
@@ -170,14 +173,14 @@ class ImportsController extends Zend_Controller_Action
 		if($this->getRequest()->getParam("submit",false))
 		{
 			$this->_helper->redirector('importfinished', 'Imports');
-			
-			
-			
 		}
-	}
+			
+			
+		
+    }
 
-	public function importpersonsAction()
-	{
+    public function importpersonsAction()
+    {
 		if($this->getRequest()->getParam("submit",false))
 		{
 			$adapter = new Zend_File_Transfer_Adapter_Http();
@@ -205,16 +208,16 @@ class ImportsController extends Zend_Controller_Action
 				
 		}
 
-	}
+    }
 
-	private function importStaff($filename)
-	{
+    private function importStaff($filename)
+    {
 		$staffImporter = new importstaff(fopen($filename,"rb"));
 		return $staffImporter->import();
-	}
+    }
 
-	public function showstaffAction()
-	{
+    public function showstaffAction()
+    {
 		$importNamespace = new Zend_Session_Namespace('importspace');
 
 		$this->view->staffImport = $importNamespace->staffImport;
@@ -224,18 +227,50 @@ class ImportsController extends Zend_Controller_Action
 			$this->_helper->redirector('createstaff', 'Imports');
 		}
 
-	}
+    }
 
-	public function createstaffAction()
-	{
+    public function createstaffAction()
+    {
 		$importNamespace = new Zend_Session_Namespace('importspace');
 		 
 		importstaff::addUsers($importNamespace->staffImport->new);
 		importstaff::updateUsers($importNamespace->staffImport->updated);
-	}
+    }
+
+    public function exportstudentsAction()
+    {
+    	set_time_limit(3000); //long timeout
+    	
+    	$this->_helper->layout()->disableLayout();
+    	$this->_helper->viewRenderer->setNoRender(true);
+    	
+    	$file = exportstudents::getCSV();
+    	
+    	 header('Content-Type: text/plain');
+		 header('Content-Disposition: attachment; filename=studenten.csv');
+		 header("Content-Transfer-Encoding: binary");
+		 header('Accept-Ranges: none');
+		 
+		 header("Cache-control: private");
+		 header('Pragma: private');
+		 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+		 
+		 header("Content-Length: ".strlen($file));
+    	
+        echo $file;
+    }
+
+    public function deleteoldusersAction()
+    {
+        // action body
+    }
 
 
 }
+
+
+
+
 
 
 

@@ -58,6 +58,7 @@
           <actionMethod actionName="importpersons"/>
           <actionMethod actionName="showstaff"/>
           <actionMethod actionName="createstaff"/>
+          <actionMethod actionName="exportstudents"/>
         </controllerFile>
         <controllerFile controllerName="Tasktemplate">
           <actionMethod actionName="index"/>
@@ -70,6 +71,7 @@
           <actionMethod actionName="startclean"/>
           <actionMethod actionName="updateconfig"/>
           <actionMethod actionName="deleteoldgroups"/>
+           <actionMethod actionName="deleteoldusers"/>
           <actionMethod actionName="rundaemon"/>
         </controllerFile>
       </controllersDirectory>
@@ -196,6 +198,12 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Imports">
             <viewScriptFile forActionName="createstaff"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Imports">
+            <viewScriptFile forActionName="exportstudents"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Databasetasks">
+            <viewScriptFile forActionName="deleteoldusers"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>

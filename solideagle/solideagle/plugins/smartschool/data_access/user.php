@@ -514,17 +514,16 @@ class User
 		}
 			
 		$user->setUntis("");
+		
+		if($person->isTypeOf(Type::TYPE_ADMIN))
+		{
+			//add to group "Beheerders"
+			$user->addClass(ClassGroup::GroupPrefix . "Beheerders");
+		}
 
 		if($enabled)
 		{
-			if($person->isTypeOf(Type::TYPE_ADMIN))
-			{
-				//dont we love smartschool, they use this field for enable, disable AND admin account
-				$user->setAccountStatus("administratief");
-			}else
-			{
-				$user->setAccountStatus("actief");
-			}
+			$user->setAccountStatus("actief");
 		}else{
 			$user->setAccountStatus("inactief");
 		}
