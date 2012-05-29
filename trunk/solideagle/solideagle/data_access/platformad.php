@@ -121,4 +121,12 @@ class PlatformAD
 	{
 	    $this->personId = $personId;
 	}
+	
+	
+	
+	public function getJson()
+	{
+		return json_encode(get_object_vars($this));
+	}
+	
 }

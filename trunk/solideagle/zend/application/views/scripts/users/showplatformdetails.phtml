@@ -1,0 +1,66 @@
+<div class="alert alert-info">
+
+	<?php if($this->platformAD !== NULL)
+	{
+	?>
+	
+	<h3>Active Directory</h3>
+	<table class="table">
+		
+		<tbody>
+		<tr>
+		<td>Account actief</td>
+		<td><?php echo $this->platformAD->getEnabled(); ?></td>
+		</tr>
+		<tr>
+		<td>Homedirectory</td>
+		<td><?php echo $this->platformAD->getHomedir(); ?></td>
+		</tr>
+		</tbody>
+	</table>
+	
+	<?php
+	}
+	?>
+
+	<?php if($this->platformSS !== NULL)
+	{
+	?>
+	
+	<h3>Smartschool</h3>
+	<table class="table">
+		
+		<tbody>
+		<tr>
+		<td>Account actief</td>
+		<td><?php echo $this->platformSS->getEnabled(); ?></td>
+		</tr>
+		
+		</tbody>
+	</table>
+	
+	<?php
+	}
+	?>
+
+	<?php if($this->platformGA !== NULL)
+	{
+	?>
+	
+	<h3>Google Apps</h3>
+	<table class="table">
+		
+		<tbody>
+		<tr>
+		<td>Account actief</td>
+		<td><?php echo $this->platformGA->getEnabled(); ?></td>
+		</tr>
+		
+		</tbody>
+	</table>
+	
+	<?php
+	}
+	?>
+
+</div>

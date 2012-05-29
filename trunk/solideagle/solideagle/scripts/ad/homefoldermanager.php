@@ -66,7 +66,9 @@ class homefoldermanager implements TaskInterface
 			if(isset($config["downloadsharepath"]))
 				DownloadFolder::setDownloadFolder($conn, $config["homefolderpath"], $config["downloadsharepath"], $username);
                         
-                        //return true;
+			//returning here will only create the homefolder but not set it in AD
+            //return true;
+            
 			$ret = ManageUser::setHomeFolder($username, "\\\\" . $config["server"]);
 			if($ret->isSucces())
 			{

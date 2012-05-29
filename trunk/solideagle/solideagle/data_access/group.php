@@ -713,35 +713,45 @@ class Group
 		return $tmpgroup;
 
 	}
+	
+	
+	public static function getGroupByUniqueName($uniquename,$excludedId=NULL)
+	{
+		$sql = "SELECT p.`id`
+		FROM `group` p WHERE  p.`uniquename` = :uniquename and p.`id` != :excludedId";
+		
+		
+		
+		$cmd = new DatabaseCommand($sql);
+		
+		$cmd->addParam(":uniquename", $uniquename);
+		$cmd->addParam(":excludedId", $excludedId);
+		
+		$row = $cmd->executeReader()->read();
+		
+		if($row)
+		{
+			return self::getGroupById($row->id);
+		}
+		return NULL;
+	}
 
 	public static function getGroupByName($groupname)
 	{
-		$sql = "SELECT p.`id`,
-		p.`name`,
-		p.uniquename,
-		p.`administrativeNumber`,
-		p.`instituteNumber`,
-		p.`description`
+		$sql = "SELECT p.`id`
 		FROM `group` p WHERE  p.`name` = :groupname";
 
 		$cmd = new DatabaseCommand($sql);
 
 		$cmd->addParam(":groupname", $groupname);
 
-		$tmpgroup = NULL;
-
-		if($row = $cmd->executeReader()->read())
+		$row = $cmd->executeReader()->read();
+		
+		if($row)
 		{
-			$tmpgroup = new Group();
-			$tmpgroup->setId($row->id);
-			$tmpgroup->setName($row->name);
-			$tmpgroup->uniquename($row->name);
-			$tmpgroup->setDescription($row->description);
-			$tmpgroup->setAdministrativeNumber($row->administrativeNumber);
-			$tmpgroup->setInstituteNumber($row->instituteNumber);
+			return self::getGroupById($row->id);
 		}
-
-		return $tmpgroup;
+		return NULL;
 	}
 
 

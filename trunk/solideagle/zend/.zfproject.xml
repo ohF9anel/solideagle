@@ -29,6 +29,7 @@
           <actionMethod actionName="remove"/>
           <actionMethod actionName="resetpw"/>
           <actionMethod actionName="search"/>
+          <actionMethod actionName="showplatformdetails"/>
         </controllerFile>
         <controllerFile controllerName="Groups">
           <actionMethod actionName="index"/>
@@ -71,7 +72,7 @@
           <actionMethod actionName="startclean"/>
           <actionMethod actionName="updateconfig"/>
           <actionMethod actionName="deleteoldgroups"/>
-           <actionMethod actionName="deleteoldusers"/>
+          <actionMethod actionName="deleteoldusers"/>
           <actionMethod actionName="rundaemon"/>
         </controllerFile>
       </controllersDirectory>
@@ -204,6 +205,9 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Databasetasks">
             <viewScriptFile forActionName="deleteoldusers"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Users">
+            <viewScriptFile forActionName="showplatformdetails"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>

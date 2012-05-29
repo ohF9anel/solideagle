@@ -19,17 +19,17 @@ use solideagle\scripts\Usermanager;
 class UsersController extends Zend_Controller_Action
 {
 
-	public function init()
-	{
+    public function init()
+    {
 		/* Initialize action controller here */
-	}
+    }
 
-	public function indexAction()
-	{
-	}
+    public function indexAction()
+    {
+    }
 
-	public function userformAction()
-	{
+    public function userformAction()
+    {
 		$this->_helper->layout()->disableLayout();
 			
 		$data = $this->getRequest()->getParams();
@@ -79,10 +79,10 @@ class UsersController extends Zend_Controller_Action
 
 		}
 
-	}
+    }
 
-	public function adduserpostAction()
-	{
+    public function adduserpostAction()
+    {
 		$this->_helper->layout()->disableLayout();
 
 		$this->_helper->viewRenderer->setNoRender(true);
@@ -145,20 +145,20 @@ class UsersController extends Zend_Controller_Action
 		$person->setGroupId($this->getRequest()->getPost('groupId'));
 		$person->setInformatId($this->getRequest()->getPost('informatId'));
 		$person->setPictureUrl($this->getRequest()->getPost('PictureUrl'));
-                
-                // more information
-                $person->setPhone2($this->getRequest()->getPost('txtPhone2'));
-                $person->setMobile($this->getRequest()->getPost('txtMobile'));
-                $person->setBirthPlace($this->getRequest()->getPost('txtBirthPlace'));
-                $person->setNationality($this->getRequest()->getPost('txtNationality'));
-                $person->setStreet($this->getRequest()->getPost('txtStreet'));
-                $person->setHouseNumber($this->getRequest()->getPost('txtHouseNumber'));
-                $person->setCity($this->getRequest()->getPost('txtCity'));
-                $person->setPostCode($this->getRequest()->getPost('txtPostCode'));
-                $person->setCountry($this->getRequest()->getPost('txtCountry'));
-                $person->setStudentStamNr($this->getRequest()->getPost('txtStamnumber'));
-                $person->setStudentPreviousSchool($this->getRequest()->getPost('txtPreviousSchool'));
-                $person->setParentOccupation($this->getRequest()->getPost('txtParentOccupation'));
+
+		// more information
+		$person->setPhone2($this->getRequest()->getPost('txtPhone2'));
+		$person->setMobile($this->getRequest()->getPost('txtMobile'));
+		$person->setBirthPlace($this->getRequest()->getPost('txtBirthPlace'));
+		$person->setNationality($this->getRequest()->getPost('txtNationality'));
+		$person->setStreet($this->getRequest()->getPost('txtStreet'));
+		$person->setHouseNumber($this->getRequest()->getPost('txtHouseNumber'));
+		$person->setCity($this->getRequest()->getPost('txtCity'));
+		$person->setPostCode($this->getRequest()->getPost('txtPostCode'));
+		$person->setCountry($this->getRequest()->getPost('txtCountry'));
+		$person->setStudentStamNr($this->getRequest()->getPost('txtStamnumber'));
+		$person->setStudentPreviousSchool($this->getRequest()->getPost('txtPreviousSchool'));
+		$person->setParentOccupation($this->getRequest()->getPost('txtParentOccupation'));
 			
 		if(count($errors = Person::validatePerson($person)) > 0)
 		{
@@ -173,10 +173,10 @@ class UsersController extends Zend_Controller_Action
 			Person::addPerson($person);
 		}
 
-	}
+    }
 
-	public function getusersAction()
-	{
+    public function getusersAction()
+    {
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
 			
@@ -200,19 +200,19 @@ class UsersController extends Zend_Controller_Action
 			$person[3] = SuperEntities::encode($gp->getName());
 			$person[4] = SuperEntities::encode($gp->getAccountUserName());
 			$person[6] = DateConverter::longDbDateToDisplayDate($gp->getMadeOn());
-				
+
 			$platformstatus = array();
-				
+
 			if(($status = PlatformSS::getPlatformConfigByPersonId($gp->getId())) !== NULL)
 			{
 				$platformstatus["SS"] = $status->getEnabled();
 			}
-			
+
 			if(($status = PlatformGA::getPlatformConfigByPersonId($gp->getId())) !== NULL)
 			{
 				$platformstatus["GA"] = $status->getEnabled();
 			}
-			
+
 			if(($status = PlatformAD::getPlatformConfigByPersonId($gp->getId())) !== NULL)
 			{
 				$platformstatus["AD"] = $status->getEnabled();
@@ -224,10 +224,10 @@ class UsersController extends Zend_Controller_Action
 		}
 		//must be called aaData, see datatables ajax docs
 		echo json_encode(array("aaData" => $persons));
-	}
+    }
 
-	public function showdetailsAction()
-	{
+    public function showdetailsAction()
+    {
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
 			
@@ -241,15 +241,15 @@ class UsersController extends Zend_Controller_Action
 			return;
 
 		echo $person->getJson();
-	}
+    }
 
-	public function showexterndetailsAction()
-	{
+    public function showexterndetailsAction()
+    {
 		// action body
-	}
+    }
 
-	public function moveAction()
-	{
+    public function moveAction()
+    {
 		$this->_helper->layout()->disableLayout();
 		$this->view->groups = Group::getAllGroups();
 
@@ -264,10 +264,10 @@ class UsersController extends Zend_Controller_Action
 			
 		$this->view->usersCount = count($users);
 		$this->view->users = json_encode($users);
-	}
+    }
 
-	public function movepostAction()
-	{
+    public function movepostAction()
+    {
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
 			
@@ -284,25 +284,25 @@ class UsersController extends Zend_Controller_Action
 		foreach($users as $user)
 		{
 			$oldgid = $user->getGroupId();
-				
+
 			if($oldgid == $newgid) //do not move to same group
 			{
 				continue;
 			}
-				
+
 			GlobalUserManager::moveUser($user, $newgid, $oldgid);
 		}
 
-	}
+    }
 
-	public function removeAction()
-	{
+    public function removeAction()
+    {
 		$this->_helper->layout()->disableLayout();
 
 		if($this->getRequest()->getPost("submit") === "remove")
 		{
 			$this->_helper->viewRenderer->setNoRender(true);
-				
+
 			$users = Person::getPersonsByIds($this->getRequest()->getParam("users",array()));
 
 			foreach($users as $user)
@@ -324,16 +324,17 @@ class UsersController extends Zend_Controller_Action
 			$this->view->usersCount = count($users);
 			$this->view->users = json_encode($users);
 		}
-	}
+		
+    }
 
-	public function resetpwAction()
-	{
+    public function resetpwAction()
+    {
 		$this->_helper->layout()->disableLayout();
 
 		if($this->getRequest()->getPost("submit") === "reset")
 		{
 			$this->_helper->viewRenderer->setNoRender(true);
-				
+
 			$users = Person::getPersonsByIds($this->getRequest()->getParam("users",array()));
 
 			$randomPass = $this->getRequest()->getParam("random",false);
@@ -347,7 +348,7 @@ class UsersController extends Zend_Controller_Action
 				}else{
 					$pass = $this->getRequest()->getParam("AccountPassword");
 					$passRepeat = $this->getRequest()->getParam("AccountPasswordRepeat");
-						
+
 					if($pass == $passRepeat)
 					{
 						$person->setAccountPassword($pass);
@@ -375,34 +376,53 @@ class UsersController extends Zend_Controller_Action
 			$this->view->usersCount = count($users);
 			$this->view->users = json_encode($users);
 		}
-	}
+		
+    }
 
-	public function searchAction()
-	{
+    public function searchAction()
+    {
 		$this->_helper->layout()->disableLayout();
 
 
 		if($this->getRequest()->getParam("submit",false))
 		{
 			$this->_helper->viewRenderer->setNoRender(true);
-			 
+
 			$personsToEncode = array();
-			 
+
 			$firstname = "%" . $this->getRequest()->getParam("voornaam","") . "%";
 			$lastname = "%" . $this->getRequest()->getParam("naam",""). "%";
 			$username ="%" . $this->getRequest()->getParam("gebruikersnaam",""). "%";
-			 
+
 			foreach(Person::searchPerson($firstname,$lastname,$username) as $person)
 			{
 				$personsToEncode[] = $person->getJson();
 			}
-			 
+
 			echo json_encode($personsToEncode);
 		}
-	}
+		
+    }
+
+    
+
+    public function showplatformdetailsAction()
+    {
+     	$this->_helper->layout()->disableLayout();
+		
+
+		if(($personid = $this->getRequest()->getParam("id")) !== NULL)
+		{
+			$this->view->platformAD = PlatformAD::getPlatformConfigByPersonId($personid);
+			$this->view->platformGA = PlatformGA::getPlatformConfigByPersonId($personid);
+			$this->view->platformSS = PlatformSS::getPlatformConfigByPersonId($personid);
+		}
+    }
 
 
 }
+
+
 
 
 
