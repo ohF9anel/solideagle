@@ -40,8 +40,10 @@ class homefoldermanager implements TaskInterface
 		}
 		else if($config["action"] == self::ActionAddHomefolder && isset($config["server"]) && isset($config["homefolderpath"]) && isset($config["scansharepath"]) && isset($config["wwwsharepath"]) && isset($config["person"]))
 		{
-			Logger::log("Creating homefolder on " . $config["server"] . " path: " .$config["homefolderpath"] ." for user: " . $config["person"]);
+			
 			$username = $config["person"]->getAccountUsername();
+			
+			Logger::log("Creating homefolder on " . $config["server"] . " path: " .$config["homefolderpath"] ." for user: " . $username);
 
 			$conn = sshpreformatter::singleton()->getFileForServer($config["server"]);
 
