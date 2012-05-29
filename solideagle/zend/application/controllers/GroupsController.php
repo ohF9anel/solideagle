@@ -82,6 +82,12 @@ class GroupsController extends Zend_Controller_Action
 			echo "Deze groep bestaat niet";
 			exit();
 		}
+		
+		if(Group::getGroupByUniqueName(UnicodeHelper::cleanEmailString($this->getRequest()->getParam("groupName")),$this->getRequest()->getParam("groupid")) !== NULL)
+		{
+			echo "Een groep met deze naam bestaat al.";
+			return;
+		}
 			
 		$newGroup = new Group();
 		$newGroup->setId($oldgroup->getId());
@@ -206,14 +212,11 @@ class GroupsController extends Zend_Controller_Action
 			return;
 		}
 		
-		if(Group::getGroupByName($this->getRequest()->getParam("groupName")) !== NULL)
+		if(Group::getGroupByUniqueName(UnicodeHelper::cleanEmailString($this->getRequest()->getParam("groupName"))) !== NULL)
 		{
 			echo "Een groep met deze naam bestaat al.";
 			return;
 		}
-		
-		
-	
 			
 		$newSubGroup = new Group();
 		$newSubGroup->setParentId($parentgroupid);
@@ -295,8 +298,7 @@ class GroupsController extends Zend_Controller_Action
 		
 		if(($group = Group::getGroupById($groupid)) !== null)
 		{
-			$mailname = UnicodeHelper::cleanEmailString($group->getName());
-			echo $mailname . "@" . Config::singleton()->googledomain;
+			echo $group->getUniquename() . "@" . Config::singleton()->googledomain;
 		}
 	}
 

@@ -1,5 +1,7 @@
 <?php
 
+use solideagle\data_access\helpers\UnicodeHelper;
+
 use solideagle\data_access\Group;
 
 use solideagle\scripts\daemon;
@@ -23,12 +25,6 @@ class DatabasetasksController extends Zend_Controller_Action
 
 	public function indexAction()
 	{
-		
-		foreach(Group::getAllGroups())
-		{
-			
-		}
-
 		$this->view->themethods = get_class_methods($this);
 	}
 

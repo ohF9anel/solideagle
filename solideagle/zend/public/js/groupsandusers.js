@@ -176,6 +176,11 @@ function preventDoubleSubmit(formData, jqForm, options) {
 	}
 }
 
+function resetDoubleSubmit()
+{
+	isSubmitting = false;
+}
+
 
 
 function selectUserinGroup(selectedGroupId,username)
@@ -278,13 +283,19 @@ function showUsers() {
 								accountstatus += " ";
 							}); 
 							
-							$('td:eq(5)', nRow).html(accountstatus);
+							$('td:eq(5)', nRow).html(accountstatus).attr("class","accsts");
 						}
 
 					});
 
 	// table rightclick
 	$('#userstable tbody').on("contextmenu", 'tr', function(e) {
+		
+		$("#externalDataHolder").css({
+			display : "none"
+		});
+		
+		
 		var clickedElem = $(this);
 
 		$("#useractions > ul > li").addClass('open');
@@ -299,9 +310,42 @@ function showUsers() {
 
 		return false;
 	});
+	
+	//accountstatus
+	$('#userstable tbody').on("mouseenter", "td.accsts", function(e) {
+		
+		$("#externalDataHolder").css({
+			display : "none"
+		});
+		
+		
+		var clickedElem = $(this);
+		hoverUserId = clickedElem.parent().find(".selectUser").attr("value");
+	
+		$("#externalDataHolder").load(SEpath + "/users/showplatformdetails",{id:hoverUserId});
+		
+		$("#externalDataHolder").css({
+			display : "block",
+			position : "absolute",
+			top : e.pageY + 10 + "px",
+			left : e.pageX + "px"
+		});
+	
+		
+		
+		return true;
+	});
+	
+	
 
 	$('html').on('click', function() {
+		
+		$("#externalDataHolder").css({
+			display : "none"
+		});
+		
 		$("#useractions > ul > li").removeClass('open');
+		
 	});
 
 }

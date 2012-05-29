@@ -53,7 +53,7 @@ class UpdateConfig
 		 * DEFAULT HOMEFOLDER CONFIG
 		*/
 
-		$defaultHomefolderServer = "s01.dbz.lok";
+		$defaultHomefolderServer = "fileserver1.dbz.lok";
 
 		$arr["ssh_server"] = $defaultHomefolderServer;
 		$arr["dir_name_downloads"] = '_downloads';
