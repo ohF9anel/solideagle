@@ -20,6 +20,7 @@ class sshpreformatter
 			
 			@mkdir(Config::singleton()->batchscriptsdir);
 			
+			Logger::log("Cleaning batch script directory",PEAR_LOG_INFO);
 			//clean batch dir
 			@exec("rm " . Config::singleton()->batchscriptsdir . "*.batch"); 
 			//create plink yes script

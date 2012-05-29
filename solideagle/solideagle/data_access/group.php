@@ -22,6 +22,7 @@ class Group
 	private $types = array();
 	private $amountOfmembers;
 	private $totalAmountOfMembers;
+	private $uniquename;
 	
 	private $instituteNumber;
 	private $administrativeNumber;
@@ -144,12 +145,14 @@ class Group
 		(
 		`name`,
 		`description`,
+		`uniquename`,
 		`instituteNumber`,
 		`administrativeNumber`)
 		VALUES
 		(
 		:name,
 		:desc,
+		:uniquename,
 		:instnr,
 		:adminnr
 		);";
@@ -160,6 +163,8 @@ class Group
 		$cmd->addParam(":desc", $group->getDescription());
 		$cmd->addParam(":instnr", $group->getInstituteNumber());
 		$cmd->addParam(":adminnr", $group->getAdministrativeNumber());
+		$cmd->addParam(":uniquename", $group->getUniquename());
+		
 			
 		$cmd->execute();
 
@@ -235,6 +240,7 @@ class Group
 		$sql = "UPDATE  `group`
 		SET
 		`name` = :name,
+		`uniquename` = :uniquename,
 		`description` = :description
 		WHERE `id` = :id;";
 
@@ -242,6 +248,7 @@ class Group
 		$cmd->newQuery($sql);
 			
 		$cmd->addParam(":name", $group->getName());
+		$cmd->addParam(":uniquename", $group->getUniquename());
 		$cmd->addParam(":description", $group->getDescription());
 		$cmd->addParam(":id", $group->getId());
 			
@@ -315,6 +322,7 @@ class Group
 		$sql = "SELECT
 		`group`.`id`,
 		`group`.`name`,
+		`group`.uniquename,
 		`group`.`description`
 		FROM  `group`, group_closure AS c
 		LEFT OUTER JOIN group_closure AS anc
@@ -329,6 +337,7 @@ class Group
 			$tempGroup = new Group();
 			$tempGroup->setId($row->id);
 			$tempGroup->setName($row->name);
+			$tempGroup->setUniquename($row->uniquename);
 			$tempGroup->setDescription($row->description);
 
 			$retArr[] = $tempGroup;
@@ -347,7 +356,7 @@ class Group
 	public static function getChilderen($group)
 	{
 		$sql = "select
-		g.id, g.name, g.description
+		g.id, g.name, g.uniquename, g.description
 		from
 		`group` as g,
 		group_closure as c
@@ -364,6 +373,7 @@ class Group
 			$tempGroup->setParentId($group->getParentId());
 			$tempGroup->setId($row->id);
 			$tempGroup->setName($row->name);
+			$tempGroup->setUniquename($row->uniquename);
 			$tempGroup->setDescription($row->description);
 
 			$retArr[] = $tempGroup;
@@ -382,7 +392,7 @@ class Group
 	public static function getAllChilderen($group)
 	{
 		$sql = "select
-		g.id, g.name, g.description
+		g.id, g.name,g.uniquename, g.description
 		from
 		`group` as g,
 		group_closure as c
@@ -399,6 +409,7 @@ class Group
 			$tempGroup->setParentId($group->getParentId());
 			$tempGroup->setId($row->id);
 			$tempGroup->setName($row->name);
+			$tempGroup->setUniquename($row->uniquename);
 			$tempGroup->setDescription($row->description);
 	
 			$retArr[] = $tempGroup;
@@ -407,6 +418,8 @@ class Group
 			
 		return $retArr;
 	}
+	
+	//do not use, it is too slow.
 	public static function getTreeSLOW()
 	{
 		return Group::getTreeRecursive(Group::getRoots());
@@ -414,7 +427,7 @@ class Group
 
 	public static function getAllGroups()
 	{
-		$sql = "SELECT p.id,p.name,p.description,t.length,
+		$sql = "SELECT p.id,p.name,p.uniquename,p.description,t.length,
 		(SELECT t1.parent_id FROM group_closure t1 WHERE t1.length=1 AND t1.child_id=t.child_id) AS parent
 		FROM `group` p JOIN group_closure t ON p.id=t.child_id  WHERE p.deleted = 0  order by t.length,parent";
 
@@ -427,6 +440,7 @@ class Group
 			$childGroup = new Group();
 			$childGroup->setId($row->id);
 			$childGroup->setName($row->name);
+			$childGroup->setUniquename($row->uniquename);
 			$childGroup->setDescription($row->description);
 			$childGroup->setParentId($row->parent);
 
@@ -472,7 +486,7 @@ class Group
 		//this query selects the tree and the amount of members from each group
 		//and is benchmarked to be a little faster
 
-		$sql ="SELECT p.id ,p.name,p.description,t.length,count(pn.id) as amountofmembers,
+		$sql ="SELECT p.id ,p.name,p.uniquename,p.description,t.length,count(pn.id) as amountofmembers,
 		(SELECT t1.parent_id FROM group_closure t1 WHERE t1.length=1 AND t1.child_id=t.child_id ) AS parent
 		FROM `group` p
 		JOIN (SELECT child_id, length from group_closure group by child_id) t ON p.id=t.child_id
@@ -488,6 +502,7 @@ class Group
 			$childGroup = new Group();
 			$childGroup->setId($row->id);
 			$childGroup->setName($row->name);
+			$childGroup->setUniquename($row->uniquename);
 			$childGroup->setDescription($row->description);
 			$childGroup->setParentId($row->parent);
 			$childGroup->setAmountOfmembers($row->amountofmembers);
@@ -594,7 +609,7 @@ class Group
 	public static function getParents($group)
 	{
 		$sql = "SELECT p.`id`,
-		p.`name`,
+		p.`name`,p.uniquename,
 		p.`description`, t.length FROM `group` p
 		JOIN group_closure t ON p.id=t.parent_id
 		WHERE t.child_id =  :groupid
@@ -612,6 +627,7 @@ class Group
 			$tmpgroup = new Group();
 			$tmpgroup->setId($row->id);
 			$tmpgroup->setName($row->name);
+			$tmpgroup->setUniquename($row->uniquename);
 			$tmpgroup->setDescription($row->description);
 
 			$retArr[] = $tmpgroup;
@@ -670,6 +686,7 @@ class Group
 		$sql = "SELECT p.`id`,
 		p.`name`,
 		p.`administrativeNumber`,
+		p.uniquename,
 		p.`instituteNumber`,
 		p.`description`
 		FROM `group` p WHERE  p.`id` = :groupid";
@@ -685,6 +702,7 @@ class Group
 			$tmpgroup = new Group();
 			$tmpgroup->setId($row->id);
 			$tmpgroup->setName($row->name);
+			$tmpgroup->setUniquename($row->uniquename);
 			$tmpgroup->setDescription($row->description);
 			$tmpgroup->setAdministrativeNumber($row->administrativeNumber);
 			$tmpgroup->setInstituteNumber($row->instituteNumber);
@@ -700,6 +718,7 @@ class Group
 	{
 		$sql = "SELECT p.`id`,
 		p.`name`,
+		p.uniquename,
 		p.`administrativeNumber`,
 		p.`instituteNumber`,
 		p.`description`
@@ -716,6 +735,7 @@ class Group
 			$tmpgroup = new Group();
 			$tmpgroup->setId($row->id);
 			$tmpgroup->setName($row->name);
+			$tmpgroup->uniquename($row->name);
 			$tmpgroup->setDescription($row->description);
 			$tmpgroup->setAdministrativeNumber($row->administrativeNumber);
 			$tmpgroup->setInstituteNumber($row->instituteNumber);
@@ -807,6 +827,16 @@ class Group
 	public function setAdministrativeNumber($administrativeNumber)
 	{
 	    $this->administrativeNumber = $administrativeNumber;
+	}
+
+	public function getUniquename()
+	{
+	    return $this->uniquename;
+	}
+
+	public function setUniquename($uniquename)
+	{
+	    $this->uniquename = $uniquename;
 	}
 }
 

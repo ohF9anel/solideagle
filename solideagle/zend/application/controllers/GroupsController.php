@@ -211,6 +211,9 @@ class GroupsController extends Zend_Controller_Action
 			echo "Een groep met deze naam bestaat al.";
 			return;
 		}
+		
+		
+	
 			
 		$newSubGroup = new Group();
 		$newSubGroup->setParentId($parentgroupid);
