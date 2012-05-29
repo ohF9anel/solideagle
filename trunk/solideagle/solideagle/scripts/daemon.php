@@ -188,7 +188,7 @@ class daemon
                  ~-<_(_.^-~"
 
 EOT;
-		echo $eagle;
+		//echo $eagle;
 		
 		foreach(TaskQueue::getAllPlatforms() as $platform)
 		//$platform = platforms::PLATFORM_GAPP;
@@ -243,6 +243,7 @@ EOT;
 			if($platform == platforms::PLATFORM_AD)
 			{
 				//run all batch files for AD
+				Logger::log("Running all external batch files!",PEAR_LOG_INFO);
 				\solideagle\plugins\ad\sshpreformatter::singleton()->runAllBatchfiles();
 			}
 		}
