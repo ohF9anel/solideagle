@@ -12,11 +12,14 @@ class sshpreformatter
 	private static $instance;
 
 
+
 	public static function singleton()
 	{
 		if (!isset(self::$instance)) {
 			$className = __CLASS__;
 			self::$instance = new $className;
+			
+			
 			
 			@mkdir(Config::singleton()->batchscriptsdir);
 			
@@ -72,15 +75,22 @@ class sshpreformatter
 class sshrunner
 {
 
+	private static $onlycopy=false;
 	
 	public static function executeSSHBatchScript($username,$password,$server,$pathtofile)
 	{
 		Logger::log("Copying batch file to: " . $server ,PEAR_LOG_INFO);
 		
-		$copyCommand = "pscp -pw " . $password .  " " . $pathtofile . " " . $username . "@" . $server . ":/cygdrive/c/solideagle.cmd";
+		$copyCommand = "pscp -pw " . $password .  " " . $pathtofile . " " . $username . "@" . $server . ":/cygdrive/c/solideagle.cmd" . " < " . Config::singleton()->batchscriptsdir . "plink.yes.batch" . " 2>&1";
 		
 		exec($copyCommand);
 		
+		if(self::$onlycopy)
+		{
+			return true;
+		}
+		
+
 		Logger::log("Running batch file for: " . $server ,PEAR_LOG_INFO);
 
 		$commandToExecute = "plink -m " . Config::singleton()->batchscriptsdir . "plink.execute.batch" . " -pw " . $password .  " " . $username . "@" . $server . " < " . Config::singleton()->batchscriptsdir . "plink.yes.batch" . " 2>&1";
@@ -128,12 +138,10 @@ class batchfile
 		return $this->isOpenForWriting;
 	}
 
-	//backwards compatibility with sshmanager
+	//backwards compatibility with sshmanager (sshmanger is deprecated)
 	public function write($data)
 	{
-	
-	
-		$this->writeToFile($data);
+		$this->writeToFile($data . "\n");
 	}
 	
 	public function writeToFile($data)

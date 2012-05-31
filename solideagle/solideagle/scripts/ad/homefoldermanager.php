@@ -1,83 +1,80 @@
 <?php
 namespace solideagle\scripts\ad;
 
+use solideagle\plugins\ad\homefolderPlugin;
+
 use solideagle\plugins\ad\sshpreformatter;
 
 use solideagle\logging\Logger;
 
-
-
 use solideagle\data_access\Type;
+
 use solideagle\data_access\person;
+
 use solideagle\data_access\PlatformAD;
+
 use solideagle\data_access\TaskQueue;
+
 use solideagle\data_access\TaskInterface;
 
 use solideagle\plugins\ad\ManageUser;
+
 use solideagle\plugins\ad\HomeFolder;
+
 use solideagle\plugins\ad\ScanFolder;
+
 use solideagle\plugins\ad\WwwFolder;
+
 use solideagle\plugins\ad\DownloadFolder;
+
 use solideagle\plugins\ad\UploadFolder;
-
-
 
 
 class homefoldermanager implements TaskInterface
 {
 	const ActionAddHomefolder = "AddHomefolder";
-        const ActionCopyHomefolder = "CopyHomefolder";
-        const ActionRemoveShare = "RemoveShare";
+	const ActionCopyHomefolder = "CopyHomefolder";
+	const ActionRemoveShare = "RemoveShare";
 
 	public function runTask($taskqueue)
 	{
 		$config = $taskqueue->getConfiguration();
 
-		if(!isset($config["action"]))
+		if($config["action"] == self::ActionAddHomefolder)
 		{
-			$taskqueue->setErrorMessages("Probleem met configuratie");
-			return false;
-		}
-		else if($config["action"] == self::ActionAddHomefolder && isset($config["server"]) && isset($config["homefolderpath"]) && isset($config["scansharepath"]) && isset($config["wwwsharepath"]) && isset($config["person"]))
-		{
-			
 			$username = $config["person"]->getAccountUsername();
 			
-			Logger::log("Creating homefolder on " . $config["server"] . " path: " .$config["homefolderpath"] ." for user: " . $username);
-
-			$conn = sshpreformatter::singleton()->getFileForServer($config["server"]);
-
-			if(!HomeFolder::createHomeFolder($conn, $config["homefolderpath"], $username))
+			$yearfolder = self::getStudentYear($config["person"]);
+			
+			$typefolder = self::getHomefolderPath($config["person"]);
+			
+			$homefolderPlugin = new homefolderPlugin($config["server"]);
+			
+			$fullpath = $config["paths"]->homefolderpath . $typefolder . $yearfolder . "\\" . $username;
+			$wwwJunctionPath = $config["paths"]->wwwsharepath . $yearfolder;
+			$scanJunctionPath = $config["paths"]->scansharepath . "\\" . $username;
+			
+			Logger::log("Creating homefolder on " . $config["server"] . " path: " . $fullpath ." for user: " . $username,PEAR_LOG_INFO);
+			
+			$homefolderPlugin->createHomeFolder($username,$fullpath,$wwwJunctionPath,$scanJunctionPath);
+			
+			if($config["person"]->isTypeOf(Type::TYPE_LEERKRACHT))
 			{
-				Logger::log("Creating homefolder failed! ",PEAR_LOG_ERR);
+				Logger::log("Adding up and downfolder on " . $config["server"] . " path: " . $fullpath ." for user: " . $username,PEAR_LOG_INFO);
+				
+				$homefolderPlugin->addUpDownToHomeFolder($username,$fullpath);
 			}
-			if(!ScanFolder::setScanFolder($conn, $config["homefolderpath"], $config["scansharepath"], $username))
-			{
-				Logger::log("Setting scanfolder failed! ",PEAR_LOG_ERR);
-			}
-			if(!WwwFolder::setWwwFolder($conn, $config["homefolderpath"],$config["wwwsharepath"], $username))
-			{
-				Logger::log("Setting www folder failed! ",PEAR_LOG_ERR);
-			}
-
-			if(isset($config["uploadsharepath"]))
-				UploadFolder::setUploadFolder($conn, $config["homefolderpath"], $config["uploadsharepath"], $username);
-
-			if(isset($config["downloadsharepath"]))
-				DownloadFolder::setDownloadFolder($conn, $config["homefolderpath"], $config["downloadsharepath"], $username);
-                        
-			//returning here will only create the homefolder but not set it in AD
-            //return true;
-            
+			
 			$ret = ManageUser::setHomeFolder($username, "\\\\" . $config["server"]);
+			
 			if($ret->isSucces())
 			{
 				$platformad = PlatformAD::getPlatformConfigByPersonId($config["person"]->getId());
-                                if ($platformad == null)
-                                {
-                                    $taskqueue->setErrorMessages("Cannot set homefolder in AD because the account does not exist");
-                                    return false;
-                                }
+				if ($platformad == null)
+				{
+					$taskqueue->setErrorMessages("Cannot set homefolder in AD because the account does not exist");
+					return false;
+				}
 				$homedir = "\\\\" . $config["server"] . "\\" . $username . "$";
 
 				$platformad->setHomedir($homedir);
@@ -99,8 +96,8 @@ class homefoldermanager implements TaskInterface
 
 			if($ret)
 			{
-                                $conn = sshpreformatter::singleton()->getFileForServer($config["oldserver"]);
-                                $ret = HomeFolder::removeShare($conn, $config["oldshare"]);
+				$conn = sshpreformatter::singleton()->getFileForServer($config["oldserver"]);
+				$ret = HomeFolder::removeShare($conn, $config["oldshare"]);
 				return true;
 			}if(!$ret)
 			{
@@ -108,7 +105,7 @@ class homefoldermanager implements TaskInterface
 				$taskqueue->setErrorMessages($ret->getError());
 				return false;
 			}
-				
+
 		}
 		else{
 			$taskqueue->setErrorMessages("Probleem met configuratie");
@@ -132,16 +129,18 @@ class homefoldermanager implements TaskInterface
 	{
 		$config["action"] = self::ActionAddHomefolder;
 		$config["server"] = $server;
-		$config["homefolderpath"] = self::makeHomefolderPath($homefolderpath, $user);
-		$config["scansharepath"] = $scansharepath;
-		$config["wwwsharepath"] = $wwwsharepath;
+
+		$paths = new \stdClass();
+		
+		$paths->homefolderpath = $homefolderpath;
+		$paths->wwwsharepath = $wwwsharepath;
+		$paths->scansharepath = $scansharepath;
+		$paths->uploadsharepath = $uploadsharepath;
+		$paths->downloadsharepath = $downloadsharepath;
+
+		$config["paths"] = $paths;
 		$config["person"] = $user;
-			
-		if((!$user->isTypeOf(Type::TYPE_LEERLING)) && $uploadsharepath!=NULL && $downloadsharepath!=NULL)
-		{
-			$config["uploadsharepath"] = $uploadsharepath;
-			$config["downloadsharepath"] = $downloadsharepath;
-		}
+
 		TaskQueue::insertNewTask($config, $user->getId(), TaskQueue::TypePerson);
 	}
 
@@ -170,8 +169,8 @@ class homefoldermanager implements TaskInterface
 					{
 						$server = substr($serversharepath, 0, $i);
 						$config["oldserver"] = $server;
-                                                $config["oldshare"] = substr($serversharepath, $i + 1);
-                                                
+						$config["oldshare"] = substr($serversharepath, $i + 1);
+
 						break;
 					}
 				}
@@ -184,27 +183,33 @@ class homefoldermanager implements TaskInterface
 
 	}
 
-	private static function makeHomefolderPath($homefolderpath, $person)
+	private static function getStudentYear($person)
+	{
+		if(is_numeric(substr($person->getAccountUsername(), -3)))
+		{
+			return "\\" . substr($person->getAccountUsername(), -3, 2);
+		}else if(is_numeric(substr($person->getAccountUsername(), -2))){
+			return "\\" . substr($person->getAccountUsername(), -2);
+		}else{
+			return "";
+		}
+	}
+
+	private static function getHomefolderPath($person)
 	{
 		if ($person->isTypeOf(Type::TYPE_LEERLING))
 		{
-                        $homefolderpath .= "\\leerlingen";
-			if(is_numeric(substr($person->getAccountUsername(), -3)))
-			{
-				$homefolderpath .= "\\" . substr($person->getAccountUsername(), -3, 2);
-			}else{
-				$homefolderpath .= "\\" . substr($person->getAccountUsername(), -2);
-			}
+			return "\\leerlingen";
 		}
-                else if($person->isTypeOf(Type::TYPE_LEERKRACHT))
-                {
-                    $homefolderpath .= "\\leerkrachten";
-                }
-                else if($person->isTypeOf(Type::TYPE_STAFF))
-                {
-                    $homefolderpath .= "\\staff";
-                }
-
-		return $homefolderpath;
+		else if($person->isTypeOf(Type::TYPE_LEERKRACHT))
+		{
+			return "\\leerkrachten";
+		}
+		else if($person->isTypeOf(Type::TYPE_STAFF))
+		{
+			return "\\staff";
+		}else{
+			return "\\other";
+		}
 	}
 }
