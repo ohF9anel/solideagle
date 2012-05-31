@@ -60,12 +60,14 @@ class UpdateConfig
 		$arr["dir_name_uploads"] = '_uploads';
 		$arr["dir_name_scans"] = '_scans';
 		$arr["dir_name_www"] = '_www';
-		$arr["path_share_downloads"] = 'E:\downloads';
-		$arr["path_share_uploads"] = 'E:\uploads';
-		$arr["path_share_scans"] = 'E:\scans';
-		$arr["path_share_www"] = 'E:\www';
-		$arr["path_homefolders"] = "E:\homefolders";
+		
+		$arr["path_share_downloads"] = 'E:\TEST\downloads';
+		$arr["path_share_uploads"] = 'E:\TEST\uploads';
+		$arr["path_share_scans"] = 'E:\TEST\scans';
+		$arr["path_share_www"] = 'E:\TEST\www';
+		$arr["path_homefolders"] = "E:\TEST\homefolders";
 		$arr["move_to_server"] = "s02.dbz.lok";
+		
 		$arr["move_to_path_homefolders"] = "E:\homefolders";
 		$arr["move_to_path_share_downloads"] = 'E:\downloads';
 		$arr["move_to_path_share_uploads"] = 'E:\uploads';
