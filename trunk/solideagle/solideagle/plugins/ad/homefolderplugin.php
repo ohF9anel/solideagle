@@ -1,39 +1,72 @@
 <?php
 namespace solideagle\plugins\ad;
 
+use solideagle\data_access\Type;
+
 use solideagle\Config;
 
 class homefolderPlugin
 {
 
 	private $conn;
+	private $homedirpath;
+	private $username;
 
 	public function __construct($server)
 	{
 		$this->conn = sshpreformatter::singleton()->getFileForServer($server);
 	}
 
-
-	public function createHomeFolder($username,$path,$wwwJunctionPath,$scanJunctionPath)
+	public function createHomeFolder($person,$pathIn,$wwwJunctionPath,$scanJunctionPath)
 	{
+		$username = $person->getAccountUsername();
+		$this->username = $username;
 
-		$this->conn->write("mkdir " . $path); //create path for user
+		$yearfolder = "";
+
+		if($person->isTypeOf(Type::TYPE_LEERLING))
+		{
+			$yearfolder = self::getStudentYear($person);
+		}
+
+		$typefolder = self::getHomefolderPath($person);
+
+		$this->homedirpath = $pathIn . $typefolder . $yearfolder . "\\" . $username;
+
+
+
+		$this->conn->write("mkdir " . $this->homedirpath); //create path for user
 			
-		$homedirwwwpath = $path . "\\" . Config::singleton()->dir_name_www;
-		$homedirscanpath = $path .  "\\" . Config::singleton()->dir_name_scans;
+		$homedirwwwpath = $this->homedirpath . "\\" . Config::singleton()->dir_name_www;
+		$homedirscanpath = $this->homedirpath .  "\\" . Config::singleton()->dir_name_scans;
 			
 		$this->conn->write("mkdir " . $homedirwwwpath); //create www path
 		$this->conn->write("mkdir " . $homedirscanpath); //create scan path
 			
-		$this->conn->write("setacl -ot file ^
-				-actn clear -clr dacl,sacl ^
-				-actn rstchldrn -rst dacl,sacl ^
-				-actn ace -ace \"n:dbz.lok\\".$username.";s:n;p:change;i:sc,so\" ^
-				-actn ace -ace \"n:dbz.lok\\admins;s:n;p:full;i:sc,so\" ^
-				-actn ace -ace \"n:dbz.lok\\Domain Admins;s:n;p:full;i:sc,so\" ^
-				-actn ace -ace \"n:dbz.lok\\studentfolders_read;s:n;p:read;i:sc,so\" ^
-				-actn setprot -op \"dacl:p_nc;sacl:p_nc\" ^
-				-on \"". $path ."\"");
+		if($person->isTypeOf(Type::TYPE_LEERLING))
+		{
+			$this->conn->write("setacl -ot file ^
+					-actn clear -clr dacl,sacl ^
+					-actn rstchldrn -rst dacl,sacl ^
+					-actn ace -ace \"n:dbz.lok\\".$username.";s:n;p:change;i:sc,so\" ^
+					-actn ace -ace \"n:dbz.lok\\admins;s:n;p:full;i:sc,so\" ^
+					-actn ace -ace \"n:dbz.lok\\Domain Admins;s:n;p:full;i:sc,so\" ^
+					-actn ace -ace \"n:dbz.lok\\studentfolders_read;s:n;p:read;i:sc,so\" ^
+					-actn setprot -op \"dacl:p_nc;sacl:p_nc\" ^
+					-on \"". $this->homedirpath ."\"");
+		}else{
+
+			$this->conn->write("setacl -ot file ^
+					-actn clear -clr dacl,sacl ^
+					-actn rstchldrn -rst dacl,sacl ^
+					-actn ace -ace \"n:dbz.lok\\".$username.";s:n;p:change;i:sc,so\" ^
+					-actn ace -ace \"n:dbz.lok\\admins;s:n;p:full;i:sc,so\" ^
+					-actn ace -ace \"n:dbz.lok\\Domain Admins;s:n;p:full;i:sc,so\" ^
+					-actn setprot -op \"dacl:p_nc;sacl:p_nc\" ^
+					-on \"". $this->homedirpath ."\"");
+		}
+
+
 			
 		$this->conn->write("setacl -ot file ^
 				-actn ace -ace \"n:dbz.lok\\".$username.";s:n;p:delete;i:np;m:deny\" ^
@@ -45,25 +78,52 @@ class homefolderPlugin
 				-actn ace -ace \"n:dbz.lok\\sys_scan_user;s:n;p:read;i:sc,so;m:grant\" ^
 				-on \"". $homedirscanpath ."\"");
 
-		$this->conn->write("net share ".$username."$=\"". $path ."\" /GRANT:".$username.",change");
+		$this->conn->write("net share ".$username."$=\"". $this->homedirpath ."\" /GRANT:".$username.",change");
+
+		if($person->isTypeOf(Type::TYPE_LEERLING)) //need to create the year folder for students
+		{
+			$wwwJunctionPath = $wwwJunctionPath . $yearfolder;
+			$this->conn->write("mkdir " . $wwwJunctionPath); //create junction path
+		}
+
+		$wwwJunctionPath = $wwwJunctionPath . "\\" . $username;
+		$scanJunctionPath = $scanJunctionPath . "\\" . $username;
 		
-		$this->conn->write("mkdir " . $wwwJunctionPath); //create junction path
 		
-		$this->conn->write("mklink /j \"" . $wwwJunctionPath .  "\\" . $username . "\" \"" . $homedirwwwpath . "\"");
+
+		$this->conn->write("mklink /j \"" . $wwwJunctionPath .  "\" \"" . $homedirwwwpath . "\"");
 		$this->conn->write("mklink /j \"" . $scanJunctionPath . "\" \"" . $homedirscanpath . "\"");
-		
+
 	}
-	
-	public function addUpDownToHomeFolder($username,$path)
+
+	public function addUpDownToHomeFolder($downloadJunctionPath,$uploadJunctionPath)
 	{
-		$homedirdownloadpath = $path . "\\" . Config::singleton()->dir_name_downloads;
-		$homediruploadpath = $path .  "\\" . Config::singleton()->dir_name_scans;
+		$homedirdownloadpath = $this->homedirpath . "\\" . Config::singleton()->dir_name_downloads;
+		$homediruploadpath = $this->homedirpath .  "\\" . Config::singleton()->dir_name_uploads;
+
+		$this->conn->write("mkdir " . $homedirdownloadpath);
+		$this->conn->write("mkdir " . $homediruploadpath);
+
+		$downloadJunctionPath = $downloadJunctionPath . "\\" . $this->username;
+		$uploadJunctionPath = $uploadJunctionPath . "\\" . $this->username;
+		
+		$this->conn->write("setacl -ot file ^
+				-actn ace -ace \"n:dbz.lok\\".$this->username.";s:n;p:delete;i:np;m:deny\" ^
+				-actn ace -ace \"n:S-1-5-11;s:y;p:read;i:sc,so;m:grant\" ^
+				-on \"". $homedirdownloadpath ."\"");
+		
+		$this->conn->write("setacl -ot file ^
+				-actn ace -ace \"n:dbz.lok\\".$this->username.";s:n;p:delete;i:np;m:deny\" ^
+				-actn ace -ace \"n:S-1-5-11;s:y;p:FILE_LIST_DIRECTORY,FILE_ADD_FILE,FILE_WRITE_EA,FILE_WRITE_ATTRIBUTES;i:sc,so;m:grant\" ^
+				-on \"". $homediruploadpath ."\"");
+
+		$this->conn->write("mklink /j \"" . $downloadJunctionPath. "\" \"" . $homedirdownloadpath . "\"");
+		$this->conn->write("mklink /j \"" . $uploadJunctionPath . "\" \"" . $homediruploadpath . "\"");
+
 	}
-	
-	
 
 	/*
-	net share leerlingen$="E:\homefolders\leerlingen" /GRANT:Everyone,change
+	 net share leerlingen$="E:\homefolders\leerlingen" /GRANT:Everyone,change
 
 	setacl -ot file ^
 	-actn clear -clr dacl,sacl ^
@@ -100,6 +160,35 @@ class homefolderPlugin
 	*/
 
 
+	private static function getStudentYear($person)
+	{
+		if(is_numeric(substr($person->getAccountUsername(), -3)))
+		{
+			return "\\" . substr($person->getAccountUsername(), -3, 2);
+		}else if(is_numeric(substr($person->getAccountUsername(), -2))){
+			return "\\" . substr($person->getAccountUsername(), -2);
+		}else{
+			return "";
+		}
+	}
+
+	private static function getHomefolderPath($person)
+	{
+		if ($person->isTypeOf(Type::TYPE_LEERLING))
+		{
+			return "\\leerlingen";
+		}
+		else if($person->isTypeOf(Type::TYPE_LEERKRACHT))
+		{
+			return "\\leerkrachten";
+		}
+		else if($person->isTypeOf(Type::TYPE_STAFF))
+		{
+			return "\\staff";
+		}else{
+			return "\\other";
+		}
+	}
 
 
 }

@@ -100,7 +100,7 @@ use solideagle\utilities\SuperEntities;
 						?>
 						<div class="alert alert-error">
 
-						<strong>Opgelet!</strong> Er zijn accounts geselecteerd die geen wachtwoord hebben!
+						<strong>Opgelet!</strong> Er zijn accounts geselecteerd die geen of te een kort wachtwoord hebben!
 					</div>
 						<?php
 					}?>
@@ -290,7 +290,7 @@ use solideagle\utilities\SuperEntities;
                                                                                                         class="input-xlarge"
                                                                                                         type="text"
                                                                                                         value="<?php echo SuperEntities::encode($this->defaults->homefolderPath); ?>">
-                                                                                                <span class="add-on">\leerkrachten\janssensj</span>
+                                                                                                <?php /*<span class="add-on">\leerkrachten\janssensj</span>*/ ?>
                                                                                                 <p class="help-block ">
                                                                                                         <i>c:\pad\naar\homefolders    (eindigt op \homefolders)</i>
                                                                                                 </p>

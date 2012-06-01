@@ -53,6 +53,7 @@ class PlatformAD
 		$cmd->CommitTransaction();
 	}
 	
+
 	public static function getPlatformConfigByPersonId($personid)
 	{
 		$sql = "SELECT

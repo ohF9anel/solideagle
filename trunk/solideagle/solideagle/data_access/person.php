@@ -1652,7 +1652,7 @@ class Person
 		//cut off first semicol
 		$params = substr($params, 1);
 
-		$sql = "SELECT count(*) as nopasscount from allPersons p where (p.account_password is null or p.account_password = '') AND p.id IN (" .$params. ")";
+		$sql = "SELECT count(*) as nopasscount from allPersons p where (p.account_password is null or CHAR_LENGTH(p.account_password) < 8) AND p.id IN (" .$params. ")";
 
 		$cmd = new DatabaseCommand($sql);
 		for($i=0;$i<count($userids);$i++)

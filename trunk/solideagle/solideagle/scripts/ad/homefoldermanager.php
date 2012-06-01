@@ -33,6 +33,7 @@ use solideagle\plugins\ad\UploadFolder;
 class homefoldermanager implements TaskInterface
 {
 	const ActionAddHomefolder = "AddHomefolder";
+	
 	const ActionCopyHomefolder = "CopyHomefolder";
 	const ActionRemoveShare = "RemoveShare";
 
@@ -42,31 +43,17 @@ class homefoldermanager implements TaskInterface
 
 		if($config["action"] == self::ActionAddHomefolder)
 		{
-			$username = $config["person"]->getAccountUsername();
-			
-			$yearfolder = self::getStudentYear($config["person"]);
-			
-			$typefolder = self::getHomefolderPath($config["person"]);
-			
 			$homefolderPlugin = new homefolderPlugin($config["server"]);
-			
-			$fullpath = $config["paths"]->homefolderpath . $typefolder . $yearfolder . "\\" . $username;
-			$wwwJunctionPath = $config["paths"]->wwwsharepath . $yearfolder;
-			$scanJunctionPath = $config["paths"]->scansharepath . "\\" . $username;
-			
-			Logger::log("Creating homefolder on " . $config["server"] . " path: " . $fullpath ." for user: " . $username,PEAR_LOG_INFO);
-			
-			$homefolderPlugin->createHomeFolder($username,$fullpath,$wwwJunctionPath,$scanJunctionPath);
-			
+
+			$homefolderPlugin->createHomeFolder($config["person"],$config["paths"]->homefolderpath,$config["paths"]->wwwsharepath,$config["paths"]->scansharepath);
+				
 			if($config["person"]->isTypeOf(Type::TYPE_LEERKRACHT))
 			{
-				Logger::log("Adding up and downfolder on " . $config["server"] . " path: " . $fullpath ." for user: " . $username,PEAR_LOG_INFO);
-				
-				$homefolderPlugin->addUpDownToHomeFolder($username,$fullpath);
+				$homefolderPlugin->addUpDownToHomeFolder($config["paths"]->downloadsharepath,$config["paths"]->uploadsharepath);
 			}
 			
-			$ret = ManageUser::setHomeFolder($username, "\\\\" . $config["server"]);
-			
+			$ret = ManageUser::setHomeFolder($config["person"]->getAccountUsername(), "\\\\" . $config["server"]);
+				
 			if($ret->isSucces())
 			{
 				$platformad = PlatformAD::getPlatformConfigByPersonId($config["person"]->getId());
@@ -75,7 +62,7 @@ class homefoldermanager implements TaskInterface
 					$taskqueue->setErrorMessages("Cannot set homefolder in AD because the account does not exist");
 					return false;
 				}
-				$homedir = "\\\\" . $config["server"] . "\\" . $username . "$";
+				$homedir = "\\\\" . $config["server"] . "\\" . $config["person"]->getAccountUsername() . "$";
 
 				$platformad->setHomedir($homedir);
 
@@ -107,10 +94,7 @@ class homefoldermanager implements TaskInterface
 			}
 
 		}
-		else{
-			$taskqueue->setErrorMessages("Probleem met configuratie");
-			return false; //it failed for some reason
-		}
+		
 		$taskqueue->setErrorMessages("Probleem met configuratie");
 		return false;
 	}
@@ -131,7 +115,7 @@ class homefoldermanager implements TaskInterface
 		$config["server"] = $server;
 
 		$paths = new \stdClass();
-		
+
 		$paths->homefolderpath = $homefolderpath;
 		$paths->wwwsharepath = $wwwsharepath;
 		$paths->scansharepath = $scansharepath;
@@ -183,33 +167,5 @@ class homefoldermanager implements TaskInterface
 
 	}
 
-	private static function getStudentYear($person)
-	{
-		if(is_numeric(substr($person->getAccountUsername(), -3)))
-		{
-			return "\\" . substr($person->getAccountUsername(), -3, 2);
-		}else if(is_numeric(substr($person->getAccountUsername(), -2))){
-			return "\\" . substr($person->getAccountUsername(), -2);
-		}else{
-			return "";
-		}
-	}
 
-	private static function getHomefolderPath($person)
-	{
-		if ($person->isTypeOf(Type::TYPE_LEERLING))
-		{
-			return "\\leerlingen";
-		}
-		else if($person->isTypeOf(Type::TYPE_LEERKRACHT))
-		{
-			return "\\leerkrachten";
-		}
-		else if($person->isTypeOf(Type::TYPE_STAFF))
-		{
-			return "\\staff";
-		}else{
-			return "\\other";
-		}
-	}
 }
