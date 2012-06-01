@@ -90,6 +90,19 @@ class Group
 		$this->id = $id;
 		$this->name = $name;
 	}
+	
+	
+	public static function isMemberOf($childgroupid,$parentgroupid)
+	{
+		$sql = "SELECT count(*) as memberof FROM group_closure gc WHERE gc.child_id = :childgroupid AND gc.parent_id = :parentgroupid";
+		
+		$cmd = new DatabaseCommand($sql);
+		
+		$count = $cmd->executeReader()->read()->memberof;
+		
+		return ($count > 0);
+		
+	}
 
 	// manage groups
 

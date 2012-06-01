@@ -73,25 +73,20 @@ class homefoldermanager implements TaskInterface
 				return false;
 			}
 		}
-		else if($config["action"] == self::ActionCopyHomefolder && isset($config["server"]) && isset($config["homefolderpath"]) && isset($config["person"]) && isset($config["oldserver"]) && isset($config["oldshare"]))
+		else if($config["action"] == self::ActionCopyHomefolder )
 		{
-			$username = $config["person"]->getAccountUsername();
-
-			$conn = sshpreformatter::singleton()->getFileForServer($config["server"]);
-
-			$ret = HomeFolder::copyHomeFolder($conn, $username, $config["homefolderpath"], $config["oldserver"]);
-
-			if($ret)
+			$homefolderPlugin = new homefolderPlugin($config["server"]);
+			
+			$homefolderPlugin->createHomeFolder($config["person"],$config["paths"]->homefolderpath,$config["paths"]->wwwsharepath,$config["paths"]->scansharepath);
+			
+			if($config["person"]->isTypeOf(Type::TYPE_LEERKRACHT))
 			{
-				$conn = sshpreformatter::singleton()->getFileForServer($config["oldserver"]);
-				$ret = HomeFolder::removeShare($conn, $config["oldshare"]);
-				return true;
-			}if(!$ret)
-			{
-				Logger::log($ret->getError(),PEAR_LOG_ERR);
-				$taskqueue->setErrorMessages($ret->getError());
-				return false;
+				$homefolderPlugin->addUpDownToHomeFolder($config["paths"]->downloadsharepath,$config["paths"]->uploadsharepath);
 			}
+			
+			$homefolderPlugin->copyFromOldShare($config["prevhomefolderpath"]);
+				
+			$ret = ManageUser::setHomeFolder($config["person"]->getAccountUsername(), "\\\\" . $config["server"]);
 
 		}
 		
@@ -112,6 +107,7 @@ class homefoldermanager implements TaskInterface
 	public static function prepareAddHomefolder($server, $homefolderpath, $scansharepath, $wwwsharepath, $user, $uploadsharepath=NULL,$downloadsharepath=NULL)
 	{
 		$config["action"] = self::ActionAddHomefolder;
+		
 		$config["server"] = $server;
 
 		$paths = new \stdClass();
@@ -128,42 +124,28 @@ class homefoldermanager implements TaskInterface
 		TaskQueue::insertNewTask($config, $user->getId(), TaskQueue::TypePerson);
 	}
 
-	public static function prepareCopyHomefolder($newserver, $newhomefolderpath, $person, $newscansharepath,
-			$newwwwsharepath, $newuploadsharepath, $newdownloadsharepath)
+	public static function prepareCopyHomefolder($server, $homefolderpath, $user, $scansharepath,
+			$wwwsharepath, $uploadsharepath, $downloadsharepath)
 	{
-		// prepare add homefolder task
-		self::prepareAddHomefolder($newserver, $newhomefolderpath, $newscansharepath, $newwwwsharepath, $person, $newuploadsharepath, $newdownloadsharepath);
-
-		// copy homefolder task
+		
 		$config["action"] = self::ActionCopyHomefolder;
-		$config["server"] = $newserver;
-		$config["homefolderpath"] = self::makeHomefolderPath($newhomefolderpath, $person);
-		$config["person"] = $person;
-
-		$oldsharepath = PlatformAD::getPlatformConfigByPersonId($person->getId())->getHomedir();
-		if ($oldsharepath != null)
-		{
-			if ($oldsharepath[0] == "\\" && $oldsharepath[1] == "\\")
-			{
-				$serversharepath = substr($oldsharepath, 2);
-
-				for ($i = 0; $i < strlen($serversharepath); $i++)
-				{
-					if ($serversharepath[$i] == "/" || $serversharepath[$i] == "\\")
-					{
-						$server = substr($serversharepath, 0, $i);
-						$config["oldserver"] = $server;
-						$config["oldshare"] = substr($serversharepath, $i + 1);
-
-						break;
-					}
-				}
-			}
-		}
+		
+		$config["server"] = $server;
+		
+		$paths = new \stdClass();
+		
+		$paths->homefolderpath = $homefolderpath;
+		$paths->wwwsharepath = $wwwsharepath;
+		$paths->scansharepath = $scansharepath;
+		$paths->uploadsharepath = $uploadsharepath;
+		$paths->downloadsharepath = $downloadsharepath;
+		
+		$config["paths"] = $paths;
+		$config["person"] = $user;
+		
+		$config["prevhomefolderpath"] = PlatformAD::getPlatformConfigByPersonId($person->getId())->getHomedir();;
 
 		TaskQueue::insertNewTask($config, $person->getId(), TaskQueue::TypePerson);
-
-		// delete old share
 
 	}
 
