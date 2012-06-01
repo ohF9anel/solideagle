@@ -88,8 +88,8 @@ class homefolderPlugin
 
 		$wwwJunctionPath = $wwwJunctionPath . "\\" . $username;
 		$scanJunctionPath = $scanJunctionPath . "\\" . $username;
-		
-		
+
+
 
 		$this->conn->write("mklink /j \"" . $wwwJunctionPath .  "\" \"" . $homedirwwwpath . "\"");
 		$this->conn->write("mklink /j \"" . $scanJunctionPath . "\" \"" . $homedirscanpath . "\"");
@@ -106,12 +106,12 @@ class homefolderPlugin
 
 		$downloadJunctionPath = $downloadJunctionPath . "\\" . $this->username;
 		$uploadJunctionPath = $uploadJunctionPath . "\\" . $this->username;
-		
+
 		$this->conn->write("setacl -ot file ^
 				-actn ace -ace \"n:dbz.lok\\".$this->username.";s:n;p:delete;i:np;m:deny\" ^
 				-actn ace -ace \"n:S-1-5-11;s:y;p:read;i:sc,so;m:grant\" ^
 				-on \"". $homedirdownloadpath ."\"");
-		
+
 		$this->conn->write("setacl -ot file ^
 				-actn ace -ace \"n:dbz.lok\\".$this->username.";s:n;p:delete;i:np;m:deny\" ^
 				-actn ace -ace \"n:S-1-5-11;s:y;p:FILE_LIST_DIRECTORY,FILE_ADD_FILE,FILE_WRITE_EA,FILE_WRITE_ATTRIBUTES;i:sc,so;m:grant\" ^
@@ -122,6 +122,20 @@ class homefolderPlugin
 
 	}
 
+	public function  copyFromOldShare($oldshare)
+	{
+
+		$conn->write("robocopy /S /E /XO /COPYALL /R:1 /W:1 \"" .$oldshare. "\" \"" . $this->homedirpath . "\"");
+
+
+		$oldserver = substr($oldshare,0, stripos($oldshare, "\\",2));
+
+		$oldsharename = substr($oldshare, stripos($oldshare, "\\",2)+1);
+
+		//try remove old share, will fail when its not \\server\sharename
+		$conn->write("net share \"" . $oldsharename . "\" " . $oldserver . " /DELETE");
+
+	}
 	/*
 	 net share leerlingen$="E:\homefolders\leerlingen" /GRANT:Everyone,change
 

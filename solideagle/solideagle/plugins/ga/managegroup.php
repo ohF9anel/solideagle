@@ -11,10 +11,10 @@ use solideagle\data_access\helpers\UnicodeHelper;
 class managegroup
 {
     
-    public static function addGroup($group)
+    public static function addGroup($name,$mail)
     {
-        $gamcmd = "create group \"" . UnicodeHelper::cleanEmailString($group->getName()) . "\"";
-        $gamcmd .= " name \"" . $group->getName() . "\"";
+        $gamcmd = "create group \"" . $mail . "\"";
+        $gamcmd .= " name \"" . $name . "\"";
         if ($group->getDescription() != null)
             $gamcmd .= " description \"" . $group->getDescription() . "\"";
         
