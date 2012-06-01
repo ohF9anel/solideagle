@@ -317,7 +317,7 @@ class ManageUser
         }
         
         $update["homeDirectory"] = $share . "\\" . $username . "$";
-        $update["homeDrive"] = "T";
+        $update["homeDrive"] = "T:";
         
         $ret = ldap_modify($connLdap->getConn(), $userInfo[0]["distinguishedname"][0], $update);
         if (!$ret)
