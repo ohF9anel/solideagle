@@ -67,10 +67,12 @@ class DatabasetasksController extends Zend_Controller_Action
 	{
 		
 		
-		foreach (Group::getAllChilderen(Group::getGroupByName("leerlingen")) as $groupp)
+		/*
+		  foreach (Group::getAllChilderen(Group::getGroupByName("leerlingen")) as $groupp)
 		{
 			$this->fixGroupMembershipOnGapp($groupp->getName());
 		}
+		//*/
 
 		
 		
