@@ -15,8 +15,9 @@ class managegroup
     {
         $gamcmd = "create group \"" . $mail . "\"";
         $gamcmd .= " name \"" . $name . "\"";
-        if ($group->getDescription() != null)
-            $gamcmd .= " description \"" . $group->getDescription() . "\"";
+        
+        /*if ($group->getDescription() != null)
+            $gamcmd .= " description \"" . $group->getDescription() . "\"";*/
         
         $report = GamExecutor::executeGamCommand($gamcmd);
         
