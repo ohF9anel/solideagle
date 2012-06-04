@@ -13,15 +13,11 @@ use solideagle\Config;
 
 class manageuser
 {
-	public static function addUser($person, $group,$groupparents,$isStudent)
+	public static function addUser($person, $group,$groupparents)
 	{
-
-		$personlastname = $person->getName();
-
-		if($isStudent)
-		{
-			$personlastname.= " - " . $group->getName();
-		}
+		$isStudent = $person->isTypeOf(Type::TYPE_LEERLING);
+		
+		$personlastname = genLastName($person,$group);
 
 		//add user
 		$gamcmd = "create user " . $person->getAccountUsername() . " firstname \"" . $person->getFirstName() .
@@ -50,8 +46,6 @@ class manageuser
 			}else{
 				$alias.= "@" . Config::singleton()->googledomain;
 			}
-
-
 
 			$gamcmd = "create nickname " . $alias  . " user \"" . $person->getAccountUsername()  . "\"";
 
@@ -107,8 +101,103 @@ class manageuser
 		PlatformGA::addToPlatform($platform);
 
 		return $report;
+	}
 
+	public static function moveUser($person,$mailalias,$oldgroupname, $group,$groupparents)
+	{
+		$personlastname = self::genLastName($person, $group);
+
+		//remove from old group
+		$gamcmd = "update group \"" . $oldgroupname . "\" remove " . $username . "@" . Config::singleton()->googledomain;
+		$report = GamExecutor::executeGamCommand($gamcmd);
+
+		if(!$report->isSucces())
+		{
+			return $report;
+		}
+
+		//add to new group
+		$report = self::addToGroup($person->getAccountUsername(),Group::getMailAdd($newgroup));
+
+		if(!$report->isSucces())
+		{
+			return $report;
+		}
+
+		//add to new ou
+		$report = self::addToOu($person->getAccountUsername(),$group,$groupparents);
+
+		if(!$report->isSucces())
+		{
+			return $report;
+		}
+
+
+		//update name
+		$report = self::updateUser($person->getAccountUsername(),$person->getFirstName(),$personlastname);
+		
+		if(!$report->isSucces())
+		{
+			return $report;
+		}
+
+
+		//set sendas
+		$report = self::createSendAs($person->getAccountUsername(),$mailalias,$person->getFirstName() . " " . $personlastname);
+
+		if(!$report->isSucces())
+		{
+			return $report;
+		}
+
+
+		return $report;
+	}
+
+
+
+	/*public static function updateUser($person, $enabled)
+	{
+		$gamcmd = "update user " . $person->getAccountUsername() . " ";
+		$gamcmd .= "firstname \"" . $person->getFirstName() . "\" ";
+		$gamcmd .= "lastname \"" . $person->getName() . "\" ";
+
+		if (!$enabled)
+			$gamcmd .= "suspended on";
+		else
+			$gamcmd .= "suspended off";
+
+		$report = GamExecutor::executeGamCommand($gamcmd);
 			
+		return $report;
+	}*/
+
+	public static function updatePassword($username, $password)
+	{
+		$gamcmd = "update user " . $username . " ";
+		$gamcmd .= "password " . $password . " ";
+
+		$report = GamExecutor::executeGamCommand($gamcmd);
+
+		return $report;
+	}
+
+	public static function removeUser($person)
+	{
+		$gamcmd = "delete user " . $person->getAccountUsername();
+
+		$report = GamExecutor::executeGamCommand($gamcmd);
+
+		return $report;
+	}
+
+	public function setPhoto($username, $filepath)
+	{
+		$gamcmd = "user " . $username . " update photo " . $filepath;
+
+		$report = GamExecutor::executeGamCommand($gamcmd);
+
+		return $report;
 	}
 
 	private static function addToOu($username,$groupparents,$group)
@@ -157,110 +246,25 @@ class manageuser
 
 		return GamExecutor::executeGamCommand($gamcmd);
 	}
-
-
-
-	public static function moveUser($person, $group,$groupparents,$isStudent)
+	
+	private static function genLastName($person,$group)
 	{
-
-		//remove from old group
-		$gamcmd = "update group \"" . $oldgroupname . "\" remove " . $username . "@" . Config::singleton()->googledomain;
-		$report = GamExecutor::executeGamCommand($gamcmd);
-
-		if(!$report->isSucces())
+		$personlastname = $person->getName();
+		
+		if($person->isTypeOf(Type::TYPE_LEERLING))
 		{
-			return $report;
+			$personlastname.= " - " . $group->getName();
 		}
-
-		//add to new group
-		$report = self::addToGroup($person->getAccountUsername(),Group::getMailAdd($newgroup));
-
-		if(!$report->isSucces())
-		{
-			return $report;
-		}
-
-		//add to new ou
-		$report = self::addToOu($person->getAccountUsername(),$group,$groupparents);
-
-		if(!$report->isSucces())
-		{
-			return $report;
-		}
-
-
-		//update name
-
-
-
-		//set sendas
-		$report = self::createSendAs($person->getAccountUsername(),$alias,$person->getFirstName() . " " . $personlastname);
-
-		if(!$report->isSucces())
-		{
-			return $report;
-		}
-
-
-		return $report;
 	}
 
-
-
-	public static function updateUser($person, $enabled)
-	{
-		$gamcmd = "update user " . $person->getAccountUsername() . " ";
-		$gamcmd .= "firstname \"" . $person->getFirstName() . "\" ";
-		$gamcmd .= "lastname \"" . $person->getName() . "\" ";
-
-		if (!$enabled)
-			$gamcmd .= "suspended on";
-		else
-			$gamcmd .= "suspended off";
-
-		$report = GamExecutor::executeGamCommand($gamcmd);
-			
-		return $report;
-	}
-
-	public static function updatePassword($username, $password)
+	private static function updateUser($username,$firstname,$lastname)
 	{
 		$gamcmd = "update user " . $username . " ";
-		$gamcmd .= "password " . $password . " ";
-
-		$report = GamExecutor::executeGamCommand($gamcmd);
-
-		return $report;
+		$gamcmd .= "firstname \"" . $firstname . "\" ";
+		$gamcmd .= "lastname \"" . $lastname . "\" ";
+		
+		return GamExecutor::executeGamCommand($gamcmd);
 	}
-
-	public static function removeUser($person)
-	{
-		$gamcmd = "delete user " . $person->getAccountUsername();
-
-		$report = GamExecutor::executeGamCommand($gamcmd);
-
-		return $report;
-	}
-
-	public function setPhoto($username, $filepath)
-	{
-		$gamcmd = "user " . $username . " update photo " . $filepath;
-
-		$report = GamExecutor::executeGamCommand($gamcmd);
-
-		return $report;
-	}
-
-	public static function setEmailSignature($username, $signature)
-	{
-		$gamcmd = "user " . $username . " signature \"" . $signature . "\"";
-
-		$report = GamExecutor::executeGamCommand($gamcmd);
-
-		return $report;
-	}
-
-
 
 }
 

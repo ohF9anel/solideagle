@@ -21,6 +21,7 @@ class usermanager implements TaskInterface
 	const ActionMoveUser = "MoveUser";
 	const ActionSetPhoto = "SetPhoto";
 	const ActionUpdatePassword = "UpdatePassword";
+	const ActionEnableDisableAccount = "EnableDisableAccount";
 
 	public function runTask($taskqueue)
 	{
@@ -29,7 +30,7 @@ class usermanager implements TaskInterface
 		if($config["action"] == self::ActionAddUser)
 		{
 			Logger::log("Trying to add user \"" . $config["user"]->getAccountUsername() . "\" in Google Apps.",PEAR_LOG_INFO);
-			$ret = manageuser::addUser($config["user"], $config["currentou"],$config["parentous"],$config["user"]->isTypeOf(Type::TYPE_LEERLING));
+			$ret = manageuser::addUser($config["user"], $config["currentou"],$config["parentous"]);
 
 			if($ret->isSucces())
 			{
@@ -42,7 +43,28 @@ class usermanager implements TaskInterface
 				return false;
 			}
 		}
-		else if($config["action"] == self::ActionUpdateUser && isset($config["user"]) && isset($config["enabled"]))
+		else if($config["action"] == self::ActionEnableDisableAccount)
+		{
+			Logger::log("Trying to set account status of user \"" . $config["user"]->getAccountUsername() . "\" to '" . $config["enabled"]
+					. "' in Google Apps.",PEAR_LOG_INFO);
+			
+			$ret = manageuser::EnableDisableAccount($config["user"], $config["enabled"]);
+		
+			if($ret->isSucces())
+			{
+				Logger::log("Successfully set account status of user \"" . $config["user"]->getAccountUsername() . "\" in Google Apps.",PEAR_LOG_INFO);
+				$platform = PlatformGA::getPlatformConfigByPersonId($config["user"]->getId());
+				$platform->setEnabled($config["enabled"]);
+				PlatformGA::updatePlatform($platform);
+				return true;
+			}
+			else
+			{
+				$taskqueue->setErrorMessages($ret->getError());
+				return false;
+			}
+		}
+		else if($config["action"] == self::ActionUpdateUser)
 		{
 			Logger::log("Trying to update user \"" . $config["user"]->getAccountUsername() . "\" in Google Apps.",PEAR_LOG_INFO);
 			$ret = manageuser::updateUser($config["user"], $config["enabled"]);
@@ -61,7 +83,7 @@ class usermanager implements TaskInterface
 				return false;
 			}
 		}
-		else if($config["action"] == self::ActionDelUser && isset($config["user"]))
+		else if($config["action"] == self::ActionDelUser)
 		{
 			Logger::log("Trying to remove user \"" . $config["user"]->getAccountUsername() . "\" in Google Apps.",PEAR_LOG_INFO);
 			$ret = manageuser::removeUser($config["user"]);
@@ -78,7 +100,7 @@ class usermanager implements TaskInterface
 				return false;
 			}
 		}
-		else if($config["action"] == self::ActionSetPhoto && isset($config["username"]) && isset($config["pictureurl"]))
+		else if($config["action"] == self::ActionSetPhoto)
 		{
 			Logger::log("Trying to set picture of user \"" . $config["username"] . "\" in Google Apps.",PEAR_LOG_INFO);
 			\solideagle\data_access\helpers\imagehelper::downloadTempFile($config["pictureurl"], Config::singleton()->tempstorage . "tempPic");
@@ -95,7 +117,7 @@ class usermanager implements TaskInterface
 				return false;
 			}
 		}
-		else if($config["action"] == self::ActionUpdatePassword && isset($config["username"]) && isset($config["password"]))
+		else if($config["action"] == self::ActionUpdatePassword)
 		{
 			Logger::log("Trying to update password of user \"" . $config["username"] . "\" in Google Apps.",PEAR_LOG_INFO);
 			$ret = manageuser::updatePassword($config["username"], $config["password"]);
@@ -113,16 +135,17 @@ class usermanager implements TaskInterface
 		}
 		else if($config["action"] == self::ActionMoveUser)
 		{
-			Logger::log("Trying to move user \"" . $config["user"]->getAccountUserName() . 
-					"\" from group \"" . $config["olgdgroupname"] . 
-					"\" to group \"" . Group::getMailAdd($config["newgroup"]) . 
+			Logger::log("Trying to move user \"" . $config["user"]->getAccountUserName() .
+					"\" from group \"" . $config["olgdgroupname"] .
+					"\" to group \"" . Group::getMailAdd($config["newgroup"]) .
 					"\" in Google Apps.",PEAR_LOG_INFO);
-			
-			$ret = manageuser::moveUser($config["user"], $config["olgdgroupname"], $config["newgroup"]);
+
+			$ret = manageuser::moveUser($config["user"], $config["mailalias"], $config["olgdgroupname"], $config["newgroup"],$config["parentous"]);
 
 			if($ret->isSucces())
 			{
-				Logger::log("Successfully removed user \"" . $config["username"] . "\" from group \"" . $config["groupname"] . "\" in Google Apps.",PEAR_LOG_INFO);
+				Logger::log("Successfully removed user \"" . $config["username"] . "\" from group \"" 
+						. $config["groupname"] . "\" in Google Apps.",PEAR_LOG_INFO);
 				return true;
 			}
 			else
@@ -137,6 +160,10 @@ class usermanager implements TaskInterface
 		return false; //it failed for some reason
 
 	}
+	
+	
+	
+	
 
 	public static function prepareAddUser($person)
 	{
@@ -152,33 +179,27 @@ class usermanager implements TaskInterface
 			self::prepareSetPhoto($person);
 	}
 
-	/**
-	 *
-	 *
-	 * @param Person $person
-	 * @param bool $enabled
-	 */
-	public static function prepareUpdateUser($person, $oldPerson, $enabled = true)
+	
+	/*public static function prepareUpdateUser($person, $oldPerson, $enabled = true)
 	{
 		$config["action"] = self::ActionUpdateUser;
 		$config["user"] = $person;
 
-		$config["enabled"] = $enabled;
-
 		if ($person->getPictureUrl() != null && $person->getPictureUrl() != $oldPerson->getPictureUrl())
+		{
 			self::prepareSetPhoto($person);
+		}
 
 		$platform = PlatformGA::getPlatformConfigByPersonId($person->getId());
+		TaskQueue::insertNewTask($config, $person->getId());
+	}*/
 
-		if ($oldPerson->getFirstName() != $person->getFirstName()
-				|| $oldPerson->getName() != $person->getName()
-				|| $enabled != $platform->getEnabled())
-		{
-			if($enabled == $platform->getEnabled())
-				self::prepareSetEmailSignature($person);
-
-			TaskQueue::insertNewTask($config, $person->getId());
-		}
+	public static function prepareEnableDisableAccount($person,$enabled)
+	{
+		$config["action"] = self::ActionUpdateUser;
+		$config["user"] = $person;
+		
+		TaskQueue::insertNewTask($config, $person->getId());
 	}
 
 	public static function prepareChangePassword($person)
@@ -197,8 +218,6 @@ class usermanager implements TaskInterface
 		TaskQueue::insertNewTask($config, $person->getId());
 	}
 
-
-
 	public static function prepareSetPhoto($person)
 	{
 		$config["action"] = self::ActionSetPhoto;
@@ -212,11 +231,11 @@ class usermanager implements TaskInterface
 		$config["action"] = self::ActionMoveUser;
 		$config["person"] = $person;
 		$config["newgroup"] =$newgroup;
+		$config["parentous"] =  Group::getParents($config["currentou"]);
+		$config["mailalias"] = PlatformGA::getPlatformConfigByPersonId($person->getId())->getAliasmail();
 		$config["olgdgroupname"] =Group::getMailAdd($oldgroup);
-		
-		TaskQueue::insertNewTask($config, $person->getId(), TaskQueue::TypePerson);
 
-
+		TaskQueue::insertNewTask($config, $person->getId());
 	}
 
 
