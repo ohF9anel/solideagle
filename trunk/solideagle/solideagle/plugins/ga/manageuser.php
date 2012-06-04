@@ -13,17 +13,17 @@ class manageuser
 {
 	public static function addUser($person, $group,$groupparents,$isStudent)
 	{
-		//add user
-		$gamcmd = "create user " . $person->getAccountUsername() . " firstname \"" . $person->getFirstName() .
-		"\" lastname \"" . $person->getName();
+		
+		$personlastname = $person->getName();
 		
 		if($isStudent)
 		{
-			$gamcmd.= " - " . $group->getName();
+			$personlastname.= " - " . $group->getName();
 		}
 		
-		
-		$gamcmd.= "\" password \"" . $person->getAccountPassword() . "\"";
+		//add user
+		$gamcmd = "create user " . $person->getAccountUsername() . " firstname \"" . $person->getFirstName() .
+		"\" lastname \"" . $personlastname . "\" password \"" . $person->getAccountPassword() . "\"";
 			
 		$report = GamExecutor::executeGamCommand($gamcmd);
 
@@ -98,8 +98,8 @@ class manageuser
 		}
 		
 		//set sendas
-		$gamcmd = "user \"". $person->getAccountUsername() . "\"sendas \"" . 
-		$alias . "\" \"" .  $person->getFirstName() . " " . $person->getName() . "\" default";
+		$gamcmd = "user \"". $person->getAccountUsername() . "\" sendas \"" . 
+		$alias . "\" \"" .  $person->getFirstName() . " " . $personlastname . "\" default";
 		
 		$report = GamExecutor::executeGamCommand($gamcmd);
 		
