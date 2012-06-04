@@ -23,27 +23,15 @@ class groupmanager implements TaskInterface
 	{
 		$config = $taskqueue->getConfiguration();
 
-		if($config["action"] == self::ActionAddGroup && isset($config["group"]))
+		if($config["action"] == self::ActionAddGroup)
 		{
-			Logger::log("Trying to add group \"" . $config["group"]->getName() . "\" in Google Apps.",PEAR_LOG_INFO);
+			Logger::log("Trying to add group \"" . $config["groupname"] . "\" with mailadd: " . $config["groupmail"] . " in Google Apps.",PEAR_LOG_INFO);
 
-			$mail = "";
-		
-			if($config["isStudentGroup"])
-			{
-				$mail = $config["group"]->getUniquename() . "@" . Config::singleton()->googledomain;
-			}else{
-				$mail = $config["group"]->getUniquename() . "@students." . Config::singleton()->googledomain;
-			}
-			
-			
-			
-			
-			$ret = managegroup::addGroup($config["group"]->getName(),$config["group"]->getUniquename());
+			$ret = managegroup::addGroup($config["groupname"],$config["groupmail"]);
 
 			if($ret->isSucces())
 			{
-				Logger::log("Successfully added group \"" . $config["group"]->getName() . "\" in Google Apps.",PEAR_LOG_INFO);
+				Logger::log("Successfully added group \"" . $config["groupmail"] . "\" in Google Apps.",PEAR_LOG_INFO);
 				return true;
 			}
 			else{
@@ -51,14 +39,14 @@ class groupmanager implements TaskInterface
 				return false;
 			}
 		}
-		else if($config["action"] == self::ActionRemoveGroup && isset($config["group"]))
+		else if($config["action"] == self::ActionRemoveGroup)
 		{
-			Logger::log("Trying to remove group \"" . $config["group"]->getName() . "\" in Google Apps.",PEAR_LOG_INFO);
+			Logger::log("Trying to remove group \"" . $config["groupmail"] . "\" in Google Apps.",PEAR_LOG_INFO);
 			$ret = managegroup::removeGroup($config["group"]);
 
 			if($ret->isSucces())
 			{
-				Logger::log("Successfully removed group \"" . $config["group"]->getName() . "\" in Google Apps.",PEAR_LOG_INFO);
+				Logger::log("Successfully removed group \"" .$config["groupmail"] . "\" in Google Apps.",PEAR_LOG_INFO);
 				return true;
 			}
 			else{
@@ -69,6 +57,7 @@ class groupmanager implements TaskInterface
 		else if($config["action"] == self::ActionAddGroupToGroup && isset($config["childgroupname"]) && isset($config["parentgroupname"]))
 		{
 			Logger::log("Trying to add group \"" . $config["childgroupname"] . "\" to group \"" . $config["parentgroupname"] . "\" in Google Apps.",PEAR_LOG_INFO);
+
 			$ret = managegroup::addGroupToGroup($config["childgroupname"], $config["parentgroupname"]);
 
 			if($ret->isSucces())
@@ -117,13 +106,21 @@ class groupmanager implements TaskInterface
 		}
 	}
 
-
+	private static function getMailAdd($group)
+	{
+		if(Group::isMemberOf($group->getId(),Group::getGroupByName("leerlingen")->getId()))
+		{
+			return $group->getUniquename() . "@students." . Config::singleton()->googledomain;
+		}else{
+			return $group->getUniquename() . "@" . Config::singleton()->googledomain;
+		}
+	}
 
 	public static function prepareAddGroup($group)
 	{
-		$config["action"] = self::ActionAddGroup;
-		$config["isStudentGroup"] = Group::isMemberOf($group->getId(),Group::getGroupByName("leerlingen")->getId());
-		$config["group"] = $group;
+		$config["action"] = self::ActionAddGroup;		
+		$config["groupmail"] = self::getMailAdd($group);
+		$config["groupname"] = $group;
 
 		TaskQueue::insertNewTask($config, $group->getId(), TaskQueue::TypeGroup);
 	}
@@ -131,16 +128,16 @@ class groupmanager implements TaskInterface
 	public static function prepareRemoveGroup($group)
 	{
 		$config["action"] = self::ActionRemoveGroup;
-		$config["group"] = $group;
-
+		$config["groupmail"] = self::getMailAdd($group);
+		
 		TaskQueue::insertNewTask($config, $group->getId(), TaskQueue::TypeGroup);
 	}
 
 	public static function prepareAddGroupToGroup($parentgroup, $childgroup)
 	{
 		$config["action"] = self::ActionAddGroupToGroup;
-		$config["childgroupname"] = $childgroup->getName();
-		$config["parentgroupname"] = $parentgroup->getName();
+		$config["childgroupname"] = self::getMailAdd($childgroup);
+		$config["parentgroupname"] = self::getMailAdd($parentgroup);
 
 		TaskQueue::insertNewTask($config, $childgroup->getId(), TaskQueue::TypeGroup);
 	}
@@ -148,18 +145,18 @@ class groupmanager implements TaskInterface
 	public static function prepareRemoveGroupFromGroup($parentgroup, $childgroup)
 	{
 		$config["action"] = self::ActionRemoveGroupFromGroup;
-		$config["childgroupname"] = $childgroup->getName();
-		$config["parentgroupname"] = $parentgroup->getName();
-
+		$config["childgroupname"] = self::getMailAdd($childgroup);
+		$config["parentgroupname"] = self::getMailAdd($parentgroup);
+		
 		TaskQueue::insertNewTask($config, $childgroup->getId(), TaskQueue::TypeGroup);
 	}
 
 	public static function prepareRenameGroup($oldgroup, $newgroup)
 	{
 		$config["action"] = self::ActionRenameGroup;
-		$config["oldgroupname"] = $oldgroup->getName();
-		$config["newgroupname"] = $newgroup->getName();
-
+		$config["childgroupname"] = self::getMailAdd($childgroup);
+		$config["parentgroupname"] = self::getMailAdd($parentgroup);
+		
 		TaskQueue::insertNewTask($config, $oldgroup->getId(), TaskQueue::TypeGroup);
 	}
 

@@ -25,27 +25,15 @@ class managegroup
     
     public static function addGroupToGroup($childGroupName, $parentGroupName)
     {
-        // clean chars not allowed in email address
-        $cleanGroupName = UnicodeHelper::cleanEmailString($childGroupName);
-        
-        $email = $cleanGroupName . "@" . Config::singleton()->googledomain;
-        $gamcmd = "update group \"" . UnicodeHelper::cleanEmailString($parentGroupName) . "\" add member " . $email;
-        
+        $gamcmd = "update group \"" . $parentGroupName . "\" add member " . $childGroupName;
         $report = GamExecutor::executeGamCommand($gamcmd);
-
         return $report;
     }
     
     public static function removeGroupFromGroup($childGroupName, $parentGroupName)
     {
-        // clean chars not allowed in email address
-        $cleanGroupName = UnicodeHelper::cleanEmailString($childGroupName);
-        
-        $email = $cleanGroupName . "@" . Config::singleton()->googledomain;
-        $gamcmd = "update group \"" . UnicodeHelper::cleanEmailString($parentGroupName) . "\" remove " . $email;
-        
+        $gamcmd = "update group \"" . $parentGroupName . "\" remove " . $childGroupName;
         $report = GamExecutor::executeGamCommand($gamcmd);
-        
         return $report;
     }
     
@@ -57,10 +45,8 @@ class managegroup
 
     public static function removeGroup($group)
     {
-        $gamcmd = "delete group \"" . UnicodeHelper::cleanEmailString($group->getName()) . "\"";
-        
+        $gamcmd = "delete group \"" . $group . "\"";
         $report = GamExecutor::executeGamCommand($gamcmd);
-        
         return $report;
     }
     
