@@ -13,7 +13,7 @@ class InitialGappImport
 	{
 		self::doRecurse(self::getGroupMembers("dbzgebruikers"));
 		
-		var_export($userArr());
+		var_export(self::$userArr);
 	}
 	
 	private static function doRecurse($members)
@@ -24,7 +24,7 @@ class InitialGappImport
 			{
 				self::doRecurse(self::getGroupMembers($member->mail));
 			}else{
-				$userArr[] = $member;
+				self::$userArr[] = $member;
 			}	
 		}
 	}
@@ -48,6 +48,8 @@ class InitialGappImport
 			}
 			
 		}
+		
+		return $retarr[];
 
 	}
 	
