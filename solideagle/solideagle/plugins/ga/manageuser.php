@@ -19,7 +19,7 @@ class manageuser
 	{
 		$isStudent = $person->isTypeOf(Type::TYPE_LEERLING);
 		
-		$personlastname = genLastName($person,$group);
+		$personlastname = self::genLastName($person,$group);
 
 		//add user
 		$gamcmd = "create user " . $person->getAccountUsername() . " firstname \"" . $person->getFirstName() .
