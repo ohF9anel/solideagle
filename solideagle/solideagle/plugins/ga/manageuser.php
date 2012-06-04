@@ -96,7 +96,7 @@ class manageuser
 		
 		//set sendas
 		$gamcmd = "user \"". $person->getAccountUsername() . "\"sendas \"" . 
-		$alias . "\" \"" .  $person->getFirstName() . " 'booyah' " . $person->getName() . "\" default";
+		$alias . "\" \"" .  $person->getFirstName() . " " . $person->getName() . "\" default";
 		
 		$report = GamExecutor::executeGamCommand($gamcmd);
 		
