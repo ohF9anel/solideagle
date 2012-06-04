@@ -2,6 +2,8 @@
 
 namespace solideagle\plugins\ga;
 
+use solideagle\data_access\PlatformGA;
+
 use solideagle\plugins\ga\GamExecutor;
 use solideagle\plugins\StatusReport;
 use solideagle\data_access\Person;
@@ -13,14 +15,14 @@ class manageuser
 {
 	public static function addUser($person, $group,$groupparents,$isStudent)
 	{
-		
+
 		$personlastname = $person->getName();
-		
+
 		if($isStudent)
 		{
 			$personlastname.= " - " . $group->getName();
 		}
-		
+
 		//add user
 		$gamcmd = "create user " . $person->getAccountUsername() . " firstname \"" . $person->getFirstName() .
 		"\" lastname \"" . $personlastname . "\" password \"" . $person->getAccountPassword() . "\"";
@@ -32,10 +34,58 @@ class manageuser
 			return $report;
 		}
 
-		//add to group
-		$gamcmd = "update group \"" . Group::getMailAdd($group) . "\" add member " . $person->getAccountUsername();
+		//create alias
+		for($i = 0; $i < 25; $i++)
+		{
 
-		$report = GamExecutor::executeGamCommand($gamcmd);
+			$alias = UnicodeHelper::cleanEmailString($person->getFirstName()) .
+			"." . UnicodeHelper::cleanEmailString($person->getName());
+
+			if ($i != 0)
+				$alias .= $i;
+
+			if($isStudent)
+			{
+				$alias.= "@" . Config::singleton()->googledomainstudent;
+			}else{
+				$alias.= "@" . Config::singleton()->googledomain;
+			}
+
+
+
+			$gamcmd = "create nickname " . $alias  . " user \"" . $person->getAccountUsername()  . "\"";
+
+			$report = GamExecutor::executeGamCommand($gamcmd);
+
+			if(!$report->isSucces() && strpos($report->getError(), "Entity exists") !== false )
+				continue;
+
+			break;
+		}
+
+		if(!$report->isSucces())
+		{
+			return $report;
+		}
+
+		//set sendas
+		$report = self::createSendAs($person->getAccountUsername(),$alias,$person->getFirstName() . " " . $personlastname);
+
+		if(!$report->isSucces())
+		{
+			return $report;
+		}
+
+		//create signature
+		$report = self::createSignature($person->getAccountUsername(),$person->getFirstName() . " " .$personlastnamen,$alias);
+
+		if(!$report->isSucces())
+		{
+			return $report;
+		}
+
+		//add to group
+		$report = self::addToGroup($person->getAccountUsername(),Group::getMailAdd($group));
 
 		if(!$report->isSucces())
 		{
@@ -43,6 +93,26 @@ class manageuser
 		}
 
 		//add to ou
+		$report = self::addToOu($person->getAccountUsername(),$group,$groupparents);
+
+		if(!$report->isSucces())
+		{
+			return $report;
+		}
+
+		$platform = new PlatformGA();
+		$platform->setPersonId($person);
+		$platform->setEnabled(true);
+		$platform->setAliasmail($alias);
+		PlatformGA::addToPlatform($platform);
+
+		return $report;
+
+			
+	}
+
+	private static function addToOu($username,$groupparents,$group)
+	{
 		$gamcmd = "update org \"";
 
 		if ($groupparents != null)
@@ -54,87 +124,83 @@ class manageuser
 		}
 
 		$gamcmd .= $group->getName();
-		$gamcmd .= "\" add " . $person->getAccountUsername();
+		$gamcmd .= "\" add " . $username;
 
-		$report = GamExecutor::executeGamCommand($gamcmd);
+		return GamExecutor::executeGamCommand($gamcmd);
+	}
 
-		if(!$report->isSucces())
-		{
-			return $report;
-		}
-
-		//create alias
-		for($i = 0; $i < 25; $i++)
-		{
-
-			$alias = UnicodeHelper::cleanEmailString($person->getFirstName()) . 
-			"." . UnicodeHelper::cleanEmailString($person->getName());
-			
-			if ($i != 0)
-				$alias .= $i;
-
-			if($isStudent)
-			{
-				$alias.= "@" . Config::singleton()->googledomainstudent; 
-			}else{
-				$alias.= "@" . Config::singleton()->googledomain;
-			}
-			
-			
-
-			$gamcmd = "create nickname " . $alias  . " user \"" . $person->getAccountUsername()  . "\"";
-
-			$report = GamExecutor::executeGamCommand($gamcmd);
-
-			if(!$report->isSucces() && strpos($report->getError(), "Entity exists") !== false )
-				continue;
-
-			break;
-		}
-		
-		if(!$report->isSucces())
-		{
-			return $report;
-		}
-		
-		//set sendas
-		$gamcmd = "user \"". $person->getAccountUsername() . "\" sendas \"" . 
-		$alias . "\" \"" .  $person->getFirstName() . " " . $personlastname . "\" default";
-		
-		$report = GamExecutor::executeGamCommand($gamcmd);
-		
-		if(!$report->isSucces())
-		{
-			return $report;
-		}
-		
-		//create signature
-		$signature = $person->getFirstName() . " " . $person->getName() . "<br>";
-		$signature .= 	$alias . "<br>";
+	private static function createSignature($username,$name,$aliasmail)
+	{
+		$signature =   $name . "<br>";
+		$signature .=  $aliasmail . "<br>";
 		$signature .= "Don Boscocollege Zwijnaarde<br>";
 		$signature .= "Grotesteenweg-Noord 113<br>";
 		$signature .= "9052 Zwijnaarde<br>";
 		$signature .= "http://www.dbz.be/";
-		
-		$gamcmd = "user " . $person->getAccountUsername() . " signature \"" . $signature . "\"";
-		
-		$report = GamExecutor::executeGamCommand($gamcmd);
 
+		$gamcmd = "user " . $username . " signature \"" . $signature . "\"";
 
+		return GamExecutor::executeGamCommand($gamcmd);
+	}
 
-		return $report;
+	private static function createSendAs($username,$aliasmail,$aliasname)
+	{
+		$gamcmd = "user \"". $username . "\" sendas \"" .
+				$aliasmail . "\" \"" .  $aliasname . "\" default";
 
-			
+		return GamExecutor::executeGamCommand($gamcmd);
+	}
+
+	private static function addToGroup($username,$groupname)
+	{
+		$gamcmd = "update group \"" . $groupname . "\" add member " . $username;
+
+		return GamExecutor::executeGamCommand($gamcmd);
 	}
 
 
 
-	public static function removeUserFromGroup($groupname, $username)
+	public static function moveUser($person, $group,$groupparents,$isStudent)
 	{
-		$email = $username . "@" . Config::singleton()->googledomain;
-		$gamcmd = "update group \"" . UnicodeHelper::cleanEmailString($groupname) . "\" remove " . $email;
 
+		//remove from old group
+		$gamcmd = "update group \"" . $oldgroupname . "\" remove " . $username . "@" . Config::singleton()->googledomain;
 		$report = GamExecutor::executeGamCommand($gamcmd);
+
+		if(!$report->isSucces())
+		{
+			return $report;
+		}
+
+		//add to new group
+		$report = self::addToGroup($person->getAccountUsername(),Group::getMailAdd($newgroup));
+
+		if(!$report->isSucces())
+		{
+			return $report;
+		}
+
+		//add to new ou
+		$report = self::addToOu($person->getAccountUsername(),$group,$groupparents);
+
+		if(!$report->isSucces())
+		{
+			return $report;
+		}
+
+
+		//update name
+
+
+
+		//set sendas
+		$report = self::createSendAs($person->getAccountUsername(),$alias,$person->getFirstName() . " " . $personlastname);
+
+		if(!$report->isSucces())
+		{
+			return $report;
+		}
+
 
 		return $report;
 	}
