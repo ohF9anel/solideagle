@@ -18,6 +18,8 @@ class InitialGappImport
 	
 	private static function doRecurse($members)
 	{
+		var_dump($members);
+		
 		foreach($members as $member)
 		{
 			if($member->type == "Group")
@@ -42,7 +44,7 @@ class InitialGappImport
 		foreach($arr as $line)
 		{
 			$parts = explode(":",$line);
-			if(count($parts)>2)
+			if(count($parts)>3)
 			{
 				$retarr[] = new gappObj(substr($parts[1],1,-6), substr($parts[2],1,-15));
 			}
