@@ -135,12 +135,12 @@ class usermanager implements TaskInterface
 		}
 		else if($config["action"] == self::ActionMoveUser)
 		{
-			Logger::log("Trying to move user \"" . $config["user"]->getAccountUserName() .
+			Logger::log("Trying to move user \"" . $config["person"]->getAccountUserName() .
 					"\" from group \"" . $config["olgdgroupname"] .
 					"\" to group \"" . Group::getMailAdd($config["newgroup"]) .
 					"\" in Google Apps.",PEAR_LOG_INFO);
 
-			$ret = manageuser::moveUser($config["user"], $config["mailalias"], $config["olgdgroupname"], $config["newgroup"],$config["parentous"]);
+			$ret = manageuser::moveUser($config["person"], $config["mailalias"], $config["olgdgroupname"], $config["newgroup"],$config["parentous"]);
 
 			if($ret->isSucces())
 			{
@@ -231,7 +231,7 @@ class usermanager implements TaskInterface
 		$config["action"] = self::ActionMoveUser;
 		$config["person"] = $person;
 		$config["newgroup"] =$newgroup;
-		$config["parentous"] =  Group::getParents($config["currentou"]);
+		$config["parentous"] =  Group::getParents($config["newgroup"]);
 		$config["mailalias"] = PlatformGA::getPlatformConfigByPersonId($person->getId())->getAliasmail();
 		$config["olgdgroupname"] =Group::getMailAdd($oldgroup);
 
