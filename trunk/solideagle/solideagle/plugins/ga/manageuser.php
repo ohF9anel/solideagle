@@ -64,18 +64,14 @@ class manageuser
 		}
 
 		//create alias
-		for($i = 0; $i < 10; $i++)
+		for($i = 0; $i < 25; $i++)
 		{
-			
-			
-			
+
 			$alias = UnicodeHelper::cleanEmailString($person->getFirstName()) . 
 			"." . UnicodeHelper::cleanEmailString($person->getName());
 			
 			if ($i != 0)
 				$alias .= $i;
-			
-			
 
 			if($isStudent)
 			{
