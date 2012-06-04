@@ -1,5 +1,7 @@
 <?php
 
+use solideagle\scripts\InitialGappImport;
+
 use solideagle\scripts\ga;
 
 use solideagle\data_access\helpers\UnicodeHelper;
@@ -74,7 +76,7 @@ class DatabasetasksController extends Zend_Controller_Action
 		}
 		//*/
 
-		
+		InitialGappImport::doImport();
 		
 
 

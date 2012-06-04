@@ -22,8 +22,8 @@ class manageuser
 		$personlastname = self::genLastName($person,$group);
 
 		//add user
-		$gamcmd = "create user " . $person->getAccountUsername() . " firstname \"" . $person->getFirstName() .
-		"\" lastname \"" . $personlastname . "\" password \"" . $person->getAccountPassword() . "\"";
+		$gamcmd = "create user " . $person->getAccountUsername() . " firstname '" . $person->getFirstName() .
+		"' lastname '" . $personlastname . "' password '" . $person->getAccountPassword() . "'";
 			
 		$report = GamExecutor::executeGamCommand($gamcmd);
 
@@ -49,7 +49,7 @@ class manageuser
 				$alias.= "@" . Config::singleton()->googledomain;
 			}
 
-			$gamcmd = "create nickname " . $alias  . " user \"" . $person->getAccountUsername()  . "\"";
+			$gamcmd = "create nickname " . $alias  . " user '" . $person->getAccountUsername()  . "'";
 
 			$report = GamExecutor::executeGamCommand($gamcmd);
 
@@ -110,7 +110,7 @@ class manageuser
 		$personlastname = self::genLastName($person, $group);
 
 		//remove from old group
-		$gamcmd = "update group \"" . $oldgroupname . "\" remove member " . $person->getAccountUsername() . "@" . Config::singleton()->googledomain;
+		$gamcmd = "update group '" . $oldgroupname . "' remove member " . $person->getAccountUsername() . "@" . Config::singleton()->googledomain;
 		$report = GamExecutor::executeGamCommand($gamcmd);
 
 		if(!$report->isSucces())
@@ -158,11 +158,9 @@ class manageuser
 
 
 
-	/*public static function updateUser($person, $enabled)
+	public static function enableDisableUser($person, $enabled)
 	{
-		$gamcmd = "update user " . $person->getAccountUsername() . " ";
-		$gamcmd .= "firstname \"" . $person->getFirstName() . "\" ";
-		$gamcmd .= "lastname \"" . $person->getName() . "\" ";
+		$gamcmd = "update user '" . $person->getAccountUsername() . "' ";
 
 		if (!$enabled)
 			$gamcmd .= "suspended on";
@@ -172,12 +170,12 @@ class manageuser
 		$report = GamExecutor::executeGamCommand($gamcmd);
 			
 		return $report;
-	}*/
+	}
 
 	public static function updatePassword($username, $password)
 	{
-		$gamcmd = "update user " . $username . " ";
-		$gamcmd .= "password " . $password . " ";
+		$gamcmd = "update user '" . $username . "' ";
+		$gamcmd .= "password '" . $password . "' ";
 
 		$report = GamExecutor::executeGamCommand($gamcmd);
 
@@ -186,7 +184,7 @@ class manageuser
 
 	public static function removeUser($person)
 	{
-		$gamcmd = "delete user " . $person->getAccountUsername();
+		$gamcmd = "delete user '" . $person->getAccountUsername() . "'";
 
 		$report = GamExecutor::executeGamCommand($gamcmd);
 
@@ -195,7 +193,7 @@ class manageuser
 
 	public function setPhoto($username, $filepath)
 	{
-		$gamcmd = "user " . $username . " update photo " . $filepath;
+		$gamcmd = "user '" . $username . "' update photo '" . $filepath . "'";
 
 		$report = GamExecutor::executeGamCommand($gamcmd);
 
@@ -204,7 +202,7 @@ class manageuser
 
 	private static function addToOu($username,$group,$groupparents)
 	{
-		$gamcmd = "update org \"";
+		$gamcmd = "update org '";
 
 		if ($groupparents != null)
 		{
@@ -215,7 +213,7 @@ class manageuser
 		}
 
 		$gamcmd .= $group->getName();
-		$gamcmd .= "\" add " . $username;
+		$gamcmd .= "' add '" . $username . "'";
 
 		return GamExecutor::executeGamCommand($gamcmd);
 	}
@@ -229,22 +227,22 @@ class manageuser
 		$signature .= "9052 Zwijnaarde<br>";
 		$signature .= "http://www.dbz.be/";
 
-		$gamcmd = "user " . $username . " signature \"" . $signature . "\"";
+		$gamcmd = "user " . $username . " signature '" . $signature . "'";
 
 		return GamExecutor::executeGamCommand($gamcmd);
 	}
 
 	private static function createSendAs($username,$aliasmail,$aliasname)
 	{
-		$gamcmd = "user \"". $username . "\" sendas \"" .
-				$aliasmail . "\" \"" .  $aliasname . "\" default";
+		$gamcmd = "user '". $username . "' sendas '" .
+				$aliasmail . "' '" .  $aliasname . "' default";
 
 		return GamExecutor::executeGamCommand($gamcmd);
 	}
 
 	private static function addToGroup($username,$groupname)
 	{
-		$gamcmd = "update group \"" . $groupname . "\" add member " . $username;
+		$gamcmd = "update group '" . $groupname . "' add member " . $username;
 
 		return GamExecutor::executeGamCommand($gamcmd);
 	}
@@ -263,9 +261,9 @@ class manageuser
 
 	private static function updateUser($username,$firstname,$lastname)
 	{
-		$gamcmd = "update user " . $username . " ";
-		$gamcmd .= "firstname \"" . $firstname . "\" ";
-		$gamcmd .= "lastname \"" . $lastname . "\" ";
+		$gamcmd = "update user '" . $username . "' ";
+		$gamcmd .= "firstname '" . $firstname . "' ";
+		$gamcmd .= "lastname '" . $lastname . "' ";
 		
 		return GamExecutor::executeGamCommand($gamcmd);
 	}

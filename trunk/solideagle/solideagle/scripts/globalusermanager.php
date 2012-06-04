@@ -202,11 +202,11 @@ class GlobalUserManager
 		{
 			if($configstdclass->enableGappAccount)
 			{
-				\solideagle\scripts\ga\usermanager::prepareUpdateUser($person,$person,true);
+				\solideagle\scripts\ga\usermanager::prepareEnableDisableAccount($person,true);
 			}
 			else if($configstdclass->disableGappAccount)
 			{
-				\solideagle\scripts\ga\usermanager::prepareUpdateUser($person,$person,false);
+				\solideagle\scripts\ga\usermanager::prepareEnableDisableAccount($person,false);
 			}
 
 		}
