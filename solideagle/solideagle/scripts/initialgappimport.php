@@ -33,7 +33,7 @@ class InitialGappImport
 	
 	private static function getGroupMembers($name)
 	{
-		$cmd = "gam info group " . $name;
+		$cmd = "info group " . $name;
 		
 		$res = GamExecutor::executeGamCommandGetResult($cmd);
 		
