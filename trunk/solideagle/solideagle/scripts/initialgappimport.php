@@ -37,6 +37,8 @@ class InitialGappImport
 		
 		$res = GamExecutor::executeGamCommandGetResult($cmd);
 		
+		var_dump($res);
+		
 		$arr = explode("\n", $res);
 		
 		$retarr = array();
