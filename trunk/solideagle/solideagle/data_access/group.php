@@ -98,6 +98,9 @@ class Group
 		
 		$cmd = new DatabaseCommand($sql);
 		
+		$cmd->addParam(":childgroupid", $childgroupid);
+		$cmd->addParam(":parentgroupid", $parentgroupid);
+		
 		$count = $cmd->executeReader()->read()->memberof;
 		
 		return ($count > 0);

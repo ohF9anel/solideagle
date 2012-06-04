@@ -1,5 +1,7 @@
 <?php
 
+use solideagle\scripts\ga;
+
 use solideagle\data_access\helpers\UnicodeHelper;
 
 use solideagle\data_access\Group;
@@ -25,6 +27,21 @@ class DatabasetasksController extends Zend_Controller_Action
 
 	public function indexAction()
 	{
+		
+		$newgroup = Group::getGroupByName("externen");
+		
+		$parents = Group::getParents($newgroup);
+		
+
+		
+		ga\oumanager::prepareAddOu($parents,$newgroup);
+		ga\groupmanager::prepareAddGroup($newgroup);
+		
+		if ($parents[0] != null)
+			ga\groupmanager::prepareAddGroupToGroup($parents[0], $newgroup);
+		
+		
+		
 		$this->view->themethods = get_class_methods($this);
 	}
 
