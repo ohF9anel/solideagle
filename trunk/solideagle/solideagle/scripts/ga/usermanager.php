@@ -41,7 +41,7 @@ class usermanager implements TaskInterface
 				Logger::log("Successfully created user \"" . $config["user"]->getAccountUsername() . "\" in Google Apps.",PEAR_LOG_INFO);
 				$platform = new PlatformGA();
 				$platform->setPersonId($config["user"]->getId());
-				$platform->setEnabled($config["enabled"]);
+				$platform->setEnabled(true);
 				PlatformGA::addToPlatform($platform);
 				GlobalUserManager::cleanPasswordIfAllAccountsExist($config["user"]->getId());
 				return true;
