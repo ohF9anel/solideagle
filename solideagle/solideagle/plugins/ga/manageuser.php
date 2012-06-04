@@ -11,7 +11,7 @@ use solideagle\Config;
 
 class manageuser
 {
-	public static function addUser($person, $group,$groupparents)
+	public static function addUser($person, $group,$groupparents,$isStudent)
 	{
 		//add user
 		$gamcmd = "create user " . $person->getAccountUsername() . " firstname \"" . $person->getFirstName() .
@@ -55,16 +55,23 @@ class manageuser
 			return $report;
 		}
 
-
 		//create alias
 		for($i = 0; $i < 10; $i++)
 		{
-			$alias = UnicodeHelper::cleanEmailString($person->getFirstName()) . "." . UnicodeHelper::cleanEmailString($person->getName());
+			$alias = UnicodeHelper::cleanEmailString($person->getFirstName()) . 
+			"." . UnicodeHelper::cleanEmailString($person->getName()) . "@";
 
+			if($isStudent)
+			{
+				$alias.= Config::singleton()->googledomainstudent; 
+			}else{
+				$alias.= Config::singleton()->googledomain;
+			}
+			
 			if ($i != 0)
 				$alias .= $i;
 
-			$gamcmd = "create nickname " . $alias . "@" . Config::singleton()->googledomainstudent . " user \"" . $person->getAccountUsername()  . "\"";
+			$gamcmd = "create nickname " . $alias  . " user \"" . $person->getAccountUsername()  . "\"";
 
 			$report = GamExecutor::executeGamCommand($gamcmd);
 
@@ -73,6 +80,17 @@ class manageuser
 
 			break;
 		}
+		
+		if(!$report->isSucces())
+		{
+			return $report;
+		}
+		
+		//set sendas
+		$gamcmd = "user \"". $person->getAccountUsername() . "\"sendas \"" . 
+		$alias . "\" \"" .  $person->getFirstName() . " 'booyah' " . $person->getName() . "\" default";
+		
+		$report = GamExecutor::executeGamCommand($gamcmd);
 		
 		if(!$report->isSucces())
 		{

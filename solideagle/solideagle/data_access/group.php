@@ -869,7 +869,7 @@ class Group
 	{
 		if(Group::isMemberOf($group->getId(),Group::getGroupByName("leerlingen")->getId()))
 		{
-			return $group->getUniquename() . "@student." . \solideagle\Config::singleton()->googledomain;
+			return $group->getUniquename() . "@" . \solideagle\Config::singleton()->googledomainstudent;
 		}else{
 			return $group->getUniquename() . "@" . \solideagle\Config::singleton()->googledomain;
 		}
