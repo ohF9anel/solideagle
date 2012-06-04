@@ -66,18 +66,25 @@ class manageuser
 		//create alias
 		for($i = 0; $i < 10; $i++)
 		{
+			
+			
+			
 			$alias = UnicodeHelper::cleanEmailString($person->getFirstName()) . 
-			"." . UnicodeHelper::cleanEmailString($person->getName()) . "@";
-
-			if($isStudent)
-			{
-				$alias.= Config::singleton()->googledomainstudent; 
-			}else{
-				$alias.= Config::singleton()->googledomain;
-			}
+			"." . UnicodeHelper::cleanEmailString($person->getName());
 			
 			if ($i != 0)
 				$alias .= $i;
+			
+			
+
+			if($isStudent)
+			{
+				$alias.= "@" . Config::singleton()->googledomainstudent; 
+			}else{
+				$alias.= "@" . Config::singleton()->googledomain;
+			}
+			
+			
 
 			$gamcmd = "create nickname " . $alias  . " user \"" . $person->getAccountUsername()  . "\"";
 
