@@ -24,22 +24,28 @@ class DatabasetasksController extends Zend_Controller_Action
 	{
 		/* Initialize action controller here */
 	}
-
-	public function indexAction()
+	
+	
+	//advanced functions that should one day get a gui!
+	private function fixGroupOnGapp($groupname)
 	{
-		
-		$newgroup = Group::getGroupByName("externen");
+		$newgroup = Group::getGroupByName($groupname);
 		
 		$parents = Group::getParents($newgroup);
 		
-
+		//ga\oumanager::prepareAddOu($parents,$newgroup);
 		
-		ga\oumanager::prepareAddOu($parents,$newgroup);
 		ga\groupmanager::prepareAddGroup($newgroup);
 		
 		if ($parents[0] != null)
 			ga\groupmanager::prepareAddGroupToGroup($parents[0], $newgroup);
 		
+	}
+
+	public function indexAction()
+	{
+		
+		$this->fixGroupOnGapp("schoolverlaters");
 		
 		
 		$this->view->themethods = get_class_methods($this);

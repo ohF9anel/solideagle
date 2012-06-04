@@ -108,12 +108,7 @@ class groupmanager implements TaskInterface
 
 	private static function getMailAdd($group)
 	{
-		if(Group::isMemberOf($group->getId(),Group::getGroupByName("leerlingen")->getId()))
-		{
-			return $group->getUniquename() . "@students." . Config::singleton()->googledomain;
-		}else{
-			return $group->getUniquename() . "@" . Config::singleton()->googledomain;
-		}
+		Group::getMailAdd($group);
 	}
 
 	public static function prepareAddGroup($group)
