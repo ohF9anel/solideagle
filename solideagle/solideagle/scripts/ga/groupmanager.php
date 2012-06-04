@@ -120,7 +120,7 @@ class groupmanager implements TaskInterface
 	{
 		$config["action"] = self::ActionAddGroup;		
 		$config["groupmail"] = self::getMailAdd($group);
-		$config["groupname"] = $group;
+		$config["groupname"] = $group->getName();
 
 		TaskQueue::insertNewTask($config, $group->getId(), TaskQueue::TypeGroup);
 	}
