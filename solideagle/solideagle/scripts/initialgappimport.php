@@ -49,7 +49,7 @@ class InitialGappImport
 			
 		}
 		
-		return $retarr[];
+		return $retarr;
 
 	}
 	
