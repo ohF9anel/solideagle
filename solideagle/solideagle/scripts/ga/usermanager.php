@@ -67,7 +67,7 @@ class usermanager implements TaskInterface
 		else if($config["action"] == self::ActionUpdateUser)
 		{
 			Logger::log("Trying to update user \"" . $config["user"]->getAccountUsername() . "\" in Google Apps.",PEAR_LOG_INFO);
-			$ret = manageuser::updateUser($config["user"], $config["enabled"]);
+			$ret = manageuser::enableDisableUser($config["user"], $config["enabled"]);
 
 			if($ret->isSucces())
 			{
@@ -145,7 +145,7 @@ class usermanager implements TaskInterface
 			if($ret->isSucces())
 			{
 				Logger::log("Successfully moved user \"" . $config["person"]->getAccountUserName() . "\" from group \"" 
-						. $config["groupname"] . "\" to\"" 
+						. $config["olgdgroupname"] . "\" to\"" 
 						. Group::getMailAdd($config["newgroup"]) . "\" in Google Apps.",PEAR_LOG_INFO);
 				return true;
 			}
@@ -199,6 +199,7 @@ class usermanager implements TaskInterface
 	{
 		$config["action"] = self::ActionUpdateUser;
 		$config["user"] = $person;
+		$config["enabled"] = $enabled;
 		
 		TaskQueue::insertNewTask($config, $person->getId());
 	}
