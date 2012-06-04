@@ -18,13 +18,9 @@ class usermanager implements TaskInterface
 	const ActionAddUser = "AddUser";
 	const ActionUpdateUser = "UpdateUser";
 	const ActionDelUser = "DelUser";
-	const ActionAddUserToOu = "AddUserToOU";
+	const ActionMoveUser = "MoveUser";
 	const ActionSetPhoto = "SetPhoto";
 	const ActionUpdatePassword = "UpdatePassword";
-	const ActionAddUserToGroup = "AddUserToGroup";
-	const ActionRemoveUserFromGroup = "RemoveUserFromGroup";
-	const ActionSetEmailSignature = "SetEmailSignature";
-	const ActionSetAlias = "SetAlias";
 
 	public function runTask($taskqueue)
 	{
@@ -33,17 +29,11 @@ class usermanager implements TaskInterface
 		if($config["action"] == self::ActionAddUser)
 		{
 			Logger::log("Trying to add user \"" . $config["user"]->getAccountUsername() . "\" in Google Apps.",PEAR_LOG_INFO);
-
-		
 			$ret = manageuser::addUser($config["user"], $config["currentou"],$config["parentous"],$config["user"]->isTypeOf(Type::TYPE_LEERLING));
 
 			if($ret->isSucces())
 			{
 				Logger::log("Successfully created user \"" . $config["user"]->getAccountUsername() . "\" in Google Apps.",PEAR_LOG_INFO);
-				$platform = new PlatformGA();
-				$platform->setPersonId($config["user"]->getId());
-				$platform->setEnabled(true);
-				PlatformGA::addToPlatform($platform);
 				GlobalUserManager::cleanPasswordIfAllAccountsExist($config["user"]->getId());
 				return true;
 			}
@@ -121,10 +111,14 @@ class usermanager implements TaskInterface
 				return false;
 			}
 		}
-		else if($config["action"] == self::ActionRemoveUserFromGroup && isset($config["groupname"]) && isset($config["username"]))
+		else if($config["action"] == self::ActionMoveUser)
 		{
-			Logger::log("Trying to remove user \"" . $config["username"] . "\" from group \"" . $config["groupname"] . "\" in Google Apps.",PEAR_LOG_INFO);
-			$ret = manageuser::removeUserFromGroup($config["groupname"], $config["username"]);
+			Logger::log("Trying to move user \"" . $config["user"]->getAccountUserName() . 
+					"\" from group \"" . $config["olgdgroupname"] . 
+					"\" to group \"" . Group::getMailAdd($config["newgroup"]) . 
+					"\" in Google Apps.",PEAR_LOG_INFO);
+			
+			$ret = manageuser::moveUser($config["user"], $config["olgdgroupname"], $config["newgroup"]);
 
 			if($ret->isSucces())
 			{
@@ -215,19 +209,16 @@ class usermanager implements TaskInterface
 
 	public static function prepareMoveUser($person, $newgroup, $oldgroup)
 	{
-		self::prepareRemoveUserFromGroup($person, $oldgroup);
-		self::prepareAddUserToGroup($person);
-		self::prepareAddUserToOu($person);
-	}
-
-	public static function prepareRemoveUserFromGroup($person, $group)
-	{
-		$config["action"] = self::ActionRemoveUserFromGroup;
-		$config["groupname"] = $group->getName();
-		$config["username"] = $person->getAccountUsername();
-
+		$config["action"] = self::ActionMoveUser;
+		$config["person"] = $person;
+		$config["newgroup"] =$newgroup;
+		$config["olgdgroupname"] =Group::getMailAdd($oldgroup);
+		
 		TaskQueue::insertNewTask($config, $person->getId(), TaskQueue::TypePerson);
+
+
 	}
+
 
 }
 
