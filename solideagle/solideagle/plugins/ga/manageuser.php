@@ -2,6 +2,8 @@
 
 namespace solideagle\plugins\ga;
 
+use solideagle\data_access\Type;
+
 use solideagle\data_access\PlatformGA;
 
 use solideagle\plugins\ga\GamExecutor;
