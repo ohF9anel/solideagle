@@ -73,7 +73,7 @@ class manageuser
 		}
 
 		//create signature
-		$report = self::createSignature($person->getAccountUsername(),$person->getFirstName() . " " .$personlastnamen,$alias);
+		$report = self::createSignature($person->getAccountUsername(),$person->getFirstName() . " " .$personlastname,$alias);
 
 		if(!$report->isSucces())
 		{
@@ -202,7 +202,7 @@ class manageuser
 		return $report;
 	}
 
-	private static function addToOu($username,$groupparents,$group)
+	private static function addToOu($username,$group,$groupparents)
 	{
 		$gamcmd = "update org \"";
 
