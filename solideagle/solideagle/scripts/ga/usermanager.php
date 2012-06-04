@@ -144,8 +144,9 @@ class usermanager implements TaskInterface
 
 			if($ret->isSucces())
 			{
-				Logger::log("Successfully removed user \"" . $config["username"] . "\" from group \"" 
-						. $config["groupname"] . "\" in Google Apps.",PEAR_LOG_INFO);
+				Logger::log("Successfully moved user \"" . $config["person"]->getAccountUserName() . "\" from group \"" 
+						. $config["groupname"] . "\" to\"" 
+						. Group::getMailAdd($config["newgroup"]) . "\" in Google Apps.",PEAR_LOG_INFO);
 				return true;
 			}
 			else
