@@ -110,7 +110,7 @@ class manageuser
 		$personlastname = self::genLastName($person, $group);
 
 		//remove from old group
-		$gamcmd = "update group \"" . $oldgroupname . "\" remove " . $username . "@" . Config::singleton()->googledomain;
+		$gamcmd = "update group \"" . $oldgroupname . "\" remove " . $person->getAccountUsername() . "@" . Config::singleton()->googledomain;
 		$report = GamExecutor::executeGamCommand($gamcmd);
 
 		if(!$report->isSucces())
@@ -119,7 +119,7 @@ class manageuser
 		}
 
 		//add to new group
-		$report = self::addToGroup($person->getAccountUsername(),Group::getMailAdd($newgroup));
+		$report = self::addToGroup($person->getAccountUsername(),Group::getMailAdd($group));
 
 		if(!$report->isSucces())
 		{
