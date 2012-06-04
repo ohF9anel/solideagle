@@ -35,7 +35,7 @@ class usermanager implements TaskInterface
 			Logger::log("Trying to add user \"" . $config["user"]->getAccountUsername() . "\" in Google Apps.",PEAR_LOG_INFO);
 
 		
-			$ret = manageuser::addUser($config["user"], $config["currentou"],$config["parentous"],$p->isTypeOf(Type::TYPE_LEERLING));
+			$ret = manageuser::addUser($config["user"], $config["currentou"],$config["parentous"],$config["user"]->isTypeOf(Type::TYPE_LEERLING));
 
 			if($ret->isSucces())
 			{
