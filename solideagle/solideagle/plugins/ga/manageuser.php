@@ -255,8 +255,10 @@ class manageuser
 		
 		if($person->isTypeOf(Type::TYPE_LEERLING))
 		{
-			$personlastname.= " - " . $group->getName();
+			 $personlastname.= " - " . $group->getName();
 		}
+		
+		return $personlastname;
 	}
 
 	private static function updateUser($username,$firstname,$lastname)
