@@ -24,30 +24,58 @@ class DatabasetasksController extends Zend_Controller_Action
 	{
 		/* Initialize action controller here */
 	}
-	
-	
+
+
 	//advanced functions that should one day get a gui!
-	private function fixGroupOnGapp($groupname)
+	private function fixGroupOuOnGapp($groupname)
 	{
 		$newgroup = Group::getGroupByName($groupname);
-		
+
 		$parents = Group::getParents($newgroup);
+
+		if(false) //toggle ou creation
+		{
+			ga\oumanager::prepareAddOu($parents,$newgroup);
+		}
+
+		if(true) //toggle group creation
+		{
+			ga\groupmanager::prepareAddGroup($newgroup);
+				
+		}
 		
-		//ga\oumanager::prepareAddOu($parents,$newgroup);
-		
-		ga\groupmanager::prepareAddGroup($newgroup);
-		
+		if(false) //toggle group membership
+		{
+			if ($parents[0] != null)
+				ga\groupmanager::prepareAddGroupToGroup($parents[0], $newgroup);
+		}
+
+
+	}
+
+	private function fixGroupMembershipOnGapp($groupname)
+	{
+		$newgroup = Group::getGroupByName($groupname);
+
+		$parents = Group::getParents($newgroup);
+
 		if ($parents[0] != null)
 			ga\groupmanager::prepareAddGroupToGroup($parents[0], $newgroup);
-		
 	}
 
 	public function indexAction()
 	{
 		
-		$this->fixGroupOnGapp("schoolverlaters");
+		
+		foreach (Group::getAllChilderen(Group::getGroupByName("leerlingen")) as $groupp)
+		{
+			$this->fixGroupMembershipOnGapp($groupp->getName());
+		}
+
 		
 		
+
+
 		$this->view->themethods = get_class_methods($this);
 	}
 
@@ -78,7 +106,7 @@ class DatabasetasksController extends Zend_Controller_Action
 
 	public function rundaemonAction()
 	{
-		
+
 	 $blah = solideagle\scripts\daemon::doNothing();
 	}
 

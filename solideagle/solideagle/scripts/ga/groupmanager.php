@@ -108,7 +108,7 @@ class groupmanager implements TaskInterface
 
 	private static function getMailAdd($group)
 	{
-		Group::getMailAdd($group);
+		return Group::getMailAdd($group);
 	}
 
 	public static function prepareAddGroup($group)
