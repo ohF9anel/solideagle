@@ -15,7 +15,15 @@ class manageuser
 	{
 		//add user
 		$gamcmd = "create user " . $person->getAccountUsername() . " firstname \"" . $person->getFirstName() .
-		"\" lastname \"" . $person->getName() . "\" password \"" . $person->getAccountPassword() . "\"";
+		"\" lastname \"" . $person->getName();
+		
+		if($isStudent)
+		{
+			$gamcmd.= " - " . $group->getName();
+		}
+		
+		
+		$gamcmd.= "\" password \"" . $person->getAccountPassword() . "\"";
 			
 		$report = GamExecutor::executeGamCommand($gamcmd);
 
