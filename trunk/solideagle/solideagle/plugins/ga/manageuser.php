@@ -97,7 +97,7 @@ class manageuser
 		}
 
 		$platform = new PlatformGA();
-		$platform->setPersonId($person);
+		$platform->setPersonId($person->getId());
 		$platform->setEnabled(true);
 		$platform->setAliasmail($alias);
 		PlatformGA::addToPlatform($platform);
