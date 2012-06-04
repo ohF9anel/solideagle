@@ -83,7 +83,7 @@ class manageuser
 
 			$report = GamExecutor::executeGamCommand($gamcmd);
 
-			if(!$report->isSucces() && strpos($report->getError(), "EntityExists") !== false )
+			if(!$report->isSucces() && strpos($report->getError(), "Entity exists") !== false )
 				continue;
 
 			break;
