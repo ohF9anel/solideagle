@@ -44,7 +44,7 @@ class GlobalUserManager
 		$oldPerson = Person::getPersonById($person->getId());
 		Person::updatePerson($person);
 
-		$enabled = true; //TODO: fix
+		$enabled = true; //TODO: fix, see issue 61
 
 		if($person->getHasAdAccount())
 		{
@@ -53,7 +53,8 @@ class GlobalUserManager
 
 		if($person->getHasGaAccount())
 		{
-			\solideagle\scripts\ga\usermanager::prepareUpdateUser($person, $oldPerson, $enabled);
+			//temporarily disabled
+			//\solideagle\scripts\ga\usermanager::prepareUpdateUser($person, $oldPerson, $enabled);
 		}
 
 		if($person->getHasSSAccount())
@@ -178,8 +179,12 @@ class GlobalUserManager
 		}
 	}
 
+	//TODO: fix, see issue 61
 	public static function enableDisableAccounts($person,$configstdclass)
 	{
+		
+		
+		
 		if($person->getHasAdAccount())
 		{
 			if($configstdclass->enableAdAccount)
