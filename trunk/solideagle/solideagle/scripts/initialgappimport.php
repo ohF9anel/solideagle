@@ -42,8 +42,11 @@ class InitialGappImport
 		foreach($arr as $line)
 		{
 			$parts = explode(":",$line);
+			if(count($parts)>2)
+			{
+				$retarr[] = new gappObj(substr($parts[1],1,-6), substr($parts[2],1,-15));
+			}
 			
-			$retarr[] = new gappObj(substr($parts[1],1,-6), substr($parts[2],1,-15));	
 		}
 
 	}
