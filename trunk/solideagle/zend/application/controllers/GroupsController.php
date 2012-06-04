@@ -298,7 +298,7 @@ class GroupsController extends Zend_Controller_Action
 		
 		if(($group = Group::getGroupById($groupid)) !== null)
 		{
-			echo $group->getUniquename() . "@" . Config::singleton()->googledomain;
+			echo Group::getMailAdd($group);
 		}
 	}
 

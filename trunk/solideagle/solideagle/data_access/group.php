@@ -94,7 +94,7 @@ class Group
 	
 	public static function isMemberOf($childgroupid,$parentgroupid)
 	{
-		$sql = "SELECT count(*) as memberof FROM group_closure gc WHERE gc.child_id = :childgroupid AND gc.parent_id = :parentgroupid";
+		$sql = "SELECT count(*) as memberof FROM group_closure gc WHERE gc.child_id = :childgroupid AND gc.parent_id = :parentgroupid AND gc.child_id != gc.parent_id";
 		
 		$cmd = new DatabaseCommand($sql);
 		
@@ -863,6 +863,16 @@ class Group
 	public function setUniquename($uniquename)
 	{
 	    $this->uniquename = $uniquename;
+	}
+	
+	public static function getMailAdd($group)
+	{
+		if(Group::isMemberOf($group->getId(),Group::getGroupByName("leerlingen")->getId()))
+		{
+			return $group->getUniquename() . "@student." . \solideagle\Config::singleton()->googledomain;
+		}else{
+			return $group->getUniquename() . "@" . \solideagle\Config::singleton()->googledomain;
+		}
 	}
 }
 
