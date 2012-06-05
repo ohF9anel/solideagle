@@ -63,27 +63,64 @@ class InitialGappImport
 
 	public static function doTheDataImport()
 	{
-		$commands ="info user blanchaerti@dbz.be
-info user colmann@dbz.be
-info user coomanm@dbz.be
-info user debeuler@dbz.be
-info user deboeverc@dbz.be
-info user declercqt@dbz.be
-info user decockl@dbz.be
-info user deschryvere@dbz.be
-info user dewaeled@dbz.be
-info user everaertc@dbz.be
-info user gallea@dbz.be
-info user gallee@dbz.be
-info user galleg@dbz.be
-info user hertegonneg@dbz.be
-info user lippensd@dbz.be
-info user pietersg@dbz.be
-info user provosth@dbz.be
-info user reunesv@dbz.be
-info user vandekerckhovem@dbz.be
-info user vanpouckea@dbz.be
-info user verschraegenk@dbz.be";
+		$commands ="info user adm_bb@dbz.be
+info user adm_ms@dbz.be
+info user adm_nc@dbz.be
+info user admcanon@dbz.be
+info user admgb@dbz.be
+info user Admin_SE@dbz.be
+info user admjd@dbz.be
+info user admmds@dbz.be
+info user admps@dbz.be
+info user baeyensm10@dbz.be
+info user beausaertn@dbz.be
+info user boeykensa11@dbz.be
+info user boeykensn11@dbz.be
+info user braekmanl@dbz.be
+info user declercqa@dbz.be
+info user declercqt1@dbz.be
+info user decockj@dbz.be
+info user deraedtj@dbz.be
+info user derammelaerej09@dbz.be
+info user deseurec@dbz.be
+info user desmetj@dbz.be
+info user duchis@dbz.be
+info user gast01@dbz.be
+info user gioto@dbz.be
+info user icttest@dbz.be
+info user kintg@dbz.be
+info user leerkrachtt@dbz.be
+info user leerkrachtt1@dbz.be
+info user leerkrachtt2@dbz.be
+info user leerkrachtt3@dbz.be
+info user leerlingt121@dbz.be
+info user leerlingt122@dbz.be
+info user lotermanj@dbz.be
+info user maesb@dbz.be
+info user maetl@dbz.be
+info user matthijsa@dbz.be
+info user ouder11@dbz.be
+info user ozlemy@dbz.be
+info user roelsh@dbz.be
+info user roosense@dbz.be
+info user smessaertt@dbz.be
+info user stafft@dbz.be
+info user testlk1@dbz.be
+info user teststaff@dbz.be
+info user teststaff2@dbz.be
+info user teststaff3@dbz.be
+info user teststaff4@dbz.be
+info user teststaff5@dbz.be
+info user teststaff6@dbz.be
+info user thirya@dbz.be
+info user vanaelstg@dbz.be
+info user vandepittet08@dbz.be
+info user vandeveldes11@dbz.be
+info user vanwonterghemc@dbz.be
+info user verbeurgta08@dbz.be
+info user vernaeved@dbz.be
+info user verniersm11@dbz.be
+info user vervincktl07@dbz.be";
 
 		$arrcmds = explode("\n", $commands);
 
