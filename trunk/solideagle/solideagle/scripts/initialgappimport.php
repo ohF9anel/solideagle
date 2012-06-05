@@ -1965,17 +1965,31 @@ class InitialGappImport
 
 		foreach($arrcmds as $cmd)
 		{
-				
+
 			$username = strstr($cmd, "info user ");
 			$username = substr($username,10);
 			$username = strstr($username,"@",true);
-			
+				
+			$myperson = Person::getPersonByUsername($username);
+				
+			if($myperson === NULL)
+			{
+				continue;
+
+			}else{
+				$cfg = PlatformGA::getPlatformConfigByPersonId($myperson->getId());
+				if($cfg !== NULL)
+				{
+					continue;
+				}
+			}
+				
 			$alias="";
 
 			$res = GamExecutor::executeGamCommandGetResult($cmd);
-				
+
 			$arr = explode("\n", $res);
-				
+
 			$usenextline=false;
 			foreach($arr as $line)
 			{
@@ -1992,24 +2006,17 @@ class InitialGappImport
 
 
 
-			$myperson = Person::getPersonByUsername($username);
-			
-			if($myperson !== NULL)
-			{
-				$cfg = PlatformGA::getPlatformConfigByPersonId($myperson->getId());
-				if($cfg === NULL)
-				{
-					$cfg = new PlatformGA();
-					$cfg->setPersonId($myperson->getId());
-					$cfg->setEnabled(true);
-					$cfg->setAliasmail($alias);
-					PlatformGA::addToPlatform($cfg);
-				}else{
-					$cfg->setAliasmail($alias);
-					PlatformGA::updatePlatform($cfg);
-				}
-			}
-			
+
+				
+				
+			$cfg = new PlatformGA();
+			$cfg->setPersonId($myperson->getId());
+			$cfg->setEnabled(true);
+			$cfg->setAliasmail($alias);
+			PlatformGA::addToPlatform($cfg);
+
+				
+				
 
 		}
 
