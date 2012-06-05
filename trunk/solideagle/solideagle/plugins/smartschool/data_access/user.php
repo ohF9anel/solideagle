@@ -155,18 +155,28 @@ class User
 	{
 		$api = Api::singleton();
 		
+		$oldgroupcode = ClassGroup::GroupPrefix . $oldgroupcode;
+		
 		$usergroupcodes = GroupsAndUsersCache::getUserGroupCodes($user->getUsername());
 		
 		foreach($usergroupcodes as $usergroupcode)
 		{
-			if($usergroupcode == $oldgroupcode)
+			
+			var_dump("cmp: " .  $usergroupcode . " " . $oldgroupcode);
+			
+			if( strcasecmp($usergroupcode, $oldgroupcode) ===0)
 			{
+				var_dump("ignore: " .  $usergroupcode);
 				continue;
 			}
+			
+			var_dump("add: " .  $usergroupcode);
 			
 			$user->addClass($usergroupcode);
 		
 		}
+		
+		var_dump($user->classCodes);
 
 		$returnvalue = $api->saveUserToClasses($user->internnumber,$user->classCodes);
 
