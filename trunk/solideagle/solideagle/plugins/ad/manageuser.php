@@ -318,6 +318,9 @@ class ManageUser
         
         $update["homeDirectory"] = $share . "\\" . $username . "$";
         $update["homeDrive"] = "T:";
+        $update["msiis-ftproot"] = $update["homeDirectory"];
+        $update["msiis-ftpdir"] = "\\" . Config::singleton()->dir_name_www;
+        
         
         $ret = ldap_modify($connLdap->getConn(), $userInfo[0]["distinguishedname"][0], $update);
         if (!$ret)

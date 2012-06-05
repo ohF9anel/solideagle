@@ -2,8 +2,8 @@
 
 namespace solideagle\plugins\ad;
 
-use solideagle\data_access\Person;
-use solideagle\data_access\Group;
+
+
 use solideagle\logging\Logger;
 use solideagle\Config;
 
