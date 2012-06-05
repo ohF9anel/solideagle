@@ -62,7 +62,7 @@ class importclasses
 		//Check if structure of groups exists
 		foreach(Group::getChilderen($studentsParentGroup) as $childGroup)
 		{
-			if($childGroup->getName() == "graad 1")
+			if($childGroup->getName() == "leerlingen graad 1")
 			{
 				$groupStructureResults->eerstegraad = $childGroup;
 				foreach(Group::getChilderen($childGroup) as $subchildGroup)
@@ -76,7 +76,7 @@ class importclasses
 					}
 				}
 			}
-			else if($childGroup->getName() == "graad 2")
+			else if($childGroup->getName() == "leerlingen graad 2")
 			{
 				$groupStructureResults->tweedegraad = $childGroup;
 				foreach(Group::getChilderen($childGroup) as $subchildGroup)
@@ -90,7 +90,7 @@ class importclasses
 					}
 				}
 			}
-			else if($childGroup->getName() == "graad 3")
+			else if($childGroup->getName() == "leerlingen graad 3")
 			{
 				$groupStructureResults->derdegraad = $childGroup;
 				foreach(Group::getChilderen($childGroup) as $subchildGroup)
@@ -111,7 +111,7 @@ class importclasses
 		if(!isset($groupStructureResults->eerstegraad ))
 		{
 			$group = new Group();
-			$group->setName("graad 1");
+			$group->setName("leerlingen graad 1");
 			$group->setParentId($studentsParentGroup->getId());
 			$gid = Group::addGroup($group);
 			$group->setId($gid);
@@ -122,7 +122,7 @@ class importclasses
 		if(!isset($groupStructureResults->tweedegraad ))
 		{
 			$group = new Group();
-			$group->setName("graad 2");
+			$group->setName("leerlingen graad 2");
 			$group->setParentId($studentsParentGroup->getId());
 			$gid = Group::addGroup($group);
 			$group->setId($gid);
@@ -133,7 +133,7 @@ class importclasses
 		if(!isset($groupStructureResults->derdegraad ))
 		{
 			$group = new Group();
-			$group->setName("graad 3");
+			$group->setName("leerlingen graad 3");
 			$group->setParentId($studentsParentGroup->getId());
 			$gid = Group::addGroup($group);
 			$group->setId($gid);
