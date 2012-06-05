@@ -2004,19 +2004,11 @@ class InitialGappImport
 				}
 			}
 
-
-
-
-				
-				
 			$cfg = new PlatformGA();
 			$cfg->setPersonId($myperson->getId());
 			$cfg->setEnabled(true);
 			$cfg->setAliasmail($alias);
 			PlatformGA::addToPlatform($cfg);
-
-				
-				
 
 		}
 
