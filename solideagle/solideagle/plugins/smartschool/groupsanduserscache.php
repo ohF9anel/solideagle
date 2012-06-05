@@ -26,6 +26,7 @@ class GroupsAndUsersCache
 			Logger::log("Building groups and users cache for smartschool",PEAR_LOG_INFO);
 			self::buildCache();
 			Logger::log("Cache for smartschool built",PEAR_LOG_INFO);
+			self::$isInitialized = true;
 		}
 		
 		if(isset(self::$userCache[$username]))
