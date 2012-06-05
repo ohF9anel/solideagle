@@ -67,7 +67,7 @@ class InitialGappImport
 		info user delportek@dbz.be
 		info user delvauxn@dbz.be
 		info user denblauwens@dbz.be
-		info user johan.decock@dbz.be
+		info user galleg@dbz.be
 		info user langendriesd@dbz.be
 		info user lotermanj@dbz.be
 		info user maesb@dbz.be
