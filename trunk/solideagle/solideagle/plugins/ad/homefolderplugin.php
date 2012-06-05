@@ -39,6 +39,10 @@ class homefolderPlugin
 			
 		$homedirwwwpath = $this->homedirpath . "\\" . Config::singleton()->dir_name_www;
 		$homedirscanpath = $this->homedirpath .  "\\" . Config::singleton()->dir_name_scans;
+		
+		//$documentpath = $this->homedirpath .  "\\" . Config::singleton()->dir_name_documents;
+		
+		
 			
 		$this->conn->write("mkdir " . $homedirwwwpath); //create www path
 		$this->conn->write("mkdir " . $homedirscanpath); //create scan path
