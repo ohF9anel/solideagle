@@ -76,7 +76,7 @@ class DatabasetasksController extends Zend_Controller_Action
 		}
 		//*/
 
-		InitialGappImport::doTheDataImport();
+		//InitialGappImport::doTheDataImport();
 		
 
 
