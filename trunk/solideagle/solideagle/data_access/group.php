@@ -4,6 +4,8 @@
 
 namespace solideagle\data_access;
 
+use solideagle\data_access\helpers\UnicodeHelper;
+
 use solideagle\data_access\database\DatabaseCommand;
 use solideagle\data_access\validation\Validator;
 use solideagle\data_access\validation\ValidationError;
@@ -60,9 +62,14 @@ class Group
 		return $this->name;
 	}
 
-	public function setName($name)
+	//ugly hacks!
+	public function setName($name,$external=true)
 	{
 		$this->name = $name;
+		if($external)
+		{
+			$this->uniquename = UnicodeHelper::cleanEmailString($name);
+		}
 	}
 
 	public function setDescription($desc)
@@ -352,7 +359,7 @@ class Group
 
 			$tempGroup = new Group();
 			$tempGroup->setId($row->id);
-			$tempGroup->setName($row->name);
+			$tempGroup->setName($row->name,false);
 			$tempGroup->setUniquename($row->uniquename);
 			$tempGroup->setDescription($row->description);
 
@@ -388,7 +395,7 @@ class Group
 			$tempGroup = new Group();
 			$tempGroup->setParentId($group->getParentId());
 			$tempGroup->setId($row->id);
-			$tempGroup->setName($row->name);
+			$tempGroup->setName($row->name,false);
 			$tempGroup->setUniquename($row->uniquename);
 			$tempGroup->setDescription($row->description);
 
@@ -424,7 +431,7 @@ class Group
 			$tempGroup = new Group();
 			$tempGroup->setParentId($group->getParentId());
 			$tempGroup->setId($row->id);
-			$tempGroup->setName($row->name);
+			$tempGroup->setName($row->name,false);
 			$tempGroup->setUniquename($row->uniquename);
 			$tempGroup->setDescription($row->description);
 	
@@ -455,7 +462,7 @@ class Group
 
 			$childGroup = new Group();
 			$childGroup->setId($row->id);
-			$childGroup->setName($row->name);
+			$childGroup->setName($row->name,false);
 			$childGroup->setUniquename($row->uniquename);
 			$childGroup->setDescription($row->description);
 			$childGroup->setParentId($row->parent);
@@ -517,7 +524,7 @@ class Group
 				
 			$childGroup = new Group();
 			$childGroup->setId($row->id);
-			$childGroup->setName($row->name);
+			$childGroup->setName($row->name,false);
 			$childGroup->setUniquename($row->uniquename);
 			$childGroup->setDescription($row->description);
 			$childGroup->setParentId($row->parent);
@@ -642,7 +649,7 @@ class Group
 
 			$tmpgroup = new Group();
 			$tmpgroup->setId($row->id);
-			$tmpgroup->setName($row->name);
+			$tmpgroup->setName($row->name,false);
 			$tmpgroup->setUniquename($row->uniquename);
 			$tmpgroup->setDescription($row->description);
 
@@ -717,7 +724,7 @@ class Group
 		{
 			$tmpgroup = new Group();
 			$tmpgroup->setId($row->id);
-			$tmpgroup->setName($row->name);
+			$tmpgroup->setName($row->name,false);
 			$tmpgroup->setUniquename($row->uniquename);
 			$tmpgroup->setDescription($row->description);
 			$tmpgroup->setAdministrativeNumber($row->administrativeNumber);
