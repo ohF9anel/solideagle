@@ -98,12 +98,14 @@ info user verschraegenk@dbz.be";
 				
 			if($myperson === NULL)
 			{
+				echo $username . "not found\n";
 				continue;
 
 			}else{
 				$cfg = PlatformGA::getPlatformConfigByPersonId($myperson->getId());
 				if($cfg !== NULL)
 				{
+					echo $username . "already has GA\n";
 					continue;
 				}
 			}
