@@ -63,19 +63,27 @@ class InitialGappImport
 
 	public static function doTheDataImport()
 	{
-		$commands ="info user collen@dbz.be
-		info user delportek@dbz.be
-		info user delvauxn@dbz.be
-		info user denblauwens@dbz.be
-		info user galleg@dbz.be
-		info user langendriesd@dbz.be
-		info user lotermanj@dbz.be
-		info user maesb@dbz.be
-		info user morell@dbz.be
-		info user rosseelf@dbz.be
-		info user vanaelstg@dbz.be
-		info user vanhuffels@dbz.be
-		info user vermeirene@dbz.be";
+		$commands ="info user blanchaerti@dbz.be
+info user colmann@dbz.be
+info user coomanm@dbz.be
+info user debeuler@dbz.be
+info user deboeverc@dbz.be
+info user declercqt@dbz.be
+info user decockl@dbz.be
+info user deschryvere@dbz.be
+info user dewaeled@dbz.be
+info user everaertc@dbz.be
+info user gallea@dbz.be
+info user gallee@dbz.be
+info user galleg@dbz.be
+info user hertegonneg@dbz.be
+info user lippensd@dbz.be
+info user pietersg@dbz.be
+info user provosth@dbz.be
+info user reunesv@dbz.be
+info user vandekerckhovem@dbz.be
+info user vanpouckea@dbz.be
+info user verschraegenk@dbz.be";
 
 		$arrcmds = explode("\n", $commands);
 
