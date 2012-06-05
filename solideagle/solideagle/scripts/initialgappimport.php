@@ -1993,23 +1993,23 @@ class InitialGappImport
 
 
 			$myperson = Person::getPersonByUsername($username);
-			$cfg = PlatformGA::getPlatformConfigByPersonId($myperson->getId());
 			
-			if($cfg === NULL)
+			if($myperson !== NULL)
 			{
-				$cfg = new PlatformGA();
-				$cfg->setPersonId($myperson->getId());
-				$cfg->setEnabled(true);
-				$cfg->setAliasmail($alias);
-				PlatformGA::addToPlatform($cfg);
-			}else{
-				$cfg->setAliasmail($alias);
-				PlatformGA::updatePlatform($cfg);
+				$cfg = PlatformGA::getPlatformConfigByPersonId($myperson->getId());
+				if($cfg === NULL)
+				{
+					$cfg = new PlatformGA();
+					$cfg->setPersonId($myperson->getId());
+					$cfg->setEnabled(true);
+					$cfg->setAliasmail($alias);
+					PlatformGA::addToPlatform($cfg);
+				}else{
+					$cfg->setAliasmail($alias);
+					PlatformGA::updatePlatform($cfg);
+				}
 			}
 			
-			
-
-
 
 		}
 
