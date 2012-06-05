@@ -92,6 +92,7 @@ class GroupsController extends Zend_Controller_Action
 		$newGroup = new Group();
 		$newGroup->setId($oldgroup->getId());
 		$newGroup->setName($this->getRequest()->getParam("groupName"));
+		$newGroup->setUniquename(UnicodeHelper::cleanEmailString($newGroup->getName()));
 		$newGroup->setDescription($this->getRequest()->getParam("groupDescription"));
 			
 		foreach($this->getRequest()->getPost('ptype', array()) as $id)
@@ -221,6 +222,7 @@ class GroupsController extends Zend_Controller_Action
 		$newSubGroup = new Group();
 		$newSubGroup->setParentId($parentgroupid);
 		$newSubGroup->setName($this->getRequest()->getParam("groupName"));
+		$newSubGroup->setUniquename(UnicodeHelper::cleanEmailString($newSubGroup->getName()));
 		$newSubGroup->setDescription($this->getRequest()->getParam("groupDescription"));
 		
 		//this group is an official class (smartschool uses this)
