@@ -23,7 +23,7 @@ class UpdateConfig
 
 		$solideagleAdmin = "sys_solideagle";
 		$solideagleAdminPass = "";
-		$domainController = "atlas4";
+		$domainController = "atlas5";
 		$domain = "dbz";
 		$suffix = "lok";
 		$securityGroupsGroup = "groepen"; //waar security groepen komen
@@ -60,6 +60,12 @@ class UpdateConfig
 		$arr["dir_name_uploads"] = '_uploadmap_voor_leerlingen';
 		$arr["dir_name_scans"] = '_scans';
 		$arr["dir_name_www"] = '_www';
+		
+		$arr["dir_name_documents"] = 'Documents';
+		$arr["dir_name_desktop"] = 'Desktop';
+		$arr["dir_name_pictures"] = 'Pictures';
+		$arr["dir_name_movies"] = 'Movies';
+		
 		
 		$arr["path_share_downloads"] = 'E:\downloads';
 		$arr["path_share_uploads"] = 'E:\uploads';
@@ -114,7 +120,7 @@ class UpdateConfig
 		*/
 
 		$solideagleAdmin = "SYS_Solideagle";
-		$solideagleAdminPass = "ChaCha69";
+		$solideagleAdminPass = "";
 		$domainController = "S1";
 		$domain = "solideagle";
 		$suffix = "lok";
@@ -170,7 +176,7 @@ class UpdateConfig
 		*/
 
 		$arr["ss_ws_url"] = 'http://dbz-tmp.smartschool.be/Webservices/V3?wsdl';
-		$arr["ss_ws_psw"] = '2CyeBGuSyc38R561';
+		$arr["ss_ws_psw"] = '';
 
 		/*
 		 * Google CONFIG
