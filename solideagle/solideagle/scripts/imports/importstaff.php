@@ -14,8 +14,8 @@ class importstaff
 {
 	private $fileptr;
 	
-	const staffGroup = "staffINF"; //TODO demo only
-	const teacherGroup = "leerkrachtenINF"; //TODO demo only
+	const staffGroup = "staff"; 
+	const teacherGroup = "leerkrachten"; 
 	
 	/**
 	 * When going out of scope we will automatically close the file, see the destructor

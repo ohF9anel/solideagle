@@ -49,7 +49,7 @@ class importclasses
 	
 	public static function createClasses($arr)
 	{
-		$studentsParentGroup = Group::getGroupByName("leerlingenINFF"); //TODO demo only
+		$studentsParentGroup = Group::getGroupByName("leerlingen"); 
 	
 		if($studentsParentGroup === NULL)
 		{
