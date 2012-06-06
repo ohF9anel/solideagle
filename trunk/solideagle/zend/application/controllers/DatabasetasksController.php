@@ -1,5 +1,7 @@
 <?php
 
+use solideagle\scripts\daemonrunner;
+
 use solideagle\scripts\InitialGappImport;
 
 use solideagle\scripts\ga;
@@ -110,8 +112,16 @@ class DatabasetasksController extends Zend_Controller_Action
 
 	public function rundaemonAction()
 	{
-
-	 $blah = solideagle\scripts\daemon::doNothing();
+		daemonrunner::startDaemon();
+	}
+	
+	public function getdaemonstatusAction()
+	{
+		//$this->_helper->layout()->disableLayout();
+		
+		$this->_helper->viewRenderer->setNoRender(true);
+		
+		echo "<pre>" . daemonrunner::getDaemonStatus() . "</pre>";
 	}
 
 
