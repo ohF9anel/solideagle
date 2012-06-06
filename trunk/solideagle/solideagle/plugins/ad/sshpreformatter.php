@@ -25,7 +25,7 @@ class sshpreformatter
 			
 			Logger::log("Cleaning batch script directory",PEAR_LOG_INFO);
 			//clean batch dir
-			@exec("rm " . Config::singleton()->batchscriptsdir . "*.batch"); 
+			exec("rm " . Config::singleton()->batchscriptsdir . "*.batch"); 
 			//create plink yes script
 			exec('echo "y\n" > ' . Config::singleton()->batchscriptsdir . "plink.yes.batch");
 			exec('echo "cmd /C C:/solideagle.cmd\nexit\nexit\n" > ' . Config::singleton()->batchscriptsdir . "plink.execute.batch");
@@ -124,7 +124,7 @@ class batchfile
 	{
 		$this->path = Config::singleton()->batchscriptsdir . $servername . ".batch";
 
-		@mkdir(Config::singleton()->batchscriptsdir);
+		mkdir(Config::singleton()->batchscriptsdir);
 
 		$this->batchfile = fopen($this->path,"a");
 
