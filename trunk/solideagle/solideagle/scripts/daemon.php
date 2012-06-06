@@ -19,6 +19,8 @@ class daemon
 	{
 		if($this->isCli())
 		{
+			date_default_timezone_set("Europe/Brussels");
+			
 			
 			echo "CLI MODE\nDaemon started at " . date("H:i:s") . "\n";
 			flush();
@@ -28,7 +30,7 @@ class daemon
 			spl_autoload_extensions(".php"); // comma-separated list
 			spl_autoload_register();
 			
-			date_default_timezone_set("Europe/Brussels");
+		
 			
 			$this->startDaemon();
 			
