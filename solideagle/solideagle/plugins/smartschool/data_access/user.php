@@ -162,15 +162,15 @@ class User
 		foreach($usergroupcodes as $usergroupcode)
 		{
 			
-			var_dump("cmp: " .  $usergroupcode . " " . $oldgroupcode);
+			//var_dump("cmp: " .  $usergroupcode . " " . $oldgroupcode);
 			
 			if( strcasecmp($usergroupcode, $oldgroupcode) ===0)
 			{
-				var_dump("ignore: " .  $usergroupcode);
+				//var_dump("ignore: " .  $usergroupcode);
 				continue;
 			}
 			
-			var_dump("add: " .  $usergroupcode);
+			//var_dump("add: " .  $usergroupcode);
 			
 			$user->addClass($usergroupcode);
 		
