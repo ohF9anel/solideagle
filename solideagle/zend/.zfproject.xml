@@ -74,6 +74,7 @@
           <actionMethod actionName="deleteoldgroups"/>
           <actionMethod actionName="deleteoldusers"/>
           <actionMethod actionName="rundaemon"/>
+          <actionMethod actionName="getdaemonstatus"/> 
         </controllerFile>
       </controllersDirectory>
       <formsDirectory enabled="false"/>

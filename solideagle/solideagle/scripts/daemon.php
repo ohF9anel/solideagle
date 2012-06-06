@@ -11,12 +11,18 @@ use solideagle\logging\Logger;
 
 use solideagle\data_access\TaskQueue;
 
+new daemon();
+
 class daemon
 {
 	public function __construct()
 	{
 		if($this->isCli())
 		{
+			
+			echo "CLI MODE\nDaemon started at " . date("H:i:s") . "\n";
+			flush();
+			
 			set_include_path(get_include_path().PATH_SEPARATOR."../../");
 			
 			spl_autoload_extensions(".php"); // comma-separated list
@@ -25,10 +31,15 @@ class daemon
 			date_default_timezone_set("Europe/Brussels");
 			
 			$this->startDaemon();
+			
+			echo "Daemon finished\n";
+			flush();
 		}else{
 			
-			echo "Daemon output:<br />\n";
-			exec("php " . __FILE__ . " 2>&1");
+			//echo "Daemon output:<br />\n";
+			//exec("php " . __FILE__ . " 2>&1");
+			
+			
 
 			/*set_time_limit(60);
 			echo "Running from command line! Output will stop after 60 seconds or when all tasks have been run";
@@ -87,10 +98,7 @@ class daemon
 		}
 	}
 
-	public static function doNothing()
-	{
 
-	}
 
 	private function startDaemon()
 	{
@@ -140,6 +148,9 @@ class daemon
 
 	private function runTasks()
 	{
+		echo "Daemon running tasks\n";
+		flush();
+		
 		Logger::log("Daemon running tasks now.... please wait",PEAR_LOG_INFO,true);
 		
 		//credits to this ascii art go to Row
@@ -188,7 +199,7 @@ class daemon
                  ~-<_(_.^-~"
 
 EOT;
-		//echo $eagle;
+		echo $eagle;
 		
 		foreach(TaskQueue::getAllPlatforms() as $platform)
 		//$platform = platforms::PLATFORM_GAPP;
@@ -250,14 +261,6 @@ EOT;
 	}
 }
 
-/*if(isset($_GET["kill"]))
-{
-	echo("<pre>");
-	echo shell_exec("killall php 2>&1") . "\n";
-	echo shell_exec("rm daemon.lock 2>&1"). "\n";
-	exit("daemon killed</pre>");
-}*/
 
-new daemon();
 
 ?>
