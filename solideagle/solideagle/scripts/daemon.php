@@ -20,6 +20,7 @@ class daemon
 		if($this->isCli())
 		{
 			date_default_timezone_set("Europe/Brussels");
+			umask(0000); //quick fix, create all dirs and files with 777
 			
 			
 			echo "CLI MODE\nDaemon started at " . date("H:i:s") . "\n";
