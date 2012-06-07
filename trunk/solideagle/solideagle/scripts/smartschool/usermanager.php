@@ -2,6 +2,8 @@
 namespace solideagle\scripts\smartschool;
 
 
+use solideagle\Config;
+
 use solideagle\logging\Logger;
 
 use solideagle\scripts\GlobalUserManager;
