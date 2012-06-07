@@ -45,7 +45,10 @@ class importstaff
 		$personparser->getFromField("mobile","Domicilie-gsm");
 		$personparser->getFromField("email","E-mail adres (privé)");
 		$personparser->getFromField("type","Hoofdambt");
-			
+
+		//picture
+		$personparser->getFromField("photourl","fotourl");
+		
 		if(count(($notfoundfields = $personparser->canParse())) > 0)
 		{
 			//some fields were not found in csv, abort
@@ -135,6 +138,7 @@ class importstaff
 		$person->setPhone($personattr->phone);
 		$person->setMobile($personattr->mobile);
 		$person->setEmail($personattr->email);
+		$person->setPictureUrl($personattr->photourl);
 		
 		if( strpos(strtolower($personattr->type), "leraar") === false)
 		{

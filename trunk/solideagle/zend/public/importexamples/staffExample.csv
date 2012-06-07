@@ -1,8 +1,8 @@
-Nr. Personeelslid;Naam;Voornaam;Geslacht;Domicilie-adres;Deelpostnr (domicilie);Land (domicilie);Deelgemeente (domicilie);Domicilie-telefoon;Domicilie-gsm;E-mail adres (privé);Hoofdambt
-staff1;Adams;Louise;v;straat 1;1234;Belgie;Gent;1241315125;6136136;stu@dent.be;staff
-staff2;Adams;Michiel;m;straat 2;1234;Belgie;Gent;1241315125;6136136;stu@dent.be;staff
-staff3;Adams;Stephanie;v;straat 3;1234;Belgie;Gent;1241315125;6136136;stu@dent.be;staff
-staff4;Adhikari;Sambid;m;straat 4;1234;Belgie;Gent;1241315125;6136136;stu@dent.be;staff
-staff5;Adhikari;Shivani;v;straat 5;1234;Belgie;Gent;1241315125;6136136;stu@dent.be;staff
-staff6;Albrecht;Indra;v;straat 6;1234;Belgie;Gent;1241315125;6136136;stu@dent.be;staff
-staff7;Alenus;Jason;m;straat 7;1234;Belgie;Gent;1241315125;6136136;stu@dent.be;staff
+Nr. Personeelslid;Naam;Voornaam;Geslacht;Domicilie-adres;Deelpostnr (domicilie);Land (domicilie);Deelgemeente (domicilie);Domicilie-telefoon;Domicilie-gsm;E-mail adres (privé);Hoofdambt;fotourl
+staff1;Adams;Louise;v;straat 1;1234;Belgie;Gent;1241315125;6136136;stu@dent.be;staff;http://solideagle.dbz.lok/importexamples/default.png
+staff2;Adams;Michiel;m;straat 2;1234;Belgie;Gent;1241315125;6136136;stu@dent.be;staff;http://solideagle.dbz.lok/importexamples/default.png
+staff3;Adams;Stephanie;v;straat 3;1234;Belgie;Gent;1241315125;6136136;stu@dent.be;staff;http://solideagle.dbz.lok/importexamples/default.png
+staff4;Adhikari;Sambid;m;straat 4;1234;Belgie;Gent;1241315125;6136136;stu@dent.be;staff;http://solideagle.dbz.lok/importexamples/default.png
+staff5;Adhikari;Shivani;v;straat 5;1234;Belgie;Gent;1241315125;6136136;stu@dent.be;staff;http://solideagle.dbz.lok/importexamples/default.png
+staff6;Albrecht;Indra;v;straat 6;1234;Belgie;Gent;1241315125;6136136;stu@dent.be;staff;http://solideagle.dbz.lok/importexamples/default.png
+staff7;Alenus;Jason;m;straat 7;1234;Belgie;Gent;1241315125;6136136;stu@dent.be;staff;http://solideagle.dbz.lok/importexamples/default.png

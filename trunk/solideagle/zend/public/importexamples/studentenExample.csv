@@ -1,9 +1,8 @@
-Nr. Leerling;Naam;Voornaam;Klascode;Geslacht;Domicilie-adres;Deelpostnr (domicilie);Land (domicilie);Deelgemeente (domicilie);Domicilie-telefoon;Domicilie-gsm;E-mail adres (privé)
-test1;Adams;Louise;3 WEWI cc;v;straat 1;1234;Belgie;Gent;1241315125;6136136;stu@dent.be
-test2;Adams;Michiel;3 WEWI cc;m;straat 2;1234;Belgie;Gent;1241315125;6136136;stu@dent.be
-test3;Adams;Stephanie;3 WEWI cc;v;straat 3;1234;Belgie;Gent;1241315125;6136136;stu@dent.be
-test4;Adhikari;Sambid;3 WEWI cc;m;straat 4;1234;Belgie;Gent;1241315125;6136136;stu@dent.be
-test5;Adhikari;Shivani;3 WEWI cc;v;straat 5;1234;Belgie;Gent;1241315125;6136136;stu@dent.be
-test6;Albrecht;Indra;3 WEWI cc;v;straat 6;1234;Belgie;Gent;1241315125;6136136;stu@dent.be
-test7;Alenus;Jason;3 WEWI cc;m;straat 7;1234;Belgie;Gent;1241315125;6136136;stu@dent.be
-
+Nr. Leerling;Naam;Voornaam;Klascode;Geslacht;Domicilie-adres;Deelpostnr (domicilie);Land (domicilie);Deelgemeente (domicilie);Domicilie-telefoon;Domicilie-gsm;E-mail adres (privé);fotourl
+test1;Adams;Louise;3 WEWI cc;v;straat 1;1234;Belgie;Gent;1241315125;6136136;stu@dent.be;http://solideagle.dbz.lok/importexamples/default.png
+test2;Adams;Michiel;3 WEWI cc;m;straat 2;1234;Belgie;Gent;1241315125;6136136;stu@dent.be;http://solideagle.dbz.lok/importexamples/default.png
+test3;Adams;Stephanie;3 WEWI cc;v;straat 3;1234;Belgie;Gent;1241315125;6136136;stu@dent.be;http://solideagle.dbz.lok/importexamples/default.png
+test4;Adhikari;Sambid;3 WEWI cc;m;straat 4;1234;Belgie;Gent;1241315125;6136136;stu@dent.be;http://solideagle.dbz.lok/importexamples/default.png
+test5;Adhikari;Shivani;3 WEWI cc;v;straat 5;1234;Belgie;Gent;1241315125;6136136;stu@dent.be;http://solideagle.dbz.lok/importexamples/default.png
+test6;Albrecht;Indra;3 WEWI cc;v;straat 6;1234;Belgie;Gent;1241315125;6136136;stu@dent.be;http://solideagle.dbz.lok/importexamples/default.png
+test7;Alenus;Jason;3 WEWI cc;m;straat 7;1234;Belgie;Gent;1241315125;6136136;stu@dent.be;http://solideagle.dbz.lok/importexamples/default.png

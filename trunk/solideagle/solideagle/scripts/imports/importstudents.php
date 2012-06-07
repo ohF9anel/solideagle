@@ -43,6 +43,10 @@ class importstudents
 		$personparser->getFromField("phone","Domicilie-telefoon");
 		$personparser->getFromField("mobile","Domicilie-gsm");
 		$personparser->getFromField("email","E-mail adres (privé)");
+		
+		//picture
+		$personparser->getFromField("photourl","fotourl");
+		
 
 		if(count(($notfoundfields = $personparser->canParse())) > 0)
 		{
@@ -161,8 +165,8 @@ class importstudents
 		$person->setPhone($personattr->phone);
 		$person->setMobile($personattr->mobile);
 		$person->setEmail($personattr->email);
-		
-		//$person->setGender($personattr->gender);
+		$person->setPictureUrl($personattr->photourl);
+
 
 		$person->addType(new Type(Type::TYPE_LEERLING));
 
