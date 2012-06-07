@@ -909,15 +909,29 @@ class Person
 		{
 			switch($valError) {
 				case ValidationError::STRING_TOO_LONG:
-					$validationErrors[] = "Wachtwoord: mag niet langer zijn dan 45 karakters.";
-					break;
-				case ValidationError::STRING_TOO_SHORT:
-					$validationErrors[] = "Wachtwoord: moet langer zijn dan 4 karakters.";
+					$validationErrors[] = "Wachtwoord: mag niet langer zijn dan 64 karakters.";
 					break;
 				default:
 					//$validationErrors[] = "Wachtwoord: fout."; break;
 			}
 		}
+		if(strlen($person->getAccountPassword()) > 0)
+		{
+			if(strlen($person->getAccountPassword()) < 8)
+			{
+				$validationErrors[] = "Wachtwoord moet minstens 8 karakters bevatten";
+			}
+				
+			if(!(preg_match('`[A-Z]`',$person->getAccountPassword()) // at least one upper case
+					&& preg_match('`[a-z]`',$person->getAccountPassword()) // at least one lower case
+					&& preg_match('`[0-9]`',$person->getAccountPassword()))) // at least one number
+			{
+				$validationErrors[] = "Wachtwoord moet tenminste 1 hoofdletter, 1 kleine letter en 1 cijfer bevatten";
+			
+			}
+		}
+		
+		
 		if(!IsNullOrEmptyString($person->getAccountActiveUntill()))
 		{
 			// account active untill
