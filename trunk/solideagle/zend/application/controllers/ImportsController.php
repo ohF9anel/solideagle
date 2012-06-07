@@ -1,5 +1,7 @@
 <?php
 
+use solideagle\scripts\exports\exportall;
+
 use solideagle\scripts\exports\exportstudents;
 
 use solideagle\scripts\imports\importclasses;
@@ -265,8 +267,33 @@ class ImportsController extends Zend_Controller_Action
         // action body
     }
 
+    public function exportallAction()
+    {
+       set_time_limit(3000); //long timeout
+    	
+    	$this->_helper->layout()->disableLayout();
+    	$this->_helper->viewRenderer->setNoRender(true);
+    	
+    	$file = exportall::getCSV();
+    	
+    	 header('Content-Type: text/plain');
+		 header('Content-Disposition: attachment; filename=studenten.csv');
+		 header("Content-Transfer-Encoding: binary");
+		 header('Accept-Ranges: none');
+		 
+		 header("Cache-control: private");
+		 header('Pragma: private');
+		 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+		 
+		 header("Content-Length: ".strlen($file));
+    	
+        echo $file;
+    }
+
 
 }
+
+
 
 
 

@@ -60,6 +60,7 @@
           <actionMethod actionName="showstaff"/>
           <actionMethod actionName="createstaff"/>
           <actionMethod actionName="exportstudents"/>
+          <actionMethod actionName="exportall"/>
         </controllerFile>
         <controllerFile controllerName="Tasktemplate">
           <actionMethod actionName="index"/>
@@ -74,7 +75,7 @@
           <actionMethod actionName="deleteoldgroups"/>
           <actionMethod actionName="deleteoldusers"/>
           <actionMethod actionName="rundaemon"/>
-          <actionMethod actionName="getdaemonstatus"/> 
+          <actionMethod actionName="getdaemonstatus"/>
         </controllerFile>
       </controllersDirectory>
       <formsDirectory enabled="false"/>
@@ -209,6 +210,9 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Users">
             <viewScriptFile forActionName="showplatformdetails"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Imports">
+            <viewScriptFile forActionName="exportall"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>
