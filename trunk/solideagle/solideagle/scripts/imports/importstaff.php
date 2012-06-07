@@ -32,10 +32,10 @@ class importstaff
 		
 
 		$personparser = new csvparser($this->fileptr,";");
-			
+
+		$personparser->getFromField("firstname", "Voornaam");
 		$personparser->getFromField("name", "Naam");
 		$personparser->getFromField("informatid", "Nr. Personeelslid");
-		$personparser->getFromField("firstname", "Voornaam");
 		$personparser->getFromField("gender", "Geslacht");
 		$personparser->getFromField("street", "Domicilie-adres");
 		$personparser->getFromField("postcode","Deelpostnr (domicilie)");
@@ -83,6 +83,7 @@ class importstaff
 	private function hasChanged($personattr)
 	{
 		//TODO
+		//implement code here to check for changes
 		return false;
 	}
 	
@@ -97,6 +98,7 @@ class importstaff
 	private function updateUser($personattr)
 	{
 		//TODO
+		//implement code here to update the user
 	}
 	
 	public static function addUsers($arr)
