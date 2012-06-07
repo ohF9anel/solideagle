@@ -31,9 +31,9 @@ class daemon
 			spl_autoload_extensions(".php"); // comma-separated list
 			spl_autoload_register();
 			
-		
-			
 			$this->startDaemon();
+			
+			
 			
 			echo "Daemon finished\n";
 			flush();
@@ -110,6 +110,9 @@ class daemon
 			exec("mkdir " . Config::singleton()->tempstorage);
 		}
 		
+		echo "Lock file: " . Config::singleton()->tempstorage ."daemon.lock\n";
+		
+		echo "Checking for duplicate daemon\n";
 		
 		Logger::log("Checking for duplicate daemon",PEAR_LOG_INFO,true);
 		
@@ -117,18 +120,17 @@ class daemon
 		{
 			Logger::log("Cannot start, daemon already running!",PEAR_LOG_WARNING);
 			echo "Cannot start, daemon already running!\n";
+			echo "If there was a crash, please remove the lock file\n";
 			return;
 		}
 		
 		Logger::log("No lock file, deamon can start\nCreating lock file",PEAR_LOG_INFO,true);
 		
-		
-		echo "Lock file: " . Config::singleton()->tempstorage ."daemon.lock\n";
-
-
 		echo shell_exec("touch ". Config::singleton()->tempstorage ."daemon.lock 2>&1");
 			
 		$this->runTasks();
+		
+	
 		
 		Logger::log("Daemon finished, removing lock file ",PEAR_LOG_INFO,true);
 
