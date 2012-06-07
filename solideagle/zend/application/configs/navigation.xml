@@ -56,6 +56,12 @@
 							<action>exportstudents</action>
 						</studentExport>
 						
+						<allExport>
+							<label>Export alles</label>
+							<controller>imports</controller>
+							<action>exportall</action>
+						</allExport>
+						
 						
 					</pages>
 				
