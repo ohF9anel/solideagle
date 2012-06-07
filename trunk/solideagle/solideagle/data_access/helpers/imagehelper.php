@@ -9,9 +9,8 @@ class imagehelper
 
     public static function downloadTempFile($url, $filepath)
     {
-        $output = array();
-        $ret;
-        exec('wget ' . $url . ' -q -O ' . $filepath . " 2>&1", $output, $ret);
+        
+        exec("wget '" . $url . "' -q -O '" . $filepath . "' 2>&1");
         
         if ($ret != 0)
             return new StatusReport(false, "Temp file cannot be downloaded");

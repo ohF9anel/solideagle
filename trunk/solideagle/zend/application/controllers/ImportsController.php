@@ -277,7 +277,7 @@ class ImportsController extends Zend_Controller_Action
     	$file = exportall::getCSV();
     	
     	 header('Content-Type: text/plain');
-		 header('Content-Disposition: attachment; filename=studenten.csv');
+		 header('Content-Disposition: attachment; filename=allegebruikers.csv');
 		 header("Content-Transfer-Encoding: binary");
 		 header('Accept-Ranges: none');
 		 
