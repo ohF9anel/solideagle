@@ -87,12 +87,14 @@ class DatabasetasksController extends Zend_Controller_Action
 
 	public function startcleanAction()
 	{
-		initdb::startclean();
+		//don't do this!
+		//initdb::startclean();
 	}
 
 	public function initialAdImportAction()
 	{
-		InitialAdImport::doImport();
+		
+		//InitialAdImport::doImport();
 	}
 
 	public function updateconfigAction()
