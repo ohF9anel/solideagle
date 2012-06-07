@@ -42,7 +42,7 @@ class groupmanager implements TaskInterface
 		else if($config["action"] == self::ActionRemoveGroup)
 		{
 			Logger::log("Trying to remove group \"" . $config["groupmail"] . "\" in Google Apps.",PEAR_LOG_INFO);
-			$ret = managegroup::removeGroup($config["group"]);
+			$ret = managegroup::removeGroup($config["groupmail"]);
 
 			if($ret->isSucces())
 			{
