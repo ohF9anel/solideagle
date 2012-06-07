@@ -130,7 +130,8 @@ class daemon
 			
 		$this->runTasks();
 		
-	
+		
+		//$blah = new DDD();
 		
 		Logger::log("Daemon finished, removing lock file ",PEAR_LOG_INFO,true);
 
