@@ -102,7 +102,60 @@ class TaskQueue
 	}
 	
 	
-	public static function getTasksToRunForPlatform($platform,$minerrorcount = 0)
+	public static function getAmountOfTasksToRunForPlatform($platform)
+	{
+		$sql = "SELECT
+		count(*) as amount
+		FROM  `task_queue`
+		WHERE `task_queue`.`platform` = :platform";
+		
+		$cmd = new DatabaseCommand($sql);
+		$cmd->addParam(":platform", $platform);
+		
+		return $cmd->executeScalar();
+	}
+	
+	public static function getTasksToRunForPlatformDisplayLimit($platform)
+	{
+		$sql = "SELECT
+		`task_queue`.`id`,
+		`task_queue`.`person_id`,
+		`task_queue`.`group_id`,
+		`task_queue`.`task_class`,
+		`task_queue`.`configuration`,
+		`task_queue`.`errorcount`,
+		`task_queue`.`errormessages`,
+		`task_queue`.`platform`
+		FROM  `task_queue`
+		WHERE `task_queue`.`platform` = :platform LIMIT 0,25"; //limit amount of tasks displayed
+	
+		$cmd = new DatabaseCommand($sql);
+		$cmd->addParam(":platform", $platform);
+	
+		$retarr = array();
+	
+		$cmd->executeReader()->readAll(function($row) use (&$retarr){
+	
+			$tq = new TaskQueue();
+			$tq->setId($row->id);
+			$tq->setPersonid($row->person_id);
+			$tq->setGroupid($row->group_id);
+			$tq->setTask_class($row->task_class);
+			$tq->setConfigurationFromDb($row->configuration);
+			$tq->setErrorcount($row->errorcount);
+			$tq->setErrormessages($row->errormessages);
+			$tq->setPlatform($row->platform);
+	
+			$retarr[] = $tq;
+		});
+		
+		
+	
+		return $retarr;
+	}
+	
+	
+	public static function getTasksToRunForPlatform($platform)
 	{
 		$sql = "SELECT
 		`task_queue`.`id`,
@@ -114,11 +167,11 @@ class TaskQueue
 		`task_queue`.`errormessages`,
 		`task_queue`.`platform`
 		FROM  `task_queue` 
-		WHERE `task_queue`.`platform` = :platform and `task_queue`.`errorcount` >= :errorcount;";
+		WHERE `task_queue`.`platform` = :platform ";
 		
 		$cmd = new DatabaseCommand($sql);
 		$cmd->addParam(":platform", $platform);
-		$cmd->addParam(":errorcount", $minerrorcount);
+	
 		
 		$retarr = array();
 		
