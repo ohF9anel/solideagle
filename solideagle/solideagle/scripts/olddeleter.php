@@ -11,8 +11,8 @@ class oldDeleter
 	{
 		$cmd = new DatabaseCommand();
 
-		$sql = "DELETE FROM  `group`
-		WHERE deleted = 1;";
+		$sql = "DELETE FROM `group` 
+		WHERE deleted = 1";
 
 		$cmd->newQuery($sql);
 
