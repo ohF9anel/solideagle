@@ -356,6 +356,23 @@ class UsersController extends Zend_Controller_Action
 						echo "Wachtwoorden niet gelijk!";
 						return;
 					}
+					
+					if(strlen($pass) < 8)
+					{
+						echo "Wachtwoord moet minstens 8 karakters bevatten";
+						return;
+					}
+					
+					if(!(preg_match('`[A-Z]`',$pass) // at least one upper case
+					&& preg_match('`[a-z]`',$pass) // at least one lower case
+					&& preg_match('`[0-9]`',$pass))) // at least one number
+					{
+						echo "Wachtwoord moet tenminste 1 hoofdletter, 1 kleine letter en 1 cijfer bevatten";
+						return;
+					}
+					
+					
+			
 				}
 				GlobalUserManager::resetUserPassword($person);
 			}
