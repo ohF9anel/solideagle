@@ -224,6 +224,8 @@ function updateTree() {
 }
 
 function updateUsers() {
+	setGroupSearchField("");
+	
 	if ($("#userstable").length) {
 		$("#userstable").dataTable().fnReloadAjax(
 				SEpath + '/users/getusers?gid=' + selectedGroupId);
@@ -233,6 +235,9 @@ function updateUsers() {
 }
 
 function showUsers() {
+	
+	
+	
 	dataTable = $("#userstable")
 			.dataTable(
 					{
