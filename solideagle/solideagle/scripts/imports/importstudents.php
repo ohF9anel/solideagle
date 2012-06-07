@@ -30,11 +30,19 @@ class importstudents
 	{
 		$personparser = new csvparser($this->fileptr,";");
 			
-		$personparser->getFromField("name", "Naam");
-		$personparser->getFromField("informatid", "Nr. Leerling");
 		$personparser->getFromField("firstname", "Voornaam");
+		$personparser->getFromField("name", "Naam");
 		$personparser->getFromField("klas", "Klascode");
-		//$personparser->getFromField("gender", "Geslacht");
+		$personparser->getFromField("informatid", "Nr. Leerling");
+		//extra
+		$personparser->getFromField("gender", "Geslacht");
+		$personparser->getFromField("street", "Domicilie-adres");
+		$personparser->getFromField("postcode","Deelpostnr (domicilie)");
+		$personparser->getFromField("country","Land (domicilie)");
+		$personparser->getFromField("city","Deelgemeente (domicilie)");
+		$personparser->getFromField("phone","Domicilie-telefoon");
+		$personparser->getFromField("mobile","Domicilie-gsm");
+		$personparser->getFromField("email","E-mail adres (privé)");
 
 		if(count(($notfoundfields = $personparser->canParse())) > 0)
 		{
@@ -145,6 +153,15 @@ class importstudents
 		$person->setName($personattr->name);
 		$person->setInformatId($personattr->informatid);
 		$person->setFirstName($personattr->firstname);
+		$person->setGender($personattr->gender);
+		$person->setStreet($personattr->street);
+		$person->setPostCode($personattr->postcode);
+		$person->setCountry($personattr->country);
+		$person->setCity($personattr->city);
+		$person->setPhone($personattr->phone);
+		$person->setMobile($personattr->mobile);
+		$person->setEmail($personattr->email);
+		
 		//$person->setGender($personattr->gender);
 
 		$person->addType(new Type(Type::TYPE_LEERLING));
