@@ -181,7 +181,7 @@ class usermanager implements TaskInterface
 	}
 
 	
-	/*public static function prepareUpdateUser($person, $oldPerson, $enabled = true)
+	public static function prepareUpdateUser($person, $oldPerson)
 	{
 		$config["action"] = self::ActionUpdateUser;
 		$config["user"] = $person;
@@ -191,9 +191,9 @@ class usermanager implements TaskInterface
 			self::prepareSetPhoto($person);
 		}
 
-		$platform = PlatformGA::getPlatformConfigByPersonId($person->getId());
-		TaskQueue::insertNewTask($config, $person->getId());
-	}*/
+		//$platform = PlatformGA::getPlatformConfigByPersonId($person->getId());
+		//TaskQueue::insertNewTask($config, $person->getId());
+	}
 
 	public static function prepareEnableDisableAccount($person,$enabled)
 	{

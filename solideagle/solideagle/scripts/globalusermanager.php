@@ -53,8 +53,8 @@ class GlobalUserManager
 
 		if($person->getHasGaAccount())
 		{
-			//temporarily disabled
-			//\solideagle\scripts\ga\usermanager::prepareUpdateUser($person, $oldPerson, $enabled);
+			
+			\solideagle\scripts\ga\usermanager::prepareUpdateUser($person, $oldPerson, $enabled);
 		}
 
 		if($person->getHasSSAccount())
