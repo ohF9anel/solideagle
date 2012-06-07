@@ -122,6 +122,8 @@ class daemon
 		
 		Logger::log("No lock file, deamon can start\nCreating lock file",PEAR_LOG_INFO,true);
 		
+		
+		echo "Lock file: " . Config::singleton()->tempstorage ."daemon.lock\n";
 
 
 		echo shell_exec("touch ". Config::singleton()->tempstorage ."daemon.lock 2>&1");
