@@ -161,7 +161,7 @@ function getSelectedUsers() {
 function loadIntoModalholder(path, extradata) {
 	$("#modalholder").html($("#loadingHolder").html());
 	$("#modalholder").load(path, extradata);
-	isSubmitting = false; // reset double submit var
+	resetDoubleSubmit();// reset double submit var
 }
 
 var isSubmitting = false;
@@ -223,12 +223,23 @@ function updateTree() {
 
 }
 
+
+
 function updateUsers() {
+	
+	
+	
 	setGroupSearchField("");
+	
+
+	
 	
 	if ($("#userstable").length) {
 		$("#userstable").dataTable().fnReloadAjax(
-				SEpath + '/users/getusers?gid=' + selectedGroupId);
+				SEpath + '/users/getusers?gid=' + selectedGroupId,function(){
+					
+				
+				});
 	}
 
 	$("#bofhexcuse").html(NewExcuse());
@@ -254,7 +265,7 @@ function showUsers() {
 						"sDom" : '<"row-fluid"f>r<"usertablewrapper"t>',
 						"bProcessing" : true,
 						"oLanguage" : {
-							"sProcessing" : "Data ophalen...",
+							"sProcessing" : 'Data ophalen... <img style="height: 25px" src="/images/loading.gif" height="25px" />',
 							"sLengthMenu" : "Aantal resultaten per pagina: _MENU_ ",
 							"sZeroRecords" : "Geen resultaten gevonden",
 							"sInfo" : "_START_ tot _END_ van _TOTAL_ resultaten",

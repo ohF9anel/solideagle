@@ -6,7 +6,7 @@
             $('#removeUsers').modal('show');
 
     		$("#formRemoveUsers").ajaxForm({
-    			beforeSubmit:  preventDoubleSubmit,
+    			
     			beforeSubmit:  preventDoubleSubmit,
     			data:  {"users[]":users},
     			success: function(responseText, statusText, xhr, $form) { 
@@ -16,6 +16,7 @@
     				if(responseText.length > 0)
     				{
     						alert(responseText);
+    						
     				}else{
     					$('#removeUsers').modal('hide');
     					 updateTree();
