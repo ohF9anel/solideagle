@@ -5,7 +5,7 @@
  * PearIncludePathTest.php
  * 
  * @author Machiel Sleeuwaert <Machiel.Sleeuwaert@dbz.be>
- * 
+ * $Id$ 
  */
 require_once 'System.php'; //include path is not set or wrong
 
