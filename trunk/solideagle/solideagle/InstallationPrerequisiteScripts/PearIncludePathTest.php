@@ -12,7 +12,7 @@
  * 
  */
 require_once 'System.php'; //include path is not set or wrong
-
+// some comment
 require_once 'Log.php'; //pear Log is not installed
 
 
