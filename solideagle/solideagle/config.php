@@ -14,7 +14,7 @@ class Config
     const mysqluser = "sysSolidEagle";
 //    const mysqlpass = "phizei2Chiem3aeH3xahngair9laesiepiegoleGhoo7heek4rooquai5uha";
 const mysqlpass = "aebu6dahs1ceitul9Uogh8shaisuQuiw3ahnieh1phooBei8gohx4tho8Edohj0ai";
-	
+// **	
 	
 	
 	private $configarr = array();
