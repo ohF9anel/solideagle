@@ -21,7 +21,7 @@ class csvfield
 	public $cleanfieldname;
 	
 
-	public function __construct($funcname,$fieldname)
+	public function __construct($funcname, $fieldname)
 	{
 		$this->fieldname = $fieldname;
 		$fieldname = iconv("UTF-8", "ASCII//TRANSLIT",$fieldname);
