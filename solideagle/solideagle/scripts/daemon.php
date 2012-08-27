@@ -206,6 +206,7 @@ class daemon
                (_/  /   | | j-"          ~^
                  ~-<_(_.^-~"
 
+ (solideagle/solideagle/scripts/daemon.php)
 EOT;
 		echo $eagle;
 		
