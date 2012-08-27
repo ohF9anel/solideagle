@@ -48,7 +48,27 @@ echo $this->headLink();
 <body>
 
 	<div id="userbar">
-		<span>Gebruikersnaam</span>
+		<span>
+		<?php 
+			if (isset($_SERVER['PHP_AUTH_USER'])) { 
+				echo "Je gebruikersnaam: {$_SERVER['PHP_AUTH_USER']}"; 
+			} 
+			else { 
+				echo "Je bent niet ingelogd (!)"; 
+			} 
+			echo " | ";
+                        if (isset($_SERVER['REMOTE_ADDR'])) {
+                                echo "Je ip-adres: {$_SERVER['REMOTE_ADDR']}"; 
+                        }
+                        else { 
+                                echo "Je hebt geen ip-adres (!)";   
+                        } 
+
+		?>
+		| <a href="https://solideagle.dbz.lok/databasetasks/" title="Database tasks">DB Tasks</a>
+		| <a href="https://sites.google.com/a/dbz.be/ict-project-gebruikersbeheertool/" title="Google site over dit project">Projectsite</a>
+ 		| <a href="http://code.google.com/p/solideagle/issues/entry" title="Post een nieuw probleem op Google Code">Nieuw probleem</a>
+		</span>
 	</div>
 
 	<div id="header">
