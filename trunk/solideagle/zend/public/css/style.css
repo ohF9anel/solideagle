@@ -1,5 +1,4 @@
-@CHARSET "UTF-8";
-
+@charset "UTF-8";
 
 body
 {
@@ -68,9 +67,7 @@ body
 {
 	background-color: #666;
 	margin:0;
-		padding:5px;()
-	
-
+	padding:5px;	
 }
 
 #tabs>ul>li > a
