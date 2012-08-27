@@ -1,9 +1,19 @@
 <?php
 
+/**
+ * @author Machiel Sleeuwaert <Machiel.Sleeuwaert@dbz.be>
+ * $Id$ 
+ * Last changed: $LastChangedDate$
+ * @author $Author$
+ * @version $Revision$
+ * 
+ */
+
 namespace solideagle\logging;
 
 use solideagle\Config;
 
+// Use the global log function
 use \Log;
 
 require_once('Log.php');
@@ -19,7 +29,7 @@ class Logger
 	 */
 	private static function getLogger()
 	{
-		
+	
 		if(!file_exists("/var/log/solideagle/out.log"))
 		{
 			exec("touch /var/log/solideagle/out.log");
