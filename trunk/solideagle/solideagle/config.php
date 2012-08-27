@@ -12,7 +12,8 @@ class Config
 	
 	const mysqlserver = "mysql:host=triton;dbname=sleeuwaertm_solideagle;charset=utf8";
     const mysqluser = "sysSolidEagle";
-    const mysqlpass = "phizei2Chiem3aeH3xahngair9laesiepiegoleGhoo7heek4rooquai5uha";
+//    const mysqlpass = "phizei2Chiem3aeH3xahngair9laesiepiegoleGhoo7heek4rooquai5uha";
+const mysqlpass = "aebu6dahs1ceitul9Uogh8shaisuQuiw3ahnieh1phooBei8gohx4tho8Edohj0ai";
 	
 	
 	
