@@ -14,7 +14,7 @@
 					
 					<pages>
 					<deamon>
-						<label>Run deamon</label>
+						<label>Run the deamon</label>
 						<controller>databasetasks</controller>
 						<action>rundaemon</action>
 					</deamon>
