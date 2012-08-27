@@ -1,9 +1,18 @@
 <?php
 
+/**
+ * Machiel's crazy csv parser
+ * $Id$ 
+ * Last changed: $LastChangedDate$
+ * @author $Author$
+ * @version $Revision$
+ *  
+ */
+
 namespace solideagle\utilities;
 
 
-//machiel's crazy csv parser
+
 class csvparser
 {
 
