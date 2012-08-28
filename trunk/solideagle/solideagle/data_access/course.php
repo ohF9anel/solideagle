@@ -81,11 +81,9 @@ namespace solideagle\data_access;
 		 */
 		public static function updateCourse($course)
 		{
-			$sql = "UPDATE  `course`
-				SET
-				`name` = :name
-				WHERE 
-				`id` = :id;";
+			$sql = "UPDATE  `course` "
+				 . "SET `name` = :name "
+				 . "WHERE `id` = :id; ";
 
 			$cmd = new DatabaseCommand($sql);
 			$cmd->addParam(":id", $course->getId());
@@ -143,15 +141,22 @@ namespace solideagle\data_access;
 			$valErrors = Validator::validateString($course->getName(), 1, 45);
 			foreach ($valErrors as $valError)
 			{
-				switch($valError) {
+				switch ($valError) {
 					case ValidationError::IS_NULL;
-					$validationErrors[] = "Naam: geef een naam in."; break;
+                      $validationErrors[] = "Naam: geef een naam in."; 
+                      break;
+                    
 					case ValidationError::STRING_TOO_LONG:
-						$validationErrors[] = "Naam: mag niet langer zijn dan 45 karakters."; break;
-					case ValidationError::STRING_HAS_SPECIAL_CHARS:
-						$validationErrors[] = "Naam: mag geen speciale tekens bevatten."; break;
-					default:
-						$validationErrors[] = "Naam: fout."; break;
+                      $validationErrors[] = "Naam: mag niet langer zijn dan 45 karakters."; 
+                      break;
+					
+                    case ValidationError::STRING_HAS_SPECIAL_CHARS:
+                      $validationErrors[] = "Naam: mag geen speciale tekens bevatten."; 
+                      break;
+					
+                    default:
+                      $validationErrors[] = "Naam: fout."; 
+                      break;
 				}
 			}
 

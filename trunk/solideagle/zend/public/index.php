@@ -1,11 +1,13 @@
 <?php
 
-//allowable IP ranges
-if(   (strpos($_SERVER['REMOTE_ADDR'], "127.0.") === false ) &&
-		(strpos($_SERVER['REMOTE_ADDR'], "10.12.1.") === false ) && 
-		(strpos($_SERVER['REMOTE_ADDR'], "10.9.1.") === false)
-)
-exit("No access for: " . $_SERVER['REMOTE_ADDR']);
+if( !isset($_SERVER['REMOTE_ADDR']) || (
+    (strpos($_SERVER['REMOTE_ADDR'], "127.0.") === false ) &&
+	(strpos($_SERVER['REMOTE_ADDR'], "10.12.1.") === false ) && 
+	(strpos($_SERVER['REMOTE_ADDR'], "10.9.1.") === false)
+        )
+) {
+  exit("No access for: " . $_SERVER['REMOTE_ADDR']);
+}
 
 
 ini_set('default_charset','UTF-8');
@@ -18,8 +20,12 @@ defined('APPLICATION_PATH')
     || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application'));
 
 // Define application environment
+/*
+ * possible options: production, staging, testing, development
+ * see /solideagle/zend/application/configs/application.ini
+ */
 defined('APPLICATION_ENV')
-    || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
+    || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'development'));
 
 // Ensure library/ is on include_path
 set_include_path(implode(PATH_SEPARATOR, array(

@@ -73,7 +73,8 @@ class groupmanager implements TaskInterface
 				
 			if($ret->isSucces())
 			{
-				Logger::log("Group: " .$config->group->getName() ." succesfully moved on smartschool",PEAR_LOG_INFO);
+				Logger::log("Group: " . $config->group->getName()
+                        . " succesfully moved on smartschool",PEAR_LOG_INFO);
 				return true;
 			}else{
 				$taskqueue->setErrorMessages($ret->getError());

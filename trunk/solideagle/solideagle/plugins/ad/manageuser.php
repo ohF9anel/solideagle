@@ -81,7 +81,7 @@ class ManageUser
             }
         }
         
-        return new StatusReport($r,ldap_error($connLdap->getConn()));
+        return new StatusReport($r, ldap_error($connLdap->getConn()));
     }
     
     public static function updateUser($userInfo, $arrParentsOUs)
@@ -192,7 +192,7 @@ class ManageUser
 
         $newParentDn .= Config::singleton()->ad_dc;
         
-        // dn of old parent ous
+        // dn of old parent ou's
         $oldParentDn = "";
         for($i = 0; $i < sizeof($oldParentsOUs); $i++)
         {
