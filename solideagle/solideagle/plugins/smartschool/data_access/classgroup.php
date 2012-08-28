@@ -72,7 +72,7 @@ class ClassGroup{
 		{
 			return new StatusReport();
 		}else{
-			return new StatusReport(false,Api::getErrorFromCode($retval));
+			return new StatusReport(false, Api::getErrorFromCode($retval));
 		}
 
 	}
@@ -87,7 +87,7 @@ class ClassGroup{
 		{
 			return new StatusReport();
 		}else{
-			return new StatusReport(false,Api::getErrorFromCode($retval));
+			return new StatusReport(false, Api::getErrorFromCode($retval));
 		}
 	}
 

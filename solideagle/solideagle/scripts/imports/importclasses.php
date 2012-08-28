@@ -18,26 +18,26 @@ class importclasses
 			$class = Group::getGroupByName($classobj->name);
 			if($class === NULL)
 			{
-				
+				// todo: move instellingsnummers to constants
 				switch (substr($classobj->name,0,1)) {
+                    // lagere graad
 					case 1:
-						$classobj->instellingsnummer = "112144";
-						break;
 					case 2:
-						$classobj->instellingsnummer = "112144";
-						break;
+                      $classobj->instellingsnummer = "112144";
+                      break;
+                    
+                    // hogere graad
 					case 3:
-						$classobj->instellingsnummer = "038604";
-						break;
 					case 4:
-						$classobj->instellingsnummer = "038604";
-						break;
 					case 5:
-						$classobj->instellingsnummer = "038604";
-						break;
 					case 6:
-						$classobj->instellingsnummer = "038604";
-						break;
+                      $classobj->instellingsnummer = "038604";
+                      break;
+                    
+                    default:                      
+                      // this should not happen
+                      // todo: generate error here
+                      break;
 				}
 				
 				$retarr[$classobj->name] = $classobj;
@@ -215,18 +215,23 @@ class importclasses
 				case 1:
 					$group->setParentId($groupStructureResults->eerstes->getId());
 					break;
+                  
 				case 2:
 					$group->setParentId($groupStructureResults->tweedes->getId());
 					break;
+                  
 				case 3:
 					$group->setParentId($groupStructureResults->derdes->getId());
 					break;
+                  
 				case 4:
 					$group->setParentId($groupStructureResults->vierdes->getId());
 					break;
+                  
 				case 5:
 					$group->setParentId($groupStructureResults->vijfdes->getId());
 					break;
+                  
 				case 6:
 					$group->setParentId($groupStructureResults->zesdes->getId());
 					break;

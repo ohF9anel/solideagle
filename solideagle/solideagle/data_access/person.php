@@ -891,15 +891,22 @@ class Person
 		$valErrors = Validator::validateString($person->getAccountUsername(), 1, 45, false);
 		foreach ($valErrors as $valError)
 		{
-			switch($valError) {
+			switch ($valError) {
 				case ValidationError::STRING_TOO_LONG:
-					$validationErrors[] = "Gebruikersnaam: mag niet langer zijn dan 45 karakters."; break;
-				case ValidationError::STRING_TOO_SHORT:
-					$validationErrors[] = "Gebruikersnaam: te kort."; break;
-				case ValidationError::STRING_HAS_SPECIAL_CHARS:
-					$validationErrors[] = "Gebruikersnaam: mag geen speciale tekens bevatten."; break;
-				default:
-					$validationErrors[] = "Gebruikersnaam: fout."; break;
+                  $validationErrors[] = "Gebruikersnaam: mag niet langer zijn dan 45 karakters."; 
+                  break;
+				
+                case ValidationError::STRING_TOO_SHORT:
+                  $validationErrors[] = "Gebruikersnaam: te kort."; 
+                  break;
+				
+                case ValidationError::STRING_HAS_SPECIAL_CHARS:
+                  $validationErrors[] = "Gebruikersnaam: mag geen speciale tekens bevatten."; 
+                  break;
+				
+                default:
+                  $validationErrors[] = "Gebruikersnaam: fout."; 
+                  break;
 			}
 		}
 
@@ -907,12 +914,14 @@ class Person
 		$valErrors = Validator::validateString($person->getAccountPassword(), 0, 64, true);
 		foreach ($valErrors as $valError)
 		{
-			switch($valError) {
+			switch ($valError) {
 				case ValidationError::STRING_TOO_LONG:
-					$validationErrors[] = "Wachtwoord: mag niet langer zijn dan 64 karakters.";
-					break;
+                  $validationErrors[] = "Wachtwoord: mag niet langer zijn dan 64 karakters.";
+                  break;
+                
 				default:
-					//$validationErrors[] = "Wachtwoord: fout."; break;
+					//$validationErrors[] = "Wachtwoord: fout."; 
+                  break;
 			}
 		}
 		if(strlen($person->getAccountPassword()) > 0)
@@ -938,16 +947,18 @@ class Person
 			$valErrors = Validator::validateDate($person->getAccountActiveUntill(), true);
 			foreach ($valErrors as $valError)
 			{
-				switch($valError) {
+				switch ($valError) {
 					case ValidationError::DATE_BAD_SYNTAX;
-					$validationErrors[] = "Account actief tot: tijdstip moet ingegeven worden als YYYYMMDD.";
-					break;
+                      $validationErrors[] = "Account actief tot: tijdstip moet ingegeven worden als YYYYMMDD.";
+                      break;
+                    
 					case ValidationError::DATE_DOES_NOT_EXIST;
-					$validationErrors[] = "Account actief tot: deze datum bestaat niet.";
-					break;
+                      $validationErrors[] = "Account actief tot: deze datum bestaat niet.";
+                      break;
 
 					default:
-						$validationErrors[] = "Account actief tot: fout."; break;
+                      $validationErrors[] = "Account actief tot: fout."; 
+                      break;
 				}
 			}
 		}
@@ -958,16 +969,18 @@ class Person
 			$valErrors = Validator::validateDate($person->getAccountActiveFrom(), true);
 			foreach ($valErrors as $valError)
 			{
-				switch($valError) {
+				switch ($valError) {
 					case ValidationError::DATE_BAD_SYNTAX;
-					$validationErrors[] = "Account actief vanaf: Tijdstip moet ingegeven worden als YYYYMMDD.";
-					break;
-					case ValidationError::DATE_DOES_NOT_EXIST;
-					$validationErrors[] = "Account actief vanaf: Deze datum bestaat niet.";
-					break;
+                      $validationErrors[] = "Account actief vanaf: Tijdstip moet ingegeven worden als YYYYMMDD.";
+                      break;
+					
+                    case ValidationError::DATE_DOES_NOT_EXIST;
+                      $validationErrors[] = "Account actief vanaf: Deze datum bestaat niet.";
+                      break;
 
 					default:
-						$validationErrors[] = "Account actief vanaf: fout."; break;
+                      $validationErrors[] = "Account actief vanaf: fout."; 
+                      break;
 				}
 			}
 		}
@@ -976,15 +989,22 @@ class Person
 		$valErrors = Validator::validateString($person->getFirstName(), 1, 45);
 		foreach ($valErrors as $valError)
 		{
-			switch($valError) {
+			switch ($valError) {
 				case ValidationError::STRING_TOO_SHORT:
-					$validationErrors[] = "Voornaam: geef een voornaam in."; break;
+                  $validationErrors[] = "Voornaam: geef een voornaam in."; 
+                  break;
+                
 				case ValidationError::STRING_TOO_LONG:
-					$validationErrors[] = "Voornaam: mag niet langer zijn dan 45 karakters."; break;
+                  $validationErrors[] = "Voornaam: mag niet langer zijn dan 45 karakters."; 
+                  break;
+                
 				case ValidationError::STRING_HAS_SPECIAL_CHARS:
-					$validationErrors[] = "Voornaam: mag geen speciale tekens bevatten."; break;
-				default:
-					$validationErrors[] = "Voornaam: fout."; break;
+                  $validationErrors[] = "Voornaam: mag geen speciale tekens bevatten."; 
+                  break;
+				
+                default:
+                  $validationErrors[] = "Voornaam: fout."; 
+                  break;
 			}
 		}
 
@@ -992,7 +1012,7 @@ class Person
 		$valErrors = Validator::validateString($person->getName(), 1, 45);
 		foreach ($valErrors as $valError)
 		{
-			switch($valError) {
+			switch ($valError) {
 				case ValidationError::STRING_TOO_SHORT:
 					$validationErrors[] = "Familienaam: geef een familienaam in."; break;
 				case ValidationError::STRING_TOO_LONG:
@@ -1011,15 +1031,22 @@ class Person
 			$valErrors = Validator::validateDateOccurrence($person->getBirthDate(), true);
 			foreach ($valErrors as $valError)
 			{
-				switch($valError) {
+				switch ($valError) {
 					case ValidationError::DATE_BAD_SYNTAX;
-					$validationErrors[] = "Geboortedatum: datum moet ingegeven worden als YYYYMMDD."; break;
+                      $validationErrors[] = "Geboortedatum: datum moet ingegeven worden als YYYYMMDD."; 
+                      break;
+                    
 					case ValidationError::DATE_DOES_NOT_EXIST;
-					$validationErrors[] = "Geboortedatum: deze datum bestaat niet."; break;
+                      $validationErrors[] = "Geboortedatum: deze datum bestaat niet."; 
+                      break;
+                    
 					case ValidationError::DATE_IS_FUTURE;
-					$validationErrors[] = "Geboortedatum: moet in het verleden zijn."; break;
+                      $validationErrors[] = "Geboortedatum: moet in het verleden zijn."; 
+                      break;
+                    
 					default:
-						$validationErrors[] = "Geboortedatum: fout."; break;
+                      $validationErrors[] = "Geboortedatum: fout."; 
+                      break;
 				}
 			}
 		}
@@ -1028,13 +1055,18 @@ class Person
 		$valErrors = Validator::validateString($person->getBirthPlace(), 0, 45);
 		foreach ($valErrors as $valError)
 		{
-			switch($valError) {
+			switch ($valError) {
 				case ValidationError::STRING_TOO_LONG:
-					$validationErrors[] = "Geboorteplaats: mag niet langer zijn dan 45 karakters."; break;
+                  $validationErrors[] = "Geboorteplaats: mag niet langer zijn dan 45 karakters."; 
+                  break;
+                
 				case ValidationError::STRING_HAS_SPECIAL_CHARS:
-					$validationErrors[] = "Geboorteplaats: mag geen speciale tekens bevatten."; break;
+                  $validationErrors[] = "Geboorteplaats: mag geen speciale tekens bevatten."; 
+                  break;
+                
 				default:
-					$validationErrors[] = "Geboorteplaats: fout."; break;
+                  $validationErrors[] = "Geboorteplaats: fout."; 
+                  break;
 			}
 		}
 
@@ -1042,13 +1074,18 @@ class Person
 		$valErrors = Validator::validateString($person->getNationality(), 0, 45);
 		foreach ($valErrors as $valError)
 		{
-			switch($valError) {
+			switch ($valError) {
 				case ValidationError::STRING_TOO_LONG:
-					$validationErrors[] = "Nationaliteit: mag niet langer zijn dan 45 karakters."; break;
+                  $validationErrors[] = "Nationaliteit: mag niet langer zijn dan 45 karakters."; 
+                  break;
+                
 				case ValidationError::STRING_HAS_SPECIAL_CHARS:
-					$validationErrors[] = "Nationaliteit: mag geen speciale tekens bevatten."; break;
-				default:
-					$validationErrors[] = "Nationaliteit: fout."; break;
+                  $validationErrors[] = "Nationaliteit: mag geen speciale tekens bevatten."; 
+                  break;
+				
+                default:
+                  $validationErrors[] = "Nationaliteit: fout."; 
+                  break;
 			}
 		}
 
@@ -1056,14 +1093,15 @@ class Person
 		$valErrors = Validator::validateString($person->getStreet(), 0, 120);
 		foreach ($valErrors as $valError)
 		{
-			switch ($valError)
-			{
+			switch ($valError) {
 				case ValidationError::STRING_TOO_LONG:
 					$validationErrors[] = "Straatnaam: mag niet langer zijn dan 120 karakters.";
 					break;
+                  
 				case ValidationError::STRING_HAS_SPECIAL_CHARS:
 					$validationErrors[] = "Straatnaam: mag geen speciale tekens bevatten.";
 					break;
+                  
 				default:
 					$validationErrors[] = "Straatnaam: fout.";
 					break;
@@ -1074,14 +1112,18 @@ class Person
 		$valErrors = Validator::validateString($person->getHouseNumber(), 0, 40);
 		foreach ($valErrors as $valError)
 		{
-			switch($valError)
-			{
+			switch ($valError) {
 				case ValidationError::STRING_TOO_LONG:
-					$validationErrors[] = "Huisnummer: mag niet langer zijn dan 40 karakters."; break;
-				case ValidationError::STRING_HAS_SPECIAL_CHARS:
-					$validationErrors[] = "Huisnummer: mag geen speciale tekens bevatten."; break;
-				default:
-					$validationErrors[] = "Huisnummer: fout."; break;
+                  $validationErrors[] = "Huisnummer: mag niet langer zijn dan 40 karakters."; 
+                  break;
+				
+                case ValidationError::STRING_HAS_SPECIAL_CHARS:
+                  $validationErrors[] = "Huisnummer: mag geen speciale tekens bevatten."; 
+                  break;
+				
+                default:
+                  $validationErrors[] = "Huisnummer: fout."; 
+                  break;
 			}
 		}
 
@@ -1089,13 +1131,14 @@ class Person
 		$valErrors = Validator::validateString($person->getPostCode(), 0, 4);
 		foreach ($valErrors as $valError)
 		{
-			switch($valError)
-			{
+			switch ($valError) {
 				case ValidationError::STRING_TOO_LONG:
-					$validationErrors[] = "Postcode: moet een nummer zijn van 4 cijfers.";
-					break;
+                  $validationErrors[] = "Postcode: moet een nummer zijn van 4 cijfers.";
+                  break;
+                  
 				default:
-					$validationErrors[] = "Postcode: fout."; break;
+                  $validationErrors[] = "Postcode: fout."; 
+                  break;
 			}
 		}
 
@@ -1103,14 +1146,18 @@ class Person
 		$valErrors = Validator::validateString($person->getCity(), 0, 40);
 		foreach ($valErrors as $valError)
 		{
-			switch($valError)
-			{
+			switch ($valError) {
 				case ValidationError::STRING_TOO_LONG:
-					$validationErrors[] = "Gemeente: mag niet langer zijn dan 40 karakters."; break;
+                  $validationErrors[] = "Gemeente: mag niet langer zijn dan 40 karakters."; 
+                  break;
+                
 				case ValidationError::STRING_HAS_SPECIAL_CHARS:
-					$validationErrors[] = "Gemeente: mag geen speciale tekens bevatten."; break;
+                  $validationErrors[] = "Gemeente: mag geen speciale tekens bevatten."; 
+                  break;
+                
 				default:
-					$validationErrors[] = "Gemeente: fout."; break;
+                  $validationErrors[] = "Gemeente: fout."; 
+                  break;
 			}
 		}
 
@@ -1118,14 +1165,18 @@ class Person
 		$valErrors = Validator::validateString($person->getCountry(), 0, 45);
 		foreach ($valErrors as $valError)
 		{
-			switch($valError)
-			{
+			switch ($valError) {
 				case ValidationError::STRING_TOO_LONG:
-					$validationErrors[] = "Land: mag niet langer zijn dan 45 karakters."; break;
-				case ValidationError::STRING_HAS_SPECIAL_CHARS:
-					$validationErrors[] = "Land: mag geen speciale tekens bevatten."; break;
-				default:
-					$validationErrors[] = "Land: fout."; break;
+                  $validationErrors[] = "Land: mag niet langer zijn dan 45 karakters."; 
+                  break;
+				
+                case ValidationError::STRING_HAS_SPECIAL_CHARS:
+                  $validationErrors[] = "Land: mag geen speciale tekens bevatten."; 
+                  break;
+				
+                default:
+                  $validationErrors[] = "Land: fout."; 
+                  break;
 			}
 		}
 
@@ -1133,12 +1184,14 @@ class Person
 		$valErrors = Validator::validateEmailAddress($person->getEmail());
 		foreach ($valErrors as $valError)
 		{
-			switch($valError)
-			{
+			switch ($valError) {
 				case ValidationError::EMAIL_ADDRESS_INVALID:
-					$validationErrors[] = "E-mailadres: geef een geldig e-mailadres in."; break;
+                  $validationErrors[] = "E-mailadres: geef een geldig e-mailadres in."; 
+                  break;
+                
 				default:
-					$validationErrors[] = "E-mailadres: fout."; break;
+                  $validationErrors[] = "E-mailadres: fout."; 
+                  break;
 			}
 		}
 
@@ -1146,12 +1199,14 @@ class Person
 		$valErrors = Validator::validateString($person->getPhone(), 0, 30);
 		foreach ($valErrors as $valError)
 		{
-			switch($valError)
-			{
+			switch ($valError) {
 				case ValidationError::STRING_TOO_LONG:
-					$validationErrors[] = "Telefoonnummer: mag niet langer zijn dan 30 karakters."; break;
-				default:
-					$validationErrors[] = "Telefoonnummer: fout."; break;
+                  $validationErrors[] = "Telefoonnummer: mag niet langer zijn dan 30 karakters."; 
+                  break;
+				
+                default:
+                  $validationErrors[] = "Telefoonnummer: fout."; 
+                  break;
 			}
 		}
 
@@ -1159,12 +1214,14 @@ class Person
 		$valErrors = Validator::validateString($person->getPhone2(), 0, 30);
 		foreach ($valErrors as $valError)
 		{
-			switch($valError)
-			{
+			switch ($valError) {
 				case ValidationError::STRING_TOO_LONG:
-					$validationErrors[] = "Telefoonnummer 2: mag niet langer zijn dan 30 karakters."; break;
-				default:
-					$validationErrors[] = "Telefoonnummer 2: fout."; break;
+                  $validationErrors[] = "Telefoonnummer 2: mag niet langer zijn dan 30 karakters."; 
+                  break;
+				
+                default:
+                  $validationErrors[] = "Telefoonnummer 2: fout."; 
+                  break;
 			}
 		}
 
@@ -1172,47 +1229,64 @@ class Person
 		$valErrors = Validator::validateString($person->getMobile(), 0, 30);
 		foreach ($valErrors as $valError)
 		{
-			switch($valError)
-			{
+			switch ($valError) {
 				case ValidationError::STRING_TOO_LONG:
-					$validationErrors[] = "GSM-nummer: mag niet langer zijn dan 30 karakters."; break;
-				default:
-					$validationErrors[] = "GSM-nummer: fout."; break;
+                  $validationErrors[] = "GSM-nummer: mag niet langer zijn dan 30 karakters."; 
+                  break;
+				
+                default:
+                  $validationErrors[] = "GSM-nummer: fout."; 
+                  break;
 			}
 		}
 
 		// made on
+        // TODO: this should not be entered manually
 		if(!IsNullOrEmptyString($person->getMadeOn()))
 		{
 			$valErrors = Validator::validateDateTimeOccurrence($person->getMadeOn(), true);
 			foreach ($valErrors as $valError)
 			{
-				switch($valError) {
+				switch ($valError) {
 					case ValidationError::DATE_BAD_SYNTAX:
-						$validationErrors[] = "Gemaakt op: datum moet ingegeven worden als YYYYMMDD."; break;
-					case ValidationError::DATE_DOES_NOT_EXIST:
-						$validationErrors[] = "Gemaakt op: deze datum bestaat niet."; break;
-					case ValidationError::TIME_DOES_NOT_EXIST:
-						$validationErrors[] = "Gemaakt op: dit tijdstip bestaat niet."; break;
-					case ValidationError::DATE_IS_FUTURE:
-						$validationErrors[] = "Gemaakt op: moet in het verleden zijn."; break;
-					default:
-						$validationErrors[] = "Gemaakt op: fout."; break;
+                      $validationErrors[] = "Gemaakt op: datum moet ingegeven worden als YYYYMMDD."; 
+                      break;
+					
+                    case ValidationError::DATE_DOES_NOT_EXIST:
+                      $validationErrors[] = "Gemaakt op: deze datum bestaat niet."; 
+                      break;
+					
+                    case ValidationError::TIME_DOES_NOT_EXIST:
+                      $validationErrors[] = "Gemaakt op: dit tijdstip bestaat niet."; 
+                      break;
+					
+                    case ValidationError::DATE_IS_FUTURE:
+                      $validationErrors[] = "Gemaakt op: moet in het verleden zijn."; 
+                      break;
+					
+                    default:
+                      $validationErrors[] = "Gemaakt op: fout."; 
+                      break;
 				}
 			}
 		}
+        
 		// previous school
 		$valErrors = Validator::validateString($person->getStudentPreviousSchool(), 0, 50);
 		foreach ($valErrors as $valError)
 		{
-			switch($valError)
-			{
+			switch ($valError) {
 				case ValidationError::STRING_TOO_LONG:
-					$validationErrors[] = "Vorige school student: mag niet langer zijn dan 50 karakters."; break;
+                  $validationErrors[] = "Vorige school student: mag niet langer zijn dan 50 karakters."; 
+                  break;
+                
 				case ValidationError::STRING_HAS_SPECIAL_CHARS:
-					$validationErrors[] = "Vorige school: mag geen speciale tekens bevatten."; break;
+                  $validationErrors[] = "Vorige school: mag geen speciale tekens bevatten."; 
+                  break;
+                
 				default:
-					$validationErrors[] = "Vorige school: fout."; break;
+                  $validationErrors[] = "Vorige school: fout."; 
+                  break;
 			}
 		}
 
@@ -1220,8 +1294,7 @@ class Person
 		$valErrors = Validator::validateString($person->getStudentStamnr(), 0, 11);
 		foreach ($valErrors as $valError)
 		{
-			switch($valError)
-			{
+			switch ($valError) {
 				case ValidationError::STRING_TOO_LONG:
 					$validationErrors[] = "Stamnummer student: mag niet langer zijn dan 11 karakters."; break;
 				case ValidationError::STRING_HAS_SPECIAL_CHARS:
@@ -1237,12 +1310,14 @@ class Person
 			$valErrors = Validator::validateUrl($person->getPictureUrl());
 			foreach ($valErrors as $valError)
 			{
-				switch($valError)
-				{
+				switch ($valError) {
 					case ValidationError::URL_INVALID:
-						$validationErrors[] = "Foto URL: ongeldig (moet met http(s): starten en mag geen gevaarlijke karakters bevatten."; break;
-					default:
-						$validationErrors[] = "Foto URL: fout."; break;
+                      $validationErrors[] = "Foto URL: ongeldig (moet met http(s): starten en mag geen gevaarlijke karakters bevatten."; 
+                      break;
+					
+                    default:
+                      $validationErrors[] = "Foto URL: fout."; 
+                      break;
 				}
 			}
 		}
@@ -1259,12 +1334,10 @@ class Person
 	{
 		$errors = Person::validatePerson($person);
 
-		if (sizeof($errors) > 0)
-		{
+		if (sizeof($errors) > 0) {
 			return false;
 		}
 			
-
 		return true;
 	}
 
