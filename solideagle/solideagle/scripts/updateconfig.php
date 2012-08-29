@@ -85,6 +85,7 @@ class UpdateConfig
 		*/
 
 		$arr["ss_ws_url"] = 'http://dbz.smartschool.be/Webservices/V3?wsdl';
+        // todo: this must be a constant out of svn and web scope
 		$arr["ss_ws_psw"] = '';
 
 		/*
