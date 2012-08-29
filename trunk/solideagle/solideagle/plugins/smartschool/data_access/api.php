@@ -7,6 +7,13 @@ use solideagle\Config;
 
 use SoapClient;
 
+/**
+ * Following api is based on documentation of Smartschool
+ * based on their ap version X.X
+ * todo: add version number
+ * todo update this for new api sept 2012
+ * 
+ */
 
 class Api
 {
