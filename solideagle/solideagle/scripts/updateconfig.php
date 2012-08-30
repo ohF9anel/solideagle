@@ -22,7 +22,10 @@ class UpdateConfig
 		*/
 
 		$solideagleAdmin = "sys_solideagle";
+        // todo: use non svn non web constant for this
 		$solideagleAdminPass = "";
+        // todo: generate a fatal error when empty
+        
 		$domainController = "atlas5";
 		$domain = "dbz";
 		$suffix = "lok";
@@ -85,8 +88,10 @@ class UpdateConfig
 		*/
 
 		$arr["ss_ws_url"] = 'http://dbz.smartschool.be/Webservices/V3?wsdl';
-        // todo: this must be a constant out of svn and web scope
-		$arr["ss_ws_psw"] = '';
+        // todo: use a non svn non web constant for this
+        // todo: generate a fatal error when empty
+        $arr["ss_ws_psw"] = '';
+        
 
 		/*
 		 * Google CONFIG
@@ -94,6 +99,8 @@ class UpdateConfig
 
 		$arr["googledomain"] = 'dbz.be'; //pilot.dbz.be
 		$arr["googledomainstudent"] = 'student.dbz.be'; //pilot.dbz.be
+        // todo: check for oauth file
+        // todo: generate a fatal error when no oauth
 
 		/*
 		 * LOGGING LEVEL
