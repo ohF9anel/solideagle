@@ -62,13 +62,13 @@ echo "\n<hr /><h1>Tweede test</h1>\n";
 //  $LDAPUserPassword = "passforuser";
   $LDAPFieldsToFind = array("cn", "givenname", "samaccountname", "homedirectory", "telephonenumber", "mail");
    
-  $cnx = ldap_connect($LDAPHost) or die("Could not connect to LDAP");
-  echo "Connected to " . $LDAPHost;
+  $cnx = ldap_connect($LDAPHost) or die("Could not connect to LDAP\n");
+  echo "Connected to " . $LDAPHost, "<br />\n";
   
   ldap_set_option($cnx, LDAP_OPT_PROTOCOL_VERSION, 3);  //Set the LDAP Protocol used by your AD service
   ldap_set_option($cnx, LDAP_OPT_REFERRALS, 0);         //This was necessary for my AD to do anything
-  ldap_bind($cnx,$LDAPUser.$LDAPUserDomain,$LDAPUserPassword) or die("Could not bind to LDAP");
-  echo "Binded to ", $cnx,$LDAPUser.$LDAPUserDomain,$LDAPUserPassword;
+  ldap_bind($cnx,$LDAPUser.$LDAPUserDomain,$LDAPUserPassword) or die("Could not bind to LDAP\n");
+  echo "Binded to ", $cnx, " ",$LDAPUser, " ", $LDAPUserDomain, " ", $LDAPUserPassword, "<br />\n";
   
   // error_reporting (E_ALL ^ E_NOTICE);   //Suppress some unnecessary messages
   $filter="($SearchField=$SearchFor*)"; //Wildcard is * Remove it if you want an exact match
