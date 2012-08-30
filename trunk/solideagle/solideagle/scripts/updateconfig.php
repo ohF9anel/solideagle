@@ -17,13 +17,16 @@ class UpdateConfig
 	{
 		Logger::log("Config Update!",PEAR_LOG_DEBUG );
 
+        // this file contains dbz specific sensitive configuration data
+        require "/root/solideagle/dbz_config.inc";
+       
 		/*
 		 * AD CONFIG
 		*/
 
-		$solideagleAdmin = "sys_solideagle";
+		$solideagleAdmin = DBZ_AD_SOLIDEAGLE_USER;
         // todo: use non svn non web constant for this
-		$solideagleAdminPass = "";
+		$solideagleAdminPass = DBZ_AD_SOLIDEAGLE_PASSWORD;
         // todo: generate a fatal error when empty
         
 		$domainController = "atlas5";
@@ -87,10 +90,10 @@ class UpdateConfig
 		 * SMARTSCHOOL CONFIG
 		*/
 
-		$arr["ss_ws_url"] = 'http://dbz.smartschool.be/Webservices/V3?wsdl';
+		$arr["ss_ws_url"] = DBZ_SS_SOLIDEAGLE_URL;
         // todo: use a non svn non web constant for this
         // todo: generate a fatal error when empty
-        $arr["ss_ws_psw"] = '';
+        $arr["ss_ws_psw"] = DBZ_SS_SOLIDEAGLE_PASSWORD;
         
 
 		/*

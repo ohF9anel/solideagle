@@ -213,9 +213,8 @@ class daemon
  
 EOT;
 		echo $eagle;
-                // test
-              require "/root/solideagle/dbz_config.inc";
-              echo "AD user: " . DBZ_AD_SOLIDEAGLE_USER;
+        require "/root/solideagle/dbz_config.inc";
+        echo "AD user: " . DBZ_AD_SOLIDEAGLE_USER;
 		
 		foreach(TaskQueue::getAllPlatforms() as $platform)
 		//$platform = platforms::PLATFORM_GAPP;
