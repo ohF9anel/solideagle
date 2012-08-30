@@ -46,7 +46,7 @@ echo "\n<hr /><h1>Tweede test</h1>\n";
   Bind to an Active Directory LDAP server and look
   something up.
 ***************************************************/
-  $SearchFor="demedtsj";               //What string do you want to find?
+  $SearchFor="leerlingt128";               //What string do you want to find?
   $SearchField="samaccountname";   //In what Active Directory field do you want to search for the string?
 
   $LDAPHost = "atlas5.dbz.lok";       //Your LDAP server DNS Name or IP Address
