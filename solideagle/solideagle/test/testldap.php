@@ -8,7 +8,7 @@
 
 echo "<h3>LDAP query test</h3>";
 echo "Connecting ...";
-$ds=ldap_connect("localhost");  // must be a valid LDAP server!
+$ds=ldap_connect("atlas5.dbz.lok");  // must be a valid LDAP server!
 echo "connect result is " . $ds . "<br />";
 
 if ($ds) { 
