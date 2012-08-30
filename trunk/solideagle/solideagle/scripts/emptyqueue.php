@@ -1,4 +1,11 @@
 <?php
+/**
+ * @author Machiel Sleeuwaert, Bruno Bodson
+ * $Id$ 
+ * Last changed: $LastChangedDate$
+ * @author $Author$
+ * @version $Revision$
+ */
 
 namespace solideagle\scripts;
 

@@ -4,7 +4,7 @@
  * 
  * PearIncludePathTest.php
  * 
- * @author Machiel Sleeuwaert <Machiel.Sleeuwaert@dbz.be>
+ * @author Machiel Sleeuwaert, Bruno Bodson
  * $Id$ 
  * Last changed: $LastChangedDate$
  * @author $Author$

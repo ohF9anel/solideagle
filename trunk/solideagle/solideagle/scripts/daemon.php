@@ -206,7 +206,11 @@ class daemon
                (_/  /   | | j-"          ~^
                  ~-<_(_.^-~"
 
- (solideagle/solideagle/scripts/daemon.php)
+ This is solideagle/solideagle/scripts/daemon.php
+ Maybe you can use this:
+ less /var/log/solideagle/daemon.log
+ less /var/log/solideagle/out.log
+ 
 EOT;
 		echo $eagle;
 		
