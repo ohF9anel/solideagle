@@ -6,23 +6,23 @@
  */
 
 
-echo "<h3>LDAP query test</h3>";
-echo "Connecting ...";
+echo "<h3>LDAP query test</h3>\n";
+echo "Connecting ...\n";
 $ds=ldap_connect("atlas5.dbz.lok");  // must be a valid LDAP server!
-echo "connect result is " . $ds . "<br />";
+echo "connect result is " . $ds . "<br />\n";
 
 if ($ds) { 
-    echo "Binding ..."; 
+    echo "Binding ...\n"; 
     $r=ldap_bind($ds);     // this is an "anonymous" bind, typically
                            // read-only access
     echo "Bind result is " . $r . "<br />\n";
 
-    echo "Searching for (sn=S*) ...";
+    echo "Searching for (sn=S*) ...\n";
     // Search surname entry
-    $sr=ldap_search($ds, "o=My Company, c=US", "sn=S*");  
+    $sr=ldap_search($ds, "dc=dbz,dc=lok", "sn=S*");  
     echo "Search result is " . $sr . "<br />\n";
 
-    echo "Number of entries returned is " . ldap_count_entries($ds, $sr) . "<br />";
+    echo "Number of entries returned is " . ldap_count_entries($ds, $sr) . "<br />\n";
 
     echo "Getting entries ...<p>\n";
     $info = ldap_get_entries($ds, $sr);
