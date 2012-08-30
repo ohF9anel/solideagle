@@ -71,6 +71,7 @@ echo "\n<hr /><h1>Tweede test</h1>\n";
   $sr=ldap_search($cnx, $dn, $filter, $LDAPFieldsToFind);
   $info = ldap_get_entries($cnx, $sr);
  
+  $x=0;
   for ($x=0; $x<$info["count"]; $x++) {
     $sam=$info[$x]['samaccountname'][0];
     $giv=$info[$x]['givenname'][0];
