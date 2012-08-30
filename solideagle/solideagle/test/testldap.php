@@ -74,7 +74,7 @@ echo "\n<hr /><h1>Tweede test</h1>\n";
   $filter="($SearchField=$SearchFor*)"; //Wildcard is * Remove it if you want an exact match
   $sr=ldap_search($cnx, $dn, $filter, $LDAPFieldsToFind);
   $info = ldap_get_entries($cnx, $sr);
- 
+  print  $info;
   $x=0;
   for ($x=0; $x<$info["count"]; $x++) {
     $sam=$info[$x]['samaccountname'][0];
