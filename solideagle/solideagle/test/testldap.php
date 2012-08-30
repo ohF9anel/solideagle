@@ -40,4 +40,56 @@ if ($ds) {
 } else {
     echo "\n<h4>Unable to connect to LDAP server</h4>";
 }
+
+echo "\n<hr /><h1>Tweede test</h1>\n";
+/**************************************************
+  Bind to an Active Directory LDAP server and look
+  something up.
+***************************************************/
+  $SearchFor="fred";               //What string do you want to find?
+  $SearchField="samaccountname";   //In what Active Directory field do you want to search for the string?
+
+  $LDAPHost = "atlas5.dbz.lok";       //Your LDAP server DNS Name or IP Address
+  $dn = "DC=dbz,DC=lok"; //Put your Base DN here
+  
+  require "/root/solideagle/dbz_config.inc";
+  $LDAPUser = DBZ_AD_SOLIDEAGLE_USER;
+        // todo: use non svn non web constant for this
+  $LDAPUserPassword = DBZ_AD_SOLIDEAGLE_PASSWORD;
+        // todo: generate a fatal error when empty
+  $LDAPUserDomain = "@dbz.lok";  //Needs the @, but not always the same as the LDAP server domain
+//  $LDAPUser = "ldapuserid";        //A valid Active Directory login
+//  $LDAPUserPassword = "passforuser";
+  $LDAPFieldsToFind = array("cn", "givenname", "samaccountname", "homedirectory", "telephonenumber", "mail");
+   
+  $cnx = ldap_connect($LDAPHost) or die("Could not connect to LDAP");
+  ldap_set_option($cnx, LDAP_OPT_PROTOCOL_VERSION, 3);  //Set the LDAP Protocol used by your AD service
+  ldap_set_option($cnx, LDAP_OPT_REFERRALS, 0);         //This was necessary for my AD to do anything
+  ldap_bind($cnx,$LDAPUser.$LDAPUserDomain,$LDAPUserPassword) or die("Could not bind to LDAP");
+  error_reporting (E_ALL ^ E_NOTICE);   //Suppress some unnecessary messages
+  $filter="($SearchField=$SearchFor*)"; //Wildcard is * Remove it if you want an exact match
+  $sr=ldap_search($cnx, $dn, $filter, $LDAPFieldsToFind);
+  $info = ldap_get_entries($cnx, $sr);
+ 
+  for ($x=0; $x<$info["count"]; $x++) {
+    $sam=$info[$x]['samaccountname'][0];
+    $giv=$info[$x]['givenname'][0];
+    $tel=$info[$x]['telephonenumber'][0];
+    $email=$info[$x]['mail'][0];
+    $nam=$info[$x]['cn'][0];
+    $dir=$info[$x]['homedirectory'][0];
+    $dir=strtolower($dir);
+    $pos=strpos($dir,"home");
+    $pos=$pos+5;
+    if (stristr($sam, "$SearchFor") && (strlen($dir) > 8)) {
+      print "\nActive Directory says that:\n";
+      print "CN is: $nam \n";
+      print "SAMAccountName is: $sam \n";
+      print "Given Name is: $giv \n";
+      print "Telephone is: $tel \n";
+      print "Home Directory is: $dir \n";
+    }  
+  }  
+  if ($x==0) { print "Oops, $SearchField $SearchFor was not found. Please try again.\n"; }
+
 ?>
