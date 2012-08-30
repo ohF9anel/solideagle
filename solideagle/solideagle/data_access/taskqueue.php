@@ -1,4 +1,12 @@
 <?php
+
+/**
+ * @author Machiel Sleeuwaert, Bruno Bodson
+ * $Id$ 
+ * Last changed: $LastChangedDate$
+ * @author $Author$
+ * @version $Revision$
+ */
 namespace solideagle\data_access;
 
 use solideagle\data_access\platforms;
@@ -193,6 +201,7 @@ class TaskQueue
 		return $retarr;
 	}
 	
+    // todo: make this a real addToRollback and not just deleteFromQueue
 	public static function addToRollback($taskQueue)
 	{
 		$sql = "DELETE FROM   `task_queue` WHERE `task_queue`.`id` = :tqid";
