@@ -260,9 +260,11 @@ class ManageUser
     public static function changePassword($username, $password)
     {
         $connLdap = ConnectionLDAP::singleton();
-        if ($connLdap->getConn() == null)
+        if ($connLdap->getConn() == null) {
             return new StatusReport(false, "Connection to AD cannot be made.");
-
+        }
+           return new StatusReport(false, Config::singleton()->ad_dc);
+        // ldap_search($cnx, $dn, $filter, $LDAPFieldsToFind);
         $sr = ldap_search($connLdap->getConn(), Config::singleton()->ad_dc, "(sAMAccountName=" . $username . ")");
         $userInfo = ldap_get_entries($connLdap->getConn(), $sr);
         
